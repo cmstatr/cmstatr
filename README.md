@@ -1,2 +1,2 @@
 # cmstat
-Statistical tools for composite paterials
+Statistical tools for composite materials
