@@ -76,7 +76,30 @@ test_that("check equiv_mean_extremum against HYTEQ using some example data", {
 })
 
 test_that("check equiv_mean_extremum against HYTEQ using an example (modCV)", {
-  # TODO: implement this
+  data_sample <- c(145.055, 148.329, 142.667, 141.795, 144.139,
+                   135.923, 136.177, 133.523, 134.350)
+  res <- equiv_mean_extremum(alpha = 0.05, data_sample = data_sample,
+                             mean_qual = 141.310, sd_qual = 6.415,
+                             modcv = TRUE)
+
+  expect_equal(res$alpha, 0.05)
+  expect_equal(res$n_sample, 9)
+  expect_equal(res$modcv, TRUE)
+  expect_equal(res$cv, 6.415 / 141.310, tolerance = 1e-8)
+  expect_equal(res$cv_star, 0.0627, tolerance = 1e-3)
+  expect_equal(res$threshold_min_indiv, 117.024, tolerance = 1e-2)
+  expect_equal(res$threshold_mean, 135.630, tolerance = 1e-2)
+  expect_equal(res$result_min_indiv, "PASS")
+  expect_equal(res$result_mean, "PASS")
+
+  #ensure print indicates it's modCV
+  expect_output(print(res), "[Mm]od\\w*\\WCV")
+
+  expect_output(print(res), "alpha\\W*=\\W*0.05")
+  expect_output(print(res), "n\\W*=\\W*9")
+  expect_output(print(res), "Sample[s:]*\\W*133.5\\d*\\W*140.2\\d*")
+  expect_output(print(res), "Threshold[s:]*\\W*117.0\\d*\\W*135.6")
+  expect_output(print(res), "Equiv\\w*\\W*PASS\\W*PASS")
 })
 
 test_that("check equiv_change_mean against HYTEQ using some example data", {
@@ -95,6 +118,7 @@ test_that("check equiv_change_mean against HYTEQ using some example data", {
   expect_equal(res$t0, -3.570, tolerance = 5e-3)
   expect_equal(res$t_req, 2.030, tolerance = 5e-3)
   expect_equal(res$threshold, c(9.115, 9.365), tolerance = 5e-3)
+  expect_equal(res$modcv, FALSE)
   expect_equal(res$result, "FAIL")
 
   expect_output(print(res), "alpha\\W*=\\W*0.05")
@@ -120,6 +144,7 @@ test_that("check equiv_change_mean against HYTEQ using an example (modCV)", {
   expect_equal(res$t0, -1.165, tolerance = 5e-3)
   expect_equal(res$t_req, 2.03, tolerance = 5e-3)
   expect_equal(res$threshold, c(8.857, 9.623), tolerance = 5e-3)
+  expect_equal(res$modcv, TRUE)
   expect_equal(res$result, "PASS")
 
   #ensure print indicates it's modCV
