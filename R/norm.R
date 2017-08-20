@@ -34,10 +34,10 @@
 #'
 #' @export
 normalize <- function(strength, measured.thk, nom.thk) {
-  if(length(strength) != length(measured.thk)) {
+  if (length(strength) != length(measured.thk)) {
     stop("strength and measured.thk must be the same length")
   }
-  if(length(nom.thk) != 1) {
+  if (length(nom.thk) != 1) {
     stop("nom.thk must be a single numeric value (not a vector)")
   }
 
