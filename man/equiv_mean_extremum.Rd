@@ -2,8 +2,7 @@
 % Please edit documentation in R/equiv.R
 \name{equiv_mean_extremum}
 \alias{equiv_mean_extremum}
-\title{Determine equivalency or equivalency thresholds based on both minimum
-individual and mean.}
+\title{Equivalency based on mean and extremum}
 \usage{
 equiv_mean_extremum(alpha, data_sample = NULL, n_sample = NULL,
   data_qual = NULL, mean_qual = NULL, sd_qual = NULL, modcv = FALSE)
@@ -55,11 +54,11 @@ with the following named elements:
   \item{\code{threshold_min_indiv}}{The calculated threshold value for
     minimum individual}
   \item{\code{threshold_mean}}{The calculated threshold value for mean}
-  \item{\code{test_min_indiv}}{a character vector of either "PASS" or
+  \item{\code{result_min_indiv}}{a character vector of either "PASS" or
     "FAIL" indicating whehter the data from \code{data_sample} passes the
     test for minimum individual. If \code{data_sample} was not supplied,
     this value will be \code{NULL}}
-  \item{\code{test_mean}}{a character vector of either "PASS" or
+  \item{\code{result_mean}}{a character vector of either "PASS" or
     "FAIL" indicating whehter the data from \code{data_sample} passes the
     test for mean. If \code{data_sample} was not supplied, this value will
     be  \code{NULL}}

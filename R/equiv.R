@@ -1,4 +1,7 @@
 
+#' Equivalency based on mean and extremum
+#'
+#' @description
 #' Determine equivalency or equivalency thresholds based on both minimum
 #' individual and mean.
 #'
@@ -42,11 +45,11 @@
 #'   \item{\code{threshold_min_indiv}}{The calculated threshold value for
 #'     minimum individual}
 #'   \item{\code{threshold_mean}}{The calculated threshold value for mean}
-#'   \item{\code{test_min_indiv}}{a character vector of either "PASS" or
+#'   \item{\code{result_min_indiv}}{a character vector of either "PASS" or
 #'     "FAIL" indicating whehter the data from \code{data_sample} passes the
 #'     test for minimum individual. If \code{data_sample} was not supplied,
 #'     this value will be \code{NULL}}
-#'   \item{\code{test_mean}}{a character vector of either "PASS" or
+#'   \item{\code{result_mean}}{a character vector of either "PASS" or
 #'     "FAIL" indicating whehter the data from \code{data_sample} passes the
 #'     test for mean. If \code{data_sample} was not supplied, this value will
 #'     be  \code{NULL}}
@@ -146,14 +149,7 @@ equiv_mean_extremum <- function(alpha, data_sample = NULL, n_sample = NULL,
   res$cv <- cv
   res$cv_star <- NULL
   if (modcv) {
-
-    if (cv < 0.04) {
-      cv <- 0.06
-    } else if (cv < 0.08) {
-      cv <- cv / 2 + 0.04
-    } else {
-      cv <- cv
-    }
+    cv <- calc_cv_star(cv)
     res$cv_star <- cv
     sd_qual <- cv * mean_qual
   }
@@ -161,22 +157,28 @@ equiv_mean_extremum <- function(alpha, data_sample = NULL, n_sample = NULL,
   res$threshold_min_indiv <- mean_qual - sd_qual * res$k1
   res$threshold_mean <- mean_qual - sd_qual * res$k2
 
-  res$test_min_indiv <- NULL
-  res$test_mean <- NULL
+  res$result_min_indiv <- NULL
+  res$result_mean <- NULL
   res$min_sample <- NULL
   res$mean_sample <- NULL
   if (!is.null(data_sample)) {
     res$min_sample <- min(data_sample)
     res$mean_sample <- mean(data_sample)
-    res$test_min_indiv <- ifelse(res$min_sample >= res$threshold_min_indiv,
-                                 "PASS", "FAIL")
-    res$test_mean <- ifelse(res$mean_sample >= res$threshold_mean,
-                            "PASS", "FAIL")
+    res$result_min_indiv <- ifelse(res$min_sample >= res$threshold_min_indiv,
+                                   "PASS", "FAIL")
+    res$result_mean <- ifelse(res$mean_sample >= res$threshold_mean,
+                              "PASS", "FAIL")
   }
 
   return(res)
 }
 
+#' Nicely formats the results from \code{\link{equiv_mean_extremum}}
+#'
+#'
+#' @param x the equiv_mean_extremum object to be printed
+#' @param ... additional arguments to be passed to \code{\link[base]{format}}
+#'
 #' @export
 print.equiv_mean_extremum <- function(x, ...) {
   cat("\nCall:\n",
@@ -204,13 +206,13 @@ print.equiv_mean_extremum <- function(x, ...) {
     printrow("Sample:", x$min_sample, x$mean_sample)
   }
   printrow("Thresholds:", x$threshold_min_indiv, x$threshold_mean)
-  if (!is.null(x$test_min_indiv)) {
-    printrow("Equivalency:", x$test_min_indiv, x$test_mean)
+  if (!is.null(x$result_min_indiv)) {
+    printrow("Equivalency:", x$result_min_indiv, x$result_mean)
   }
 }
 
 
-#' Return the k-factors for use in equivalency testing.
+#' k-factors for equivalency testing
 #'
 #' @param alpha the acceptable probability of a type I error
 #' @param n the number of observations in the sample to test for equivalency
@@ -358,4 +360,276 @@ k_equiv <- function(alpha, n) {
   }
 
   return(res$par)
+}
+
+
+#' Change in mean value
+#'
+#' @description
+#' Checks for change in the mean value between a qualification data set and
+#' a sample. This is normally used to check for properties such as modulus.
+#'
+#' @param alpha the acceptable probability of a Type I error
+#' @param data_sample a vector of observations from the sample being compared
+#'   for equivalency
+#' @param n_sample the number of observations in the sample being compared for
+#'   equivalency
+#' @param mean_sample the mean of the sample being compared for equivalency
+#' @param sd_sample the standard deviation of the sample being compared for
+#'   equivalency
+#' @param data_qual a vector of observations from the qualification data to
+#'   which the sample is being compared for equivalency
+#' @param n_qual the number of observations in the qualification data to which
+#'   the sample is being compared for equivalency
+#' @param mean_qual the mean from the qualification data to which the sample
+#'   is being compared for equivalency
+#' @param sd_qual the standard deviation from the qualification data to which
+#'   the sample is being comapred for equivalency
+#' @param modcv a logical value indicating whether the modified CV approach
+#'   should be used. Defaults to \code{FALSE}
+#'
+#' @return
+#' \describe{
+#'   \item{\code{call}}{the expression used to call this function}
+#'   \item{\code{alpha}}{the value of alpha passed to this function}
+#'   \item{\code{n_sample}}{the number of observations in the sample for which
+#'     equivalency is being checked. This is either the value \code{n_sample}
+#'     passed to this function or the length of the vector \code{data_sample}.}
+#'   \item{\code{mean_sample}}{the mean of the observations in the sample for
+#'     which equivalency is being checked. This is either the value
+#'     \code{mean_sample} passed to this function or the mean of the vector
+#'     \code{data-sample}.}
+#'   \item{\code{sd_sample}}{the standard deviation of the observations in the
+#'     sample for which equivalency is being checked. This is either the value
+#'     \code{mean_sample} passed to this function or the standard deviation of
+#'     the vector \code{data-sample}.}
+#'   \item{\code{n_qual}}{the number of observations in the qualification data
+#'     to which the sample is being compared for equivalency. This is either
+#'     the value \code{n_qual} passed to this function or the length of the
+#'     vector \code{data_qual}.}
+#'   \item{\code{mean_qual}}{the mean of the qualification data to which the
+#'     sample is being compared for equivalency. This is either the value
+#'     \code{mean_qual} passed to this function or the mean of the vector
+#'     \code{data-qual}.}
+#'   \item{\code{sd_qual}}{the standard deviation of the qualification data to
+#'     which the sample is being compared for equivalency. This is either the
+#'     value \code{mean_qual} passed to this function or the standard deviation
+#'     of the vector \code{data-qual}.}
+#'   \item{\code{modcv}}{logical value indicating whether the equivalency
+#'     calculations were performed using the modified CV approach}
+#'   \item{\code{sp}}{the value of the pooled standard deviation. If
+#'     \code{modecv = TRUE}, this pooled standard deviation includes the
+#'     modification to the qualification CV.}
+#'   \item{\code{t0}}{the test statistic}
+#'   \item{\code{t_req}}{the t-value for \eqn{\alpha / 2} and
+#'     \eqn{df = n1 + n2 -2}}
+#'   \item{\code{threshold}}{a vector with two elements corresponding to the
+#'     minimum and maximum values of the sample mean that would result in a
+#'     pass}
+#'   \item{\code{result}}{a character vector of either "PASS" or "FAIL"
+#'     indicating the result of the test for change in mean}
+#' }
+#'
+#' @details
+#' There are several optional arguments to this function. Either (but not both)
+#' \code{data_sample} or all of \code{n_sample}, \code{mean_sample} and
+#' \code{sd_sample} must be supplied. And, either (but not both) \code{data_qual}
+#' or all of \code{n_qual}, \code{mean_qual} and \code{sd_qual} must be supplied.
+#' If these requirements are violated, warning(s) or error(s) will be issued.
+#'
+#' This function uses a two-sided t-test to determine if there is a difference
+#' in the mean value of the qualification data and the sample. A pooled
+#' standard deviation is used in the t-test. The procedure is per CMH-17-1G.
+#'
+#' If the option \code{modcv = TRUE} is set, standard deviation of the
+#' qualification data is replaced with CV* times mean_qual (which may be passed
+#' as an argument or internally calculated from \code{data_qual}.
+#'
+#' When \code{modcv = TRUE}, CV* is calculated as follows:
+#' \eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
+#' if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
+#'
+#' Note that the modified CV option should only be used if that data passes the
+#' Andreson-Darling test.
+#'
+#' @examples
+#' equiv_change_mean(0.05, n_sample = 9, mean_sample = 9.02,
+#'                   sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+#'                   sd_qual = 0.162, modcv = TRUE)
+#' #
+#' # Call:
+#' # equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
+#' #                   sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+#' #                   sd_qual = 0.162, modcv = TRUE)
+#' #
+#' # Modified CV used
+#' # For alpha = 0.05
+#' #                 Qualificaiton        Sample
+#' #        Number        28               9
+#' #          Mean       9.24             9.02
+#' #            SD      0.162           0.15785
+#' #        Result               PASS
+#' # Passing Range       8.856695 to 9.623305
+#'
+#' @export
+equiv_change_mean <- function(alpha, data_sample = NULL, n_sample = NULL,
+                              mean_sample = NULL, sd_sample = NULL,
+                              data_qual = NULL, n_qual = NULL,
+                              mean_qual = NULL, sd_qual = NULL,
+                              modcv = FALSE) {
+  if (alpha <= 0) {
+    stop("alpha must be positive")
+  }
+  if (alpha >= 1) {
+    stop("alpha must be less than 1")
+  }
+
+  if (!is.null(data_sample)) {
+    if (!is.null(n_sample)) {
+      warning("Both data_sample and n_sample supplied. n_sample ignored.")
+    }
+    n_sample <- length(data_sample)
+
+    if (!is.null(mean_sample)) {
+      warning("Both data_sample and mean_sample supplied. mean_sample ignored")
+    }
+    mean_sample <- mean(data_sample)
+
+    if (!is.null(sd_sample)) {
+      warning("Both data_sample and sd_sample supplied. sd_sample ignored")
+    }
+    sd_sample <- stats::sd(data_sample)
+  }
+
+  if (!is.null(data_qual)) {
+    if (!is.null(n_qual)) {
+      warning("Both data_qual and n_qual supplied. n_qual ignored.")
+    }
+    n_qual <- length(data_qual)
+
+    if (!is.null(mean_qual)) {
+      warning("Both data_qual and mean_qual supplied. mean_qual ignored")
+    }
+    mean_qual <- mean(data_qual)
+
+    if (!is.null(sd_qual)) {
+      warning("Both data_qual and sd_qual supplied. sd_qual ignored")
+    }
+    sd_qual <- stats::sd(data_qual)
+  }
+
+  if (is.null(n_sample)) {
+    stop("n_sample not set")
+  }
+  if (is.null(mean_sample)) {
+    stop("mean_sample not set")
+  }
+  if (is.null(sd_sample)) {
+    stop("sd_sample not set")
+  }
+  if (is.null(n_qual)) {
+    stop("n_qual not set")
+  }
+  if (is.null(mean_qual)) {
+    stop("mean_qual not set")
+  }
+  if (is.null(sd_qual)) {
+    stop("sd_qual not set")
+  }
+
+  res <- list()
+  class(res) <- "equiv_change_mean"
+
+  res$call <- match.call()
+  res$alpha <- alpha
+  res$n_sample <- n_sample
+  res$mean_sample <- mean_sample
+  res$sd_sample <- sd_sample
+  res$n_qual <- n_qual
+  res$mean_qual <- mean_qual
+  res$sd_qual <- sd_qual
+  res$modcv <- modcv
+
+  cv <- sd_qual / mean_qual
+  res$modcv <- modcv
+  if (modcv) {
+    cv <- calc_cv_star(cv)
+    sd_qual <- cv * mean_qual
+  }
+
+  sp <- sqrt(
+    ( (n_qual - 1) * sd_qual ** 2 + (n_sample - 1) * sd_sample ** 2) /
+      (n_qual + n_sample - 2)
+  )
+  res$sp <- sp
+
+  t0 <- (mean_sample - mean_qual) /
+    (sp * sqrt(1 / n_qual + 1 / n_sample))
+  res$t0 <- t0
+
+  t_req <- stats::qt(alpha / 2, n_qual + n_sample - 2, lower.tail = FALSE)
+  res$t_req <- t_req
+
+  res$threshold <- c(
+    mean_qual - t_req * sp * sqrt(1 / n_qual + 1 / n_sample),
+    mean_qual + t_req * sp * sqrt(1 / n_qual + 1 / n_sample)
+  )
+
+  res$result <- ifelse(-t_req <= t0 & t0 <= t_req, "PASS", "FAIL")
+
+  return(res)
+}
+
+
+#' Nicely formats the results of \code{\link{equiv_change_mean}}
+#'
+#' @param x the equiv_change_mean object to be printed
+#' @param ... additional arguments to be passed to \code{\link[base]{format}}
+#'
+#' @export
+print.equiv_change_mean <- function(x, ...) {
+  cat("\nCall:\n",
+      paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+
+  printrow <- function(c1, c2, c3) {
+    cat(format(c1, justify = "right", width = 16L, ...),
+        format(c2, justify = "centre", width = 16L, ...),
+        format(c3, justify = "centre", width = 16L, ...),
+        "\n")
+  }
+
+  printrow2 <- function(c1, c2) {
+    cat(format(c1, justify = "right", width = 16L, ...),
+        format(c2, justify = "centre", width = 32L, ...),
+        "\n")
+  }
+
+  cat("For alpha =", format(x$alpha, ...), "\n")
+
+  if (x$modcv) {
+    cat("Modified CV used\n")
+  }
+
+  printrow("", "Qualificaiton", "Sample")
+  printrow("Number", format(x$n_qual, ...), format(x$n_sample, ...))
+  printrow("Mean", format(x$mean_qual, ...), format(x$mean_sample, ...))
+  printrow("SD", format(x$sd_qual, ...), format(x$sd_sample, ...))
+  printrow2("Result", x$result)
+  printrow2("Passing Range", paste0(format(x$threshold[1], ...),
+                                    " to ",
+                                    format(x$threshold[2], ...))
+  )
+}
+
+# a helper function to calculate the value of the modified CV. This function is
+# not exported
+calc_cv_star <- function(cv) {
+  if (cv < 0.04) {
+    cv <- 0.06
+  } else if (cv < 0.08) {
+    cv <- cv / 2 + 0.04
+  } else {
+    cv <- cv
+  }
+  return(cv)
 }

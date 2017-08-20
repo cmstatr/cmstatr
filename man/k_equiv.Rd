@@ -2,7 +2,7 @@
 % Please edit documentation in R/equiv.R
 \name{k_equiv}
 \alias{k_equiv}
-\title{Return the k-factors for use in equivalency testing.}
+\title{k-factors for equivalency testing}
 \usage{
 k_equiv(alpha, n)
 }
@@ -16,7 +16,7 @@ a vector with elements c(k1, k2). k1 is for testing the sample
   extremum. k2 is for testing the sample mean
 }
 \description{
-Return the k-factors for use in equivalency testing.
+k-factors for equivalency testing
 }
 \details{
 The k-factors returned by this function are used for equivalency testing,
