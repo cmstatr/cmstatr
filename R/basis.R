@@ -23,8 +23,10 @@
 #'
 #' @return the calculated factor
 #' @export
-basis_factor_normal <- function(n, p = 0.90, conf = 0.95) {
+k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
   z <- qnorm(p)
   t <- qt(0.95, df = n - 1, ncp = z * sqrt(n))
   return(t / sqrt(n))
 }
+
+

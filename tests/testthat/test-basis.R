@@ -46,7 +46,7 @@ test_that("kB factors are correct for normal distribution", {
     rename(kb = V2) %>%
     filter(n <= 95) %>%
     rowwise() %>%
-    mutate(calc_kb = basis_factor_normal(n, p = 0.90, conf = 0.95)) %>%
+    mutate(calc_kb = k_factor_normal(n, p = 0.90, conf = 0.95)) %>%
     mutate(check = expect_lte(abs(calc_kb - kb), expected = 0.002,
                               label = glue("Validation failure for {n}.",
                                            "CMH-17 gives kB={kb},",
@@ -96,7 +96,7 @@ test_that("kA factors are correct for normal distribution", {
     rename(ka = V2) %>%
     filter(n <= 75) %>%
     rowwise() %>%
-    mutate(calc_ka = basis_factor_normal(n, p = 0.99, conf = 0.95)) %>%
+    mutate(calc_ka = k_factor_normal(n, p = 0.99, conf = 0.95)) %>%
     mutate(check = expect_lte(abs(calc_ka - ka), expected = 0.002,
                               label = glue("Validation failure for {n}.",
                                            "CMH-17 gives kA={ka},",
