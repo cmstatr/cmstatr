@@ -25,6 +25,9 @@
 #' CMH-17-1G give values to three decimal places.
 #'
 #' @return the calculated factor
+#'
+#' @importFrom stats qnorm qt
+#'
 #' @export
 k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
   z <- qnorm(p)
