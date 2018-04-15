@@ -29,8 +29,8 @@ See CMH-17, or other references, for information about the cases where
 normalization is appropriate.
 
 Either cured ply thickness or laminate thickness may be used for
-measured.thk and nom.thk, as long as CPT or laminate thickness is used
-for both.
+\code{measured.thk} and \code{nom.thk}, as long as CPT or laminate
+thickness is used for both.
 
 The formula applied is:
 \deqn{normalized value = test value \\frac{t_{measured}}{t_{nominal}}}{normalized value = test value * t_measured / t_nominal}

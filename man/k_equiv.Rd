@@ -27,7 +27,7 @@ The k-factors returned by this function are used for equivalency testing,
 
   This function uses numerical integration and numerical optimization to
   find values of the factors \eqn{k_1} and \eqn{k_2} based on Vangel's
-  saddlepoint approximation.
+  saddle point approximation.
 
   The value \eqn{n} refers to the number of observations in the sample
   being compared with the original population (the qualification sample is

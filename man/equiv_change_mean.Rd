@@ -32,7 +32,7 @@ the sample is being compared for equivalency}
 is being compared for equivalency}
 
 \item{sd_qual}{the standard deviation from the qualification data to which
-the sample is being comapred for equivalency}
+the sample is being compared for equivalency}
 
 \item{modcv}{a logical value indicating whether the modified CV approach
 should be used. Defaults to \code{FALSE}}
@@ -59,11 +59,11 @@ should be used. Defaults to \code{FALSE}}
   \item{\code{mean_qual}}{the mean of the qualification data to which the
     sample is being compared for equivalency. This is either the value
     \code{mean_qual} passed to this function or the mean of the vector
-    \code{data-qual}.}
+    \code{data_qual}.}
   \item{\code{sd_qual}}{the standard deviation of the qualification data to
     which the sample is being compared for equivalency. This is either the
     value \code{mean_qual} passed to this function or the standard deviation
-    of the vector \code{data-qual}.}
+    of the vector \code{data_qual}.}
   \item{\code{modcv}}{logical value indicating whether the equivalency
     calculations were performed using the modified CV approach}
   \item{\code{sp}}{the value of the pooled standard deviation. If
@@ -95,15 +95,15 @@ in the mean value of the qualification data and the sample. A pooled
 standard deviation is used in the t-test. The procedure is per CMH-17-1G.
 
 If the option \code{modcv = TRUE} is set, standard deviation of the
-qualification data is replaced with CV* times mean_qual (which may be passed
-as an argument or internally calculated from \code{data_qual}.
+qualification data is replaced with CV* times \code{mean_qual} (which may
+be passed as an argument or internally calculated from \code{data_qual}.
 
 When \code{modcv = TRUE}, CV* is calculated as follows:
 \eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
 if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
 
 Note that the modified CV option should only be used if that data passes the
-Andreson-Darling test.
+Anderson-Darling test.
 }
 \examples{
 equiv_change_mean(0.05, n_sample = 9, mean_sample = 9.02,

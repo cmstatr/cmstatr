@@ -18,7 +18,7 @@
 #' data to which equivalency is being tested. Defaults to NULL
 #' @param modcv (optional) a boolean value indicating whether a modified CV
 #' should be used. Defaults to FALSE, in which case the standard deviation
-#' supplied (or calculated from data_qual) will be used directly.
+#' supplied (or calculated from \code{data_qual}) will be used directly.
 #'
 #' @return
 #' Returns an object of class \code{equiv_mean_extremum}. This object is a list
@@ -37,7 +37,7 @@
 #'     threshold for mean is calculated as
 #'     \eqn{Wmean = qual_mean - k2 * qual_sd}}
 #'   \item{\code{modcv}}{logical value indicating whether the acceptance
-#'     thresholds are calcualted using the modified CV approach}
+#'     thresholds are calculated using the modified CV approach}
 #'   \item{\code{cv}}{the coefficient of variation of the qualification data.
 #'     This value is not modified, even if \code{modcv=TRUE}}
 #'   \item{\code{cv_star}}{The modified coefficient of variation. If
@@ -46,11 +46,11 @@
 #'     minimum individual}
 #'   \item{\code{threshold_mean}}{The calculated threshold value for mean}
 #'   \item{\code{result_min_indiv}}{a character vector of either "PASS" or
-#'     "FAIL" indicating whehter the data from \code{data_sample} passes the
+#'     "FAIL" indicating whether the data from \code{data_sample} passes the
 #'     test for minimum individual. If \code{data_sample} was not supplied,
 #'     this value will be \code{NULL}}
 #'   \item{\code{result_mean}}{a character vector of either "PASS" or
-#'     "FAIL" indicating whehter the data from \code{data_sample} passes the
+#'     "FAIL" indicating whether the data from \code{data_sample} passes the
 #'     test for mean. If \code{data_sample} was not supplied, this value will
 #'     be  \code{NULL}}
 #'   \item{\code{min_sample}}{The minimum value from the vector
@@ -63,11 +63,12 @@
 #'
 #' @details
 #' There are several optional arguments to this function. However, you can't
-#' omit all of the optional arguments. You must supply either data_sample or
-#' n_sample, but not both. You must also supply either data_qual or both
-#' mean_qual and sd_qual, but if you supply data_qual you should not supply
-#' either mean_qual or sd_qual (and visa-versa). This function will issue a
-#' warning or error if you violate any of these rules.
+#' omit all of the optional arguments. You must supply either
+#' \code{data_sample} or \code{n_sample}, but not both. You must also supply
+#' either \code{data_qual} or both \code{mean_qual} and \code{sd_qual}, but
+#' if you supply \code{data_qual} you should not supply
+#' either \code{mean_qual} or \code{sd_qual} (and visa-versa). This function
+#' will issue a warning or error if you violate any of these rules.
 #'
 #' If \code{modcv} is TRUE, the standard deviation used to calculate the
 #' thresholds will be replaced with a standard deviation calculated by
@@ -227,7 +228,7 @@ print.equiv_mean_extremum <- function(x, ...) {
 #'
 #'   This function uses numerical integration and numerical optimization to
 #'   find values of the factors \eqn{k_1} and \eqn{k_2} based on Vangel's
-#'   saddlepoint approximation.
+#'   saddle point approximation.
 #'
 #'   The value \eqn{n} refers to the number of observations in the sample
 #'   being compared with the original population (the qualification sample is
@@ -384,7 +385,7 @@ k_equiv <- function(alpha, n) {
 #' @param mean_qual the mean from the qualification data to which the sample
 #'   is being compared for equivalency
 #' @param sd_qual the standard deviation from the qualification data to which
-#'   the sample is being comapred for equivalency
+#'   the sample is being compared for equivalency
 #' @param modcv a logical value indicating whether the modified CV approach
 #'   should be used. Defaults to \code{FALSE}
 #'
@@ -410,11 +411,11 @@ k_equiv <- function(alpha, n) {
 #'   \item{\code{mean_qual}}{the mean of the qualification data to which the
 #'     sample is being compared for equivalency. This is either the value
 #'     \code{mean_qual} passed to this function or the mean of the vector
-#'     \code{data-qual}.}
+#'     \code{data_qual}.}
 #'   \item{\code{sd_qual}}{the standard deviation of the qualification data to
 #'     which the sample is being compared for equivalency. This is either the
 #'     value \code{mean_qual} passed to this function or the standard deviation
-#'     of the vector \code{data-qual}.}
+#'     of the vector \code{data_qual}.}
 #'   \item{\code{modcv}}{logical value indicating whether the equivalency
 #'     calculations were performed using the modified CV approach}
 #'   \item{\code{sp}}{the value of the pooled standard deviation. If
@@ -442,15 +443,15 @@ k_equiv <- function(alpha, n) {
 #' standard deviation is used in the t-test. The procedure is per CMH-17-1G.
 #'
 #' If the option \code{modcv = TRUE} is set, standard deviation of the
-#' qualification data is replaced with CV* times mean_qual (which may be passed
-#' as an argument or internally calculated from \code{data_qual}.
+#' qualification data is replaced with CV* times \code{mean_qual} (which may
+#' be passed as an argument or internally calculated from \code{data_qual}.
 #'
 #' When \code{modcv = TRUE}, CV* is calculated as follows:
 #' \eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
 #' if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
 #'
 #' Note that the modified CV option should only be used if that data passes the
-#' Andreson-Darling test.
+#' Anderson-Darling test.
 #'
 #' @examples
 #' equiv_change_mean(0.05, n_sample = 9, mean_sample = 9.02,

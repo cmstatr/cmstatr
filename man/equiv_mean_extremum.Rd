@@ -27,7 +27,7 @@ data to which equivalency is being tested. Defaults to NULL}
 
 \item{modcv}{(optional) a boolean value indicating whether a modified CV
 should be used. Defaults to FALSE, in which case the standard deviation
-supplied (or calculated from data_qual) will be used directly.}
+supplied (or calculated from \code{data_qual}) will be used directly.}
 }
 \value{
 Returns an object of class \code{equiv_mean_extremum}. This object is a list
@@ -46,7 +46,7 @@ with the following named elements:
     threshold for mean is calculated as
     \eqn{Wmean = qual_mean - k2 * qual_sd}}
   \item{\code{modcv}}{logical value indicating whether the acceptance
-    thresholds are calcualted using the modified CV approach}
+    thresholds are calculated using the modified CV approach}
   \item{\code{cv}}{the coefficient of variation of the qualification data.
     This value is not modified, even if \code{modcv=TRUE}}
   \item{\code{cv_star}}{The modified coefficient of variation. If
@@ -55,11 +55,11 @@ with the following named elements:
     minimum individual}
   \item{\code{threshold_mean}}{The calculated threshold value for mean}
   \item{\code{result_min_indiv}}{a character vector of either "PASS" or
-    "FAIL" indicating whehter the data from \code{data_sample} passes the
+    "FAIL" indicating whether the data from \code{data_sample} passes the
     test for minimum individual. If \code{data_sample} was not supplied,
     this value will be \code{NULL}}
   \item{\code{result_mean}}{a character vector of either "PASS" or
-    "FAIL" indicating whehter the data from \code{data_sample} passes the
+    "FAIL" indicating whether the data from \code{data_sample} passes the
     test for mean. If \code{data_sample} was not supplied, this value will
     be  \code{NULL}}
   \item{\code{min_sample}}{The minimum value from the vector
@@ -76,11 +76,12 @@ individual and mean.
 }
 \details{
 There are several optional arguments to this function. However, you can't
-omit all of the optional arguments. You must supply either data_sample or
-n_sample, but not both. You must also supply either data_qual or both
-mean_qual and sd_qual, but if you supply data_qual you should not supply
-either mean_qual or sd_qual (and visa-versa). This function will issue a
-warning or error if you violate any of these rules.
+omit all of the optional arguments. You must supply either
+\code{data_sample} or \code{n_sample}, but not both. You must also supply
+either \code{data_qual} or both \code{mean_qual} and \code{sd_qual}, but
+if you supply \code{data_qual} you should not supply
+either \code{mean_qual} or \code{sd_qual} (and visa-versa). This function
+will issue a warning or error if you violate any of these rules.
 
 If \code{modcv} is TRUE, the standard deviation used to calculate the
 thresholds will be replaced with a standard deviation calculated by
