@@ -18,11 +18,12 @@ Imports:
     stats,
     utils
 Suggests:
+    knitr,
+    lintr,
+    rmarkdown,
     spelling,
     testthat,
     tidyr,
-    knitr,
-    rmarkdown,
     tidyverse
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
