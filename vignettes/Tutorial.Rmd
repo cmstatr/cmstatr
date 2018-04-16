@@ -1,0 +1,39 @@
+---
+title: "cmstatr Tutorial"
+author: "Stefan Kloppenborg"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+`cmstatr` is an R package for analyzing composite material data for use in the aerospace industry. The statistical methods are based on those published in [CMH-17-1G](https://www.cmh17.org/). This package is intended to facilitate reproducible statistical analysis of composite materials. In this tutorial, we'll explore the basic functionality of `cmstatr`.
+
+# Input Data
+`cmstatr` is build with the assumption that the data is in (so called) [tidy data](http://vita.had.co.nz/papers/tidy-data.html) format. This means that the data is in a data frame and that each observation (i.e. test result) has its own row and that each variable has its own column. Included in this package is a sample composite material data set (this data set is fictional: don't use it for anything other than learning this package). The data set `carbon.fabric` has the expected format.
+
+```{r}
+library(cmstatr)
+
+carbon.fabric
+```
+
+If your data set is not yet in this type of format (note: that the column names *do not* need to match the column names in the example), there are many ways to get it into this format. One of the easier ways of doing so is to use the [tidyr](https://tidyr.tidyverse.org/) package. The use of this package is outside the scope of this vignette.
+
+# Working With Data
+Throughout this vignette, we will be using some of the `tidyverse` tools for working with data. There are several ways to work with data in R, but in the opinion of the author of this vignette, the `tidyverse` provides the easiest way to do so. As such, this is the approach used in this vignette. Feel free to use whichever approach works best for you.
+
+To load the various packages that make up the `tidyverse`, simply load them as follows:
+
+```{r}
+library(tidyverse)
+```
