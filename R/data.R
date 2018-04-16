@@ -1,0 +1,17 @@
+
+#' Sample data for a generic carbon fabric
+#'
+#' A dataset containing sample data that is typical of a generic carbon
+#' prepreg fabric. This data is used in several examples within the
+#' \code{cmstatr} package. This data is fictional and should
+#' not be used for anything besides learning how to use this package.
+#'
+#' @format A data frame with 216 observations and 5 variables:
+#' \describe{
+#'   \item{id}{a unique identification for each coupon}
+#'   \item{test}{a code indicating the test method}
+#'   \item{condition}{a code to indicate an environmental condition}
+#'   \item{batch}{the prepreg batch}
+#'   \item{strength}{the strength value observed in the test}
+#' }
+"carbon.fabric"
