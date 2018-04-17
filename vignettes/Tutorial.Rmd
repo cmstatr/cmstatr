@@ -37,3 +37,13 @@ To load the various packages that make up the `tidyverse`, simply load them as f
 ```{r}
 library(tidyverse)
 ```
+
+# Calculating Single-Point Basis Value
+The simplest thing that you will likely do is to calculate a basis value based of a set of numbers that you consider as unstructured data. An example of this would be calculating the B-Basis of the `RTD` warp tension (`WT`) data.
+
+
+```{r}
+carbon.fabric %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  basis_normal(strength)
+```

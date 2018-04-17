@@ -34,3 +34,41 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
   t <- qt(0.95, df = n - 1, ncp = z * sqrt(n))
   return(t / sqrt(n))
 }
+
+#' Calculate basis values (\eqn{kB}, \eqn{kA}) with normal distribution
+#'
+#' @description
+#' TODO: Add some text here
+#'
+#' @param df a data.frame
+#' @param x the variable in the data.frame for which to find the basis value
+#' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
+#' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
+#'
+#' @details
+#' TODO: Add some text here
+#'
+#' @return an object of class \code{basis}
+#'
+#' @importFrom rlang enquo eval_tidy
+#' @importFrom stats sd
+#'
+#' @export
+basis_normal <- function(df, x, p = 0.90, conf = 0.95) {
+  res <- list()
+  class(res) <- "basis"
+
+  res$call <- match.call()
+
+  res$distribution <- "Normal"
+  res$p <- p
+  res$conf <- conf
+
+  x <- enquo(x)
+  res$data <- eval_tidy(x, df)
+  res$n <- length(res$data)
+  k <- k_factor_normal(n = res$n, p = p, conf = conf)
+  res$basis <- mean(res$data) - k * sd(res$data)
+
+  return(res)
+}

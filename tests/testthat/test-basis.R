@@ -102,3 +102,21 @@ test_that("kA factors are correct for normal distribution", {
                                            "CMH-17 gives kA={ka},",
                                            "library gives kA={calc_ka}")))
 })
+
+test_that("(normal) basis value equals mean when sd = 0", {
+  expect_equal(
+    (data.frame(x = rep(100, 10)) %>%
+      basis_normal(x, p = 0.9, conf = 0.95))$basis,
+    100
+  )
+})
+
+test_that("(normal) basis value approximately equals percentile for large samples", {
+  m <- 100
+  s <- 5
+  set.seed(100)  # make sure that this doesn't fail by pure chance
+  q <- qnorm(0.10, m, s, lower.tail = TRUE)
+  basis <- (data.frame(x = rnorm(50, m, s)) %>%
+    basis_normal(x, p = 0.90, conf = 0.95))$basis
+  expect_lt(abs(basis - q), 0.1)
+})
