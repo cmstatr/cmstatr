@@ -4,11 +4,23 @@
 \alias{equiv_mean_extremum}
 \title{Equivalency based on mean and extremum}
 \usage{
-equiv_mean_extremum(alpha, data_sample = NULL, n_sample = NULL,
-  data_qual = NULL, mean_qual = NULL, sd_qual = NULL, modcv = FALSE)
+equiv_mean_extremum(df_qual = NULL, data_qual = NULL, mean_qual = NULL,
+  sd_qual = NULL, data_sample = NULL, n_sample = NULL, alpha,
+  modcv = FALSE)
 }
 \arguments{
-\item{alpha}{the acceptable probability of a type I error}
+\item{df_qual}{(optional) a data.frame containing the qualification data.
+Defaults to NULL.}
+
+\item{data_qual}{(optional) a vector of observations from the
+"qualification" data to which equivalency is being tested. Or the column of
+\code{df_qual} that contains this data. Defaults to NULL}
+
+\item{mean_qual}{(optional) the mean from the "qualification" data to which
+equivalency is being tested. Defaults to NULL}
+
+\item{sd_qual}{(optional) the standard deviation from the "qualification"
+data to which equivalency is being tested. Defaults to NULL}
 
 \item{data_sample}{(optional) a vector of observations from the sample for
 which equivalency is being tested. Defaults to NULL}
@@ -16,14 +28,7 @@ which equivalency is being tested. Defaults to NULL}
 \item{n_sample}{(optional) the number of observations in the sample for
 which equivalency will be tested. Defaults to NULL}
 
-\item{data_qual}{(optional) a vector of observations from the
-"qualification" data to which equivalency is being tested. Defaults to NULL}
-
-\item{mean_qual}{(optional) the mean from the "qualification" data to which
-equivalency is being tested. Defaults to NULL}
-
-\item{sd_qual}{(optional) the standard deviation from the "qualification"
-data to which equivalency is being tested. Defaults to NULL}
+\item{alpha}{the acceptable probability of a type I error}
 
 \item{modcv}{(optional) a boolean value indicating whether a modified CV
 should be used. Defaults to FALSE, in which case the standard deviation
@@ -78,10 +83,11 @@ individual and mean.
 There are several optional arguments to this function. However, you can't
 omit all of the optional arguments. You must supply either
 \code{data_sample} or \code{n_sample}, but not both. You must also supply
-either \code{data_qual} or both \code{mean_qual} and \code{sd_qual}, but
-if you supply \code{data_qual} you should not supply
-either \code{mean_qual} or \code{sd_qual} (and visa-versa). This function
-will issue a warning or error if you violate any of these rules.
+either \code{data_qual} (and \code{df_qual} if \code{data_qual} is a
+variable name and not a vector) or both \code{mean_qual} and \code{sd_qual},
+but if you supply \code{data_qual} (and possibly \code{df_qual}) you should
+not supply either \code{mean_qual} or \code{sd_qual} (and visa-versa). This
+function will issue a warning or error if you violate any of these rules.
 
 If \code{modcv} is TRUE, the standard deviation used to calculate the
 thresholds will be replaced with a standard deviation calculated by
@@ -95,8 +101,8 @@ equiv_mean_extremum(alpha = 0.01, n_sample = 6,
                     mean_qual = 100, sd_qual = 5.5, modcv = TRUE)
 #
 # Call:
-# equiv_mean_extremum(alpha = 0.01, n_sample = 6, mean_qual = 100,
-#                     sd_qual = 5.5, modcv = TRUE)
+# equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
+#                     alpha = 0.01, modcv = TRUE)
 #
 # Modified CV used: CV* = 0.0675 ( CV = 0.055 )
 #

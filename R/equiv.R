@@ -5,13 +5,16 @@
 #' Determine equivalency or equivalency thresholds based on both minimum
 #' individual and mean.
 #'
+#' @param df_qual (optional) a data.frame containing the qualification data.
+#' Defaults to NULL.
 #' @param alpha the acceptable probability of a type I error
 #' @param data_sample (optional) a vector of observations from the sample for
 #' which equivalency is being tested. Defaults to NULL
 #' @param n_sample (optional) the number of observations in the sample for
 #' which equivalency will be tested. Defaults to NULL
 #' @param data_qual (optional) a vector of observations from the
-#' "qualification" data to which equivalency is being tested. Defaults to NULL
+#' "qualification" data to which equivalency is being tested. Or the column of
+#' \code{df_qual} that contains this data. Defaults to NULL
 #' @param mean_qual (optional) the mean from the "qualification" data to which
 #' equivalency is being tested. Defaults to NULL
 #' @param sd_qual (optional) the standard deviation from the "qualification"
@@ -65,10 +68,11 @@
 #' There are several optional arguments to this function. However, you can't
 #' omit all of the optional arguments. You must supply either
 #' \code{data_sample} or \code{n_sample}, but not both. You must also supply
-#' either \code{data_qual} or both \code{mean_qual} and \code{sd_qual}, but
-#' if you supply \code{data_qual} you should not supply
-#' either \code{mean_qual} or \code{sd_qual} (and visa-versa). This function
-#' will issue a warning or error if you violate any of these rules.
+#' either \code{data_qual} (and \code{df_qual} if \code{data_qual} is a
+#' variable name and not a vector) or both \code{mean_qual} and \code{sd_qual},
+#' but if you supply \code{data_qual} (and possibly \code{df_qual}) you should
+#' not supply either \code{mean_qual} or \code{sd_qual} (and visa-versa). This
+#' function will issue a warning or error if you violate any of these rules.
 #'
 #' If \code{modcv} is TRUE, the standard deviation used to calculate the
 #' thresholds will be replaced with a standard deviation calculated by
@@ -82,8 +86,8 @@
 #'                     mean_qual = 100, sd_qual = 5.5, modcv = TRUE)
 #' #
 #' # Call:
-#' # equiv_mean_extremum(alpha = 0.01, n_sample = 6, mean_qual = 100,
-#' #                     sd_qual = 5.5, modcv = TRUE)
+#' # equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
+#' #                     alpha = 0.01, modcv = TRUE)
 #' #
 #' # Modified CV used: CV* = 0.0675 ( CV = 0.055 )
 #' #
@@ -95,14 +99,29 @@
 #' @seealso
 #' \code{\link{k_equiv}}
 #'
+#' @importFrom rlang enquo eval_tidy
+#'
 #' @export
-equiv_mean_extremum <- function(alpha, data_sample = NULL, n_sample = NULL,
-                                data_qual = NULL, mean_qual = NULL,
-                                sd_qual = NULL, modcv = FALSE) {
+equiv_mean_extremum <- function(df_qual = NULL, data_qual = NULL,
+                                mean_qual = NULL, sd_qual = NULL,
+                                data_sample = NULL, n_sample = NULL,
+                                alpha, modcv = FALSE) {
   res <- list()
   class(res) <- "equiv_mean_extremum"
 
   res$call <- match.call()
+
+  if (alpha <= 0) {
+    stop("alpha must be positive")
+  }
+  if (alpha >= 1) {
+    stop("alpha must be less than 1")
+  }
+
+  if (!is.null(df_qual)) {
+    data_qual_enq <- enquo(data_qual)
+    data_qual <- eval_tidy(data_qual_enq, df_qual)
+  }
 
   if (!is.null(data_sample)) {
     if (!is.null(n_sample)) {
@@ -370,6 +389,8 @@ k_equiv <- function(alpha, n) {
 #' Checks for change in the mean value between a qualification data set and
 #' a sample. This is normally used to check for properties such as modulus.
 #'
+#' @param df_qual (optional) a data.frame containing the qualification data.
+#' Defaults to NULL.
 #' @param alpha the acceptable probability of a Type I error
 #' @param data_sample a vector of observations from the sample being compared
 #'   for equivalency
@@ -378,8 +399,9 @@ k_equiv <- function(alpha, n) {
 #' @param mean_sample the mean of the sample being compared for equivalency
 #' @param sd_sample the standard deviation of the sample being compared for
 #'   equivalency
-#' @param data_qual a vector of observations from the qualification data to
-#'   which the sample is being compared for equivalency
+#' @param data_qual (optional) a vector of observations from the
+#'   "qualification" data to which equivalency is being tested. Or the column of
+#'   \code{df_qual} that contains this data. Defaults to NULL
 #' @param n_qual the number of observations in the qualification data to which
 #'   the sample is being compared for equivalency
 #' @param mean_qual the mean from the qualification data to which the sample
@@ -435,8 +457,10 @@ k_equiv <- function(alpha, n) {
 #' There are several optional arguments to this function. Either (but not both)
 #' \code{data_sample} or all of \code{n_sample}, \code{mean_sample} and
 #' \code{sd_sample} must be supplied. And, either (but not both) \code{data_qual}
-#' or all of \code{n_qual}, \code{mean_qual} and \code{sd_qual} must be supplied.
-#' If these requirements are violated, warning(s) or error(s) will be issued.
+#' (and also \code{df_qual} if \code{data_qual} is a column name and not a
+#' vector) or all of \code{n_qual}, \code{mean_qual} and \code{sd_qual} must
+#' be supplied. If these requirements are violated, warning(s) or error(s) will
+#' be issued.
 #'
 #' This function uses a two-sided t-test to determine if there is a difference
 #' in the mean value of the qualification data and the sample. A pooled
@@ -454,35 +478,41 @@ k_equiv <- function(alpha, n) {
 #' Anderson-Darling test.
 #'
 #' @examples
-#' equiv_change_mean(0.05, n_sample = 9, mean_sample = 9.02,
+#' equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
 #'                   sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
 #'                   sd_qual = 0.162, modcv = TRUE)
 #' #
 #' # Call:
-#' # equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
-#' #                   sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
-#' #                   sd_qual = 0.162, modcv = TRUE)
+#' # equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162,
+#' #                   n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785,
+#' #                   alpha = 0.05,modcv = TRUE)
 #' #
-#' # Modified CV used
 #' # For alpha = 0.05
-#' #                 Qualificaiton        Sample
-#' #        Number        28               9
-#' #          Mean       9.24             9.02
-#' #            SD      0.162           0.15785
-#' #        Result               PASS
-#' # Passing Range       8.856695 to 9.623305
+#' # Modified CV used
+#' #                   Qualificaiton        Sample
+#' #           Number        28               9
+#' #             Mean       9.24             9.02
+#' #               SD      0.162           0.15785
+#' #           Result               PASS
+#' #    Passing Range       8.856695 to 9.623305
 #'
 #' @export
-equiv_change_mean <- function(alpha, data_sample = NULL, n_sample = NULL,
-                              mean_sample = NULL, sd_sample = NULL,
-                              data_qual = NULL, n_qual = NULL,
-                              mean_qual = NULL, sd_qual = NULL,
-                              modcv = FALSE) {
+#'
+equiv_change_mean <- function(df_qual = NULL, data_qual = NULL,
+                              n_qual = NULL, mean_qual = NULL,
+                              sd_qual = NULL, data_sample = NULL,
+                              n_sample = NULL, mean_sample = NULL,
+                              sd_sample = NULL, alpha, modcv = FALSE) {
   if (alpha <= 0) {
     stop("alpha must be positive")
   }
   if (alpha >= 1) {
     stop("alpha must be less than 1")
+  }
+
+  if (!is.null(df_qual)) {
+    data_qual_enq <- enquo(data_qual)
+    data_qual <- eval_tidy(data_qual_enq, df_qual)
   }
 
   if (!is.null(data_sample)) {

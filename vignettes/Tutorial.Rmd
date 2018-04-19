@@ -41,9 +41,20 @@ library(tidyverse)
 # Calculating Single-Point Basis Value
 The simplest thing that you will likely do is to calculate a basis value based of a set of numbers that you consider as unstructured data. An example of this would be calculating the B-Basis of the `RTD` warp tension (`WT`) data.
 
-
 ```{r}
 carbon.fabric %>%
   filter(test == "WT" & condition == "RTD") %>%
   basis_normal(strength)
 ```
+
+# Equivalency
+Eventually, once you've finished calculating all your basis values, you'll probably want to set specification requirements or evaluate site/process equivalency. `cmstatr` has functionality to do both.
+
+Let's say that you want to develop specification limits for warp tension that you're going to put in your material specification. You can do this as follows:
+
+```{r}
+carbon.fabric %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  equiv_mean_extremum(strength, n_sample = 5, alpha = 0.01)
+```
+
