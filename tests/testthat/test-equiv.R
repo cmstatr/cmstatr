@@ -102,8 +102,29 @@ test_that("check equiv_mean_extremum against HYTEQ using an example (modCV)", {
   expect_output(print(res), "Equiv\\w*\\W*PASS\\W*PASS")
 })
 
+test_that("check three ways of specifying qual data are same (mean_ext)", {
+  data_qual <- c(145.055, 148.329, 142.667, 141.795, 144.139,
+                   135.923, 136.177, 133.523, 134.350)
+  data_qual_df <- data.frame(strength = data_qual)
+
+  res1 <- equiv_mean_extremum(alpha = 0.05, data_qual = data_qual,
+                              n_sample = 5)
+  res2 <- equiv_mean_extremum(alpha = 0.05, df_qual = data_qual_df,
+                              data_qual = strength, n_sample = 5)
+  res3 <- equiv_mean_extremum(alpha = 0.05, mean_qual = mean(data_qual),
+                              sd_qual = sd(data_qual), n_sample = 5)
+
+  # the calls will be different, and that's okay
+  res1$call <- NULL
+  res2$call <- NULL
+  res3$call <- NULL
+
+  expect_equal(res1, res2)
+  expect_equal(res1, res3)
+})
+
 test_that("check equiv_change_mean against HYTEQ using some example data", {
-  res <- equiv_change_mean(0.05, n_sample = 9, mean_sample = 9.02,
+  res <- equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
                            sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
                            sd_qual = 0.162)
 
@@ -129,7 +150,7 @@ test_that("check equiv_change_mean against HYTEQ using some example data", {
 })
 
 test_that("check equiv_change_mean against HYTEQ using an example (modCV)", {
-  res <- equiv_change_mean(0.05, n_sample = 9, mean_sample = 9.02,
+  res <- equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
                            sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
                            sd_qual = 0.162, modcv = TRUE)
 
@@ -155,4 +176,39 @@ test_that("check equiv_change_mean against HYTEQ using an example (modCV)", {
   expect_output(print(res), "Mean\\W*9.24\\d*\\W*9.02\\d*")
   expect_output(print(res), "Result\\W*PASS")
   expect_output(print(res), "Range\\W*8.85[67]\\d*\\W*\\w*\\W*9.623\\d*")
+})
+
+test_that("check four ways of specifying qual data are same (chg in mean)", {
+  data_qual <- c(145.055, 148.329, 142.667, 141.795, 144.139,
+                 135.923, 136.177, 133.523, 134.350)
+  data_qual_df <- data.frame(strength = data_qual)
+  data_sample <- c(145.055, 148.329, 142.667, 141.795, 144.139)
+
+  res1 <- equiv_change_mean(alpha = 0.05, data_qual = data_qual,
+                            n_sample = length(data_sample),
+                            mean_sample = mean(data_sample),
+                            sd_sample = sd(data_sample))
+  res2 <- equiv_change_mean(alpha = 0.05, df_qual = data_qual_df,
+                            data_qual = strength,
+                            n_sample = length(data_sample),
+                            mean_sample = mean(data_sample),
+                            sd_sample = sd(data_sample))
+  res3 <- equiv_change_mean(alpha = 0.05, mean_qual = mean(data_qual),
+                            sd_qual = sd(data_qual),
+                            n_qual = length(data_qual),
+                            n_sample = length(data_sample),
+                            mean_sample = mean(data_sample),
+                            sd_sample = sd(data_sample))
+  res4 <- equiv_change_mean(alpha = 0.05, data_qual = data_qual,
+                            data_sample = data_sample)
+
+  # the calls will be different, and that's okay
+  res1$call <- NULL
+  res2$call <- NULL
+  res3$call <- NULL
+  res4$call <- NULL
+
+  expect_equal(res1, res2)
+  expect_equal(res1, res3)
+  expect_equal(res1, res4)
 })
