@@ -54,7 +54,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @importFrom stats sd
 #'
 #' @export
-basis_normal <- function(df, x, p = 0.90, conf = 0.95) {
+basis_normal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
   res <- list()
   class(res) <- "basis"
 

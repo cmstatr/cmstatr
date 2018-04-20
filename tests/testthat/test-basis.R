@@ -111,7 +111,7 @@ test_that("(normal) basis value equals mean when sd = 0", {
   )
 })
 
-test_that("(normal) basis value approximately equals percentile for large samples", {
+test_that("(normal) basis value approx equals percentile for large samples", {
   m <- 100
   s <- 5
   set.seed(100)  # make sure that this doesn't fail by pure chance
@@ -119,4 +119,33 @@ test_that("(normal) basis value approximately equals percentile for large sample
   basis <- (data.frame(x = rnorm(50, m, s)) %>%
     basis_normal(x, p = 0.90, conf = 0.95))$basis
   expect_lt(abs(basis - q), 0.1)
+})
+
+test_that("normal basis value matches STAT17 result", {
+  data <- c(
+    137.4438,
+    139.5395,
+    150.89,
+    141.4474,
+    141.8203,
+    151.8821,
+    143.9245,
+    132.9732,
+    136.6419,
+    138.1723,
+    148.7668,
+    143.283,
+    143.5429,
+    141.7023,
+    137.4732,
+    152.338,
+    144.1589,
+    128.5218
+  )
+
+  res <- basis_normal(x = data, p = 0.9, conf = 0.95)
+  expect_equal(res$basis, 129.287, tolerance = 0.05)
+
+  res <- basis_normal(x = data, p = 0.99, conf = 0.95)
+  expect_equal(res$basis, 120.336, tolerance = 0.05)
 })
