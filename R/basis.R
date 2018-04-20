@@ -72,3 +72,29 @@ basis_normal <- function(df, x, p = 0.90, conf = 0.95) {
 
   return(res)
 }
+
+# TODO: Write some tests for the follwowing print function
+
+#' Nicely formats the results of basis calculations
+#'
+#' @param x the \code{basis} object to be printed
+#' @param ... additional arguments to be passed to \code{\link[base]{format}}
+#'
+#' @export
+print.basis <- function(x, ...) {
+  cat("\nCall:\n",
+      paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+
+  cat("Distribution: ", x$distribution, "\t")
+  cat("( n = ", x$n, ")\n")
+
+  if (x$conf == 0.95 & x$p == 0.9) {
+    cat("B-Basis: ", x$basis, " ( p = ", x$p, ", conf = ", x$conf, ")\n\n")
+  }
+  else if (x$conf == 0.95 & x$p == 0.99) {
+    cat("A-Basis: ", x$basis, " ( p = ", x$p, ", conf = ", x$conf, ")\n\n")
+  }
+  else {
+    cat("Basis: ", x$basis, " ( p = ", x$p, ", conf = ", x$conf, ")\n\n")
+  }
+}
