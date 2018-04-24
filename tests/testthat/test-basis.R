@@ -144,8 +144,104 @@ test_that("normal basis value matches STAT17 result", {
   )
 
   res <- basis_normal(x = data, p = 0.9, conf = 0.95)
-  expect_equal(res$basis, 129.287, tolerance = 0.05)
+  expect_equal(res$basis, 129.287, tolerance = 0.0005)
+  expect_output(print(res), "b-basis.*129.2", ignore.case = TRUE)
+  expect_output(print(res), "normal", ignore.case = TRUE)
 
   res <- basis_normal(x = data, p = 0.99, conf = 0.95)
-  expect_equal(res$basis, 120.336, tolerance = 0.05)
+  expect_equal(res$basis, 120.336, tolerance = 0.0005)
+  expect_output(print(res), "a-basis.*120.3", ignore.case = TRUE)
+  expect_output(print(res), "normal", ignore.case = TRUE)
+
+  expect_match(res$distribution, "normal", ignore.case = TRUE)
+})
+
+test_that("log-normal basis value matches STAT17 result", {
+  data <- c(
+    137.4438,
+    139.5395,
+    150.89,
+    141.4474,
+    141.8203,
+    151.8821,
+    143.9245,
+    132.9732,
+    136.6419,
+    138.1723,
+    148.7668,
+    143.283,
+    143.5429,
+    141.7023,
+    137.4732,
+    152.338,
+    144.1589,
+    128.5218
+  )
+
+  res <- basis_lognormal(x = data, p = 0.9, conf = 0.95)
+  expect_equal(res$basis, 129.664, tolerance = 0.0005)
+  expect_output(print(res), "b-basis.*129.6", ignore.case = TRUE)
+  expect_output(print(res), "normal", ignore.case = TRUE)
+  expect_output(print(res), "log", ignore.case = TRUE)
+
+  res <- basis_lognormal(x = data, p = 0.99, conf = 0.95)
+  expect_equal(res$basis, 121.710, tolerance = 0.0005)
+  expect_output(print(res), "a-basis.*121.7", ignore.case = TRUE)
+  expect_output(print(res), "normal", ignore.case = TRUE)
+  expect_output(print(res), "log", ignore.case = TRUE)
+
+  expect_match(res$distribution, "log", ignore.case = TRUE)
+  expect_match(res$distribution, "normal", ignore.case = TRUE)
+})
+
+test_that("Weibull basis value matches STAT17 result", {
+  data <- c(
+    137.4438,
+    139.5395,
+    150.89,
+    141.4474,
+    141.8203,
+    151.8821,
+    143.9245,
+    132.9732,
+    136.6419,
+    138.1723,
+    148.7668,
+    143.283,
+    143.5429,
+    141.7023,
+    137.4732,
+    152.338,
+    144.1589,
+    128.5218
+  )
+
+  # stat17 B-Basis: 125.441
+  # stat17 A-Basis: 109.150
+})
+
+test_that("Non-parametric basis value matches STAT17 result", {
+  data <- c(
+    137.4438,
+    139.5395,
+    150.89,
+    141.4474,
+    141.8203,
+    151.8821,
+    143.9245,
+    132.9732,
+    136.6419,
+    138.1723,
+    148.7668,
+    143.283,
+    143.5429,
+    141.7023,
+    137.4732,
+    152.338,
+    144.1589,
+    128.5218
+  )
+
+  # stat17 B-Basis: 124.156
+  # stat17 A-Basis: 99.651
 })

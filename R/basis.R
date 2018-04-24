@@ -1,6 +1,3 @@
-
-
-
 #' Calculate k factor for basis values (\eqn{kB}, \eqn{kA}) with normal
 #' distribution
 #'
@@ -35,10 +32,13 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
   return(t / sqrt(n))
 }
 
-#' Calculate basis values (\eqn{kB}, \eqn{kA}) with normal distribution
+#' Calculate basis values (\eqn{kB}, \eqn{kA})
 #'
 #' @description
-#' TODO: Add some text here
+#' Calculate the basis value for a given data set. There are various functions
+#' to calculate the basis values for different distributions. For \eqn{kB},
+#' set \eqn{p=0.90} and \eqn{conf=0.95}; for \eqn{kA}, set \eqn{p=0.90} and
+#' \eqn{conf=0.95}
 #'
 #' @param df a data.frame
 #' @param x the variable in the data.frame for which to find the basis value
@@ -46,20 +46,44 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
 #'
 #' @details
-#' TODO: Add some text here
+#' \code{df} is an optional argument. If \code{df} is given, it should be a
+#' \code{data.frame} (or similar object). When \code{df} is specified, the
+#' value of \code{x} is expected to be a variable within \code{df}. If
+#' \code{df} is not specified, \code{x} must be a vector.
+#'
+#' \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
+#' the standard deviation from the mean using. \eqn{k} is given by
+#' the function \code{\link{k_factor_normal}}.
+#'
+#' \code{basis_lognormal} calculates the basis value in the same way
+#' that \code{basis_normal} does, except that the natural logarithm of the
+#' data is taken.
 #'
 #' @return an object of class \code{basis}
+#' This object has the following fields:
+#' \describe{
+#'   \item{\code{call}}{the expression used to call this function}
+#'   \item{\code{distribution}}{the distribution used (normal, etc.)}
+#'   \item{\code{p}}{the value of \eqn{p} supplied}
+#'   \item{\code{conf}}{the value of \eqn{conf} supplied}
+#'   \item{\code{data}}{a copy of the data used in the calculation}
+#'   \item{\code{n}}{the number of observations}
+#'   \item{\code{basis}}{the basis value computed}
+#' }
 #'
+#' @name basis
+NULL
+
+
+#' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
-#'
 #' @export
 basis_normal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
   res <- list()
   class(res) <- "basis"
 
   res$call <- match.call()
-
   res$distribution <- "Normal"
   res$p <- p
   res$conf <- conf
@@ -73,13 +97,28 @@ basis_normal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
   return(res)
 }
 
-# TODO: Write some tests for the follwowing print function
+#' @rdname basis
+#' @importFrom rlang enquo eval_tidy
+#' @importFrom stats sd
+#' @export
+basis_lognormal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
+  res <- list()
+  class(res) <- "basis"
 
-#' Nicely formats the results of basis calculations
-#'
-#' @param x the \code{basis} object to be printed
-#' @param ... additional arguments to be passed to \code{\link[base]{format}}
-#'
+  res$call <- match.call()
+  res$distribution <- "Lognormal"
+  res$p <- p
+  res$conf <- conf
+
+  x <- enquo(x)
+  res$data <- eval_tidy(x, df)
+  res$n <- length(res$data)
+  k <- k_factor_normal(n = res$n, p = p, conf = conf)
+  res$basis <- exp(mean(log(res$data)) - k * sd(log(res$data)))
+
+  return(res)
+}
+
 #' @export
 print.basis <- function(x, ...) {
   cat("\nCall:\n",

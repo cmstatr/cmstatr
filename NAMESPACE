@@ -3,6 +3,7 @@
 S3method(print,basis)
 S3method(print,equiv_change_mean)
 S3method(print,equiv_mean_extremum)
+export(basis_lognormal)
 export(basis_normal)
 export(equiv_change_mean)
 export(equiv_mean_extremum)
