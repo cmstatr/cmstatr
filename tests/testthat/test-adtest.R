@@ -74,7 +74,7 @@ test_that("AD test matches results from STAT17 (weibull)", {
   # OSL: 0.179
 })
 
-test_that("ad_inf result match published results", {
+test_that("ad_p_inf result match published results", {
   # Published values from:
   # M. A. Stephens, “EDF Statistics for Goodness of Fit and Some Comparisons,”
   # Journal of the American Statistical Association, vol. 69, no. 347.
@@ -84,15 +84,38 @@ test_that("ad_inf result match published results", {
   # the publised results to about 0.01 as that is the accuracy generally
   # reported in literature.
 
-  expect_equal(0.15, ad_inf(1.610), tolerance = 0.01)
-  expect_equal(0.10, ad_inf(1.933), tolerance = 0.01)
-  expect_equal(0.05, ad_inf(2.492), tolerance = 0.01)
-  expect_equal(0.025, ad_inf(3.070), tolerance = 0.01)
-  expect_equal(0.01, ad_inf(3.857), tolerance = 0.01)
+  expect_equal(0.15, ad_p_inf(1.610), tolerance = 0.01)
+  expect_equal(0.10, ad_p_inf(1.933), tolerance = 0.01)
+  expect_equal(0.05, ad_p_inf(2.492), tolerance = 0.01)
+  expect_equal(0.025, ad_p_inf(3.070), tolerance = 0.01)
+  expect_equal(0.01, ad_p_inf(3.857), tolerance = 0.01)
 })
 
 test_that("ad_inf raises warning if tolerance is unachievable", {
   expect_warning({
-    ad_inf(1.933, abs_tol = 1e-1000)
+    ad_p_inf(1.933, abs_tol = 1e-1000)
   })
+})
+
+test_that("ad_p produces the same results as ad_p_inf for large n", {
+  # Stephens (1974) suggests that the values publised for infinite sample size
+  # hold for values of n >= 5
+  # Ref:
+  # M. A. Stephens, “EDF Statistics for Goodness of Fit and Some Comparisons,”
+  # Journal of the American Statistical Association, vol. 69, no. 347.
+  # pp. 730–737, Sep-1974.
+
+  expect_equal(0.15, ad_p(1.610, n = 5), tolerance = 0.01)
+  expect_equal(0.10, ad_p(1.933, n = 5), tolerance = 0.01)
+  expect_equal(0.05, ad_p(2.492, n = 5), tolerance = 0.01)
+  expect_equal(0.025, ad_p(3.070, n = 5), tolerance = 0.01)
+  expect_equal(0.01, ad_p(3.857, n = 5), tolerance = 0.01)
+})
+
+test_that("ad_p produces larger values for smaller n", {
+  expect_gt(ad_p(1.610, n = 2), ad_p(1.610, n = 10))
+  expect_gt(ad_p(1.933, n = 2), ad_p(1.933, n = 10))
+  expect_gt(ad_p(2.492, n = 2), ad_p(2.492, n = 10))
+  expect_gt(ad_p(3.070, n = 2), ad_p(3.070, n = 10))
+  expect_gt(ad_p(3.857, n = 2), ad_p(3.857, n = 10))
 })

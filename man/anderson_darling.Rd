@@ -7,9 +7,9 @@
 anderson_darling(x, dist, ...)
 }
 \arguments{
-\item{x}{a vector whos distribution is being evaluated}
+\item{x}{a numeric vector}
 
-\item{dist}{the cummulative distribution function considered}
+\item{dist}{the cumulative distribution function considered}
 
 \item{...}{additional arguments to pass to \code{dist}}
 }
