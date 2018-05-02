@@ -33,31 +33,43 @@ anderson_darling <- function(x, dist, ...) {
   n <- length(x)
   ii <- 1:n
   U <- F0(x, ...)
-  An2 <- -n - sum( (2 * ii) / n * (log(U) + log(1 - rev(U))))
-  return(An2)
+  A <- -n - sum( (2 * ii - 1) / n * (log(U) + log(1 - rev(U))))
+
+  res <- list(
+    A = A,
+    p = ad_p(A, n)
+  )
+
+  return(res)
 }
 
 
 
-#' @rdname ad_p
 #' @export
 ad_p_inf <- function(z, abs_tol = .Machine$double.eps ^ 0.5) {
+  if (z < 0.01) {
+    return(1)  # According to Marsaglia, ADInf(0.01) = 0.528e-52
+  }
+
   max_iter <- 100
 
   warning_message <- FALSE
 
+  erfc <- function(x) 2 * pnorm(x * sqrt(2), lower = FALSE)
+
   adinf <- 0
 
-  for (j in 0:max_iter) {
-    ad_inc_mult <- choose(-1 / 2, j) * (4 * j + 1)
+  r <- 1 / z
+  ad_inc_mult <- r
 
+  for (j in 0:max_iter) {
     # Calculate f
     t <- (4 * j + 1) ^ 2 * pi ^ 2 / (8 * z)
     cm2 <- pi * exp(-t) * (2 * t) ^ (-1 / 2)
     cm1 <- pi * (pi / 2) ^ (1 / 2) * erfc(t ^ (1 / 2))
     f <- cm2 + cm1 * z / 8
     for (n in 2:max_iter) {
-      cn <- ( (n - 1 / 2 - t) * cm1 + t * cm2) / n
+      cn <- ( ( (n - 1) - 1 / 2 - t) * cm1 + t * cm2) / (n - 1)
       f_inc <- cn * (z / 8) ^ n / factorial(n)
       f <- f + f_inc
       if (abs(f_inc) < abs(abs_tol / ad_inc_mult)) break
@@ -69,6 +81,9 @@ ad_p_inf <- function(z, abs_tol = .Machine$double.eps ^ 0.5) {
     ad_inc <- ad_inc_mult * f
     adinf <- adinf + ad_inc
     if (abs(ad_inc) < abs_tol ) break
+
+    r <- r * (1 / 2 - (j + 1)) / (j + 1)
+    ad_inc_mult <- (4 * j + 5) * r
   }
   if (j >= max_iter) warning_message <- TRUE
 
@@ -80,20 +95,20 @@ ad_p_inf <- function(z, abs_tol = .Machine$double.eps ^ 0.5) {
     ))
   }
 
-  return(1.0 - adinf / z)
+  return(1.0 - adinf)
 }
 
-#' \eqn{\alpha} from Anderson-Darling test statistic
+#' significance level for the Anderson-Darling test statistic
 #'
 #' @description
-#' Calculates the significance level (\eqn{\alpha}) from an Anderson-Darling
+#' Calculates the significance level from an Anderson-Darling
 #' test statistic.
 #'
 #' @param z the test statistic
 #' @param n the sample size
 #' @param abs_tol the requested accuracy of the calculation
 #'
-#' @return the significance level (\eqn{\alpha}).
+#' @return the significance level.
 #'
 #' @details
 #' \code{ad_p_inf} uses the limiting distribution (i.e. for infinite sample
@@ -115,6 +130,10 @@ ad_p_inf <- function(z, abs_tol = .Machine$double.eps ^ 0.5) {
 #' @name ad_p
 #' @export
 ad_p <- function(z, n, abs_tol = .Machine$double.eps ^ 0.5) {
+  if (z < 0.01) {
+    return(1)  # According to Marsaglia, ADInf(0.01) = 0.528e-52
+  }
+
   p <- 1.0 - ad_p_inf(z, abs_tol = abs_tol)
 
   # calculate the correction for n
@@ -137,4 +156,11 @@ ad_p <- function(z, n, abs_tol = .Machine$double.eps ^ 0.5) {
   }
 
   return(1.0 - (p + errfix))
+}
+
+#' @export
+ad_osl <- function(AD, n) {
+  ad_star <- (1 + 4 / n - 25 / n ^ 2) * AD
+  osl <- 1 / (1 + exp(-0.48 + 0.78*log(ad_star) + 4.58 * ad_star))
+  return(osl)
 }

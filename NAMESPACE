@@ -3,6 +3,7 @@
 S3method(print,basis)
 S3method(print,equiv_change_mean)
 S3method(print,equiv_mean_extremum)
+export(ad_osl)
 export(ad_p)
 export(ad_p_inf)
 export(anderson_darling)

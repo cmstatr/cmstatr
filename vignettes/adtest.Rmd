@@ -1,0 +1,85 @@
+---
+title: "Anderson-Darling Test"
+author: "Stefan Kloppenborg"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+csl: ieee-with-url.csl
+references:
+- id: CMH-17-1G
+  type: report
+  number: CMH-17-1G
+  title: Composites Materials Handbook, Volume 1. Polymer Matrix Composites Guideline for Characterization of Structural Materials
+  issued:
+    year: 2012
+    month: 03
+  publisher: SAE International
+- id: Stephens1974
+  type: article
+  author: 
+  - given: M.A.
+    family: Stephens
+  title: EDF Statistics for Goodness of Fit and Some Comparisons
+  container-title: Journal of the American Statistical Association
+  volume: 69
+  issue: 347
+  page: 730-737
+  issued:
+    year: 1974
+    month: 09
+- id: Marsaglia2004
+  type: article
+  author:
+  - given: George
+    family: Marsaglia
+  - given: John
+    family: Marsaglia
+  title: Evaluating the Anderson-Darling Distribution
+  container-title: Journal of Statistical Software
+  volume: 9
+  issue: 2
+  issued:
+    year: 2004
+  DOI: 10.18637/jss.v009.i02"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r}
+library(tidyverse)
+library(cmstatr)
+```
+
+# Comparison of P-Value Versus OSL
+There are various methods publised for calculating the p-value given an Anderson-Darling statistic. [@Stephens1974] provides Anderson-Darling statistics at various significance levels, and [@Marsaglia2004] provides an algorithm for doing so. However, [@CMH-17-1G] provides a formula (which appears to be an empirical formula, perhaps based on simuluation) for the OSL, or Observed Significance Level. At first glance, one might expect these to be the same, but if one actually computes both for a given Anderson-Darling statistic, one will find that they differ.
+
+Both the method in [@Marsaglia2004] and [@CMH-17-1G] have a correction for sample size. We'll plot the OSL and the p-value for different values of $AD$ (the Anderson-Darling statistic) and a fixed value of $n$. For now, we'll choose a small value of $n$ and a large value, say $n=5$ and $n=100$. Both methods are provided in the `cmstatr` package and we will use that implementation.
+
+```{r}
+expand.grid(
+  n = c(5, 100),
+  AD = c(0, 10 ^ (seq(-1.1, 0.5, length.out = 100)))
+) %>%
+  rowwise() %>%
+  mutate(
+    p = ad_p(AD, n),
+    OSL = ad_osl(AD, n)
+  ) %>%
+  gather(stat, value, p, OSL) %>%
+  group_by(n, stat) %>%
+  ggplot(aes(x = AD, y = value, color = stat)) +
+  geom_line() +
+  facet_grid(n ~ .)
+```
+
+Both the p-value and the OSL take values of $1.0$ when $AD=0$ and both tend towards $0$ as $AD$ increases. However, the shape of both is quite different. 
+
+# References
