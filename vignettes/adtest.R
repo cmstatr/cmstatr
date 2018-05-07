@@ -11,14 +11,14 @@ library(cmstatr)
 ## ------------------------------------------------------------------------
 expand.grid(
   n = c(5, 100),
-  AD = c(0, 10 ^ (seq(-1.1, 0.7, length.out = 100)))
+  AD = c(0, 10 ^ (seq(-1.1, 0.5, length.out = 100)))
 ) %>%
   rowwise() %>%
   mutate(
-    p = ad_p(AD, n),
-    OSL = ad_osl(AD, n)
+    p_known_param = ad_p_known_param(AD, n),
+    p_unknown_param = ad_p_unknown_param(AD, n)
   ) %>%
-  gather(stat, value, p, OSL) %>%
+  gather(stat, value, p_known_param, p_unknown_param) %>%
   group_by(n, stat) %>%
   ggplot(aes(x = AD, y = value, color = stat)) +
   geom_line() +

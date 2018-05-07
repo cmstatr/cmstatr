@@ -43,7 +43,6 @@ references:
   issue: 2
   issued:
     year: 2004
-  DOI: 10.18637/jss.v009.i02"
 ---
 
 ```{r setup, include = FALSE}
@@ -58,8 +57,8 @@ library(tidyverse)
 library(cmstatr)
 ```
 
-# Comparison of P-Value Versus OSL
-There are various methods publised for calculating the p-value given an Anderson-Darling statistic. [@Stephens1974] provides Anderson-Darling statistics at various significance levels, and [@Marsaglia2004] provides an algorithm for doing so. However, [@CMH-17-1G] provides a formula (which appears to be an empirical formula, perhaps based on simuluation) for the OSL, or Observed Significance Level. At first glance, one might expect these to be the same, but if one actually computes both for a given Anderson-Darling statistic, one will find that they differ.
+# Comparison of P-Value for Known and Unknown Parameters
+There are various methods published for calculating the p-value given an Anderson-Darling statistic. [@Stephens1974] provides Anderson-Darling statistics at various significance levels, and [@Marsaglia2004] provides an algorithm for doing so. However, [@CMH-17-1G] provides a formula for the OSL, or Observed Significance Level (which is the same as a p-value). At first glance, one might expect these to be the same, but if one actually computes both for a given Anderson-Darling statistic, one will find that they differ. The reason for this difference are the assumptions. The p-vales given by [@Stephens1974] assume that the parameters of the distribution are known (i.e. for a normal distribution, that the population mean and population standard deviation are known). The p-value given by [@CMH-17-1G] assume that the parameters of the distribution are unknown and that the parameters used are simply estimates based on the sample.
 
 Both the method in [@Marsaglia2004] and [@CMH-17-1G] have a correction for sample size. We'll plot the OSL and the p-value for different values of $AD$ (the Anderson-Darling statistic) and a fixed value of $n$. For now, we'll choose a small value of $n$ and a large value, say $n=5$ and $n=100$. Both methods are provided in the `cmstatr` package and we will use that implementation.
 
@@ -70,16 +69,16 @@ expand.grid(
 ) %>%
   rowwise() %>%
   mutate(
-    p = ad_p(AD, n),
-    OSL = ad_osl(AD, n)
+    p_known_param = ad_p_known_param(AD, n),
+    p_unknown_param = ad_p_unknown_param(AD, n)
   ) %>%
-  gather(stat, value, p, OSL) %>%
+  gather(stat, value, p_known_param, p_unknown_param) %>%
   group_by(n, stat) %>%
   ggplot(aes(x = AD, y = value, color = stat)) +
   geom_line() +
   facet_grid(n ~ .)
 ```
 
-Both the p-value and the OSL take values of $1.0$ when $AD=0$ and both tend towards $0$ as $AD$ increases. However, the shape of both is quite different. 
+Both the p-value and the OSL take values of $1.0$ when $AD=0$ and both tend towards $0$ as $AD$ increases. However, the shape of both is quite different. This is due to the uncertainty in the parameters for the distribution to which the data is being compared with.
 
 # References

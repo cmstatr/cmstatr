@@ -14,13 +14,36 @@ anderson_darling(x, dist, ...)
 \item{...}{additional arguments to pass to \code{dist}}
 }
 \value{
+an object of class \code{anderson_darling}. This object has the following
+fields.
 
+\describe{
+  \item{\code{call}}{the expression used to call this function}
+  \item{\code{A}}{the Anderson-Darling test statistic}
+  \item{\code{p_known_param}}{the significance level, assuming the parameters
+    of the distribution are known}
+  \item{\code{p_unknown_param}}{the significance level, assuming the
+    parameters of the distribution are unknown}
+}
 }
 \description{
-TODO: Write this
+Calculates the Anderson-Darling test statistic for a sample, given
+a particular distribution and computes the significance level.
 }
 \details{
-TODO: Write this
+The Anderson-Darling test statistic is calculated for the distribution
+given by the function \code{dist}. The function \code{dist} should be
+the cumulative distribution function. Additional parameters, such as
+the parameters for the distribution, can be passed through the argument
+to the function \code{...} to the function \code{dist}.
+
+The significance level is calculated both assuming that the parameters
+of the distribution are known and unknown. The significance level assuming
+that the parameters are known are given in \code{p_known_param} and are
+computed using the function \code{\link{ad_p_known_param}}. The
+significance level assuming that the parameters of the distribution are
+unknown are given in \code{p_unknown_param} and are computed using the
+function \code{\link{ad_p_unknown_param}}.
 }
 \references{
 J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
