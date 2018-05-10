@@ -206,3 +206,33 @@ test_that("ad_p_unknown_parameters matches results from Lawless", {
   expect_equal(fcn(0.918, n), 0.025, tolerance = 0.002)
   expect_equal(fcn(1.092, n), 0.01, tolerance = 0.002)
 })
+
+test_that("print.anderson_darling contains expected values", {
+  data <- data.frame(
+    strength = c(
+      137.4438,
+      139.5395,
+      150.89,
+      141.4474,
+      141.8203,
+      151.8821,
+      143.9245,
+      132.9732,
+      136.6419,
+      138.1723,
+      148.7668,
+      143.283,
+      143.5429,
+      141.7023,
+      137.4732,
+      152.338,
+      144.1589,
+      128.5218
+    ))
+  res.vec <- anderson_darling_normal(x = data$strength)
+  # should include the distribution
+  expect_output(print(res.vec), "distribution.*pnorm", ignore.case = TRUE)
+  # should include the signficance for known parameters
+  expect_output(print(res.vec), "sig.*0.948.*\\sknown", ignore.case = TRUE)
+  expect_output(print(res.vec), "sig.*0.464.*unknown", ignore.case = TRUE)
+})

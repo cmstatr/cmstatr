@@ -100,8 +100,16 @@ print.anderson_darling <- function(x, ...) {
   cat("Sample size: ", x$n, "\n")
 
   cat("Test statistic: A = ", x$A, "\n")
-  cat("Significance: ", x$p_known_param, " (assuming parameters are known)\n")
-  cat("Significance: ", x$p_unknown_param, " (assuming parameters are unknown)\n")
+  cat(
+    "Significance: ",
+    x$p_known_param,
+    " (assuming known parameters)\n"
+  )
+  cat(
+    "Significance: ",
+    x$p_unknown_param,
+    " (assuming unknown parameters)\n"
+  )
 }
 
 #' @importFrom rlang enquo eval_tidy
