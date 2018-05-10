@@ -4,10 +4,12 @@
 \alias{anderson_darling}
 \title{Anderson-Darling test for goodness of fit}
 \usage{
-anderson_darling(x, dist, ...)
+anderson_darling(df = NULL, x, dist, ...)
 }
 \arguments{
-\item{x}{a numeric vector}
+\item{df}{a data.frame-like object (optional)}
+
+\item{x}{a numeric vector or a variable in the data.frame}
 
 \item{dist}{the cumulative distribution function considered}
 
@@ -19,6 +21,9 @@ fields.
 
 \describe{
   \item{\code{call}}{the expression used to call this function}
+  \item{\code{dist_fcn}}{the distribution function used}
+  \item{\code{data}}{a copy of the data analyzed}
+  \item{\code{n}}{the number of observations in the sample}
   \item{\code{A}}{the Anderson-Darling test statistic}
   \item{\code{p_known_param}}{the significance level, assuming the parameters
     of the distribution are known}

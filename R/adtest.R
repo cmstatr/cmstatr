@@ -5,7 +5,8 @@
 #' Calculates the Anderson-Darling test statistic for a sample, given
 #' a particular distribution and computes the significance level.
 #'
-#' @param x a numeric vector
+#' @param df a data.frame-like object (optional)
+#' @param x a numeric vector or a variable in the data.frame
 #' @param dist the cumulative distribution function considered
 #' @param ... additional arguments to pass to \code{dist}
 #'
@@ -15,6 +16,9 @@
 #'
 #' \describe{
 #'   \item{\code{call}}{the expression used to call this function}
+#'   \item{\code{dist_fcn}}{the distribution function used}
+#'   \item{\code{data}}{a copy of the data analyzed}
+#'   \item{\code{n}}{the number of observations in the sample}
 #'   \item{\code{A}}{the Anderson-Darling test statistic}
 #'   \item{\code{p_known_param}}{the significance level, assuming the parameters
 #'     of the distribution are known}
@@ -41,8 +45,11 @@
 #' J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
 #' New York: Wiley, 1982.
 #'
+#' @importFrom rlang enquo eval_tidy
+#'
 #' @export
-anderson_darling <- function(x, dist, ...) {
+anderson_darling <- function(df = NULL, x, dist, ...) {  # TODO: Update documentation
+  dist_fcn <- as.character(substitute(dist))
   if (is.function(dist)) {
     F0 <- dist
   } else if (is.character(dist)) {
@@ -51,16 +58,20 @@ anderson_darling <- function(x, dist, ...) {
     stop("dist must be a function or character string with the function name")
   }
 
-  stopifnot(is.numeric(x))
+  x <- enquo(x)
+  x0 <- eval_tidy(x, df)
 
-  x <- sort(x)
-  n <- length(x)
+  x0_sorted <- sort(x0)
+  n <- length(x0_sorted)
   ii <- 1:n
-  U <- F0(x, ...)
+  U <- F0(x0_sorted, ...)
   A <- -n - sum( (2 * ii - 1) / n * (log(U) + log(1 - rev(U))))
 
   res <- list(
     call = match.call(),
+    dist_fcn = dist_fcn,
+    data = x0,
+    n = n,
     A = A,
     p_known_param = ad_p_known_param(A, n),
     p_unknown_param = ad_p_unknown_param(A, n)
@@ -69,6 +80,19 @@ anderson_darling <- function(x, dist, ...) {
   class(res) <- "anderson_darling"
 
   return(res)
+}
+
+#' @export
+print.anderson_darling <- function(x, ...) {
+  cat("\nCall:\n",
+      paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+
+  cat("Distribution function: ", x$dist_fcn, "\n")
+  cat("Sample size: ", x$n, "\n")
+
+  cat("Test statistic: A = ", x$A, "\n")
+  cat("Significance: ", x$p_known_param, " (assuming parameters are known)\n")
+  cat("Significance: ", x$p_unknown_param, " (assuming parameters are unknown)\n")
 }
 
 
