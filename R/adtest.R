@@ -41,14 +41,23 @@
 #' unknown are given in \code{p_unknown_param} and are computed using the
 #' function \code{\link{ad_p_unknown_param}}.
 #'
+#' The function \code{anderson_darling_normal} is just a shorthand for calling
+#' \code{anderson_darling} with \code{dist = pnorm} and passing the additional
+#' arguments \code{mean = mean(x)} and \code{sd = sd(x)}.
+#'
+#' The function \code{anderson_darling_lognormal} is the same as
+#' \code{anderson_darling_normal} except that the data is log transformed
+#' first.
+#'
 #' @references
 #' J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
 #' New York: Wiley, 1982.
 #'
 #' @importFrom rlang enquo eval_tidy
 #'
+#' @name anderson_darling
 #' @export
-anderson_darling <- function(df = NULL, x, dist, ...) {  # TODO: Update documentation
+anderson_darling <- function(df = NULL, x, dist, ...) {
   dist_fcn <- as.character(substitute(dist))
   if (is.function(dist)) {
     F0 <- dist
@@ -95,7 +104,30 @@ print.anderson_darling <- function(x, ...) {
   cat("Significance: ", x$p_unknown_param, " (assuming parameters are unknown)\n")
 }
 
+#' @importFrom rlang enquo eval_tidy
+#' @importFrom stats pnorm
+#'
+#' @rdname anderson_darling
+#'
+#' @export
+anderson_darling_normal <- function(df = NULL, x) {
+  x <- enquo(x)
+  x0 <- eval_tidy(x, df)
+  return(anderson_darling(x = x0, dist = pnorm, mean = mean(x0), sd = sd(x0)))
+}
 
+#' @importFrom rlang enquo eval_tidy
+#' @importFrom stats pnorm
+#'
+#' @rdname anderson_darling
+#'
+#' @export
+anderson_darling_lognormal <- function(df = NULL, x) {
+  x <- enquo(x)
+  x0 <- eval_tidy(x, df)
+  x0 <- log(x0)
+  return(anderson_darling(x = x0, dist = pnorm, mean = mean(x0), sd = sd(x0)))
+}
 
 #' @rdname ad_p_known_parameters
 #' @export

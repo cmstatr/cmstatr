@@ -2,9 +2,15 @@
 % Please edit documentation in R/adtest.R
 \name{anderson_darling}
 \alias{anderson_darling}
+\alias{anderson_darling_normal}
+\alias{anderson_darling_lognormal}
 \title{Anderson-Darling test for goodness of fit}
 \usage{
 anderson_darling(df = NULL, x, dist, ...)
+
+anderson_darling_normal(df = NULL, x)
+
+anderson_darling_lognormal(df = NULL, x)
 }
 \arguments{
 \item{df}{a data.frame-like object (optional)}
@@ -49,6 +55,14 @@ computed using the function \code{\link{ad_p_known_param}}. The
 significance level assuming that the parameters of the distribution are
 unknown are given in \code{p_unknown_param} and are computed using the
 function \code{\link{ad_p_unknown_param}}.
+
+The function \code{anderson_darling_normal} is just a shorthand for calling
+\code{anderson_darling} with \code{dist = pnorm} and passing the additional
+arguments \code{mean = mean(x)} and \code{sd = sd(x)}.
+
+The function \code{anderson_darling_lognormal} is the same as
+\code{anderson_darling_normal} except that the data is log transformed
+first.
 }
 \references{
 J. F. Lawless, \emph{Statistical models and methods for lifetime data}.

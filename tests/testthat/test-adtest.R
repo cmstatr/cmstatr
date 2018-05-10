@@ -42,59 +42,61 @@ test_that("AD test gives same results for a data frame and a vector", {
 })
 
 test_that("AD test matches results from STAT17 (normal)", {
-  data <- c(
-    137.4438,
-    139.5395,
-    150.89,
-    141.4474,
-    141.8203,
-    151.8821,
-    143.9245,
-    132.9732,
-    136.6419,
-    138.1723,
-    148.7668,
-    143.283,
-    143.5429,
-    141.7023,
-    137.4732,
-    152.338,
-    144.1589,
-    128.5218
-  )
-  res <- anderson_darling(x = data, dist = pnorm, mean = mean(data), sd = sd(data))
-  expect_equal(res$p_unknown_param, 0.465, tolerance = 0.002)
+  data <- data.frame(
+    strength = c(
+      137.4438,
+      139.5395,
+      150.89,
+      141.4474,
+      141.8203,
+      151.8821,
+      143.9245,
+      132.9732,
+      136.6419,
+      138.1723,
+      148.7668,
+      143.283,
+      143.5429,
+      141.7023,
+      137.4732,
+      152.338,
+      144.1589,
+      128.5218
+    ))
+  res.vec <- anderson_darling_normal(x = data$strength)
+  expect_equal(res.vec$p_unknown_param, 0.465, tolerance = 0.002)
+  # Do it again but pass in a data.frame
+  res.df <- anderson_darling_normal(data, strength)
+  expect_equal(res.vec$p_unknown_param, res.df$p_unknown_param)
 })
 
 test_that("AD test matches results from STAT17 (lognormal)", {
-  data <- c(
-    137.4438,
-    139.5395,
-    150.89,
-    141.4474,
-    141.8203,
-    151.8821,
-    143.9245,
-    132.9732,
-    136.6419,
-    138.1723,
-    148.7668,
-    143.283,
-    143.5429,
-    141.7023,
-    137.4732,
-    152.338,
-    144.1589,
-    128.5218
-  )
-  res <- anderson_darling(
-    x = log(data),
-    dist = pnorm,
-    mean = mean(log(data)),
-    sd = sd(log(data))
-  )
-  expect_equal(res$p_unknown_param, 0.480, tolerance = 0.002)
-  # OSL: 0.480
+  data <- data.frame(
+    strength = c(
+      137.4438,
+      139.5395,
+      150.89,
+      141.4474,
+      141.8203,
+      151.8821,
+      143.9245,
+      132.9732,
+      136.6419,
+      138.1723,
+      148.7668,
+      143.283,
+      143.5429,
+      141.7023,
+      137.4732,
+      152.338,
+      144.1589,
+      128.5218
+    ))
+  res.vec <- anderson_darling_lognormal(x = data$strength)
+  expect_equal(res.vec$p_unknown_param, 0.480, tolerance = 0.002)
+  # Do it again but pass in a data.frame
+  res.df <- anderson_darling_lognormal(data, strength)
+  expect_equal(res.vec$p_unknown_param, res.df$p_unknown_param)
 })
 
 test_that("AD test matches results from STAT17 (weibull)", {
