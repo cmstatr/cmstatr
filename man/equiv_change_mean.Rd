@@ -5,8 +5,9 @@
 \title{Change in mean value}
 \usage{
 equiv_change_mean(df_qual = NULL, data_qual = NULL, n_qual = NULL,
-  mean_qual = NULL, sd_qual = NULL, data_sample = NULL, n_sample = NULL,
-  mean_sample = NULL, sd_sample = NULL, alpha, modcv = FALSE)
+  mean_qual = NULL, sd_qual = NULL, data_sample = NULL,
+  n_sample = NULL, mean_sample = NULL, sd_sample = NULL, alpha,
+  modcv = FALSE)
 }
 \arguments{
 \item{df_qual}{(optional) a data.frame containing the qualification data.
