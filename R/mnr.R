@@ -1,7 +1,7 @@
 #' Detect outliers using the maximum normed resiudal method
 #'
 #' @param df a data.frame
-#' @param x the variable in the data.frame for which to find the basis value
+#' @param x the variable in the data.frame for which to find the MNR
 #'          or a vector if \code{df=NULL}
 #' @param alpha the significance level for the test. Defaults to 0.05
 #'
