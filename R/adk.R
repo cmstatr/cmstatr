@@ -18,12 +18,13 @@
 #'   \item{\code{data}}{the original data used to compute the ADK}
 #'   \item{\code{groups}}{a vector of the groups used in the computation}
 #'   \item{\code{alpha}}{the value of alpha specified}
+#'   \item{\code{n}}{the total number of observations}
 #'   \item{\code{k}}{the number of groups}
 #'   \item{\code{sigma}}{the computed standard deviation of the test statistic}
 #'   \item{\code{ad}}{the value of the Anderson-Darling k-Sample test
 #'     statistic}
 #'   \item{\code{p}}{the computed p-value}
-#'   \item{\code{reject_same_pop}}{a boolean value indicating whether the null
+#'   \item{\code{reject_same_dist}}{a boolean value indicating whether the null
 #'     hypothesis that all samples come from the same distribution is rejected}
 #'   \item{\code{raw}}{the orignal results returned from
 #'     \link[kSamples]{ad.test}}
@@ -76,13 +77,29 @@ ad_ksample <- function(df, x, groups, alpha = 0.025) {
   )
 
   raw <- ad.test(grps, method = "exact")
+  res$n <- raw$N
   res$k <- raw$k
   res$sigma <- raw$sig
   res$ad <- raw$ad[2, 1]
   res$p <- raw$ad[2, 3]
-  res$reject_same_pop <- res$p < alpha
+  res$reject_same_dist <- res$p < alpha
 
   res$raw <- raw
 
   return(res)
+}
+
+#' @export
+print.adk <- function(x, ...) {
+  cat("\nCall:\n",
+      paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+  cat("N = ", x$n, "\tk = ", x$k, "\n")
+  cat("ADK = ", x$ad, "\tp-value = ", x$p, "\n")
+  if( x$reject_same_dist ) {
+    cat("Conclusion: Samples do not come from the same distribution (alpha=",
+        x$alpha, ")\n\n")
+  } else{
+    cat("Conclusion: Samples come from the same distribution ( alpha=",
+        x$alpha, ")\n\n")
+  }
 }
