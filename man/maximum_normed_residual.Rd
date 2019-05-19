@@ -9,7 +9,7 @@ maximum_normed_residual(df = NULL, x, alpha = 0.05)
 \arguments{
 \item{df}{a data.frame}
 
-\item{x}{the variable in the data.frame for which to find the basis value
+\item{x}{the variable in the data.frame for which to find the MNR
 or a vector if \code{df=NULL}}
 
 \item{alpha}{the significance level for the test. Defaults to 0.05}
