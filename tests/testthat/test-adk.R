@@ -120,7 +120,7 @@ test_that("ADK test match ASAP", {
 
 test_that("ADK test matches example from CMH-17-1G", {
   # Reference the example in section 8.3.11.1.1
-  etw <- tibble::tribble(
+  etw <- tribble(
     ~batch, ~strength,
     1, 106.357525,
     1, 105.898733,
@@ -156,7 +156,7 @@ test_that("ADK test matches example from CMH-17-1G", {
   expect_output(print(res), ".*k.*3")
   expect_output(print(res), "Conclusion: Samples come")
 
-  etw2 <- tibble::tribble(
+  etw2 <- tribble(
     ~batch, ~strength,
     1, 99.0239966,
     1, 103.341238,

@@ -2,7 +2,7 @@ context("mnr")
 
 suppressMessages(library(tidyverse))
 
-cmh_17_cv <- tibble::tribble(
+cmh_17_cv <- tribble(
   ~n, ~c,
   3, 1.154,
   4, 1.481,
@@ -215,7 +215,7 @@ test_that(
 test_that(
   "MNR calculation matches example in CMH-17-1G Section 8.3.11.1.1", {
     # What follows is part of the ETW data from Section 8.3.11.1.1
-    df <- tibble::tribble(
+    df <- tribble(
       ~batch, ~strength,
       2, 99.3207107,
       2, 115.86177,
@@ -280,7 +280,7 @@ test_that(
 })
 
 test_that("Both vectors and data.frames can be passed to the MNR function", {
-  df <- tibble::tribble(
+  df <- tribble(
     ~batch, ~strength,
     3, 107.676986,
     3, 108.960241,
