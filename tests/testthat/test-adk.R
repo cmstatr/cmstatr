@@ -2,13 +2,13 @@ context("Anderson-Darling k-Sample")
 
 suppressMessages(library(dplyr))
 suppressMessages(library(tidyr))
-suppressMessages(library(kSamples))
+suppressMessages(library(kSamples))  # nolint
 
 test_that("kSamples package gives results that match published example", {
   # Reproduce the example from:
   # F. W. Scholz and M. . Stephens, “K-Sample Anderson-Darling Tests,” Journal
-  #   of the American Statistical Association, vol. 82, no. 399. pp. 918–924,
-  #   Sep-1987.
+  #   of the American Statistical Association, vol. 82, no. 399.
+  #   pp. 918–924, Sep-1987.
 
   df <- data.frame(
     smoothness = c(
@@ -20,7 +20,7 @@ test_that("kSamples package gives results that match published example", {
     lab = c(rep("A", 8), rep("B", 8), rep("C", 8), rep("D", 8))
   )
 
-  res <- ad.test(smoothness ~ lab, data=df)
+  res <- ad.test(smoothness ~ lab, data = df)
 
   expect_equal(res[["sig"]], 1.2038, tolerance = 1e-4)
 
@@ -33,36 +33,87 @@ test_that("kSamples package gives results that match published example", {
 })
 
 test_that("ADK test match ASAP", {
-  # carbon.fabric %>%
-  #   filter(test == "WT")
-  # ADK(RTD) = 0.456 / same pop
-  # ADK(ETW) = 1.604 / same pop
-  # ADK(CTD) = 1.778 / same pop
-  # ADC(0.05) = 1.917
-  # ADC(0.025) = 2.217
-  # ADC(0.01) = 2.613
+  res <- carbon.fabric %>%
+    filter(test == "WT") %>%
+    filter(condition == "RTD") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 0.456, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
 
-  # Carbon FT
-  # ADK(RTD) = 0.777 / same pop
-  # ADK(ETW) = 1.355 / same pop
-  # ADK(CTD) = 1.432 / same pop
-  # ADC(0.05) = 1.917
-  # ADC(0.025) = 2.217
-  # ADC(0.01) = 2.613
+  res <- carbon.fabric %>%
+    filter(test == "WT") %>%
+    filter(condition == "ETW") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 1.604, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
 
-  # Carbon WC
-  # ADK(RTD) = 0.384 / same pop
-  # ADK(ETW) = 0.723 / same pop
-  # ADK(CTD) = 1.145 / same pop
-  # ADC(0.05) = 1.917
-  # ADC(0.025) = 2.217
-  # ADC(0.01) = 2.613
+  res <- carbon.fabric %>%
+    filter(test == "WT") %>%
+    filter(condition == "CTD") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 1.778, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
 
-  # Carbon WT
-  # ADK(RTD) = 0.865 / same pop
-  # ADK(ETW) = 0.934 / same pop
-  # ADK(CTD) = 0.501 / same pop
-  # ADC(0.05) = 1.917
-  # ADC(0.025) = 2.217
-  # ADC(0.01) = 2.613
+  res <- carbon.fabric %>%
+    filter(test == "FT") %>%
+    filter(condition == "RTD") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 0.777, tolerance = 0.003)
+  expect_false(res$reject_same_pop)
+
+  res <- carbon.fabric %>%
+    filter(test == "FT") %>%
+    filter(condition == "ETW") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 1.355, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
+
+  res <- carbon.fabric %>%
+    filter(test == "FT") %>%
+    filter(condition == "CTD") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 1.432, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
+
+  res <- carbon.fabric %>%
+    filter(test == "WC") %>%
+    filter(condition == "RTD") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 0.384, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
+
+  res <- carbon.fabric %>%
+    filter(test == "WC") %>%
+    filter(condition == "ETW") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 0.723, tolerance = 0.003)
+  expect_false(res$reject_same_pop)
+
+  res <- carbon.fabric %>%
+    filter(test == "WC") %>%
+    filter(condition == "CTD") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 1.145, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
+
+  res <- carbon.fabric %>%
+    filter(test == "FC") %>%
+    filter(condition == "RTD") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 0.865, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
+
+  res <- carbon.fabric %>%
+    filter(test == "FC") %>%
+    filter(condition == "ETW") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 0.934, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
+
+  res <- carbon.fabric %>%
+    filter(test == "FC") %>%
+    filter(condition == "CTD") %>%
+    ad_ksample(strength, batch)
+  expect_equal(res$ad / (res$k - 1), 0.501, tolerance = 0.002)
+  expect_false(res$reject_same_pop)
 })
