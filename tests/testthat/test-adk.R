@@ -190,5 +190,3 @@ test_that("ADK test matches example from CMH-17-1G", {
   expect_output(print(res), ".*k.*3")
   expect_output(print(res), "Conclusion: Samples do not come")
 })
-
-
