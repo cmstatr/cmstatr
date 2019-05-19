@@ -152,6 +152,9 @@ test_that("ADK test matches example from CMH-17-1G", {
     ad_ksample(strength, batch)
   expect_equal(res$ad / (res$k - 1), 0.793, tolerance = 0.003)
   expect_false(res$reject_same_dist)
+  expect_output(print(res), ".*N.*22")
+  expect_output(print(res), ".*k.*3")
+  expect_output(print(res), "Conclusion: Samples come")
 
   etw2 <- tibble::tribble(
     ~batch, ~strength,
@@ -183,4 +186,9 @@ test_that("ADK test matches example from CMH-17-1G", {
     ad_ksample(strength, batch)
   expect_equal(res$ad / (res$k - 1), 3.024, tolerance = 0.003)
   expect_true(res$reject_same_dist)
+  expect_output(print(res), ".*N.*20")
+  expect_output(print(res), ".*k.*3")
+  expect_output(print(res), "Conclusion: Samples do not come")
 })
+
+

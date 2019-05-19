@@ -95,10 +95,10 @@ print.adk <- function(x, ...) {
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
   cat("N = ", x$n, "\tk = ", x$k, "\n")
   cat("ADK = ", x$ad, "\tp-value = ", x$p, "\n")
-  if( x$reject_same_dist ) {
+  if (x$reject_same_dist) {
     cat("Conclusion: Samples do not come from the same distribution (alpha=",
         x$alpha, ")\n\n")
-  } else{
+  } else {
     cat("Conclusion: Samples come from the same distribution ( alpha=",
         x$alpha, ")\n\n")
   }
