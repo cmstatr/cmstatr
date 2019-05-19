@@ -1,0 +1,45 @@
+[
+  {
+    "id": "Stephens1987",
+    "type": "article",
+    "author": [
+      {
+        "given": "F.W.",
+        "family": "Scholz"
+      },
+      {
+        "given": "M.A,",
+        "family": "Stephens"
+      }
+    ],
+    "title": "K-Sample Anderson-Darling Tests",
+    "container-title": "Journal of the American Statistical Association",
+    "volume": "82",
+    "issue": "399",
+    "page": "918-924",
+    "issued": {
+      "date-parts": [
+        [
+          "1987",
+          "09"
+        ]
+      ]
+    },
+    "keyword": "Combining tests; Convolution; Consistency; Empirical processes; Pearson curves; Simulation."
+  },
+  {
+    "id": "CMH-17-1G",
+    "type": "report",
+    "number": "CMH-17-1G",
+    "title": "Composites Materials Handbook, Volume 1. Polymer Matrix Composites Guideline for Characterization of Structural Materials",
+    "issued": {
+      "date-parts": [
+        [
+          "2012",
+          "03"
+        ]
+      ]
+    },
+    "publisher": "SAE International"
+  }
+]
