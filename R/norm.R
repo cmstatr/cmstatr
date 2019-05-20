@@ -43,3 +43,42 @@ normalize_ply_thickness <- function(strength, measured_thk, nom_thk) {
 
   return(strength * measured_thk / nom_thk)
 }
+
+
+#' Normalize values to group means
+#'
+#' @description
+#' This function computes the mean of each group, then divides each value by
+#' the group mean for the group to which it belongs. This is commonly done
+#' when pooling data across environments.
+#'
+#' @param x the variable containing the data to normalized
+#' @param groups the variable containing the groups
+#'
+#' @return
+#' Returns a vector of normalized values
+#'
+#' @details
+#' Computes the mean for each group, then divides each value by the mean for
+#' the corresponding group.
+#'
+#' @references
+#' “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,” SAE International,
+#' CMH-17-1G, Mar. 2012.
+#'
+#' @export
+normalize_group_mean <- function(x, groups) {
+  if (length(x) != length(groups)) {
+    stop("The length of x and groups must be equal")
+  }
+
+  group_means <- sapply(groups, function(g) {
+    cur_group <- x[groups == g]
+    group_mean <- mean(cur_group)
+    return(group_mean)
+  },
+  USE.NAMES = FALSE)
+
+  return(x / group_means)
+}
