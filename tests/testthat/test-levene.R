@@ -115,6 +115,9 @@ test_that("Levene's test matches ASAP", {
 
   expect_equal(res$f, 0.896, tolerance = 0.005)
   expect_false(res$reject_equal_variance)
+  expect_output(print(res), ".*n.*102")
+  expect_output(print(res), ".*k.*5")
+  expect_output(print(res), "Conclusion: Samples have equal variance")
 })
 
 test_that("Levene's test matches results from STAT17", {

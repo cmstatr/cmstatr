@@ -89,3 +89,18 @@ levene_test <- function(df, x, groups, alpha = 0.05) {
 
   return(res)
 }
+
+#' @export
+print.levene <- function(x, ...) {
+  cat("\nCall:\n",
+      paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+  cat("n = ", x$n, "\tk = ", x$k, "\n")
+  cat("F = ", x$f, "\tp-value = ", x$p, "\n")
+  if (x$reject_equal_variance) {
+    cat("Conclusion: Samples have unequal variance (alpha=",
+        x$alpha, ")\n\n")
+  } else {
+    cat("Conclusion: Samples have equal variances ( alpha=",
+        x$alpha, ")\n\n")
+  }
+}
