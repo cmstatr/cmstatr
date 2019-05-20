@@ -66,9 +66,23 @@ levene_test <- function(df, x, groups, alpha = 0.05) {
   n <- length(data_vector)
   k <- length(transformed_groups)
 
+  grand_mean <- mean(unlist(transformed_groups))
+
+  f_stat_numerator <- sum(sapply(transformed_groups, function(group_data) {
+    ni <- length(group_data)
+    res <- ni * (mean(group_data) - grand_mean) ^ 2 / (k - 1)
+    return(res)
+  }))
+
+  f_stat_denomenator <- sum(sapply(transformed_groups, function(group_data) {
+    group_data_minus_group_mean <- group_data - mean(group_data)
+    res <- sum( (group_data_minus_group_mean) ^ 2) / (n - k)
+    return(res)
+  }))
+
   res$n <- n
   res$k <- k
-  res$f <- f_test(transformed_groups)
+  res$f <- f_stat_numerator / f_stat_denomenator
 
   return(res)
 }
