@@ -40,7 +40,7 @@
 #' CMH-17-1G, Mar. 2012.
 #'
 #' @importFrom rlang enquo eval_tidy
-#' @importFrom stats var.test median
+#' @importFrom stats var.test median pf
 #'
 #' @export
 levene_test <- function(df, x, groups, alpha = 0.05) {
@@ -83,6 +83,9 @@ levene_test <- function(df, x, groups, alpha = 0.05) {
   res$n <- n
   res$k <- k
   res$f <- f_stat_numerator / f_stat_denomenator
+
+  res$p <- pf(res$f, df1 = k - 1, df2 = n - k, lower.tail = FALSE)
+  res$reject_equal_variance <- res$p <= alpha
 
   return(res)
 }

@@ -109,6 +109,14 @@ df <- tribble(
   "ETW2", 3, 97.0712407
 )
 
+test_that("Levene's test matches ASAP", {
+  res <- df %>%
+    levene_test(strength, condition)
+
+  expect_equal(res$f, 0.896, tolerance = 0.005)
+  expect_false(res$reject_equal_variance)
+})
+
 test_that("Levene's test matches results from STAT17", {
   res <- df %>%
     filter(condition == "CTD") %>%
@@ -119,11 +127,14 @@ test_that("Levene's test matches results from STAT17", {
     filter(condition == "RTD") %>%
     levene_test(strength, batch)
   expect_equal(res$f, 0.973, tolerance = 0.005)
-  # Fcritical 4.71, variances equal
 
   res <- df %>%
     filter(condition == "ETD") %>%
     levene_test(strength, batch)
   expect_equal(res$f, 0.723, tolerance = 0.005)
-  # Fcritical 4.76, variances equal
+
+  res <- df %>%
+    filter(condition == "ETW2") %>%
+    levene_test(strength, batch)
+  expect_equal(res$f, 0.123, tolerance = 0.005)
 })
