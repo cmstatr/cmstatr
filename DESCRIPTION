@@ -16,6 +16,7 @@ LazyData: true
 Imports:
     dplyr,
     kSamples,
+    MASS,
     rlang,
     stats,
     utils
