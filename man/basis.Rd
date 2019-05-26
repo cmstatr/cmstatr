@@ -4,11 +4,14 @@
 \alias{basis}
 \alias{basis_normal}
 \alias{basis_lognormal}
+\alias{basis_weibull}
 \title{Calculate basis values (\eqn{kB}, \eqn{kA})}
 \usage{
 basis_normal(df = NULL, x, p = 0.9, conf = 0.95)
 
 basis_lognormal(df = NULL, x, p = 0.9, conf = 0.95)
+
+basis_weibull(df = NULL, x, p = 0.9, conf = 0.95)
 }
 \arguments{
 \item{df}{a data.frame}
@@ -51,4 +54,19 @@ the function \code{\link{k_factor_normal}}.
 \code{basis_lognormal} calculates the basis value in the same way
 that \code{basis_normal} does, except that the natural logarithm of the
 data is taken.
+
+\code{basis_weibull} calculates the basis value for data distributed
+according to a Weibull distribution. The confidence interval for the
+quantile requested is calcualted using the conditional method, as
+described in Lawless (1982) Section 4.1.2b. This has good agreement
+with tables published in CMH-17-1G. Results differ between this function
+and STAT17 by approximately 0.5%.
+}
+\references{
+J. F. Lawless, Statistical Models and Methods for Lifetime Data.
+New York: John Wiley & Sons, 1982.
+
+“Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.
 }

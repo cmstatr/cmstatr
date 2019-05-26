@@ -1,0 +1,80 @@
+---
+title: "Anderson-Darling k-Sample Test"
+author: "Stefan Kloppenborg"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: bibliography.json
+csl: ieee.csl
+vignette: >
+  %\VignetteIndexEntry{Anderson-Darling k-Sample Test}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette explores the Anderson-Darling k-Sample test.
+CMH-17-1G [@CMH-17-1G] provides a formulation for this test that appears different than the formulation given by Scholz and Stephens in their 1987 paper [@Stephens1987].
+
+Both references use different nomenclature, which is summarized as follows:
+
+Term                                               | CMH-17-1G             | Scholz and Stephens
+---------------------------------------------------|-----------------------|---------------------
+A sample                                           | $i$                   | $i$
+The number of samples                              | $k$                   | $k$
+An observation within a sample                     | $j$                   | $j$
+The number of observations within the $i$th sample | $n_i$                 | $n_i$
+The total number of observations within all samples| $n$                   | $N$
+Distinct values in combined data, ordered          | $z_{(1)}$...$z_{(L)}$ | $Z_1^*$...$Z_L^*$
+The number of distinct values in the combined data | $L$                   | $L$
+
+
+Given the possibility of ties in the data, the discrete version of the test must be used
+Scholz and Stephens (1987) give the test statistic as:
+
+$$
+A_{akN}^2 = \frac{N - 1}{N}\sum_{i=1}^k \frac{1}{n_i}\sum_{j=1}^{L}\frac{l_j}{N}\frac{\left(N M_{aij} - n_i B_{aj}\right)^2}{B_{aj}\left(N - B_{aj}\right) - N l_j / 4}
+$$
+
+
+CMH-17-1G gives the test statistic as:
+
+$$
+ADK = \frac{n - 1}{n^2\left(k - 1\right)}\sum_{i=1}^k\frac{1}{n_i}\sum_{j=1}^L h_j \frac{\left(n F_{ij} - n_i H_j\right)^2}{H_j \left(n - H_j\right) - n h_j / 4}
+$$
+
+By inspection, the CMH-17-1G version of this test statistic contains an extra factor of $\frac{1}{\left(k - 1\right)}$.
+
+Scholtz and Stephens indicate that one rejects $H_0$ at a significance level of $\alpha$ when:
+
+$$
+\frac{A_{akN}^2 - \left(k - 1\right)}{\sigma_N} \ge t_{k - 1}\left(\alpha\right)
+$$
+
+This can be rearranged to give a critical value:
+
+$$
+A_{crit}^2 = \left(k - 1\right) + \sigma_N t_{k - 1}\left(\alpha\right)
+$$
+
+CHM-17-1G gives the critical value for $ADK$ for $\alpha=0.025$ as:
+
+$$
+ADC = 1 + \sigma_n \left(1.96 + \frac{1.149}{\sqrt{k - 1}} - \frac{0.391}{k - 1}\right)
+$$
+
+The definition of $\sigma_n$ from the two sources differs by a factor of $\left(k - 1\right)$.
+
+The value in parenthese in the CMH-17-1G critical value corresponds to the interpolation formula for $t_m\left(\alpha\right)$ given in Scholtz and Stephen's paper.
+It should be noted that this is *not* the student's t-distribution, but rather a distribution referred to as the $T_m$ distribution.
+
+The `cmstatr` package use the package `kSamples` to perform the k-sample Anderson-Darling tests.
+This package uses the original formulation from Scholtz and Stephens, so the test statistic will differ from that given software based on the CMH-17-1G formulation by a factor of $\left(k-1\right)$.
+The conclusions about the null hypothesis drawn, however, will be the same.
+
+# References

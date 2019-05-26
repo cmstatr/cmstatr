@@ -218,6 +218,18 @@ test_that("Weibull basis value matches STAT17 result", {
 
   # stat17 B-Basis: 125.441
   # stat17 A-Basis: 109.150
+
+  res <- basis_weibull(x = data, p = 0.9, conf = 0.95)
+  expect_equal(res$basis, 125.441, tolerance = 0.3)
+  expect_output(print(res), "b-basis.*125", ignore.case = TRUE)
+  expect_output(print(res), "weibull", ignore.case = TRUE)
+
+  res <- basis_weibull(x = data, p = 0.99, conf = 0.95)
+  expect_equal(res$basis, 109.150, tolerance = 0.6)
+  expect_output(print(res), "a-basis.*109", ignore.case = TRUE)
+  expect_output(print(res), "weibull", ignore.case = TRUE)
+
+  expect_match(res$distribution, "weibull", ignore.case = TRUE)
 })
 
 test_that("Non-parametric basis value matches STAT17 result", {

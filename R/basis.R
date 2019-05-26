@@ -59,6 +59,13 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' that \code{basis_normal} does, except that the natural logarithm of the
 #' data is taken.
 #'
+#' \code{basis_weibull} calculates the basis value for data distributed
+#' according to a Weibull distribution. The confidence interval for the
+#' quantile requested is calcualted using the conditional method, as
+#' described in Lawless (1982) Section 4.1.2b. This has good agreement
+#' with tables published in CMH-17-1G. Results differ between this function
+#' and STAT17 by approximately 0.5%.
+#'
 #' @return an object of class \code{basis}
 #' This object has the following fields:
 #' \describe{
@@ -70,6 +77,14 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'   \item{\code{n}}{the number of observations}
 #'   \item{\code{basis}}{the basis value computed}
 #' }
+#'
+#' @references
+#' J. F. Lawless, Statistical Models and Methods for Lifetime Data.
+#' New York: John Wiley & Sons, 1982.
+#'
+#' “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,” SAE International,
+#' CMH-17-1G, Mar. 2012.
 #'
 #' @name basis
 NULL
@@ -136,4 +151,75 @@ print.basis <- function(x, ...) {
   else {
     cat("Basis: ", x$basis, " ( p = ", x$p, ", conf = ", x$conf, ")\n\n")
   }
+}
+
+#' @rdname basis
+#' @importFrom rlang enquo eval_tidy
+#' @importFrom stats qweibull integrate pchisq uniroot
+#' @importFrom MASS fitdistr
+#'
+#' @export
+basis_weibull <- function(df = NULL, x, p = 0.90, conf = 0.95) {
+  res <- list()
+  class(res) <- "basis"
+
+  res$call <- match.call()
+  res$distribution <- "Weibull"
+  res$p <- p
+  res$conf <- conf
+
+  x <- enquo(x)
+  res$data <- eval_tidy(x, df)
+  res$n <- length(res$data)
+
+  dist <- fitdistr(res$data, "weibull")
+
+  alpha_hat <- dist$estimate[["scale"]]
+  beta_hat <- dist$estimate[["shape"]]
+
+  # The data must be transformed to fit an extreme value distribution
+  data_evd <- log(res$data)
+  u_hat <- log(alpha_hat)
+  b_hat <- 1 / beta_hat
+
+  # Next, find the ancillary statistic for the data
+  a <- (data_evd - u_hat) / b_hat
+
+  k_integrand <- function(z) {
+    return(
+      z ^ (res$n - 2) * exp( (z - 1) * sum(a)) /
+        ( (1 / res$n) * sum( exp(a * z))) ^ res$n
+    )
+  }
+
+  k_inv <- integrate(Vectorize(k_integrand), lower = 0, upper = Inf)
+  k <- 1 / k_inv$value
+
+  incomplete_gamma <- function(ki, xi) {
+    pchisq(xi * 2, ki * 2)
+  }
+
+  h2 <- function(z) {
+    return(
+      k * z ^ (res$n - 2) * exp( (z - 1) * sum(a)) /
+        ( (1 / res$n) * sum( exp(a * z))) ^ res$n
+    )
+  }
+
+  wp <- log(-log(p))
+
+  pr_zp_integrand <- function(z, t) {
+    h2(z) * incomplete_gamma(res$n, exp(wp + t * z) * sum(exp(a * z)))
+  }
+
+  pr_fcn <- function(t) {
+    int_res <- integrate(Vectorize(function(z) pr_zp_integrand(z, t)), 0, Inf)
+    return(int_res$value - 0.95)
+  }
+
+  res_root <- uniroot(pr_fcn, c(-10, 10), extendInt = "yes")
+
+  res$basis <- exp(u_hat - res_root$root * b_hat)
+
+  return(res)
 }
