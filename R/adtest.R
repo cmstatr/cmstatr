@@ -7,8 +7,6 @@
 #'
 #' @param df a data.frame-like object (optional)
 #' @param x a numeric vector or a variable in the data.frame
-#' @param dist the cumulative distribution function considered
-#' @param ... additional arguments to pass to \code{dist}
 #'
 #' @return
 #' an object of class \code{anderson_darling}. This object has the following
@@ -16,56 +14,62 @@
 #'
 #' \describe{
 #'   \item{\code{call}}{the expression used to call this function}
-#'   \item{\code{dist_fcn}}{the distribution function used}
+#'   \item{\code{dist}}{the distribution used}
 #'   \item{\code{data}}{a copy of the data analyzed}
 #'   \item{\code{n}}{the number of observations in the sample}
 #'   \item{\code{A}}{the Anderson-Darling test statistic}
-#'   \item{\code{p_known_param}}{the significance level, assuming the parameters
-#'     of the distribution are known}
-#'   \item{\code{p_unknown_param}}{the significance level, assuming the
-#'     parameters of the distribution are unknown}
+#'   \item{\code{osl}}{the significance level, assuming the
+#'     parameters of the distribution are estimated from the data}
 #' }
 #'
 #' @details
 #' The Anderson-Darling test statistic is calculated for the distribution
-#' given by the function \code{dist}. The function \code{dist} should be
-#' the cumulative distribution function. Additional parameters, such as
-#' the parameters for the distribution, can be passed through the argument
-#' to the function \code{...} to the function \code{dist}.
+#' given.
 #'
-#' The significance level is calculated both assuming that the parameters
-#' of the distribution are known and unknown. The significance level assuming
-#' that the parameters are known are given in \code{p_known_param} and are
-#' computed using the function \code{\link{ad_p_known_param}}. The
-#' significance level assuming that the parameters of the distribution are
-#' unknown are given in \code{p_unknown_param} and are computed using the
-#' function \code{\link{ad_p_unknown_param}}.
+#' The significance level is calculated assuming that the parameters
+#' of the distribution are unknown; these parameters are estimate from the
+#' data.
 #'
-#' The function \code{anderson_darling_normal} is just a shorthand for calling
-#' \code{anderson_darling} with \code{dist = pnorm} and passing the additional
-#' arguments \code{mean = mean(x)} and \code{sd = sd(x)}.
+#' The function \code{anderson_darling_normal} computes the Anderson-Darling
+#' test statistic given a normal distribution with mean and standard devaition
+#' equal to the sample mean and standard deviation.
 #'
 #' The function \code{anderson_darling_lognormal} is the same as
 #' \code{anderson_darling_normal} except that the data is log transformed
 #' first.
 #'
+#' The function \code{anderson_darling_weibull} computes the Anderson-Darling
+#' test statistic given a Weibull distribution with shape and scale parameters
+#' estimate from the data using a maximum likelihood estimate.
+#'
+#' This function uses the formula for observed significance
+#' level published in CMH-17-1G. These formulae depend on the particular
+#' distribution used.
+#'
+#' The results of this function have been validated against
+#' published values in Lawless (1982).
+#'
 #' @references
 #' J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
 #' New York: Wiley, 1982.
 #'
+#' "Composites Materials Handbook, Volume 1. Polymer Matrix
+#' Composites Guideline for Characterization of Structural
+#' Materials," SAE International, CMH-17-1G, Mar. 2012.
+#'
 #' @importFrom rlang enquo eval_tidy
 #'
 #' @name anderson_darling
-#' @export
-anderson_darling <- function(df = NULL, x, dist, ...) {
-  dist_fcn <- as.character(substitute(dist))
-  if (is.function(dist)) {
-    F0 <- dist
-  } else if (is.character(dist)) {
-    F0 <- get(dist, mode = "function")
-  } else {
-    stop("dist must be a function or character string with the function name")
-  }
+NULL
+
+# A non-exported function for an Anderson-Darling goodness of fit test
+# The function \code{dist} should be
+# the cumulative distribution function. Additional parameters, such as
+# the parameters for the distribution, can be passed through the argument
+# to the function \code{...} to the function \code{dist}.
+anderson_darling <- function(df = NULL, x, call, ad_p_unknown_param_fcn,
+                             dist_name, dist, ...) {
+  F0 <- dist
 
   x <- enquo(x)
   x0 <- eval_tidy(x, df)
@@ -77,13 +81,12 @@ anderson_darling <- function(df = NULL, x, dist, ...) {
   A <- -n - sum( (2 * ii - 1) / n * (log(U) + log(1 - rev(U))))
 
   res <- list(
-    call = match.call(),
-    dist_fcn = dist_fcn,
+    call = call,
+    dist = dist_name,
     data = x0,
     n = n,
     A = A,
-    p_known_param = ad_p_known_param(A, n),
-    p_unknown_param = ad_p_unknown_param(A, n)
+    osl = ad_p_unknown_param_fcn(A, n)
   )
 
   class(res) <- "anderson_darling"
@@ -96,18 +99,13 @@ print.anderson_darling <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  cat("Distribution function: ", x$dist_fcn, "\n")
+  cat("Distribution function: ", x$dist, "\n")
   cat("Sample size: ", x$n, "\n")
 
   cat("Test statistic: A = ", x$A, "\n")
   cat(
     "Significance: ",
-    x$p_known_param,
-    " (assuming known parameters)\n"
-  )
-  cat(
-    "Significance: ",
-    x$p_unknown_param,
+    x$osl,
     " (assuming unknown parameters)\n"
   )
 }
@@ -121,7 +119,10 @@ print.anderson_darling <- function(x, ...) {
 anderson_darling_normal <- function(df = NULL, x) {
   x <- enquo(x)
   x0 <- eval_tidy(x, df)
-  return(anderson_darling(x = x0, dist = pnorm, mean = mean(x0), sd = sd(x0)))
+  return(anderson_darling(x = x0, call = match.call(),
+                          ad_p_unknown_param_fcn = ad_p_normal_unknown_param,
+                          dist_name = "Normal",
+                          dist = pnorm, mean = mean(x0), sd = sd(x0)))
 }
 
 #' @importFrom rlang enquo eval_tidy
@@ -134,158 +135,40 @@ anderson_darling_lognormal <- function(df = NULL, x) {
   x <- enquo(x)
   x0 <- eval_tidy(x, df)
   x0 <- log(x0)
-  return(anderson_darling(x = x0, dist = pnorm, mean = mean(x0), sd = sd(x0)))
+  return(anderson_darling(x = x0, call = match.call(),
+                          ad_p_unknown_param_fcn = ad_p_normal_unknown_param,
+                          dist_name = "Lognormal",
+                          dist = pnorm, mean = mean(x0), sd = sd(x0)))
 }
 
-#' @rdname ad_p_known_parameters
+#' @importFrom rlang enquo eval_tidy
+#' @importFrom stats pweibull
+#' @importFrom MASS fitdistr
+#'
+#' @rdname anderson_darling
+#'
 #' @export
-ad_p_inf_known_param <- function(z, abs_tol = .Machine$double.eps ^ 0.5) {
-  if (z < 0.01) {
-    return(1)  # According to Marsaglia, ADInf(0.01) = 0.528e-52
-  }
+anderson_darling_weibull <- function(df = NULL, x) {
+  x <- enquo(x)
+  x0 <- eval_tidy(x, df)
+  dist <- fitdistr(x0, "weibull")
 
-  max_iter <- 100
-
-  warning_message <- FALSE
-
-  erfc <- function(x) 2 * pnorm(x * sqrt(2), lower.tail = FALSE)
-
-  adinf <- 0
-
-  r <- 1 / z
-  ad_inc_mult <- r
-
-  for (j in 0:max_iter) {
-    # Calculate f
-    t <- (4 * j + 1) ^ 2 * pi ^ 2 / (8 * z)
-    cm2 <- pi * exp(-t) * (2 * t) ^ (-1 / 2)
-    cm1 <- pi * (pi / 2) ^ (1 / 2) * erfc(t ^ (1 / 2))
-    f <- cm2 + cm1 * z / 8
-    for (n in 2:max_iter) {
-      cn <- ( ( (n - 1) - 1 / 2 - t) * cm1 + t * cm2) / (n - 1)
-      f_inc <- cn * (z / 8) ^ n / factorial(n)
-      f <- f + f_inc
-      if (abs(f_inc) < abs(abs_tol / ad_inc_mult)) break
-      cm2 <- cm1
-      cm1 <- cn
-    }
-    if (n >= max_iter) warning_message <- TRUE
-
-    ad_inc <- ad_inc_mult * f
-    adinf <- adinf + ad_inc
-    if (abs(ad_inc) < abs_tol ) break
-
-    r <- r * (1 / 2 - (j + 1)) / (j + 1)
-    ad_inc_mult <- (4 * j + 5) * r
-  }
-  if (j >= max_iter) warning_message <- TRUE
-
-  if (warning_message) {
-    warning(paste0(
-      "Solution did not converge within requested tolerance (abs.tol=",
-      abs_tol,
-      ")"
-    ))
-  }
-
-  return(1.0 - adinf)
+  return(anderson_darling(x = x0, call = match.call(),
+                          dist = pweibull,
+                          dist_name = "Weibull",
+                          ad_p_unknown_param_fcn = ad_p_weibull_unknown_param,
+                          shape = dist$estimate[["shape"]],
+                          scale = dist$estimate[["scale"]]))
 }
 
-#' significance level for the Anderson-Darling test statistic
-#' when the parameters of the distribution are known
-#'
-#' @description
-#' Calculates the significance level from an Anderson-Darling
-#' test statistic. These functions assume that the parameters
-#' of the distribution are known.
-#'
-#' @param z the test statistic
-#' @param n the sample size
-#' @param abs_tol the requested accuracy of the calculation
-#'
-#' @return the significance level.
-#'
-#' @details
-#' \code{ad_p_inf_known_param} uses the limiting distribution (i.e. for
-#' infinite sample size). \code{ad_p_known_param} applies a correction
-#' for sample size. Since the
-#' Anderson-Darling test statistic converges very quickly, the correction
-#' only has a practical effect for very small sample sizes (around 5 or less).
-#' Nevertheless, it is recommended that \code{ad_p_known_param} be used as
-#' the correction
-#' is not computationally intensive to apply.
-#'
-#' The method of Marsaglia and Marsaglia is used to compute the significance
-#' level. See references below.
-#'
-#' @importFrom stats pnorm
-#'
-#' @references
-#' G. Marsaglia and J. Marsaglia, “Evaluating the Anderson-Darling
-#' Distribution,” Journal of Statistical Software, vol. 9, no. 2. 25-Feb-2004.
-#'
-#' @name ad_p_known_parameters
-#' @export
-ad_p_known_param <- function(z, n, abs_tol = .Machine$double.eps ^ 0.5) {
-  if (z < 0.01) {
-    return(1)  # According to Marsaglia, ADInf(0.01) = 0.528e-52
-  }
-
-  p <- 1.0 - ad_p_inf_known_param(z, abs_tol = abs_tol)
-
-  # calculate the correction for n
-  cn <- 0.01265 + 0.1757 / n
-  if (p < cn) {
-    x <- p / cn
-    g1 <- sqrt(x) * (1 - x) * (49 * x - 102)
-    errfix <- (0.0037 / n ^ 3 + 0.00078 / n ^ 2 + 0.00006 / n) * g1
-  } else if (p < 0.8) {
-    x <- (p - cn) / (0.8 - cn)
-    g2 <- 8.259 - 1.91864 * x
-    g2 <- 14.458 - g2 * x
-    g2 <- -0.00022633 + (6.54034 - (14.6538 - g2 * x) * x) * x
-    errfix <- (0.04213 / n + 0.01365 / n ^ 2) * g2
-  } else {
-    g3 <- 1116.360 - 255.7844 * p
-    g3 <- 1950.646 - g3 * p
-    g3 <- -130.2137 + (745.2337 - (1705.091 - g3 * p) * p) * p
-    errfix <- g3 / n
-  }
-
-  return(1.0 - (p + errfix))
-}
-
-#' significance level for the Anderson-Darling test statistic
-#' when the parameters of the distribution are unknown
-#'
-#' @description
-#' Calculates the significance level from an Anderson-Darling
-#' test statistic. These functions assume that the parameters
-#' of the distribution are unknown.
-#'
-#' @param z the test statistic
-#' @param n the number of observations
-#'
-#' @return the significance level (numeric)
-#'
-#' @details
-#' This function uses the formula for observed significance
-#' level published in CMH-17-1G.
-#'
-#' The results of this function have been validated against
-#' published values in Lawless (1982).
-#'
-#' @references
-#' “Composites Materials Handbook, Volume 1. Polymer Matrix
-#' Composites Guideline for Characterization of Structural
-#' Materials,” SAE International, CMH-17-1G, Mar. 2012.
-#'
-#' J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
-#' New York: Wiley, 1982.
-#'
-#' @export
-ad_p_unknown_param <- function(z, n) {
+ad_p_normal_unknown_param <- function(z, n) {
   ad_star <- (1 + 4 / n - 25 / n ^ 2) * z
   osl <- 1 / (1 + exp(-0.48 + 0.78 * log(ad_star) + 4.58 * ad_star))
+  return(osl)
+}
+
+ad_p_weibull_unknown_param <- function(z, n) {
+  ad_star <- (1 + 0.2 / sqrt(n)) * z
+  osl <- 1 / (1 + exp(-0.1 + 1.24 * log(ad_star) + 4.48 * ad_star))
   return(osl)
 }

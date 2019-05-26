@@ -4,22 +4,19 @@
 \alias{anderson_darling}
 \alias{anderson_darling_normal}
 \alias{anderson_darling_lognormal}
+\alias{anderson_darling_weibull}
 \title{Anderson-Darling test for goodness of fit}
 \usage{
-anderson_darling(df = NULL, x, dist, ...)
-
 anderson_darling_normal(df = NULL, x)
 
 anderson_darling_lognormal(df = NULL, x)
+
+anderson_darling_weibull(df = NULL, x)
 }
 \arguments{
 \item{df}{a data.frame-like object (optional)}
 
 \item{x}{a numeric vector or a variable in the data.frame}
-
-\item{dist}{the cumulative distribution function considered}
-
-\item{...}{additional arguments to pass to \code{dist}}
 }
 \value{
 an object of class \code{anderson_darling}. This object has the following
@@ -27,14 +24,12 @@ fields.
 
 \describe{
   \item{\code{call}}{the expression used to call this function}
-  \item{\code{dist_fcn}}{the distribution function used}
+  \item{\code{dist}}{the distribution used}
   \item{\code{data}}{a copy of the data analyzed}
   \item{\code{n}}{the number of observations in the sample}
   \item{\code{A}}{the Anderson-Darling test statistic}
-  \item{\code{p_known_param}}{the significance level, assuming the parameters
-    of the distribution are known}
-  \item{\code{p_unknown_param}}{the significance level, assuming the
-    parameters of the distribution are unknown}
+  \item{\code{osl}}{the significance level, assuming the
+    parameters of the distribution are estimated from the data}
 }
 }
 \description{
@@ -43,28 +38,36 @@ a particular distribution and computes the significance level.
 }
 \details{
 The Anderson-Darling test statistic is calculated for the distribution
-given by the function \code{dist}. The function \code{dist} should be
-the cumulative distribution function. Additional parameters, such as
-the parameters for the distribution, can be passed through the argument
-to the function \code{...} to the function \code{dist}.
+given.
 
-The significance level is calculated both assuming that the parameters
-of the distribution are known and unknown. The significance level assuming
-that the parameters are known are given in \code{p_known_param} and are
-computed using the function \code{\link{ad_p_known_param}}. The
-significance level assuming that the parameters of the distribution are
-unknown are given in \code{p_unknown_param} and are computed using the
-function \code{\link{ad_p_unknown_param}}.
+The significance level is calculated assuming that the parameters
+of the distribution are unknown; these parameters are estimate from the
+data.
 
-The function \code{anderson_darling_normal} is just a shorthand for calling
-\code{anderson_darling} with \code{dist = pnorm} and passing the additional
-arguments \code{mean = mean(x)} and \code{sd = sd(x)}.
+The function \code{anderson_darling_normal} computes the Anderson-Darling
+test statistic given a normal distribution with mean and standard devaition
+equal to the sample mean and standard deviation.
 
 The function \code{anderson_darling_lognormal} is the same as
 \code{anderson_darling_normal} except that the data is log transformed
 first.
+
+The function \code{anderson_darling_weibull} computes the Anderson-Darling
+test statistic given a Weibull distribution with shape and scale parameters
+estimate from the data using a maximum likelihood estimate.
+
+This function uses the formula for observed significance
+level published in CMH-17-1G. These formulae depend on the particular
+distribution used.
+
+The results of this function have been validated against
+published values in Lawless (1982).
 }
 \references{
 J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
 New York: Wiley, 1982.
+
+"Composites Materials Handbook, Volume 1. Polymer Matrix
+Composites Guideline for Characterization of Structural
+Materials," SAE International, CMH-17-1G, Mar. 2012.
 }

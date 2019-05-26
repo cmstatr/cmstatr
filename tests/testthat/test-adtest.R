@@ -1,4 +1,4 @@
-context("anderson darling test")
+context("Anderson-Darling test for goodness of fit")
 
 test_that("AD test gives same results for a data frame and a vector", {
   data <- data.frame(
@@ -22,38 +22,16 @@ test_that("AD test gives same results for a data frame and a vector", {
       80.7564920650884,
       79.3614980225488
     ))
-  res.vec <- anderson_darling(
-    x = data$strength,
-    dist = pnorm,
-    mean = mean(data$strength),
-    sd = sd(data$strength))
+  res.vec <- anderson_darling_normal(
+    x = data$strength)
   # value from STAT17 (0.0840)
-  expect_equal(res.vec$p_unknown_param, 0.0840, tolerance = 0.002)
+  expect_equal(res.vec$osl, 0.0840, tolerance = 0.002)
 
-  res.df <- anderson_darling(
+  res.df <- anderson_darling_normal(
     data,
-    strength,
-    dist = pnorm,
-    mean = mean(data$strength),
-    sd = sd(data$strength))
+    strength)
 
-  expect_equal(res.vec$p_unknown_param, res.df$p_unknown_param)
-  expect_equal(res.vec$p_known_param, res.df$p_known_param)
-})
-
-test_that("AD test accepts both a function name and a string", {
-  data <- data.frame(
-    strength = rnorm(20, 100, 5)
-  )
-
-  res.fcn <- anderson_darling(data, strength, pnorm,
-                              mean = mean(data$strength),
-                            sd = sd(data$strength))
-  res.str <- anderson_darling(data, strength, "pnorm",
-                              mean = mean(data$strength),
-                              sd = sd(data$strength))
-  expect_equal(res.fcn$p_known_param, res.str$p_known_param)
-  expect_equal(res.fcn$p_unknown_param, res.str$p_unknown_param)
+  expect_equal(res.vec$osl, res.df$osl)
 })
 
 test_that("AD test matches results from STAT17 (normal)", {
@@ -79,10 +57,10 @@ test_that("AD test matches results from STAT17 (normal)", {
       128.5218
     ))
   res.vec <- anderson_darling_normal(x = data$strength)
-  expect_equal(res.vec$p_unknown_param, 0.465, tolerance = 0.002)
+  expect_equal(res.vec$osl, 0.465, tolerance = 0.002)
   # Do it again but pass in a data.frame
   res.df <- anderson_darling_normal(data, strength)
-  expect_equal(res.vec$p_unknown_param, res.df$p_unknown_param)
+  expect_equal(res.vec$osl, res.df$osl)
 })
 
 test_that("AD test matches results from STAT17 (lognormal)", {
@@ -108,96 +86,50 @@ test_that("AD test matches results from STAT17 (lognormal)", {
       128.5218
     ))
   res.vec <- anderson_darling_lognormal(x = data$strength)
-  expect_equal(res.vec$p_unknown_param, 0.480, tolerance = 0.002)
+  expect_equal(res.vec$osl, 0.480, tolerance = 0.002)
   # Do it again but pass in a data.frame
   res.df <- anderson_darling_lognormal(data, strength)
-  expect_equal(res.vec$p_unknown_param, res.df$p_unknown_param)
+  expect_equal(res.vec$osl, res.df$osl)
 })
 
 test_that("AD test matches results from STAT17 (weibull)", {
-  data <- c(
-    137.4438,
-    139.5395,
-    150.89,
-    141.4474,
-    141.8203,
-    151.8821,
-    143.9245,
-    132.9732,
-    136.6419,
-    138.1723,
-    148.7668,
-    143.283,
-    143.5429,
-    141.7023,
-    137.4732,
-    152.338,
-    144.1589,
-    128.5218
+  data <- data.frame(
+    strength = c(
+      137.4438,
+      139.5395,
+      150.89,
+      141.4474,
+      141.8203,
+      151.8821,
+      143.9245,
+      132.9732,
+      136.6419,
+      138.1723,
+      148.7668,
+      143.283,
+      143.5429,
+      141.7023,
+      137.4732,
+      152.338,
+      144.1589,
+      128.5218
+    )
   )
   # OSL: 0.179
+  res.vec <- anderson_darling_weibull(x = data$strength)
+  expect_equal(res.vec$osl, 0.179, tolerance = 0.002)
+  # Do it again but pass in a data.frame
+  res.df <- anderson_darling_weibull(data, strength)
+  expect_equal(res.vec$osl, res.df$osl)
 })
 
-test_that("ad_p_inf_known_param result match published results", {
-  # Published values from:
-  # M. A. Stephens, “EDF Statistics for Goodness of Fit and Some Comparisons,”
-  # Journal of the American Statistical Association, vol. 69, no. 347.
-  # pp. 730–737, Sep-1974.
-
-  # The result here is alpha. We can only expect that the result will match
-  # the publised results to about 0.01 as that is the accuracy generally
-  # reported in literature.
-
-  expect_equal(0.15, ad_p_inf_known_param(1.610), tolerance = 0.01)
-  expect_equal(0.10, ad_p_inf_known_param(1.933), tolerance = 0.01)
-  expect_equal(0.05, ad_p_inf_known_param(2.492), tolerance = 0.01)
-  expect_equal(0.025, ad_p_inf_known_param(3.070), tolerance = 0.01)
-  expect_equal(0.01, ad_p_inf_known_param(3.857), tolerance = 0.01)
-})
-
-test_that("ad_inf_known_param raises warning if tolerance is unachievable", {
-  expect_warning({
-    ad_p_inf_known_param(1.933, abs_tol = 1e-1000)
-  })
-})
-
-test_that(
-  "ad_p_known_param gives same results as ad_p_inf_known_param for large n", {
-    # Stephens (1974) suggests that the values publised for infinite sample
-    # size hold for values of n >= 5
-    # Ref:
-    # M. A. Stephens, “EDF Statistics for Goodness of Fit and Some Comparisons"
-    # Journal of the American Statistical Association, vol. 69, no. 347.
-    # pp. 730–737, Sep-1974.
-
-    expect_equal(0.15, ad_p_known_param(1.610, n = 5), tolerance = 0.01)
-    expect_equal(0.10, ad_p_known_param(1.933, n = 5), tolerance = 0.01)
-    expect_equal(0.05, ad_p_known_param(2.492, n = 5), tolerance = 0.01)
-    expect_equal(0.025, ad_p_known_param(3.070, n = 5), tolerance = 0.01)
-    expect_equal(0.01, ad_p_known_param(3.857, n = 5), tolerance = 0.01)
-  })
-
-test_that("ad_p_known_param produces larger values for smaller n", {
-  expect_gt(ad_p_known_param(1.610, n = 2), ad_p_known_param(1.610, n = 10))
-  expect_gt(ad_p_known_param(1.933, n = 2), ad_p_known_param(1.933, n = 10))
-  expect_gt(ad_p_known_param(2.492, n = 2), ad_p_known_param(2.492, n = 10))
-  expect_gt(ad_p_known_param(3.070, n = 2), ad_p_known_param(3.070, n = 10))
-  expect_gt(ad_p_known_param(3.857, n = 2), ad_p_known_param(3.857, n = 10))
-})
-
-test_that("ad_p_inf_known_param produces results as publised in Marsaglia", {
-  # From: G. Marsaglia and J. Marsaglia, “Evaluating the Anderson-Darling
-  # Distribution,” Journal of Statistical Software, vol. 9, no. 2. 25-Feb-2004.
-  expect_equal(1 - 0.999960465988611, ad_p_inf_known_param(9))
-  expect_equal(1 - 0.999986184964588, ad_p_inf_known_param(10))
-})
-
-test_that("ad_p_unknown_parameters matches results from Lawless", {
+test_that("ad_p_unknown_parameters matches normal results from Lawless", {
   # Comparison with the results from:
   # J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
   # New York: Wiley, 1982.
+  # See page 458
   fcn <- function(A, n) {
-    ad_p_unknown_param(A / (1 + 4 / n - 25 / n ^ 2), n)
+    ad_p_normal_unknown_param(A / (1 + 4 / n - 25 / n ^ 2), n)
   }
 
   n <- 5
@@ -220,6 +152,37 @@ test_that("ad_p_unknown_parameters matches results from Lawless", {
   expect_equal(fcn(0.787, n), 0.05, tolerance = 0.002)
   expect_equal(fcn(0.918, n), 0.025, tolerance = 0.002)
   expect_equal(fcn(1.092, n), 0.01, tolerance = 0.002)
+})
+
+test_that("ad_p_unknown_parameters matches weibull results from Lawless", {
+  # Comparison with the results from:
+  # J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
+  # New York: Wiley, 1982.
+  # See p. 455
+  fcn <- function(A, n) {
+    ad_p_weibull_unknown_param(A / (1 + 0.2 / sqrt(n)), n)
+  }
+
+  n <- 5
+  expect_equal(fcn(0.474, n), 0.25, tolerance = 0.002)
+  expect_equal(fcn(0.637, n), 0.10, tolerance = 0.002)
+  expect_equal(fcn(0.757, n), 0.05, tolerance = 0.002)
+  expect_equal(fcn(0.877, n), 0.025, tolerance = 0.002)
+  expect_equal(fcn(1.038, n), 0.01, tolerance = 0.002)
+
+  n <- 10
+  expect_equal(fcn(0.474, n), 0.25, tolerance = 0.002)
+  expect_equal(fcn(0.637, n), 0.10, tolerance = 0.002)
+  expect_equal(fcn(0.757, n), 0.05, tolerance = 0.002)
+  expect_equal(fcn(0.877, n), 0.025, tolerance = 0.002)
+  expect_equal(fcn(1.038, n), 0.01, tolerance = 0.002)
+
+  n <- 20
+  expect_equal(fcn(0.474, n), 0.25, tolerance = 0.002)
+  expect_equal(fcn(0.637, n), 0.10, tolerance = 0.002)
+  expect_equal(fcn(0.757, n), 0.05, tolerance = 0.002)
+  expect_equal(fcn(0.877, n), 0.025, tolerance = 0.002)
+  expect_equal(fcn(1.038, n), 0.01, tolerance = 0.002)
 })
 
 test_that("print.anderson_darling contains expected values", {
@@ -246,8 +209,7 @@ test_that("print.anderson_darling contains expected values", {
     ))
   res.vec <- anderson_darling_normal(x = data$strength)
   # should include the distribution
-  expect_output(print(res.vec), "distribution.*pnorm", ignore.case = TRUE)
+  expect_output(print(res.vec), "distribution.*normal", ignore.case = TRUE)
   # should include the signficance for known parameters
-  expect_output(print(res.vec), "sig.*0.948.*\\sknown", ignore.case = TRUE)
   expect_output(print(res.vec), "sig.*0.464.*unknown", ignore.case = TRUE)
 })
