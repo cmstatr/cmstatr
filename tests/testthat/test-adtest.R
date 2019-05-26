@@ -41,6 +41,21 @@ test_that("AD test gives same results for a data frame and a vector", {
   expect_equal(res.vec$p_known_param, res.df$p_known_param)
 })
 
+test_that("AD test accepts both a function name and a string", {
+  data <- data.frame(
+    strength = rnorm(20, 100, 5)
+  )
+
+  res.fcn <- anderson_darling(data, strength, pnorm,
+                              mean = mean(data$strength),
+                            sd = sd(data$strength))
+  res.str <- anderson_darling(data, strength, "pnorm",
+                              mean = mean(data$strength),
+                              sd = sd(data$strength))
+  expect_equal(res.fcn$p_known_param, res.str$p_known_param)
+  expect_equal(res.fcn$p_unknown_param, res.str$p_unknown_param)
+})
+
 test_that("AD test matches results from STAT17 (normal)", {
   data <- data.frame(
     strength = c(
