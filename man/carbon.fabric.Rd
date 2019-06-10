@@ -3,20 +3,16 @@
 \docType{data}
 \name{carbon.fabric}
 \alias{carbon.fabric}
+\alias{carbon.fabric.2}
 \title{Sample data for a generic carbon fabric}
-\format{A data frame with 216 observations and 5 variables:
-\describe{
-  \item{id}{a unique identification for each coupon}
-  \item{test}{a code indicating the test method}
-  \item{condition}{a code to indicate an environmental condition}
-  \item{batch}{the prepreg batch}
-  \item{strength}{the strength value observed in the test}
-}}
+\format{An object of class \code{data.frame} with 216 rows and 5 columns.}
 \usage{
 carbon.fabric
+
+carbon.fabric.2
 }
 \description{
-A dataset containing sample data that is typical of a generic carbon
+Datasets containing sample data that is typical of a generic carbon
 prepreg fabric. This data is used in several examples within the
 \code{cmstatr} package. This data is fictional and should
 not be used for anything besides learning how to use this package.
