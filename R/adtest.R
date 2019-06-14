@@ -7,6 +7,8 @@
 #'
 #' @param df a data.frame-like object (optional)
 #' @param x a numeric vector or a variable in the data.frame
+#' @param alpha the required significance to conclude that the data follows
+#'   the specified distribution. Defaults to 0.05.
 #'
 #' @return
 #' an object of class \code{anderson_darling}. This object has the following
@@ -20,6 +22,9 @@
 #'   \item{\code{A}}{the Anderson-Darling test statistic}
 #'   \item{\code{osl}}{the significance level, assuming the
 #'     parameters of the distribution are estimated from the data}
+#'  \item{\code{alpha}}{the required significance level for the test to
+#'    conclude that the data is drawn from the specified distribution.
+#'    This value is given by the user.}
 #' }
 #'
 #' @details
@@ -68,7 +73,7 @@ NULL
 # the parameters for the distribution, can be passed through the argument
 # to the function \code{...} to the function \code{dist}.
 anderson_darling <- function(df = NULL, x, call, ad_p_unknown_param_fcn,
-                             dist_name, dist, ...) {
+                             dist_name, dist, alpha, ...) {
   F0 <- dist
 
   x <- enquo(x)
@@ -86,7 +91,8 @@ anderson_darling <- function(df = NULL, x, call, ad_p_unknown_param_fcn,
     data = x0,
     n = n,
     A = A,
-    osl = ad_p_unknown_param_fcn(A, n)
+    osl = ad_p_unknown_param_fcn(A, n),
+    alpha = alpha
   )
 
   class(res) <- "anderson_darling"
@@ -99,8 +105,7 @@ print.anderson_darling <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  cat("Distribution function: ", x$dist, "\n")
-  cat("Sample size: ", x$n, "\n")
+  cat("Distribution: ", x$dist, "( n = ", x$n, ")", "\n")
 
   cat("Test statistic: A = ", x$A, "\n")
   cat(
@@ -108,6 +113,15 @@ print.anderson_darling <- function(x, ...) {
     x$osl,
     " (assuming unknown parameters)\n"
   )
+  if (x$osl > x$alpha) {
+    cat("Conclusion: Sample is drawn from a",
+        x$dist,
+        "distribution (alpha = ", x$alpha, ")")
+  } else {
+    cat("Conclusion: Sample is not drawn from a",
+        x$dist,
+        "distribution (alpha = ", x$alpha, ")")
+  }
 }
 
 #' @importFrom rlang enquo eval_tidy
@@ -116,12 +130,13 @@ print.anderson_darling <- function(x, ...) {
 #' @rdname anderson_darling
 #'
 #' @export
-anderson_darling_normal <- function(df = NULL, x) {
+anderson_darling_normal <- function(df = NULL, x, alpha = 0.05) {
   x <- enquo(x)
   x0 <- eval_tidy(x, df)
   return(anderson_darling(x = x0, call = match.call(),
                           ad_p_unknown_param_fcn = ad_p_normal_unknown_param,
                           dist_name = "Normal",
+                          alpha = alpha,
                           dist = pnorm, mean = mean(x0), sd = sd(x0)))
 }
 
@@ -131,13 +146,14 @@ anderson_darling_normal <- function(df = NULL, x) {
 #' @rdname anderson_darling
 #'
 #' @export
-anderson_darling_lognormal <- function(df = NULL, x) {
+anderson_darling_lognormal <- function(df = NULL, x, alpha = 0.05) {
   x <- enquo(x)
   x0 <- eval_tidy(x, df)
   x0 <- log(x0)
   return(anderson_darling(x = x0, call = match.call(),
                           ad_p_unknown_param_fcn = ad_p_normal_unknown_param,
                           dist_name = "Lognormal",
+                          alpha = alpha,
                           dist = pnorm, mean = mean(x0), sd = sd(x0)))
 }
 
@@ -148,7 +164,7 @@ anderson_darling_lognormal <- function(df = NULL, x) {
 #' @rdname anderson_darling
 #'
 #' @export
-anderson_darling_weibull <- function(df = NULL, x) {
+anderson_darling_weibull <- function(df = NULL, x, alpha = 0.05) {
   x <- enquo(x)
   x0 <- eval_tidy(x, df)
   dist <- fitdistr(x0, "weibull")
@@ -156,6 +172,7 @@ anderson_darling_weibull <- function(df = NULL, x) {
   return(anderson_darling(x = x0, call = match.call(),
                           dist = pweibull,
                           dist_name = "Weibull",
+                          alpha = alpha,
                           ad_p_unknown_param_fcn = ad_p_weibull_unknown_param,
                           shape = dist$estimate[["shape"]],
                           scale = dist$estimate[["scale"]]))

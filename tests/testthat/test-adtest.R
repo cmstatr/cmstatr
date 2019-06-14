@@ -212,4 +212,12 @@ test_that("print.anderson_darling contains expected values", {
   expect_output(print(res.vec), "distribution.*normal", ignore.case = TRUE)
   # should include the signficance for known parameters
   expect_output(print(res.vec), "sig.*0.464.*unknown", ignore.case = TRUE)
+  # conclusion should be printed
+  expect_output(print(res.vec), "conclusion.*is drawn.*alpha.*0.05",
+                ignore.case = TRUE)
+
+  # if alpha is adjusted to be above OSL, the conclusion should be reversed
+  res.vec <- anderson_darling_normal(x = data$strength, alpha = 0.470)
+  expect_output(print(res.vec), "conclusion.*is not drawn.*alpha.*0.47",
+                ignore.case = TRUE)
 })

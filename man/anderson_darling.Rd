@@ -7,16 +7,19 @@
 \alias{anderson_darling_weibull}
 \title{Anderson-Darling test for goodness of fit}
 \usage{
-anderson_darling_normal(df = NULL, x)
+anderson_darling_normal(df = NULL, x, alpha = 0.05)
 
-anderson_darling_lognormal(df = NULL, x)
+anderson_darling_lognormal(df = NULL, x, alpha = 0.05)
 
-anderson_darling_weibull(df = NULL, x)
+anderson_darling_weibull(df = NULL, x, alpha = 0.05)
 }
 \arguments{
 \item{df}{a data.frame-like object (optional)}
 
 \item{x}{a numeric vector or a variable in the data.frame}
+
+\item{alpha}{the required significance to conclude that the data follows
+the specified distribution. Defaults to 0.05.}
 }
 \value{
 an object of class \code{anderson_darling}. This object has the following
@@ -30,6 +33,9 @@ fields.
   \item{\code{A}}{the Anderson-Darling test statistic}
   \item{\code{osl}}{the significance level, assuming the
     parameters of the distribution are estimated from the data}
+ \item{\code{alpha}}{the required significance level for the test to
+   conclude that the data is drawn from the specified distribution.
+   This value is given by the user.}
 }
 }
 \description{
