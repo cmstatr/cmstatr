@@ -16,36 +16,199 @@ knitr::opts_chunk$set(
 )
 ```
 
-`cmstatr` is an R package for analyzing composite material data for use in the aerospace industry. The statistical methods are based on those published in [CMH-17-1G](https://www.cmh17.org/). This package is intended to facilitate reproducible statistical analysis of composite materials. In this tutorial, we'll explore the basic functionality of `cmstatr`.
+`cmstatr` is an R package for analyzing composite material data for use in the
+aerospace industry. The statistical methods are based on those published in
+[CMH-17-1G](https://www.cmh17.org/). This package is intended to facilitate
+reproducible statistical analysis of composite materials. In this tutorial,
+we'll explore the basic functionality of `cmstatr`.
 
-# Input Data
-`cmstatr` is build with the assumption that the data is in (so called) [tidy data](http://vita.had.co.nz/papers/tidy-data.html) format. This means that the data is in a data frame and that each observation (i.e. test result) has its own row and that each variable has its own column. Included in this package is a sample composite material data set (this data set is fictional: don't use it for anything other than learning this package). The data set `carbon.fabric` has the expected format.
+Before we can acutally use the package, we'll need to load it. We'll also load
+the `tidyverse` package, which we'll talk about shortly.
 
-```{r}
+```{r message=FALSE}
 library(cmstatr)
-
-carbon.fabric
-```
-
-If your data set is not yet in this type of format (note: that the column names *do not* need to match the column names in the example), there are many ways to get it into this format. One of the easier ways of doing so is to use the [tidyr](https://tidyr.tidyverse.org/) package. The use of this package is outside the scope of this vignette.
-
-# Working With Data
-Throughout this vignette, we will be using some of the `tidyverse` tools for working with data. There are several ways to work with data in R, but in the opinion of the author of this vignette, the `tidyverse` provides the easiest way to do so. As such, this is the approach used in this vignette. Feel free to use whichever approach works best for you.
-
-To load the various packages that make up the `tidyverse`, simply load them as follows:
-
-```{r}
 library(tidyverse)
 ```
 
-# Calculating Single-Point Basis Value
-The simplest thing that you will likely do is to calculate a basis value based of a set of numbers that you consider as unstructured data. An example of this would be calculating the B-Basis of the `RTD` warp tension (`WT`) data.
+# Input Data
+`cmstatr` is build with the assumption that the data is in (so called)
+[tidy data](http://vita.had.co.nz/papers/tidy-data.html) format. This means
+that the data is in a data frame and that each observation (i.e. test result)
+has its own row and that each variable has its own column. Included in this
+package is a sample composite material data set (this data set is fictional:
+don't use it for anything other than learning this package). The data set
+`carbon.fabric.2` has the expected format. We'll just show the first 10 rows
+of the data for now.
 
 ```{r}
-carbon.fabric %>%
+library(cmstatr)
+library(tidyverse)
+
+carbon.fabric.2 %>%
+  head(10)
+```
+
+If your data set is not yet in this type of format (note: that the column
+names *do not* need to match the column names in the example), there are
+many ways to get it into this format. One of the easier ways of doing so
+is to use the [tidyr](https://tidyr.tidyverse.org/) package. The use of this
+package is outside the scope of this vignette.
+
+# Working With Data
+Throughout this vignette, we will be using some of the `tidyverse` tools for
+working with data. There are several ways to work with data in R, but in the
+opinion of the author of this vignette, the `tidyverse` provides the easiest
+way to do so. As such, this is the approach used in this vignette. Feel free
+to use whichever approach works best for you.
+
+# Normalizing Data to Cured Ply Thickness
+Very often, you'll want to normalize as-measured strength data to a nominal
+cured ply thickness for fiber-dominated properties. Very often, this will
+reduce the apparent variance in the data. The `normalize_ply_thickness`
+function can be used to normlize strength or modulus data to a certain
+cured ply thickness. This function takes three arguments: the value to
+normalize (ie. strenght or modulus), the measured thickness and the
+nominal thickness. In our case, the nominal cured ply thickness of the
+material is $0.0079$. We can then normalize the warp-tension data as
+follows:
+
+```{r}
+norm_data <- carbon.fabric.2 %>%
+  filter(test == "WT" | test == "FC") %>%
+  mutate(strength.norm = normalize_ply_thickness(strength, thickness / nplies, 0.0079))
+
+norm_data %>%
+  head(10)
+```
+
+# Calculating Single-Point Basis Value
+The simplest thing that you will likely do is to calculate a basis value based
+of a set of numbers that you consider as unstructured data. An example of this
+would be calculating the B-Basis of the `RTD` warp tension (`WT`) data.
+
+First, we need to determine how the data are distributed. We'll use an
+Anderson-Darling test to do so. The `cmstatr` package provides the function
+`anderson_darling_normal` and related functions for other distributions.
+We can run an Anderson-Darling test for normality on the warp tension RTD
+data as follows. We'll perform this test on the normalized strength.
+
+```{r}
+norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  anderson_darling_normal(strength.norm)
+```
+
+```{r include=FALSE}
+# Verify that the AD test always provides the same conclusion
+# If this assertion fails, the Vignette needs to be re-written
+if (0.05 >= (norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  anderson_darling_normal(strength.norm))$osl) {
+  stop("Unexpected vale for Anderson-Darling test")
+  }
+```
+
+Now that we know that this data follows a normal distribution (since the
+signficane of the Anderson-Darling test is greater than $0.05$), we can
+proceed to calculate a basis value based based on the assumption of normally
+distributed data. The `cmstatr` package provides teh function `basis_normal`
+as well as related functions for other distributions. By default, the B-Basis
+value is calculated, but other population proportions and confidence bounds
+can be specified (for example, specify `p = 0.99, conf = 0.99` for A-Basis).
+
+```{r}
+carbon.fabric.2 %>%
   filter(test == "WT" & condition == "RTD") %>%
   basis_normal(strength)
 ```
+
+# Calculating Basis Values by Pooling Across Environments
+In this section, we'll use the fill-compression data from the `carbon.fabric.2`
+data set.
+
+## Checking for Outliers
+After checking that there are a sufficinet number of conditions, batches and
+specimens and that the failure modes are consistent, we would normally
+check if there are outliers within each batch and condition. The maximum
+normed resiudal test can be used for this. The `cmstatr` package provides the
+function `maximum_normed_residual` to do this. First, we'll group the data
+by condition and batch, then run the test on each group. The
+`maximum_normed_residual` function returns an object that contains the variable
+`n_outlier`, which we will report.
+
+```{r}
+norm_data %>%
+  filter(test == "FC") %>%
+  group_by(condition, batch) %>%
+  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers)
+```
+
+```{r include=FALSE}
+if ((norm_data %>%
+  filter(test == "FC") %>%
+  group_by(condition, batch) %>%
+  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers) %>%
+  ungroup() %>%
+  summarise(n_outliers = sum(n_outliers)))[[1]] != 0) {
+  stop("Unexpected number of outliers")
+  }
+```
+
+None of the groups have outliers, so we can continue.
+
+# Batch-to-Batch Distribution
+Next, we will use the Anderson-Darling k-Sample test to check that each batch
+comes from the same distribution within each condition. We can use the
+`ad_ksample` function from `cmstatr` to do so:
+
+```{r}
+norm_data %>%
+  filter(test == "FC") %>%
+  group_by(condition) %>%
+  summarise(different_dist =
+           ad_ksample(x = strength.norm, groups = batch)$reject_same_dist
+  )
+```
+
+```{r include=FALSE}
+if (!all(!(norm_data %>%
+  filter(test == "FC") %>%
+  group_by(condition) %>%
+  summarise(different_dist =
+           ad_ksample(x = strength.norm, groups = batch)$reject_same_dist
+  ))$different_dist)) {
+  stop("Unexpected ADK result")
+  }
+```
+
+For all conditions, the Anderson-Darling k-Sample test fails to reject the
+hypothesis that each batch comes from the same (unspecified) distribution.
+We can thus proceed to pooling the data
+
+## Checking for Outliers Within Each Condition
+Just as we did when checking for outlier within each condition and each
+batch, we can pool all the batches (within each condition) and check
+for outliers within each condition.
+
+```{r}
+norm_data %>%
+  filter(test == "FC") %>%
+  group_by(condition) %>%
+  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers)
+```
+
+```{r include=FALSE}
+if ((norm_data %>%
+  filter(test == "FC") %>%
+  group_by(condition) %>%
+  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers) %>%
+  ungroup() %>%
+  summarise(n_outliers = sum(n_outliers)))[[1]] != 0) {
+  stop("Unexpected number of outliers")
+  }
+```
+
+We find no outliers, so we can continue.
 
 # Equivalency
 Eventually, once you've finished calculating all your basis values, you'll probably want to set specification requirements or evaluate site/process equivalency. `cmstatr` has functionality to do both.
