@@ -25,6 +25,7 @@ This object has the following fields:
                      significance level}
   \item{\code{outliers}}{a data.frame containing the \code{index} and
                          \code{value} of each of the identified outliers}
+  \item{\code{n_outliers}}{the number of outliers found}
 }
 }
 \description{

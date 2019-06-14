@@ -249,13 +249,14 @@ test_that(
     expect_lte(abs(res$mnr - 2.008), 0.001)
     expect_lte(abs(res$crit - 2.127), 0.001)
     expect_equal(nrow(res$outliers), 0)  # no outliers for this batch
+    expect_equal(res$n_outliers, 0)
 
     # check the print function
     expect_output(print(res), "no outliers", ignore.case = TRUE)
     expect_output(print(res), "MNR.*2.008", ignore.case = TRUE)
     expect_output(print(res), ".*crit.*2\\.12", ignore.case = TRUE)
 
-    # check for typographical errors
+    # check for typographical errors in the data above
     df %>%
       filter(batch == 3) %>%
       summarise(check = expect_equal(n(), 7),
@@ -269,6 +270,7 @@ test_that(
     expect_lte(abs(res$mnr - 2.119), 0.001)
     expect_lte(abs(res$crit - 2.02), 0.001)
     expect_equal(nrow(res$outliers), 1)  # one outlier for this batch
+    expect_equal(res$n_outliers, 1)
 
     # check the print function
     expect_output(print(res), "outliers", ignore.case = TRUE)
@@ -297,10 +299,12 @@ test_that("Both vectors and data.frames can be passed to the MNR function", {
   expect_lte(abs(res1$mnr - 2.119), 0.001)
   expect_lte(abs(res1$crit - 2.02), 0.001)
   expect_equal(nrow(res1$outliers), 1)  # one outlier for this batch
+  expect_equal(res1$n_outliers, 1)
 
   # check that passing a vector works
   res2 <- maximum_normed_residual(x = df$strength, alpha = 0.05)
   expect_lte(abs(res2$mnr - 2.119), 0.001)
   expect_lte(abs(res2$crit - 2.02), 0.001)
   expect_equal(nrow(res2$outliers), 1)  # one outlier for this batch
+  expect_equal(res2$n_outliers, 1)
 })

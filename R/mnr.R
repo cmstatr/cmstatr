@@ -24,6 +24,7 @@
 #'                      significance level}
 #'   \item{\code{outliers}}{a data.frame containing the \code{index} and
 #'                          \code{value} of each of the identified outliers}
+#'   \item{\code{n_outliers}}{the number of outliers found}
 #' }
 #'
 #'
@@ -45,6 +46,8 @@ maximum_normed_residual <- function(df = NULL, x, alpha = 0.05) {
 
   res$outliers <- data.frame(index = c(), value = c())
 
+  res$n_outliers <- 0
+
   for (i in 1:(length(res$data) - 1)) {
     if (cur_mnr >= cur_crit) {
       worst_index <- which.max(abs(cur_data - mean(cur_data)))
@@ -52,6 +55,7 @@ maximum_normed_residual <- function(df = NULL, x, alpha = 0.05) {
         res$outliers,
         data.frame(index = worst_index, value = cur_data[worst_index])
       )
+      res$n_outliers <- res$n_outliers + 1
       cur_data <- cur_data[-worst_index]
       cur_mnr <- max(abs(cur_data - mean(cur_data)) / sd(cur_data))
       cur_crit <- maximum_normed_residual_critical(length(cur_data), alpha)
