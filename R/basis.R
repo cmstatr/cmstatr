@@ -32,12 +32,12 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
   return(t / sqrt(n))
 }
 
-#' Calculate basis values (\eqn{kB}, \eqn{kA})
+#' Calculate basis values
 #'
 #' @description
 #' Calculate the basis value for a given data set. There are various functions
-#' to calculate the basis values for different distributions. For \eqn{kB},
-#' set \eqn{p=0.90} and \eqn{conf=0.95}; for \eqn{kA}, set \eqn{p=0.90} and
+#' to calculate the basis values for different distributions. For B-Basis,
+#' set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.90} and
 #' \eqn{conf=0.95}
 #'
 #' @param df a data.frame

@@ -5,7 +5,7 @@
 \alias{basis_normal}
 \alias{basis_lognormal}
 \alias{basis_weibull}
-\title{Calculate basis values (\eqn{kB}, \eqn{kA})}
+\title{Calculate basis values}
 \usage{
 basis_normal(df = NULL, x, p = 0.9, conf = 0.95)
 
@@ -37,8 +37,8 @@ This object has the following fields:
 }
 \description{
 Calculate the basis value for a given data set. There are various functions
-to calculate the basis values for different distributions. For \eqn{kB},
-set \eqn{p=0.90} and \eqn{conf=0.95}; for \eqn{kA}, set \eqn{p=0.90} and
+to calculate the basis values for different distributions. For B-Basis,
+set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.90} and
 \eqn{conf=0.95}
 }
 \details{
