@@ -27,6 +27,7 @@
 #'   \item{\code{n_outliers}}{the number of outliers found}
 #' }
 #'
+#' @importFrom rlang eval_tidy enquo
 #'
 #' @export
 maximum_normed_residual <- function(df = NULL, x, alpha = 0.05) {
@@ -35,8 +36,12 @@ maximum_normed_residual <- function(df = NULL, x, alpha = 0.05) {
 
   res$call <- match.call()
 
-  x <- enquo(x)
-  cur_data <- eval_tidy(x, df)
+  if (is.data.frame(df) | is.null(df)) {
+    x <- enquo(x)
+    cur_data <- eval_tidy(x, df)
+  } else {
+    cur_data <- df
+  }
   res$data <- cur_data
 
   cur_mnr <- max(abs(res$data - mean(res$data)) / sd(res$data))

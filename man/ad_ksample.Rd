@@ -4,7 +4,7 @@
 \alias{ad_ksample}
 \title{Anderson-Darling K-Sample Test}
 \usage{
-ad_ksample(df, x, groups, alpha = 0.025)
+ad_ksample(df = NULL, x, groups, alpha = 0.025)
 }
 \arguments{
 \item{df}{a data.frame}

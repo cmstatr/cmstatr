@@ -148,6 +148,10 @@ test_that("normal basis value matches STAT17 result", {
   expect_output(print(res), "b-basis.*129.2", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
 
+  # Check that passing a vector as the first argument works
+  res <- basis_normal(data, p = 0.9, conf = 0.95)
+  expect_equal(res$basis, 129.287, tolerance = 0.0005)
+
   res <- basis_normal(x = data, p = 0.99, conf = 0.95)
   expect_equal(res$basis, 120.336, tolerance = 0.0005)
   expect_output(print(res), "a-basis.*120.3", ignore.case = TRUE)
@@ -183,6 +187,10 @@ test_that("log-normal basis value matches STAT17 result", {
   expect_output(print(res), "b-basis.*129.6", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
   expect_output(print(res), "log", ignore.case = TRUE)
+
+  # Check that passing a vector as the first argument works
+  res <- basis_lognormal(data, p = 0.9, conf = 0.95)
+  expect_equal(res$basis, 129.664, tolerance = 0.0005)
 
   res <- basis_lognormal(x = data, p = 0.99, conf = 0.95)
   expect_equal(res$basis, 121.710, tolerance = 0.0005)
@@ -223,6 +231,10 @@ test_that("Weibull basis value matches STAT17 result", {
   expect_equal(res$basis, 125.441, tolerance = 0.3)
   expect_output(print(res), "b-basis.*125", ignore.case = TRUE)
   expect_output(print(res), "weibull", ignore.case = TRUE)
+
+  # Check that passing a vector as the first argument works
+  res <- basis_lognormal(data, p = 0.9, conf = 0.95)
+  expect_equal(res$basis, 129.664, tolerance = 0.0005)
 
   res <- basis_weibull(x = data, p = 0.99, conf = 0.95)
   expect_equal(res$basis, 109.150, tolerance = 0.6)

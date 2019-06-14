@@ -58,7 +58,7 @@
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom kSamples ad.test
 #' @export
-ad_ksample <- function(df, x, groups, alpha = 0.025) {
+ad_ksample <- function(df = NULL, x, groups, alpha = 0.025) {
   res <- list()
   class(res) <- "adk"
 

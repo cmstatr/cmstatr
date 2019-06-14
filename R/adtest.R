@@ -72,12 +72,9 @@ NULL
 # the cumulative distribution function. Additional parameters, such as
 # the parameters for the distribution, can be passed through the argument
 # to the function \code{...} to the function \code{dist}.
-anderson_darling <- function(df = NULL, x, call, ad_p_unknown_param_fcn,
+anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
                              dist_name, dist, alpha, ...) {
   F0 <- dist
-
-  x <- enquo(x)
-  x0 <- eval_tidy(x, df)
 
   x0_sorted <- sort(x0)
   n <- length(x0_sorted)
@@ -131,9 +128,13 @@ print.anderson_darling <- function(x, ...) {
 #'
 #' @export
 anderson_darling_normal <- function(df = NULL, x, alpha = 0.05) {
-  x <- enquo(x)
-  x0 <- eval_tidy(x, df)
-  return(anderson_darling(x = x0, call = match.call(),
+  if (is.data.frame(df) | is.null(df)) {
+    x <- enquo(x)
+    x0 <- eval_tidy(x, df)
+  } else {
+    x0 <- df
+  }
+  return(anderson_darling(x0 = x0, call = match.call(),
                           ad_p_unknown_param_fcn = ad_p_normal_unknown_param,
                           dist_name = "Normal",
                           alpha = alpha,
@@ -147,10 +148,15 @@ anderson_darling_normal <- function(df = NULL, x, alpha = 0.05) {
 #'
 #' @export
 anderson_darling_lognormal <- function(df = NULL, x, alpha = 0.05) {
-  x <- enquo(x)
-  x0 <- eval_tidy(x, df)
+  if (is.data.frame(df) | is.null(df)) {
+    x <- enquo(x)
+    x0 <- eval_tidy(x, df)
+  } else {
+    x0 <- df
+  }
+
   x0 <- log(x0)
-  return(anderson_darling(x = x0, call = match.call(),
+  return(anderson_darling(x0 = x0, call = match.call(),
                           ad_p_unknown_param_fcn = ad_p_normal_unknown_param,
                           dist_name = "Lognormal",
                           alpha = alpha,
@@ -165,11 +171,14 @@ anderson_darling_lognormal <- function(df = NULL, x, alpha = 0.05) {
 #'
 #' @export
 anderson_darling_weibull <- function(df = NULL, x, alpha = 0.05) {
-  x <- enquo(x)
-  x0 <- eval_tidy(x, df)
+  if (is.data.frame(df) | is.null(df)) {
+    x <- enquo(x)
+    x0 <- eval_tidy(x, df)
+  } else {
+    x0 <- df
+  }
   dist <- fitdistr(x0, "weibull")
-
-  return(anderson_darling(x = x0, call = match.call(),
+  return(anderson_darling(x0 = x0, call = match.call(),
                           dist = pweibull,
                           dist_name = "Weibull",
                           alpha = alpha,

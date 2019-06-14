@@ -103,8 +103,13 @@ basis_normal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
   res$p <- p
   res$conf <- conf
 
-  x <- enquo(x)
-  res$data <- eval_tidy(x, df)
+  if (is.data.frame(df) | is.null(df)) {
+    x <- enquo(x)
+    res$data <- eval_tidy(x, df)
+  } else {
+    res$data <- df
+  }
+
   res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
   res$basis <- mean(res$data) - k * sd(res$data)
@@ -125,8 +130,13 @@ basis_lognormal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
   res$p <- p
   res$conf <- conf
 
-  x <- enquo(x)
-  res$data <- eval_tidy(x, df)
+  if (is.data.frame(df) | is.null(df)) {
+    x <- enquo(x)
+    res$data <- eval_tidy(x, df)
+  } else {
+    res$data <- df
+  }
+
   res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
   res$basis <- exp(mean(log(res$data)) - k * sd(log(res$data)))
@@ -168,8 +178,13 @@ basis_weibull <- function(df = NULL, x, p = 0.90, conf = 0.95) {
   res$p <- p
   res$conf <- conf
 
-  x <- enquo(x)
-  res$data <- eval_tidy(x, df)
+  if (is.data.frame(df) | is.null(df)) {
+    x <- enquo(x)
+    res$data <- eval_tidy(x, df)
+  } else {
+    res$data <- df
+  }
+
   res$n <- length(res$data)
 
   dist <- fitdistr(res$data, "weibull")
