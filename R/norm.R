@@ -67,10 +67,16 @@ normalize_ply_thickness <- function(strength, measured_thk, nom_thk) {
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
+#' @importFrom rlang enquo eval_tidy
+#'
 #' @export
 normalize_group_mean <- function(x, groups) {
   if (length(x) != length(groups)) {
     stop("The length of x and groups must be equal")
+  }
+
+  if (length(x) == 0) {
+    return(numeric(0))
   }
 
   group_means <- sapply(groups, function(g) {
