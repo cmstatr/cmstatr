@@ -48,29 +48,67 @@ norm_data %>%
   group_by(condition, batch) %>%
   summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers)
 
+## ----include=FALSE-------------------------------------------------------
+if ((norm_data %>%
+  filter(test == "FC") %>%
+  group_by(condition, batch) %>%
+  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers) %>%
+  ungroup() %>%
+  summarise(n_outliers = sum(n_outliers)))[[1]] != 0) {
+  stop("Unexpected number of outliers")
+  }
+
 ## ------------------------------------------------------------------------
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
-  mutate(different_dist =
+  summarise(different_dist =
            ad_ksample(x = strength.norm, groups = batch)$reject_same_dist
   )
 
+## ----include=FALSE-------------------------------------------------------
+if (!all(!(norm_data %>%
+  filter(test == "FC") %>%
+  group_by(condition) %>%
+  summarise(different_dist =
+           ad_ksample(x = strength.norm, groups = batch)$reject_same_dist
+  ))$different_dist)) {
+  stop("Unexpected ADK result")
+  }
+
 ## ------------------------------------------------------------------------
 norm_data %>%
-  filter(test == "FC" & condition == "RTD") %>%
-  ad_ksample(strength.norm, batch)
+  filter(test == "FC") %>%
+  group_by(condition) %>%
+  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers)
 
 ## ----include=FALSE-------------------------------------------------------
-if (0.025 >= (norm_data %>%
-   filter(test == "FC" & condition == "RTD") %>%
-   ad_ksample(strength.norm, batch))$p ) {
-  stop("Unexpected value of AD-K test")
-   }
+if ((norm_data %>%
+  filter(test == "FC") %>%
+  group_by(condition) %>%
+  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers) %>%
+  ungroup() %>%
+  summarise(n_outliers = sum(n_outliers)))[[1]] != 0) {
+  stop("Unexpected number of outliers")
+  }
 
 ## ------------------------------------------------------------------------
-# TODO: Write this!
+pooled_norm_data <- norm_data %>%
+  mutate(norm_group_mean = normalize_group_mean(strength.norm, condition))
 
+pooled_norm_data %>%
+  filter(test == "FC") %>%
+  head(10)
+
+## ------------------------------------------------------------------------
+pooled_norm_data %>%
+  filter(test == "FC") %>%
+  summarise(osl = anderson_darling_normal(norm_group_mean)$osl)
+
+## ------------------------------------------------------------------------
+pooled_norm_data %>%
+  filter(test == "FC") %>%
+  levene_test(x = norm_group_mean, groups = condition)
 
 ## ------------------------------------------------------------------------
 carbon.fabric %>%

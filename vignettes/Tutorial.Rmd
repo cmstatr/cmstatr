@@ -22,7 +22,7 @@ aerospace industry. The statistical methods are based on those published in
 reproducible statistical analysis of composite materials. In this tutorial,
 we'll explore the basic functionality of `cmstatr`.
 
-Before we can acutally use the package, we'll need to load it. We'll also load
+Before we can actually use the package, we'll need to load it. We'll also load
 the `tidyverse` package, which we'll talk about shortly.
 
 ```{r message=FALSE}
@@ -65,9 +65,9 @@ to use whichever approach works best for you.
 Very often, you'll want to normalize as-measured strength data to a nominal
 cured ply thickness for fiber-dominated properties. Very often, this will
 reduce the apparent variance in the data. The `normalize_ply_thickness`
-function can be used to normlize strength or modulus data to a certain
+function can be used to normalize strength or modulus data to a certain
 cured ply thickness. This function takes three arguments: the value to
-normalize (ie. strenght or modulus), the measured thickness and the
+normalize (ie. strength or modulus), the measured thickness and the
 nominal thickness. In our case, the nominal cured ply thickness of the
 material is $0.0079$. We can then normalize the warp-tension data as
 follows:
@@ -109,9 +109,9 @@ if (0.05 >= (norm_data %>%
 ```
 
 Now that we know that this data follows a normal distribution (since the
-signficane of the Anderson-Darling test is greater than $0.05$), we can
+significance of the Anderson-Darling test is greater than $0.05$), we can
 proceed to calculate a basis value based based on the assumption of normally
-distributed data. The `cmstatr` package provides teh function `basis_normal`
+distributed data. The `cmstatr` package provides the function `basis_normal`
 as well as related functions for other distributions. By default, the B-Basis
 value is calculated, but other population proportions and confidence bounds
 can be specified (for example, specify `p = 0.99, conf = 0.99` for A-Basis).
@@ -127,10 +127,10 @@ In this section, we'll use the fill-compression data from the `carbon.fabric.2`
 data set.
 
 ## Checking for Outliers
-After checking that there are a sufficinet number of conditions, batches and
+After checking that there are a sufficient number of conditions, batches and
 specimens and that the failure modes are consistent, we would normally
 check if there are outliers within each batch and condition. The maximum
-normed resiudal test can be used for this. The `cmstatr` package provides the
+normed residual test can be used for this. The `cmstatr` package provides the
 function `maximum_normed_residual` to do this. First, we'll group the data
 by condition and batch, then run the test on each group. The
 `maximum_normed_residual` function returns an object that contains the variable
@@ -209,6 +209,66 @@ if ((norm_data %>%
 ```
 
 We find no outliers, so we can continue.
+
+## Pooling Across Environemnts
+When pooling across environments, the procedure is to normalize the data for
+each condition by the mean of the data for that condition. The `cmstatr`
+package provides the function `normalize_group_mean` for doing that. This
+function computes the mean within each group, then divides each data point
+by this group mean.
+
+```{r}
+pooled_norm_data <- norm_data %>%
+  group_by(test) %>%
+  mutate(norm_group_mean = normalize_group_mean(strength.norm, condition))
+
+pooled_norm_data %>%
+  filter(test == "FC") %>%
+  head(10)
+```
+
+Next, we check for normality of the pooled data using the Anderson-Darling
+test for normality:
+
+```{r}
+pooled_norm_data %>%
+  filter(test == "FC") %>%
+  anderson_darling_normal(norm_group_mean)
+```
+
+```{r include=FALSE}
+if ((pooled_norm_data %>%
+  filter(test == "FC") %>%
+  anderson_darling_normal(norm_group_mean))$osl <= 0.05) {
+  stop("Unexpected Anderson-Darling result")
+  }
+```
+
+Since the pooled data are normally distributed, we can continue by checking for
+equality of variance among the conditions. We will do so using Levene's test.
+The `cmstatr` package provides the function `levene_test` to do so.
+
+```{r}
+pooled_norm_data %>%
+  filter(test == "FC") %>%
+  levene_test(x = norm_group_mean, groups = condition)
+```
+
+```{r include=FALSE}
+if ((pooled_norm_data %>%
+  filter(test == "FC") %>%
+  levene_test(x = norm_group_mean, groups = condition))$reject_equal_variance) {
+  stop("Unexpected result from Levene's test")
+  }
+```
+
+The result from Levene's test indicates that the variance for each condition
+is equal. 
+
+## Calculating the Pooled Basis Value
+The `cmstatr` does not currently support this. This functionality is coming
+soon.
+
 
 # Equivalency
 Eventually, once you've finished calculating all your basis values, you'll probably want to set specification requirements or evaluate site/process equivalency. `cmstatr` has functionality to do both.
