@@ -97,7 +97,7 @@ print.levene <- function(x, ...) {
   cat("n = ", x$n, "\tk = ", x$k, "\n")
   cat("F = ", x$f, "\tp-value = ", x$p, "\n")
   if (x$reject_equal_variance) {
-    cat("Conclusion: Samples have unequal variance (alpha=",
+    cat("Conclusion: Samples have unequal variance ( alpha=",
         x$alpha, ")\n\n")
   } else {
     cat("Conclusion: Samples have equal variances ( alpha=",
