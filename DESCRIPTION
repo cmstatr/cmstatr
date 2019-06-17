@@ -3,13 +3,17 @@ Type: Package
 Title: Statistical Methods for Composite Material Data
 Version: 0.0.1
 Depends: R (>= 3.1)
-Authors@R: person("Stefan", "Kloppenborg", email = "skloppenborg@comtekadvanced.com",
-                  role = c("aut"))
-           person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",
-                  role = c("aut", "cre"))
+Authors@R: c(
+    person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",
+      role = c("aut", "cre")),
+    person("Billy", "Cheng", email = "bcheng@comtekadvanced.com",
+      role = c("ctb")),
+    person("Comtek Advanced Structures Ltd.",
+      role = c("aut"))
+  )
 Description: This package provides an implementation in the R language
-            of the statistical methods commonly used for advanced composite
-            materials. These statistical methods are described in CMH-17-1G.
+             of the statistical methods commonly used for advanced composite
+             materials. These statistical methods are described in CMH-17-1G.
 License: AGPL-3
 Encoding: UTF-8
 LazyData: true
