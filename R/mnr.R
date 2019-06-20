@@ -1,4 +1,4 @@
-#' Detect outliers using the maximum normed resiudal method
+#' Detect outliers using the maximum normed residual method
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame for which to find the MNR

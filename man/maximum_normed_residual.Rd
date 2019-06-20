@@ -2,7 +2,7 @@
 % Please edit documentation in R/mnr.R
 \name{maximum_normed_residual}
 \alias{maximum_normed_residual}
-\title{Detect outliers using the maximum normed resiudal method}
+\title{Detect outliers using the maximum normed residual method}
 \usage{
 maximum_normed_residual(data = NULL, x, alpha = 0.05)
 }
@@ -29,7 +29,7 @@ This object has the following fields:
 }
 }
 \description{
-Detect outliers using the maximum normed resiudal method
+Detect outliers using the maximum normed residual method
 }
 \details{
 \code{data} is an optional argument. If \code{data} is given, it

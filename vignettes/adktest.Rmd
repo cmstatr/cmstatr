@@ -28,7 +28,7 @@ Term                                               | CMH-17-1G             | Sch
 A sample                                           | $i$                   | $i$
 The number of samples                              | $k$                   | $k$
 An observation within a sample                     | $j$                   | $j$
-The number of observations within the $i$th sample | $n_i$                 | $n_i$
+The number of observations within the sample $i$   | $n_i$                 | $n_i$
 The total number of observations within all samples| $n$                   | $N$
 Distinct values in combined data, ordered          | $z_{(1)}$...$z_{(L)}$ | $Z_1^*$...$Z_L^*$
 The number of distinct values in the combined data | $L$                   | $L$
@@ -38,28 +38,28 @@ Given the possibility of ties in the data, the discrete version of the test must
 Scholz and Stephens (1987) give the test statistic as:
 
 $$
-A_{akN}^2 = \frac{N - 1}{N}\sum_{i=1}^k \frac{1}{n_i}\sum_{j=1}^{L}\frac{l_j}{N}\frac{\left(N M_{aij} - n_i B_{aj}\right)^2}{B_{aj}\left(N - B_{aj}\right) - N l_j / 4}
+A_{a k N}^2 = \frac{N - 1}{N}\sum_{i=1}^k \frac{1}{n_i}\sum_{j=1}^{L}\frac{l_j}{N}\frac{\left(N M_{a i j} - n_i B_{a j}\right)^2}{B_{a j}\left(N - B_{a j}\right) - N l_j / 4}
 $$
 
 
 CMH-17-1G gives the test statistic as:
 
 $$
-ADK = \frac{n - 1}{n^2\left(k - 1\right)}\sum_{i=1}^k\frac{1}{n_i}\sum_{j=1}^L h_j \frac{\left(n F_{ij} - n_i H_j\right)^2}{H_j \left(n - H_j\right) - n h_j / 4}
+ADK = \frac{n - 1}{n^2\left(k - 1\right)}\sum_{i=1}^k\frac{1}{n_i}\sum_{j=1}^L h_j \frac{\left(n F_{i j} - n_i H_j\right)^2}{H_j \left(n - H_j\right) - n h_j / 4}
 $$
 
 By inspection, the CMH-17-1G version of this test statistic contains an extra factor of $\frac{1}{\left(k - 1\right)}$.
 
-Scholtz and Stephens indicate that one rejects $H_0$ at a significance level of $\alpha$ when:
+Scholz and Stephens indicate that one rejects $H_0$ at a significance level of $\alpha$ when:
 
 $$
-\frac{A_{akN}^2 - \left(k - 1\right)}{\sigma_N} \ge t_{k - 1}\left(\alpha\right)
+\frac{A_{a k N}^2 - \left(k - 1\right)}{\sigma_N} \ge t_{k - 1}\left(\alpha\right)
 $$
 
 This can be rearranged to give a critical value:
 
 $$
-A_{crit}^2 = \left(k - 1\right) + \sigma_N t_{k - 1}\left(\alpha\right)
+A_{c r i t}^2 = \left(k - 1\right) + \sigma_N t_{k - 1}\left(\alpha\right)
 $$
 
 CHM-17-1G gives the critical value for $ADK$ for $\alpha=0.025$ as:
@@ -70,11 +70,11 @@ $$
 
 The definition of $\sigma_n$ from the two sources differs by a factor of $\left(k - 1\right)$.
 
-The value in parenthese in the CMH-17-1G critical value corresponds to the interpolation formula for $t_m\left(\alpha\right)$ given in Scholtz and Stephen's paper.
+The value in parentheses in the CMH-17-1G critical value corresponds to the interpolation formula for $t_m\left(\alpha\right)$ given in Scholz and Stephen's paper.
 It should be noted that this is *not* the student's t-distribution, but rather a distribution referred to as the $T_m$ distribution.
 
 The `cmstatr` package use the package `kSamples` to perform the k-sample Anderson-Darling tests.
-This package uses the original formulation from Scholtz and Stephens, so the test statistic will differ from that given software based on the CMH-17-1G formulation by a factor of $\left(k-1\right)$.
+This package uses the original formulation from Scholz and Stephens, so the test statistic will differ from that given software based on the CMH-17-1G formulation by a factor of $\left(k-1\right)$.
 The conclusions about the null hypothesis drawn, however, will be the same.
 
 # References

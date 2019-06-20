@@ -10,7 +10,7 @@ levene_test(data, x, groups, alpha = 0.05)
 \item{data}{a data.frame}
 
 \item{x}{the variable in the data.frame or a vector on which to perform the
-Levene's test (usuall strength)}
+Levene's test (usually strength)}
 
 \item{groups}{a variable in the data.frame that defines the groups}
 
@@ -40,8 +40,8 @@ data is transformed as follows:
 
 \deqn{wij = | xij - mi |}
 
-Where \eqn{mi} is medean of the ith group. An F-Test is then performed on the
-transforemd data.
+Where \eqn{mi} is median of the \eqn{ith} group. An F-Test is then
+performed on the transformed data.
 }
 \references{
 “Composites Materials Handbook, Volume 1. Polymer Matrix Composites

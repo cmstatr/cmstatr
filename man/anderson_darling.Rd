@@ -51,7 +51,7 @@ of the distribution are unknown; these parameters are estimate from the
 data.
 
 The function \code{anderson_darling_normal} computes the Anderson-Darling
-test statistic given a normal distribution with mean and standard devaition
+test statistic given a normal distribution with mean and standard deviation
 equal to the sample mean and standard deviation.
 
 The function \code{anderson_darling_lognormal} is the same as

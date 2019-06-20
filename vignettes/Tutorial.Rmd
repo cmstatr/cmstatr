@@ -51,7 +51,7 @@ carbon.fabric.2 %>%
 If your data set is not yet in this type of format (note: that the column
 names *do not* need to match the column names in the example), there are
 many ways to get it into this format. One of the easier ways of doing so
-is to use the [tidyr](https://tidyr.tidyverse.org/) package. The use of this
+is to use the [`tidyr`](https://tidyr.tidyverse.org/) package. The use of this
 package is outside the scope of this vignette.
 
 # Working With Data
@@ -67,7 +67,7 @@ cured ply thickness for fiber-dominated properties. Very often, this will
 reduce the apparent variance in the data. The `normalize_ply_thickness`
 function can be used to normalize strength or modulus data to a certain
 cured ply thickness. This function takes three arguments: the value to
-normalize (ie. strength or modulus), the measured thickness and the
+normalize (i.e.. strength or modulus), the measured thickness and the
 nominal thickness. In our case, the nominal cured ply thickness of the
 material is $0.0079$. We can then normalize the warp-tension data as
 follows:
@@ -218,7 +218,7 @@ if ((norm_data %>%
 
 We find no outliers, so we can continue.
 
-## Pooling Across Environemnts
+## Pooling Across Environments
 When pooling across environments, the procedure is to normalize the data for
 each condition by the mean of the data for that condition. The `cmstatr`
 package provides the function `normalize_group_mean` for doing that. This

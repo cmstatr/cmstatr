@@ -62,7 +62,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' \code{basis_weibull} calculates the basis value for data distributed
 #' according to a Weibull distribution. The confidence interval for the
-#' quantile requested is calcualted using the conditional method, as
+#' quantile requested is calculated using the conditional method, as
 #' described in Lawless (1982) Section 4.1.2b. This has good agreement
 #' with tables published in CMH-17-1G. Results differ between this function
 #' and STAT17 by approximately 0.5%.
