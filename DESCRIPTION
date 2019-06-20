@@ -28,6 +28,7 @@ Suggests:
     glue,
     knitr,
     lintr,
+    rlang,
     rmarkdown,
     spelling,
     testthat,
