@@ -6,7 +6,7 @@ suppressMessages(library(kSamples))  # nolint
 
 test_that("kSamples package gives results that match published example", {
   # Reproduce the example from:
-  # F. W. Scholz and M. . Stephens, “K-Sample Anderson-Darling Tests,” Journal
+  # F. W. Scholz and M. Stephens, “K-Sample Anderson-Darling Tests,” Journal
   #   of the American Statistical Association, vol. 82, no. 399.
   #   pp. 918–924, Sep-1987.
 
