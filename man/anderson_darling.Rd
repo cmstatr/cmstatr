@@ -7,14 +7,14 @@
 \alias{anderson_darling_weibull}
 \title{Anderson-Darling test for goodness of fit}
 \usage{
-anderson_darling_normal(df = NULL, x, alpha = 0.05)
+anderson_darling_normal(data = NULL, x, alpha = 0.05)
 
-anderson_darling_lognormal(df = NULL, x, alpha = 0.05)
+anderson_darling_lognormal(data = NULL, x, alpha = 0.05)
 
-anderson_darling_weibull(df = NULL, x, alpha = 0.05)
+anderson_darling_weibull(data = NULL, x, alpha = 0.05)
 }
 \arguments{
-\item{df}{a data.frame-like object (optional)}
+\item{data}{a data.frame-like object (optional)}
 
 \item{x}{a numeric vector or a variable in the data.frame}
 

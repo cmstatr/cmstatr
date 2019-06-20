@@ -24,8 +24,6 @@ test_that("AD test gives same results for a data frame and a vector", {
     ))
   res.vec1 <- anderson_darling_normal(
     x = data$strength)
-  res.vec2 <- anderson_darling_normal(
-    data$strength)
 
   # value from STAT17 (0.0840)
   expect_equal(res.vec1$osl, 0.0840, tolerance = 0.002)
@@ -35,7 +33,6 @@ test_that("AD test gives same results for a data frame and a vector", {
     strength)
 
   expect_equal(res.vec1$osl, res.df$osl)
-  expect_equal(res.vec2$osl, res.df$osl)
 })
 
 test_that("AD test matches results from STAT17 (normal)", {

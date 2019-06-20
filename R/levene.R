@@ -4,8 +4,8 @@
 #' @description
 #' This function performs the Levene's test for equality of variance.
 #'
-#' @param df a data.frame
-#' @param x the variable in the data.frame on which to perform the
+#' @param data a data.frame
+#' @param x the variable in the data.frame or a vector on which to perform the
 #'          Levene's test (usuall strength)
 #' @param groups a variable in the data.frame that defines the groups
 #' @param alpha the significance level (default 0.05)
@@ -43,17 +43,27 @@
 #' @importFrom stats var.test median pf
 #'
 #' @export
-levene_test <- function(df, x, groups, alpha = 0.05) {
+levene_test <- function(data, x, groups, alpha = 0.05) {
   res <- list()
   class(res) <- "levene"
 
   res$call <- match.call()
 
-  x <- enquo(x)
-  groups <- enquo(groups)
-  data_vector <- eval_tidy(x, df)
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  data_vector <- eval_tidy(enquo(x), data)
+
+  verify_tidy_input(
+    df = data,
+    x = groups,
+    c = match.call(),
+    arg_name = "groups")
+  group_vector <- eval_tidy(enquo(groups), data)
+
   res$data <- data_vector
-  group_vector <- eval_tidy(groups, df)
   res$groups <- group_vector
   res$alpha <- alpha
 

@@ -40,16 +40,17 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.90} and
 #' \eqn{conf=0.95}
 #'
-#' @param df a data.frame
+#' @param data a data.frame
 #' @param x the variable in the data.frame for which to find the basis value
 #' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
 #' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
 #'
 #' @details
-#' \code{df} is an optional argument. If \code{df} is given, it should be a
-#' \code{data.frame} (or similar object). When \code{df} is specified, the
-#' value of \code{x} is expected to be a variable within \code{df}. If
-#' \code{df} is not specified, \code{x} must be a vector.
+#' \code{data} is an optional argument. If \code{data} is given, it should
+#' be a
+#' \code{data.frame} (or similar object). When \code{data} is specified, the
+#' value of \code{x} is expected to be a variable within \code{data}. If
+#' \code{data} is not specified, \code{x} must be a vector.
 #'
 #' \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 #' the standard deviation from the mean using. \eqn{k} is given by
@@ -94,7 +95,7 @@ NULL
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
 #' @export
-basis_normal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
+basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res <- list()
   class(res) <- "basis"
 
@@ -103,12 +104,12 @@ basis_normal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
   res$p <- p
   res$conf <- conf
 
-  if (is.data.frame(df) | is.null(df)) {
-    x <- enquo(x)
-    res$data <- eval_tidy(x, df)
-  } else {
-    res$data <- df
-  }
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  res$data <- eval_tidy(enquo(x), data)
 
   res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
@@ -121,7 +122,7 @@ basis_normal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
 #' @export
-basis_lognormal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
+basis_lognormal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res <- list()
   class(res) <- "basis"
 
@@ -130,12 +131,12 @@ basis_lognormal <- function(df = NULL, x, p = 0.90, conf = 0.95) {
   res$p <- p
   res$conf <- conf
 
-  if (is.data.frame(df) | is.null(df)) {
-    x <- enquo(x)
-    res$data <- eval_tidy(x, df)
-  } else {
-    res$data <- df
-  }
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  res$data <- eval_tidy(enquo(x), data)
 
   res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
@@ -169,7 +170,7 @@ print.basis <- function(x, ...) {
 #' @importFrom MASS fitdistr
 #'
 #' @export
-basis_weibull <- function(df = NULL, x, p = 0.90, conf = 0.95) {
+basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res <- list()
   class(res) <- "basis"
 
@@ -178,12 +179,12 @@ basis_weibull <- function(df = NULL, x, p = 0.90, conf = 0.95) {
   res$p <- p
   res$conf <- conf
 
-  if (is.data.frame(df) | is.null(df)) {
-    x <- enquo(x)
-    res$data <- eval_tidy(x, df)
-  } else {
-    res$data <- df
-  }
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  res$data <- eval_tidy(enquo(x), data)
 
   res$n <- length(res$data)
 

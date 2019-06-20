@@ -46,13 +46,17 @@ carbon.fabric.2 %>%
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition, batch) %>%
-  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers)
+  summarise(
+    n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers
+    )
 
 ## ----include=FALSE-------------------------------------------------------
 if ((norm_data %>%
   filter(test == "FC") %>%
   group_by(condition, batch) %>%
-  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers) %>%
+  summarise(
+    n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers
+    ) %>%
   ungroup() %>%
   summarise(n_outliers = sum(n_outliers)))[[1]] != 0) {
   stop("Unexpected number of outliers")
@@ -80,13 +84,15 @@ if (!all(!(norm_data %>%
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
-  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers)
+  summarise(n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers)
 
 ## ----include=FALSE-------------------------------------------------------
 if ((norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
-  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers) %>%
+  summarise(
+    n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers
+    ) %>%
   ungroup() %>%
   summarise(n_outliers = sum(n_outliers)))[[1]] != 0) {
   stop("Unexpected number of outliers")
@@ -94,6 +100,7 @@ if ((norm_data %>%
 
 ## ------------------------------------------------------------------------
 pooled_norm_data <- norm_data %>%
+  group_by(test) %>%
   mutate(norm_group_mean = normalize_group_mean(strength.norm, condition))
 
 pooled_norm_data %>%
@@ -103,12 +110,26 @@ pooled_norm_data %>%
 ## ------------------------------------------------------------------------
 pooled_norm_data %>%
   filter(test == "FC") %>%
-  summarise(osl = anderson_darling_normal(norm_group_mean)$osl)
+  anderson_darling_normal(norm_group_mean)
+
+## ----include=FALSE-------------------------------------------------------
+if ((pooled_norm_data %>%
+  filter(test == "FC") %>%
+  anderson_darling_normal(norm_group_mean))$osl <= 0.05) {
+  stop("Unexpected Anderson-Darling result")
+  }
 
 ## ------------------------------------------------------------------------
 pooled_norm_data %>%
   filter(test == "FC") %>%
   levene_test(x = norm_group_mean, groups = condition)
+
+## ----include=FALSE-------------------------------------------------------
+if ((pooled_norm_data %>%
+  filter(test == "FC") %>%
+  levene_test(x = norm_group_mean, groups = condition))$reject_equal_variance) {
+  stop("Unexpected result from Levene's test")
+  }
 
 ## ------------------------------------------------------------------------
 carbon.fabric %>%

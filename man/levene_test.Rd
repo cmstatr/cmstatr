@@ -4,12 +4,12 @@
 \alias{levene_test}
 \title{Levene's Test for Equality of Variance}
 \usage{
-levene_test(df, x, groups, alpha = 0.05)
+levene_test(data, x, groups, alpha = 0.05)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{data}{a data.frame}
 
-\item{x}{the variable in the data.frame on which to perform the
+\item{x}{the variable in the data.frame or a vector on which to perform the
 Levene's test (usuall strength)}
 
 \item{groups}{a variable in the data.frame that defines the groups}

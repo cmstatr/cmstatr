@@ -4,10 +4,10 @@
 \alias{ad_ksample}
 \title{Anderson-Darling K-Sample Test}
 \usage{
-ad_ksample(df = NULL, x, groups, alpha = 0.025)
+ad_ksample(data = NULL, x, groups, alpha = 0.025)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{data}{a data.frame}
 
 \item{x}{the variable in the data.frame on which to perform the
 Anderson-Darling k-Sample test (usuall strength)}

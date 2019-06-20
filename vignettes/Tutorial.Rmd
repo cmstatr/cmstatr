@@ -134,20 +134,26 @@ normed residual test can be used for this. The `cmstatr` package provides the
 function `maximum_normed_residual` to do this. First, we'll group the data
 by condition and batch, then run the test on each group. The
 `maximum_normed_residual` function returns an object that contains the variable
-`n_outlier`, which we will report.
+`n_outlier`, which we will report. Note that when `maximum_normed_residual` is
+inside a `summarize` function, we have to use the syntax `x = ...` to specify
+the data on which to perform the maximum normed residual test.
 
 ```{r}
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition, batch) %>%
-  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers)
+  summarise(
+    n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers
+    )
 ```
 
 ```{r include=FALSE}
 if ((norm_data %>%
   filter(test == "FC") %>%
   group_by(condition, batch) %>%
-  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers) %>%
+  summarise(
+    n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers
+    ) %>%
   ungroup() %>%
   summarise(n_outliers = sum(n_outliers)))[[1]] != 0) {
   stop("Unexpected number of outliers")
@@ -194,14 +200,16 @@ for outliers within each condition.
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
-  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers)
+  summarise(n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers)
 ```
 
 ```{r include=FALSE}
 if ((norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
-  summarise(n_outliers = maximum_normed_residual(strength.norm)$n_outliers) %>%
+  summarise(
+    n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers
+    ) %>%
   ungroup() %>%
   summarise(n_outliers = sum(n_outliers)))[[1]] != 0) {
   stop("Unexpected number of outliers")

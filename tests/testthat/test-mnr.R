@@ -307,11 +307,4 @@ test_that("Both vectors and data.frames can be passed to the MNR function", {
   expect_lte(abs(res2$crit - 2.02), 0.001)
   expect_equal(nrow(res2$outliers), 1)  # one outlier for this batch
   expect_equal(res2$n_outliers, 1)
-
-  # check that passing a vector as the first argument works
-  res2 <- maximum_normed_residual(df$strength, alpha = 0.05)
-  expect_lte(abs(res2$mnr - 2.119), 0.001)
-  expect_lte(abs(res2$crit - 2.02), 0.001)
-  expect_equal(nrow(res2$outliers), 1)  # one outlier for this batch
-  expect_equal(res2$n_outliers, 1)
 })

@@ -5,7 +5,7 @@
 #' This function performs an Anderson-Darling k-sample test. This is used to
 #' determine if several samples share a common (unspecified) distribution.
 #'
-#' @param df a data.frame
+#' @param data a data.frame
 #' @param x the variable in the data.frame on which to perform the
 #'          Anderson-Darling k-Sample test (usuall strength)
 #' @param groups a variable in the data.frame that defines the groups
@@ -58,16 +58,26 @@
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom kSamples ad.test
 #' @export
-ad_ksample <- function(df = NULL, x, groups, alpha = 0.025) {
+ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
   res <- list()
   class(res) <- "adk"
 
   res$call <- match.call()
 
-  x <- enquo(x)
-  groups <- enquo(groups)
-  res$data <- eval_tidy(x, df)
-  res$groups <- eval_tidy(groups, df)
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  res$data <- eval_tidy(enquo(x), data)
+
+  verify_tidy_input(
+    df = data,
+    x = groups,
+    c = match.call(),
+    arg_name = "groups")
+  res$groups <- eval_tidy(enquo(groups), data)
+
   res$alpha <- alpha
 
   grps <- lapply(levels(as.factor(res[["groups"]])),

@@ -7,14 +7,14 @@
 \alias{basis_weibull}
 \title{Calculate basis values}
 \usage{
-basis_normal(df = NULL, x, p = 0.9, conf = 0.95)
+basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
 
-basis_lognormal(df = NULL, x, p = 0.9, conf = 0.95)
+basis_lognormal(data = NULL, x, p = 0.9, conf = 0.95)
 
-basis_weibull(df = NULL, x, p = 0.9, conf = 0.95)
+basis_weibull(data = NULL, x, p = 0.9, conf = 0.95)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{data}{a data.frame}
 
 \item{x}{the variable in the data.frame for which to find the basis value}
 
@@ -42,10 +42,11 @@ set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.90} and
 \eqn{conf=0.95}
 }
 \details{
-\code{df} is an optional argument. If \code{df} is given, it should be a
-\code{data.frame} (or similar object). When \code{df} is specified, the
-value of \code{x} is expected to be a variable within \code{df}. If
-\code{df} is not specified, \code{x} must be a vector.
+\code{data} is an optional argument. If \code{data} is given, it should
+be a
+\code{data.frame} (or similar object). When \code{data} is specified, the
+value of \code{x} is expected to be a variable within \code{data}. If
+\code{data} is not specified, \code{x} must be a vector.
 
 \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 the standard deviation from the mean using. \eqn{k} is given by

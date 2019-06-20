@@ -5,7 +5,7 @@
 #' Calculates the Anderson-Darling test statistic for a sample, given
 #' a particular distribution and computes the significance level.
 #'
-#' @param df a data.frame-like object (optional)
+#' @param data a data.frame-like object (optional)
 #' @param x a numeric vector or a variable in the data.frame
 #' @param alpha the required significance to conclude that the data follows
 #'   the specified distribution. Defaults to 0.05.
@@ -75,7 +75,6 @@ NULL
 anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
                              dist_name, dist, alpha, ...) {
   F0 <- dist
-
   x0_sorted <- sort(x0)
   n <- length(x0_sorted)
   ii <- 1:n
@@ -127,14 +126,14 @@ print.anderson_darling <- function(x, ...) {
 #' @rdname anderson_darling
 #'
 #' @export
-anderson_darling_normal <- function(df = NULL, x, alpha = 0.05) {
-  if (is.data.frame(df) | is.null(df)) {
-    x <- enquo(x)
-    x0 <- eval_tidy(x, df)
-  } else {
-    x0 <- df
-  }
-  return(anderson_darling(x0 = x0, call = match.call(),
+anderson_darling_normal <- function(data = NULL, x, alpha = 0.05) {
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  x0 <- eval_tidy(enquo(x), data)
+  return(anderson_darling(x0, call = match.call(),
                           ad_p_unknown_param_fcn = ad_p_normal_unknown_param,
                           dist_name = "Normal",
                           alpha = alpha,
@@ -147,16 +146,15 @@ anderson_darling_normal <- function(df = NULL, x, alpha = 0.05) {
 #' @rdname anderson_darling
 #'
 #' @export
-anderson_darling_lognormal <- function(df = NULL, x, alpha = 0.05) {
-  if (is.data.frame(df) | is.null(df)) {
-    x <- enquo(x)
-    x0 <- eval_tidy(x, df)
-  } else {
-    x0 <- df
-  }
-
+anderson_darling_lognormal <- function(data = NULL, x, alpha = 0.05) {
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  x0 <- eval_tidy(enquo(x), data)
   x0 <- log(x0)
-  return(anderson_darling(x0 = x0, call = match.call(),
+  return(anderson_darling(x0, call = match.call(),
                           ad_p_unknown_param_fcn = ad_p_normal_unknown_param,
                           dist_name = "Lognormal",
                           alpha = alpha,
@@ -170,15 +168,15 @@ anderson_darling_lognormal <- function(df = NULL, x, alpha = 0.05) {
 #' @rdname anderson_darling
 #'
 #' @export
-anderson_darling_weibull <- function(df = NULL, x, alpha = 0.05) {
-  if (is.data.frame(df) | is.null(df)) {
-    x <- enquo(x)
-    x0 <- eval_tidy(x, df)
-  } else {
-    x0 <- df
-  }
+anderson_darling_weibull <- function(data = NULL, x, alpha = 0.05) {
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  x0 <- eval_tidy(enquo(x), data)
   dist <- fitdistr(x0, "weibull")
-  return(anderson_darling(x0 = x0, call = match.call(),
+  return(anderson_darling(x0, call = match.call(),
                           dist = pweibull,
                           dist_name = "Weibull",
                           alpha = alpha,
