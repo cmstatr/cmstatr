@@ -42,6 +42,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame for which to find the basis value
+#' @param groups the variable in the data.frame representing the groups
 #' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
 #' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
 #'
@@ -67,6 +68,12 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' with tables published in CMH-17-1G. Results differ between this function
 #' and STAT17 by approximately 0.5%.
 #'
+#' \code{basis_pooled_sd} calculates basis values by pooling the data from
+#' several groups together. \code{x} specifies the data (normally strength)
+#' and \code{group} indicates the group corresponding with each observation.
+#' This method is described in CMH-17-1G and matches the pooling method
+#' implemented in ASAP.
+#'
 #' @return an object of class \code{basis}
 #' This object has the following fields:
 #' \describe{
@@ -75,8 +82,14 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'   \item{\code{p}}{the value of \eqn{p} supplied}
 #'   \item{\code{conf}}{the value of \eqn{conf} supplied}
 #'   \item{\code{data}}{a copy of the data used in the calculation}
+#'   \item{\code{groups}}{a copy of the groups variable.
+#'                        Only used for pooling methods.}
 #'   \item{\code{n}}{the number of observations}
-#'   \item{\code{basis}}{the basis value computed}
+#'   \item{\code{r}}{the number of groups, if a pooling method was used.
+#'                   Otherwise it is NULL.}
+#'   \item{\code{basis}}{the basis value computed. This is a number
+#'                       except when pooling methods are used, in
+#'                       which case it is a data.frame.}
 #' }
 #'
 #' @references
@@ -90,7 +103,6 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @name basis
 NULL
 
-
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
@@ -103,6 +115,7 @@ basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res$distribution <- "Normal"
   res$p <- p
   res$conf <- conf
+  res$groups <- NULL
 
   verify_tidy_input(
     df = data,
@@ -130,6 +143,7 @@ basis_lognormal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res$distribution <- "Lognormal"
   res$p <- p
   res$conf <- conf
+  res$groups <- NULL
 
   verify_tidy_input(
     df = data,
@@ -151,17 +165,36 @@ print.basis <- function(x, ...) {
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
   cat("Distribution: ", x$distribution, "\t")
-  cat("( n = ", x$n, ")\n")
+
+  cat("( n = ", x$n)
+  if (!is.null(x$r)) {
+    cat(", r = ", x$r)
+  }
+  cat(" )\n")
 
   if (x$conf == 0.95 & x$p == 0.9) {
-    cat("B-Basis: ", x$basis, " ( p = ", x$p, ", conf = ", x$conf, ")\n\n")
+    cat("B-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
   }
   else if (x$conf == 0.95 & x$p == 0.99) {
-    cat("A-Basis: ", x$basis, " ( p = ", x$p, ", conf = ", x$conf, ")\n\n")
+    cat("A-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
   }
   else {
-    cat("Basis: ", x$basis, " ( p = ", x$p, ", conf = ", x$conf, ")\n\n")
+    cat("Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
   }
+
+  if (is.numeric(x$basis)) {
+    cat(x$basis, "\n")
+  } else if (is.data.frame(x$basis)) {
+    col_width <- max(nchar(as.character(x$basis[["group"]]))) + 2
+    for (j in 1:nrow(x$basis)) {
+      cat(format(x$basis[["group"]][j], width = col_width))
+      cat(x$basis[["value"]][j], "\n")
+    }
+  } else {
+    stop("`basis` is an unexpected data type")
+  }
+
+  cat("\n")
 }
 
 #' @rdname basis
@@ -178,6 +211,7 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res$distribution <- "Weibull"
   res$p <- p
   res$conf <- conf
+  res$groups <- NULL
 
   verify_tidy_input(
     df = data,
@@ -236,6 +270,56 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res_root <- uniroot(pr_fcn, c(-10, 10), extendInt = "yes")
 
   res$basis <- exp(u_hat - res_root$root * b_hat)
+
+  return(res)
+}
+
+#' @rdname basis
+#' @importFrom rlang enquo eval_tidy
+#' @export
+basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
+  res <- list()
+  class(res) <- "basis"
+
+  res$call <- match.call()
+  res$distribution <- "Normal - Pooled Standard Deviation"
+  res$p <- p
+  res$conf <- conf
+
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  res$data <- eval_tidy(enquo(x), data)
+
+  verify_tidy_input(
+    df = data,
+    x = groups,
+    c = match.call(),
+    arg_name = "groups")
+  res$groups <- eval_tidy(enquo(groups), data)
+
+  res$n <- length(res$data)
+  res$r <- length(levels(as.factor(res$groups)))
+
+  pooled_sd <- sqrt(
+    sum(
+      sapply(levels(as.factor(res$groups)), function(g) {
+        xj_bar <- mean(res$data[res$groups == g])
+        sum( (res$data[res$groups == g] - xj_bar) ^ 2)
+      })
+    ) / (res$n - res$r))
+
+  basis <- sapply(levels(as.factor(res$groups)), function(g) {
+    nj <- length(res$data[res$groups == g])
+    z <- qnorm(p)
+    kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    xj_bar <- mean(res$data[res$groups == g])
+    xj_bar - kj * pooled_sd
+  })
+
+  res$basis <- data.frame(group = names(basis), value = basis)
 
   return(res)
 }
