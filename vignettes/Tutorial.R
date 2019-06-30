@@ -99,37 +99,53 @@ if ((norm_data %>%
   }
 
 ## ------------------------------------------------------------------------
-pooled_norm_data <- norm_data %>%
-  group_by(test) %>%
-  mutate(norm_group_mean = normalize_group_mean(strength.norm, condition))
-
-pooled_norm_data %>%
+norm_data %>%
   filter(test == "FC") %>%
-  head(10)
-
-## ------------------------------------------------------------------------
-pooled_norm_data %>%
-  filter(test == "FC") %>%
-  anderson_darling_normal(norm_group_mean)
+  levene_test(strength.norm, condition)
 
 ## ----include=FALSE-------------------------------------------------------
-if ((pooled_norm_data %>%
+if (!(norm_data %>%
   filter(test == "FC") %>%
-  anderson_darling_normal(norm_group_mean))$osl <= 0.05) {
-  stop("Unexpected Anderson-Darling result")
-  }
-
-## ------------------------------------------------------------------------
-pooled_norm_data %>%
-  filter(test == "FC") %>%
-  levene_test(x = norm_group_mean, groups = condition)
-
-## ----include=FALSE-------------------------------------------------------
-if ((pooled_norm_data %>%
-  filter(test == "FC") %>%
-  levene_test(x = norm_group_mean, groups = condition))$reject_equal_variance) {
+  levene_test(strength.norm, condition))$reject_equal_variance) {
   stop("Unexpected result from Levene's test")
   }
+
+## ------------------------------------------------------------------------
+norm_data %>%
+  filter(test == "FC") %>%
+  mutate(
+    strength_norm_group = normalize_group_mean(strength.norm, condition)) %>%
+  levene_test(strength_norm_group, condition)
+
+## ----include=FALSE-------------------------------------------------------
+if ((norm_data %>%
+  filter(test == "FC") %>%
+  mutate(
+    strength_norm_group = normalize_group_mean(strength.norm, condition)) %>%
+  levene_test(strength_norm_group, condition))$reject_equal_variance) {
+  stop("Unexpected value from Levene's test")
+  }
+
+## ------------------------------------------------------------------------
+norm_data %>%
+  filter(test == "FC") %>%
+  mutate(
+    strength_norm_group = normalize_group_mean(strength.norm, condition)) %>%
+  anderson_darling_normal(strength_norm_group)
+
+## ----include=FALSE-------------------------------------------------------
+if ((norm_data %>%
+  filter(test == "FC") %>%
+  mutate(
+    strength_norm_group = normalize_group_mean(strength.norm, condition)) %>%
+  anderson_darling_normal(strength_norm_group))$osl <= 0.05) {
+  stop("Unexpected value from AD test")
+  }
+
+## ------------------------------------------------------------------------
+norm_data %>%
+  filter(test == "FC") %>%
+  basis_pooled_sd(strength.norm, condition)
 
 ## ------------------------------------------------------------------------
 carbon.fabric %>%

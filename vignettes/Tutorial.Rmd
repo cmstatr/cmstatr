@@ -219,63 +219,87 @@ if ((norm_data %>%
 We find no outliers, so we can continue.
 
 ## Pooling Across Environments
-When pooling across environments, the procedure is to normalize the data for
-each condition by the mean of the data for that condition. The `cmstatr`
-package provides the function `normalize_group_mean` for doing that. This
-function computes the mean within each group, then divides each data point
-by this group mean.
+Often it is desirable to pool data across several environments. There
+are two methods for doing so: "pooled standard deviation" and
+"pooled CV."
 
-```{r}
-pooled_norm_data <- norm_data %>%
-  group_by(test) %>%
-  mutate(norm_group_mean = normalize_group_mean(strength.norm, condition))
 
-pooled_norm_data %>%
-  filter(test == "FC") %>%
-  head(10)
-```
-
-Next, we check for normality of the pooled data using the Anderson-Darling
-test for normality:
-
-```{r}
-pooled_norm_data %>%
-  filter(test == "FC") %>%
-  anderson_darling_normal(norm_group_mean)
-```
-
-```{r include=FALSE}
-if ((pooled_norm_data %>%
-  filter(test == "FC") %>%
-  anderson_darling_normal(norm_group_mean))$osl <= 0.05) {
-  stop("Unexpected Anderson-Darling result")
-  }
-```
-
-Since the pooled data are normally distributed, we can continue by checking for
+First, we will check for
 equality of variance among the conditions. We will do so using Levene's test.
 The `cmstatr` package provides the function `levene_test` to do so.
 
 ```{r}
-pooled_norm_data %>%
+norm_data %>%
   filter(test == "FC") %>%
-  levene_test(x = norm_group_mean, groups = condition)
+  levene_test(strength.norm, condition)
 ```
 
 ```{r include=FALSE}
-if ((pooled_norm_data %>%
+if (!(norm_data %>%
   filter(test == "FC") %>%
-  levene_test(x = norm_group_mean, groups = condition))$reject_equal_variance) {
+  levene_test(strength.norm, condition))$reject_equal_variance) {
   stop("Unexpected result from Levene's test")
   }
 ```
 
 The result from Levene's test indicates that the variance for each condition
-is equal. 
+is not equal. This indicates that the data cannot be pooled using the
+"pooled standard deviation" is inappropriate."
 
-## Calculating the Pooled Basis Value
-The `cmstatr` does not currently support this. This functionality is coming
-soon.
+We can check if the data can be pooled using the "pooled CV" method.
+We'll start by normalizing the data from each group to the group's mean.
+The `cmstatr` package provides the function `normalize_group_mean` for
+this purpose.
+
+```{r}
+norm_data %>%
+  filter(test == "FC") %>%
+  mutate(
+    strength_norm_group = normalize_group_mean(strength.norm, condition)) %>%
+  levene_test(strength_norm_group, condition)
+```
+
+```{r include=FALSE}
+if ((norm_data %>%
+  filter(test == "FC") %>%
+  mutate(
+    strength_norm_group = normalize_group_mean(strength.norm, condition)) %>%
+  levene_test(strength_norm_group, condition))$reject_equal_variance) {
+  stop("Unexpected value from Levene's test")
+  }
+```
+
+The Levene's test thus shows the variances of the pooled data are equal.
+We can move on to performing an Anderson-Darling test for normality on
+the pooled data.
+
+```{r}
+norm_data %>%
+  filter(test == "FC") %>%
+  mutate(
+    strength_norm_group = normalize_group_mean(strength.norm, condition)) %>%
+  anderson_darling_normal(strength_norm_group)
+```
+
+```{r include=FALSE}
+if ((norm_data %>%
+  filter(test == "FC") %>%
+  mutate(
+    strength_norm_group = normalize_group_mean(strength.norm, condition)) %>%
+  anderson_darling_normal(strength_norm_group))$osl <= 0.05) {
+  stop("Unexpected value from AD test")
+  }
+```
+
+The Anderson-Darling test indicates that the pooled data is drawn from
+a normal distribution, so we can continue with calculating basis values
+using the "pooled CV" method.
+
+```{r}
+norm_data %>%
+  filter(test == "FC") %>%
+  basis_pooled_sd(strength.norm, condition)
+```
 
 
 # Equivalency

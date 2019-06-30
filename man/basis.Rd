@@ -5,6 +5,8 @@
 \alias{basis_normal}
 \alias{basis_lognormal}
 \alias{basis_weibull}
+\alias{basis_pooled_cv}
+\alias{basis_pooled_sd}
 \title{Calculate basis values}
 \usage{
 basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
@@ -12,6 +14,10 @@ basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
 basis_lognormal(data = NULL, x, p = 0.9, conf = 0.95)
 
 basis_weibull(data = NULL, x, p = 0.9, conf = 0.95)
+
+basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95)
+
+basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95)
 }
 \arguments{
 \item{data}{a data.frame}
@@ -21,6 +27,8 @@ basis_weibull(data = NULL, x, p = 0.9, conf = 0.95)
 \item{p}{should be 0.90 for B-Basis and 0.99 for A-Basis}
 
 \item{conf}{confidence interval. Should be 0.95 for both A- and B-Basis}
+
+\item{groups}{the variable in the data.frame representing the groups}
 }
 \value{
 an object of class \code{basis}
@@ -31,8 +39,14 @@ This object has the following fields:
   \item{\code{p}}{the value of \eqn{p} supplied}
   \item{\code{conf}}{the value of \eqn{conf} supplied}
   \item{\code{data}}{a copy of the data used in the calculation}
+  \item{\code{groups}}{a copy of the groups variable.
+                       Only used for pooling methods.}
   \item{\code{n}}{the number of observations}
-  \item{\code{basis}}{the basis value computed}
+  \item{\code{r}}{the number of groups, if a pooling method was used.
+                  Otherwise it is NULL.}
+  \item{\code{basis}}{the basis value computed. This is a number
+                      except when pooling methods are used, in
+                      which case it is a data.frame.}
 }
 }
 \description{
@@ -62,6 +76,17 @@ quantile requested is calculated using the conditional method, as
 described in Lawless (1982) Section 4.1.2b. This has good agreement
 with tables published in CMH-17-1G. Results differ between this function
 and STAT17 by approximately 0.5%.
+
+\code{basis_pooled_sd} calculates basis values by pooling the data from
+several groups together. \code{x} specifies the data (normally strength)
+and \code{group} indicates the group corresponding to each observation.
+This method is described in CMH-17-1G and matches the pooling method
+implemented in ASAP 2008.
+
+\code{basis_pooled_cv} calculates basis values by pooling the data from
+several groups together. \code{x} specifies the data (normally strength)
+and \code{group} indicates the group corresponding to each observation.
+This method is described in CMH-17-1G.
 }
 \references{
 J. F. Lawless, Statistical Models and Methods for Lifetime Data.
