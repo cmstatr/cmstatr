@@ -70,9 +70,14 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' \code{basis_pooled_sd} calculates basis values by pooling the data from
 #' several groups together. \code{x} specifies the data (normally strength)
-#' and \code{group} indicates the group corresponding with each observation.
+#' and \code{group} indicates the group corresponding to each observation.
 #' This method is described in CMH-17-1G and matches the pooling method
-#' implemented in ASAP.
+#' implemented in ASAP 2008.
+#'
+#' \code{basis_pooled_cv} calculates basis values by pooling the data from
+#' several groups together. \code{x} specifies the data (normally strength)
+#' and \code{group} indicates the group corresponding to each observation.
+#' This method is described in CMH-17-1G.
 #'
 #' @return an object of class \code{basis}
 #' This object has the following fields:
@@ -270,6 +275,51 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res_root <- uniroot(pr_fcn, c(-10, 10), extendInt = "yes")
 
   res$basis <- exp(u_hat - res_root$root * b_hat)
+
+  return(res)
+}
+
+#' @rdname basis
+#' @importFrom rlang enquo eval_tidy
+#' @export
+basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
+  res <- list()
+  class(res) <- "basis"
+
+  res$call <- match.call()
+  res$distribution <- "Normal - Pooled CV"
+  res$p <- p
+  res$conf <- conf
+
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  res$data <- eval_tidy(enquo(x), data)
+
+  verify_tidy_input(
+    df = data,
+    x = groups,
+    c = match.call(),
+    arg_name = "groups")
+  res$groups <- eval_tidy(enquo(groups), data)
+
+  norm_data <- normalize_group_mean(res$data, res$groups)
+  res$n <- length(res$data)
+  res$r <- length(levels(as.factor(res$groups)))
+
+  pooled_sd <- sqrt(sum( (norm_data - 1) ^ 2) / (res$n - res$r))
+
+  basis <- sapply(levels(as.factor(res$groups)), function(g) {
+    nj <- length(res$data[res$groups == g])
+    z <- qnorm(p)
+    kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    xj_bar <- mean(res$data[res$groups == g])
+    xj_bar * (1 - kj * pooled_sd)
+  })
+
+  res$basis <- data.frame(group = names(basis), value = basis)
 
   return(res)
 }

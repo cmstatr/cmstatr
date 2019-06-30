@@ -377,3 +377,37 @@ test_that("Pooled SD results match ASAP results", {
   expect_equal(res_a$basis$value[res_a$basis$group == "ETW2"],
                39.69, tolerance = 0.01)
 })
+
+test_that("Pooled CV results match CMH17STATS", {
+  res_b <- basis_pooled_cv(poolable_data, strength, condition)
+
+  expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
+               90.89, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "RTD"],
+               85.37, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "ETW"],
+               56.79, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "ETW2"],
+               50.55, tolerance = 0.01)
+
+  expect_equal(res_b$n, 83)
+  expect_equal(res_b$r, 4)
+  expect_output(print(res_b), "b-basis", ignore.case = TRUE)
+  expect_output(print(res_b), "pooled CV", ignore.case = TRUE)
+  expect_output(print(res_b), "CTD.*90\\.8", ignore.case = TRUE)
+  expect_output(print(res_b), "RTD.*85\\.3", ignore.case = TRUE)
+  expect_output(print(res_b), "ETW.*56\\.7", ignore.case = TRUE)
+  expect_output(print(res_b), "ETW2.*50\\.5", ignore.case = TRUE)
+
+  res_a <- basis_pooled_cv(poolable_data, strength, condition,
+                           p = 0.99, conf = 0.95)
+  expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
+               81.62, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
+               76.67, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "ETW"],
+               50.98, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "ETW2"],
+               45.40, tolerance = 0.01)
+  expect_output(print(res_a), "a-basis", ignore.case = TRUE)
+})

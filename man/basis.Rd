@@ -5,6 +5,7 @@
 \alias{basis_normal}
 \alias{basis_lognormal}
 \alias{basis_weibull}
+\alias{basis_pooled_cv}
 \alias{basis_pooled_sd}
 \title{Calculate basis values}
 \usage{
@@ -13,6 +14,8 @@ basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
 basis_lognormal(data = NULL, x, p = 0.9, conf = 0.95)
 
 basis_weibull(data = NULL, x, p = 0.9, conf = 0.95)
+
+basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95)
 
 basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95)
 }
@@ -76,9 +79,14 @@ and STAT17 by approximately 0.5%.
 
 \code{basis_pooled_sd} calculates basis values by pooling the data from
 several groups together. \code{x} specifies the data (normally strength)
-and \code{group} indicates the group corresponding with each observation.
+and \code{group} indicates the group corresponding to each observation.
 This method is described in CMH-17-1G and matches the pooling method
-implemented in ASAP.
+implemented in ASAP 2008.
+
+\code{basis_pooled_cv} calculates basis values by pooling the data from
+several groups together. \code{x} specifies the data (normally strength)
+and \code{group} indicates the group corresponding to each observation.
+This method is described in CMH-17-1G.
 }
 \references{
 J. F. Lawless, Statistical Models and Methods for Lifetime Data.
