@@ -47,7 +47,7 @@ fail before your fix is implemented and pass once it is).
 - Before submitting a pull request, please make sure that `R CMD CHECK`
   passes with no errors, warnings or notes
 - New and modified code should follow the style guide enforced by the
-  [`lintr`](https://cran.r-project.org/web/packages/lintr/README.html)
+  [`lintr`](https://cran.r-project.org/web/packages/lintr/index.html)
   package
 - Document all exported functions using
   [`roxygen2`](https://cran.r-project.org/package=roxygen2)
