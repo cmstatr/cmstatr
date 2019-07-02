@@ -1,17 +1,56 @@
 # cmstatr
-Statistical tools for composite materials
+Statistical tools for composite materials.
+
+# What It Does
+The `cmstatr` package provides functions for performing statistical analysis
+of composite material data. The statistical methods implemented are those
+described in CMH-17-1G.
+
+# Installation
+This package is not yet on CRAN. For now, install from github using devtools:
+
+```r
+install.packages("devtools")
+devtools::install_github("ComtekAdvancedStructures/cmstatr")
+```
+
+# Usage
+For example usage of the `cmstatr` package, see the vignettes, which can be
+loaded as follows, once the package is installed:
+
+```r
+RShowDoc("cmstatr_tutorial", package = "cmstatr")
+```
 
 # Philosophical Notes
-This package expects [`tidy data`](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html). That is, individual observations should be in rows and variables in columns.
+This package expects
+[`tidy data`](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html).
+That is, individual observations should be in rows and variables in columns.
 
-When graphing is appropriate, [`ggplot2`](https://cran.r-project.org/web/packages/ggplot2/index.html) will be used. This package will not include wrappers for `ggplot2`, but may include extensions to `ggplot2`
+Where possible, this package uses general solutions. Lookup tables are avoided
+wherever possible.
 
-# For Developers
-## Documentation
-All exported functions should have complete documentation in the form of [`roxygen2`](https://cran.r-project.org/package=roxygen2) documentation that will compile into Rd documentation. Additionally, important features of this package should be explained through vignettes to allow new users to start using this package more easily.
+# Contributing
+Contributions to `cmstatr` are always welcomed. For small changes (fixing typos
+or improving the documentation), go ahead and submit a pull request. For more
+significant changes, such as new features, please discuss the proposed change
+in an issue first.
 
-## Testing
-Please ensure that all code is tested. Tests are located in the `tests/testthat` folder. Additionally, any code that computes results should be validated with results published in literature or to existing accepted software.
+If you've found a bug, please open an issue and describe the bug. Please
+include a [reproducible example](https://reprex.tidyverse.org/) of the bug.
+If you're able to fix the bug, please do so by submitting a pull request.
+Please also add a test to prevent a later regression (this new test should
+fail before your fix is implemented and pass once it is).
 
-## Code Style
-When writing code, please lint the code using the package [`lintr`](https://cran.r-project.org/web/packages/lintr/README.html).
+## Contribution Guidelines
+- Please create a git branch for each pull request (PR)
+- Before submitting a pull request, please make sure that `R CMD CHECK`
+  passes with no errors, warnings or notes
+- New and modified code should follow the style guide enforced by the
+  [`lintr`](https://cran.r-project.org/web/packages/lintr/README.html)
+  package
+- Document all exported functions using
+  [`roxygen2`](https://cran.r-project.org/package=roxygen2)
+- Write tests using [`testthat`](https://cran.r-project.org/package=testthat)
+- For changes that affect the user, add a bullet at the top of NEWS.md below
+  the current development version
