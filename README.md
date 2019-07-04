@@ -11,7 +11,8 @@ This package is not yet on CRAN. For now, install from github using devtools:
 
 ```r
 install.packages("devtools")
-devtools::install_github("ComtekAdvancedStructures/cmstatr")
+devtools::install_github("ComtekAdvancedStructures/cmstatr",
+                         build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 # Usage
@@ -19,7 +20,7 @@ For example usage of the `cmstatr` package, see the vignettes, which can be
 loaded as follows, once the package is installed:
 
 ```r
-RShowDoc("cmstatr_tutorial", package = "cmstatr")
+RShowDoc("cmstatr_Tutorial", package = "cmstatr")
 ```
 
 # Philosophical Notes
