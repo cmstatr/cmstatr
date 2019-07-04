@@ -24,7 +24,7 @@ RShowDoc("cmstatr_tutorial", package = "cmstatr")
 
 # Philosophical Notes
 This package expects
-[`tidy data`](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html).
+[`tidy data`](https://www.jstatsoft.org/article/view/v059i10).
 That is, individual observations should be in rows and variables in columns.
 
 Where possible, this package uses general solutions. Lookup tables are avoided
@@ -47,7 +47,7 @@ fail before your fix is implemented and pass once it is).
 - Before submitting a pull request, please make sure that `R CMD CHECK`
   passes with no errors, warnings or notes
 - New and modified code should follow the style guide enforced by the
-  [`lintr`](https://cran.r-project.org/web/packages/lintr/index.html)
+  [`lintr`](https://cran.r-project.org/package=lintr)
   package
 - Document all exported functions using
   [`roxygen2`](https://cran.r-project.org/package=roxygen2)
