@@ -373,3 +373,69 @@ basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
 
   return(res)
 }
+
+#' @importFrom stats pbeta dbeta
+hanson_koopmans_extended_h <- function(z, n, i, j, p) {
+  if (!(1 <= i && i < j && j <= n)) {
+    stop("Error: The condition 1 <= i < j <= n must be true.")
+  }
+
+  # for z >= 1
+  qb <- pbeta(1 - p, j, n - j + 1)
+  int <- integrate(function(t) {
+      pbeta( ( (1 - p) / t) ^ (1 / z), i, j - i) * dbeta(t, j, n - j + 1)
+    },
+    lower = 1 - p, upper = 1)
+  if (int$message != "OK") {
+    warning(int$message)
+  }
+  qb + int$value
+}
+
+#' @export
+hanson_koopmans_extended_z <- function(n, i, j, p, conf) {
+  res <- uniroot(
+    function(z) {
+      hanson_koopmans_extended_h(z, n, i, j, p) - conf
+    },
+    lower = 1, upper = 10,
+    extendInt = "upX")
+  z <- res$root
+  z
+}
+
+#' @export
+hanson_koopmans_extended_z_j_opt <- function(n, p, conf) {
+  i <- 1  # i is always 1
+
+  # an approximation of the expected value of the order statistic
+  # for a standard normal distribution. This approximation is
+  # known to be incorrect, especially in the tails of the
+  # distribution. However, it appears to be close enough
+  # for the purposes of determining which value of j is optimum
+  # per Vangel's approach.
+  expected_order_statistic <- function(i, n) {
+    qnorm( (i - 0.5) / n)
+  }
+
+  # Try all the allowable values of j to find the value of T
+  # that is closest to the population quantile for a standard
+  # normal distribution
+  j <- (i + 1):n
+  z_vals <- sapply(j, function(ji) {
+    hanson_koopmans_extended_z(n, i, ji, p, conf)
+  })
+
+  err_vals <- sapply(1:length(j), function(index) {
+    ji <- j[index]
+    zi <- z_vals[index]
+    E1 <- expected_order_statistic(i, n)
+    E2 <- expected_order_statistic(ji, n)
+    abs(zi * E1 + (1 - zi) * E2 - qnorm(p))
+  })
+
+  list(
+    z = z_vals[err_vals == min(err_vals)],
+    j = j[err_vals == min(err_vals)]
+  )
+}
