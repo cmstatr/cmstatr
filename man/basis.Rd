@@ -7,6 +7,8 @@
 \alias{basis_weibull}
 \alias{basis_pooled_cv}
 \alias{basis_pooled_sd}
+\alias{basis_hk_ext}
+\alias{basis_nonparametric_large_sample}
 \title{Calculate basis values}
 \usage{
 basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
@@ -18,6 +20,12 @@ basis_weibull(data = NULL, x, p = 0.9, conf = 0.95)
 basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95)
 
 basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95)
+
+basis_hk_ext(data = NULL, x, p = 0.9, conf = 0.95,
+  method = c("optimum-order", "woodward-frawley"))
+
+basis_nonparametric_large_sample(data = NULL, x, p = 0.9,
+  conf = 0.95)
 }
 \arguments{
 \item{data}{a data.frame}
@@ -29,6 +37,10 @@ basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95)
 \item{conf}{confidence interval. Should be 0.95 for both A- and B-Basis}
 
 \item{groups}{the variable in the data.frame representing the groups}
+
+\item{method}{the method for Hanson-Koopmans nonparametric basis values.
+should be "optimum-order" for B-Basis and "woodward-frawley"
+for A-Basis.}
 }
 \value{
 an object of class \code{basis}
@@ -77,6 +89,34 @@ described in Lawless (1982) Section 4.1.2b. This has good agreement
 with tables published in CMH-17-1G. Results differ between this function
 and STAT17 by approximately 0.5%.
 
+\code{basis_hk_ext} calculates the basis value using the Extended
+Hanson-Koopmans method, as described in CMH-17-1G and Vangel (1994).
+For nonparametric distributions, this function should be used for samples
+up to n=28 for B-Basis and up to 299 for A-Basis.
+This method uses a pair of order statistics to determine the basis value.
+CMH-17-1G suggests that for A-Basis, the first and last order statistic
+is used: this is called the "woodward-frawley" method in this package,
+after the paper in which this approach is described (as referenced
+by Vangel (1994)). For B-Basis, another approach is used whereby the
+first and \code{j-th} order statistic are used to calculate the basis value.
+In this approach, the \code{j-th} order statistic is selected to minimize
+the difference between the tolerance limit (assuming that the order
+statistics are equal to the expected values from a standard normal
+distribtion) and the population quantile for a standard normal
+distribution. This approach is described in Vangel (1994). The results
+of this function have been
+verified against example results from the program STAT-17: agreement is
+typically well within 0.2%, however, for a few sample sizes, the
+agreement can be as poor as 1% with the result of this function being
+more conservative than STAT-17.
+
+\code{basis_nonparametric_large_sample} calculates the basis value
+using the large sample method described in CMH-17-1G. This method uses
+a sum of binomials to determine the rank of the ordered statistic
+corresponding with the desired tolerance limit (basis value). Results
+of this function have been verified against results of the STAT-17
+program.
+
 \code{basis_pooled_sd} calculates basis values by pooling the data from
 several groups together. \code{x} specifies the data (normally strength)
 and \code{group} indicates the group corresponding to each observation.
@@ -95,4 +135,13 @@ New York: John Wiley & Sons, 1982.
 “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
+
+M. Vangel, “One-Sided Nonparametric Tolerance Limits,”
+Communications in Statistics - Simulation and Computation,
+vol. 23, no. 4. pp. 1137–1154, 1994.
+}
+\seealso{
+\code{\link{hk_ext_z_j_opt}}
+
+\code{\link{k_factor_normal}}
 }
