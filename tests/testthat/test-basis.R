@@ -254,8 +254,20 @@ test_that("Non-parametric basis value matches STAT17 result", {
     128.5218
   )
 
-  # stat17 B-Basis: 124.156
-  # stat17 A-Basis: 99.651
+  res <- basis_hk_ext(x = data, p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 124.156, tolerance = 0.05)
+  expect_output(print(res), "b-basis.*124", ignore.case = TRUE)
+  expect_output(print(res), "nonparametric", ignore.case = TRUE)
+  expect_match(res$distribution, "nonparametric.*optimum", ignore.case = TRUE)
+
+  res <- basis_hk_ext(x = data, p = 0.99, conf = 0.95,
+                      method = "woodward-frawley")
+  expect_equal(res$basis, 99.651, tolerance = 0.05)
+  expect_output(print(res), "a-basis.*99", ignore.case = TRUE)
+  expect_output(print(res), "nonparametric", ignore.case = TRUE)
+  expect_match(res$distribution,
+               "nonparametric.*Woodward-Frawley", ignore.case = TRUE)
 })
 
 # data from CMH-17-1G Section 8.3.11.1.2
@@ -518,7 +530,7 @@ test_that("Extended Hanson-Koopman matches median results from Vangel 1994", {
   vangel1994 %>%
     rowwise() %>%
     mutate(
-      z_calc = hanson_koopmans_extended_z(n, 1, ceiling(n / 2), p, conf)
+      z_calc = hk_ext_z(n, 1, ceiling(n / 2), p, conf)
     ) %>%
     mutate(expect_equal(z, z_calc, tolerance = 0.00005,
                         label = glue("Mismatch in `z` for n={n}, p={p}, ",
@@ -568,8 +580,8 @@ test_that("Extended Hanson-Koopman matches CMH-17-1G Table 8.5.14", {
 
   cmh_17_1g_8_5_14 %>%
     rowwise() %>%
-    mutate(z = hanson_koopmans_extended_z_j_opt(n, 0.90, 0.95)$z) %>%
-    mutate(j = hanson_koopmans_extended_z_j_opt(n, 0.90, 0.95)$j) %>%
+    mutate(z = hk_ext_z_j_opt(n, 0.90, 0.95)$z) %>%
+    mutate(j = hk_ext_z_j_opt(n, 0.90, 0.95)$j) %>%
     filter(
       n != 10 & n != 13 & n != 16 & n != 17 & n != 19 & n != 22 & n != 27
       ) %>%
@@ -579,6 +591,113 @@ test_that("Extended Hanson-Koopman matches CMH-17-1G Table 8.5.14", {
     mutate(expect_equal(z, k, tolerance = 0.005,
                         label = glue("Mismatch in `k`/`z` for n={n}, ",
                                      "k_B_cmh={k}, z_calc={z}\n")))
+})
+
+test_that("Hanson-Koopman results match STAT17 for several values of n", {
+  data <- c(
+    139.6734,
+    143.0032,
+    130.4757,
+    144.8327,
+    138.7818,
+    136.7693,
+    148.636,
+    131.0095,
+    131.4933,
+    142.8856,
+    158.0198,
+    145.2271,
+    137.5991,
+    139.8298,
+    140.8557,
+    137.6148,
+    131.3614,
+    152.7795,
+    145.8792,
+    152.9207,
+    160.0989,
+    145.192,
+    128.6383,
+    141.5992,
+    122.5297,
+    159.8209,
+    151.672,
+    159.0156
+  )
+
+  res <- basis_hk_ext(x = head(data, 28), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 122.36798, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 27), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 121.96939, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 26), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 121.57073, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 23), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 127.11286, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 22), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 128.82397, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 21), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 128.52107, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 20), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 128.20999, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 19), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 127.74060, tolerance = 0.15)
+
+  res <- basis_hk_ext(x = head(data, 18), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 127.36697, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 17), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 127.02732, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 16), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 126.23545, tolerance = 0.3)
+
+  res <- basis_hk_ext(x = head(data, 15), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 125.68740, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 14), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 125.17500, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 13), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 124.07851, tolerance = 1.3)
+  # worst agreement, ensure that it's conservative
+  expect_lt(res$basis, 124.07851)
+
+  res <- basis_hk_ext(x = head(data, 12), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 121.17418, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 11), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 120.26382, tolerance = 0.001)
+
+  res <- basis_hk_ext(x = head(data, 10), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 120.75149, tolerance = 0.05)
+
+  res <- basis_hk_ext(x = head(data, 9), p = 0.9, conf = 0.95,
+                      method = "optimum-order")
+  expect_equal(res$basis, 119.80108, tolerance = 0.001)
 })
 
 cmh_17_1g_8_5_15 <- tribble(
@@ -696,7 +815,7 @@ test_that("Extended Hanson-Koopman matches CMH-17-1G Table 8.5.15", {
   # in this package computes the same values of z (k, as CMH-17 calls it)
   cmh_17_1g_8_5_15 %>%
     rowwise() %>%
-    mutate(z = hanson_koopmans_extended_z(n, 1, n, 0.99, 0.95)) %>%
+    mutate(z = hk_ext_z(n, 1, n, 0.99, 0.95)) %>%
     mutate(expect_equal(z, k, tolerance = 0.00005,
                         label = glue("Mismatch in `k`/`z` for n={n}, ",
                                      "k_A_cmh={k}, z_calc={z}\n")))

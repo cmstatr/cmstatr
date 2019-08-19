@@ -45,6 +45,9 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @param groups the variable in the data.frame representing the groups
 #' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
 #' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
+#' @param method the method for Hanson-Koopmans nonparametric basis values.
+#'               should be "optimum-order" for B-Basis and "woodward-frawley"
+#'               for A-Basis.
 #'
 #' @details
 #' \code{data} is an optional argument. If \code{data} is given, it should
@@ -67,6 +70,27 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' described in Lawless (1982) Section 4.1.2b. This has good agreement
 #' with tables published in CMH-17-1G. Results differ between this function
 #' and STAT17 by approximately 0.5%.
+#'
+#' \code{basis_hk_ext} calculates the basis value using the Extended
+#' Hanson-Koopmans method, as described in CMH-17-1G and Vangel (1994).
+#' For nonparametric distributions, this function should be used for samples
+#' up to n=28 for B-Basis and up to 299 for A-Basis.
+#' This method uses a pair of order statistics to determine the basis value.
+#' CMH-17-1G suggests that for A-Basis, the first and last order statistic
+#' is used: this is called the "woodward-frawley" method in this package,
+#' after the paper in which this approach is described (as referenced
+#' by Vangel (1994)). For B-Basis, another approach is used whereby the
+#' first and \code{j-th} order statistic are used to calculate the basis value.
+#' In this approach, the \code{j-th} order statistic is selected to minimize
+#' the difference between the tolerance limit (assuming that the order
+#' statistics are equal to the expected values from a standard normal
+#' distribtion) and the population quantile for a standard normal
+#' distribution. This approach is described in Vangel (1994). The results
+#' of this function have been
+#' verified against example results from the program STAT-17: agreement is
+#' typically well within 0.2%, however, for a few sample sizes, the
+#' agreement can be as poor as 1% with the result of this function being
+#' more conservative than STAT-17.
 #'
 #' \code{basis_pooled_sd} calculates basis values by pooling the data from
 #' several groups together. \code{x} specifies the data (normally strength)
@@ -97,6 +121,9 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'                       which case it is a data.frame.}
 #' }
 #'
+#' @seealso \code{\link{hk_ext_z_j_opt}}
+#' @seealso \code{\link{k_factor_normal}}
+#'
 #' @references
 #' J. F. Lawless, Statistical Models and Methods for Lifetime Data.
 #' New York: John Wiley & Sons, 1982.
@@ -104,6 +131,10 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
+#'
+#' M. Vangel, “One-Sided Nonparametric Tolerance Limits,”
+#' Communications in Statistics - Simulation and Computation,
+#' vol. 23, no. 4. pp. 1137–1154, 1994.
 #'
 #' @name basis
 NULL
@@ -375,7 +406,7 @@ basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
 }
 
 #' @importFrom stats pbeta dbeta
-hanson_koopmans_extended_h <- function(z, n, i, j, p) {
+hk_ext_h <- function(z, n, i, j, p) {
   if (!(1 <= i && i < j && j <= n)) {
     stop("Error: The condition 1 <= i < j <= n must be true.")
   }
@@ -392,11 +423,65 @@ hanson_koopmans_extended_h <- function(z, n, i, j, p) {
   qb + int$value
 }
 
+#' Calculate values related to the Extended Hanson-Koopmans method
+#'
+#' @description
+#' Calculates values related to the Extended Hanson-Koopmans method
+#' as described by Vangel (1994).
+#'
+#' @param n the sample size
+#' @param i the first order statistic (1 <= i < j)
+#' @param j the second order statistic (i < j <= n)
+#' @param p the population quantile of interest (normally 0.90 or 0.99)
+#' @param conf the confidence bound (normally 0.95)
+#'
+#' @return
+#' For \code{hk_ext_z}, the return value is a numeric value representing
+#' the parameter z (denoted as k in CMH-17-1G).
+#'
+#' For \code{hk_ext_z_j_opt}, the return value is named list containing
+#' \code{z} and \code{k}. The former is the value of z, as defined by
+#' Vangel (1994), and the latter is the corresponding order statistic.
+#'
+#' @details
+#' Hanson (1964) presents a nonparametric method for determining
+#' tolerance limits based on consecutive order statistics.
+#' Vangel (1994) extends this method using non-consecutive order statistics.
+#'
+#' The extended Hanson-Koopmans method calculates a tolerance limit
+#' (basis value) based on two order statistics and a weighting value
+#' \code{z}. The value of \code{z} is based on the sample size, which
+#' order statistics are selected, the desired quantile and the desired
+#' confidence interval.
+#'
+#' The function \code{hk_ext_z} calculates the weighting variable \code{z}
+#' based on selected order statistics \code{i} and \code{j}.
+#'
+#' The function \code{hk_ext_z_j_opt} determines the value of \code{j} and
+#' the corresponding value of \code{z}, assuming \code{i=1}. The value
+#' of \code{j} is selected such that the computed tolerance limit is
+#' nearest to the desired population quantile for a standard normal
+#' distribution when the order statistics are equal to the expected
+#' value of the order statistics for the standard normal distribution.
+#'
+#' @references
+#' M. Vangel, “One-Sided Nonparametric Tolerance Limits,”
+#' Communications in Statistics - Simulation and Computation,
+#' vol. 23, no. 4. pp. 1137–1154, 1994.
+#'
+#' D. L. Hanson and L. H. Koopmans,
+#' “Tolerance Limits for the Class of Distributions with Increasing
+#' Hazard Rates,” The Annals of Mathematical Statistics,
+#' vol. 35, no. 4. pp. 1561–1570, 1964.
+#'
+#' @name hk_ext
+
+#' @rdname hk_ext
 #' @export
-hanson_koopmans_extended_z <- function(n, i, j, p, conf) {
+hk_ext_z <- function(n, i, j, p, conf) {
   res <- uniroot(
     function(z) {
-      hanson_koopmans_extended_h(z, n, i, j, p) - conf
+      hk_ext_h(z, n, i, j, p) - conf
     },
     lower = 1, upper = 10,
     extendInt = "upX")
@@ -404,8 +489,9 @@ hanson_koopmans_extended_z <- function(n, i, j, p, conf) {
   z
 }
 
+#' @rdname hk_ext
 #' @export
-hanson_koopmans_extended_z_j_opt <- function(n, p, conf) {
+hk_ext_z_j_opt <- function(n, p, conf) {
   i <- 1  # i is always 1
 
   # an approximation of the expected value of the order statistic
@@ -423,7 +509,7 @@ hanson_koopmans_extended_z_j_opt <- function(n, p, conf) {
   # normal distribution
   j <- (i + 1):n
   z_vals <- sapply(j, function(ji) {
-    hanson_koopmans_extended_z(n, i, ji, p, conf)
+    hk_ext_z(n, i, ji, p, conf)
   })
 
   err_vals <- sapply(1:length(j), function(index) {
@@ -438,4 +524,50 @@ hanson_koopmans_extended_z_j_opt <- function(n, p, conf) {
     z = z_vals[err_vals == min(err_vals)],
     j = j[err_vals == min(err_vals)]
   )
+}
+
+#' @rdname basis
+#' @importFrom rlang enquo eval_tidy
+#'
+#' @export
+basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
+                       method = c("optimum-order", "woodward-frawley")) {
+  method <- match.arg(method)
+  res <- list()
+  class(res) <- "basis"
+
+  res$call <- match.call()
+  res$distribution <- paste0(
+    "Nonparametric (Extended Hanson-Koopmans, ",
+    ifelse(method == "optimum-order", "optimum two-order-statistic method",
+           "Woodward-Frawley method"),
+    ")")
+  res$p <- p
+  res$conf <- conf
+  res$groups <- NULL
+
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  res$data <- eval_tidy(enquo(x), data)
+
+  res$n <- length(res$data)
+
+  if (method == "optimum-order") {
+    zj <- hk_ext_z_j_opt(res$n, p, conf)
+    z <- zj$z
+    j <- zj$j
+  } else if (method == "woodward-frawley") {
+    j <- res$n
+    z <- hk_ext_z(res$n, 1, j, p, conf)
+  } else {
+    stop("Invalid value for method.")
+  }
+
+  x_ordered <- sort(res$data)
+  res$basis <- x_ordered[j] * (x_ordered[1] / x_ordered[j]) ^ z
+
+  return(res)
 }
