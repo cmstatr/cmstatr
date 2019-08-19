@@ -232,7 +232,7 @@ test_that("Weibull basis value matches STAT17 result", {
   expect_match(res$distribution, "weibull", ignore.case = TRUE)
 })
 
-test_that("Non-parametric basis value matches STAT17 result", {
+test_that("Non-parametric (small sample) basis value matches STAT17 result", {
   data <- c(
     137.4438,
     139.5395,
@@ -268,6 +268,26 @@ test_that("Non-parametric basis value matches STAT17 result", {
   expect_output(print(res), "nonparametric", ignore.case = TRUE)
   expect_match(res$distribution,
                "nonparametric.*Woodward-Frawley", ignore.case = TRUE)
+})
+
+test_that("Non-parametric (large sample) basis value matches STAT17 result", {
+  data <- c(
+    137.3603, 135.6665, 136.6914, 154.7919, 159.2037, 137.3277, 128.821,
+    138.6304, 138.9004, 147.4598, 148.6622, 144.4948, 131.0851, 149.0203,
+    131.8232, 146.4471, 123.8124, 126.3105, 140.7609, 134.4875, 128.7508,
+    117.1854, 129.3088, 141.6789, 138.4073, 136.0295, 128.4164, 141.7733,
+    134.455,  122.7383, 136.9171, 136.9232, 138.8402, 152.8294, 135.0633,
+    121.052,  131.035,  138.3248, 131.1379, 147.3771, 130.0681, 132.7467,
+    137.1444, 141.662,  146.9363, 160.7448, 138.5511, 129.1628, 140.2939,
+    144.8167, 156.5918, 132.0099, 129.3551, 136.6066, 134.5095, 128.2081,
+    144.0896, 141.8029, 130.0149, 140.8813, 137.7864
+  )
+
+  res <- basis_nonparametric_large_sample(x = data, p = 0.9, conf = 0.95)
+  expect_equal(res$basis, 122.738297, tolerance = 0.005)
+  expect_output(print(res), "b-basis.*122", ignore.case = TRUE)
+  expect_output(print(res), "nonparametric", ignore.case = TRUE)
+  expect_match(res$distribution, "nonparametric.*large", ignore.case = TRUE)
 })
 
 # data from CMH-17-1G Section 8.3.11.1.2

@@ -92,6 +92,13 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' agreement can be as poor as 1% with the result of this function being
 #' more conservative than STAT-17.
 #'
+#' \code{basis_nonparametric_large_sample} calculates the basis value
+#' using the large sample method described in CMH-17-1G. This method uses
+#' a sum of binomials to determine the rank of the ordered statistic
+#' corresponding with the desired tolerance limit (basis value). Results
+#' of this function have been verified against results of the STAT-17
+#' program.
+#'
 #' \code{basis_pooled_sd} calculates basis values by pooling the data from
 #' several groups together. \code{x} specifies the data (normally strength)
 #' and \code{group} indicates the group corresponding to each observation.
@@ -578,7 +585,8 @@ basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
 #' Calculates the rank order for finding distribution-free tolerance
 #' limits for large samples. This function should only be used for
 #' computing B-Basis for samples larger than 28 or A-Basis for samples
-#' larger than 298.
+#' larger than 298. This function is used by
+#' \code{\link{basis_nonparametric_large_sample}}.
 #'
 #' @param n the sample size
 #' @param p the desired quantile for the tolerance limit
@@ -621,6 +629,8 @@ basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
 #' “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
+#'
+#' @seealso \code{\link{basis_nonparametric_large_sample}}
 #'
 #' @export
 nonparametric_binomial_rank <- function(n, p, conf) {
@@ -671,4 +681,35 @@ nonparametric_binomial_rank <- function(n, p, conf) {
     }
   }
   r1
+}
+
+#' @rdname basis
+#' @importFrom rlang enquo eval_tidy
+#'
+#' @export
+basis_nonparametric_large_sample <- function(data = NULL, x, p = 0.90,
+                                             conf = 0.95) {
+  res <- list()
+  class(res) <- "basis"
+
+  res$call <- match.call()
+  res$distribution <- "Nonparametric (large sample)"
+  res$p <- p
+  res$conf <- conf
+  res$groups <- NULL
+
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  res$data <- eval_tidy(enquo(x), data)
+
+  res$n <- length(res$data)
+
+  x_ordered <- sort(res$data)
+  r <- nonparametric_binomial_rank(res$n, p, conf)
+  res$basis <- x_ordered[r]
+
+  return(res)
 }

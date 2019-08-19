@@ -20,7 +20,8 @@ The rank corresponding with the desired tolerance limit
 Calculates the rank order for finding distribution-free tolerance
 limits for large samples. This function should only be used for
 computing B-Basis for samples larger than 28 or A-Basis for samples
-larger than 298.
+larger than 298. This function is used by
+\code{\link{basis_nonparametric_large_sample}}.
 }
 \details{
 This function uses the sum of binomial terms to determine the rank
@@ -56,4 +57,7 @@ Tolerance Limits,” Jan. 1969
 “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
+}
+\seealso{
+\code{\link{basis_nonparametric_large_sample}}
 }
