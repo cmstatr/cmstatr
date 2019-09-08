@@ -43,8 +43,8 @@ rank of one for sample sizes one less than the \code{n} published in the
 table. This indicates a disagreement in that sample size at which
 the rank should change. This is likely due to numerical
 differences in this function and the procedure used to generate the tables.
-However, the disagrement is limited to sample 6500 for A-Basis; no
-discrepencies have been noted for B-Basis. Since these sample sizes are
+However, the disagreement is limited to sample 6500 for A-Basis; no
+discrepancies have been noted for B-Basis. Since these sample sizes are
 uncommon for composite materials
 testing, and the difference between subsequent order statistics will be
 very small for samples this large, this difference will have no practical

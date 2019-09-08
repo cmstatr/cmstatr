@@ -1112,3 +1112,47 @@ test_that("Non-parametric ranks for BA-Basis match CMH-17-1G Table 8.5.12", {
                           "r_calc={r_calc_minus}"
                         )))
 })
+
+cmh_17_1g_8_3_11_1_1_ETW2 <- tribble(
+  ~batch, ~strength,
+  1, 99.0239966,
+  1, 103.341238,
+  1, 100.30213,
+  1, 98.4634133,
+  1, 92.264728,
+  1, 103.487693,
+  1, 113.734763,
+  2, 108.172659,
+  2, 108.426732,
+  2, 116.260375,
+  2, 121.04961,
+  2, 111.223082,
+  2, 104.574843,
+  2, 103.222552,
+  3, 99.3918538,
+  3, 87.3421658,
+  3, 102.730741,
+  3, 96.3694916,
+  3, 99.5946088,
+  3, 97.0712407
+)
+
+test_that("ANOVA results match STAT17 for sample data", {
+  # Sample data from CMH-17-1G Section 8.3.11.2.2
+
+  res <- cmh_17_1g_8_3_11_1_1_ETW2 %>%
+    basis_anova(strength, batch)
+
+  expect_equal(res$basis, 63.2, tolerance = 0.05)
+  expect_output(print(res), "b-basis.*63\\.2", ignore.case = TRUE)
+  expect_output(print(res), "ANOVA", ignore.case = TRUE)
+  expect_match(res$distribution, "ANOVA", ignore.case = TRUE)
+
+  res <- cmh_17_1g_8_3_11_1_1_ETW2 %>%
+    basis_anova(strength, batch, p = 0.99, conf = 0.95)
+
+  expect_equal(res$basis, 34.6, tolerance = 0.05)
+  expect_output(print(res), "a-basis.*34\\.", ignore.case = TRUE)
+  expect_output(print(res), "ANOVA", ignore.case = TRUE)
+  expect_match(res$distribution, "ANOVA", ignore.case = TRUE)
+})
