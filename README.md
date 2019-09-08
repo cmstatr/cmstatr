@@ -7,7 +7,8 @@ of composite material data. The statistical methods implemented are those
 described in CMH-17-1G.
 
 # Installation
-This package is not yet on CRAN. For now, install from github using devtools:
+This package is not yet on CRAN. For now, install from `github` using
+`devtools`:
 
 ```r
 install.packages("devtools")
@@ -53,5 +54,5 @@ fail before your fix is implemented and pass once it is).
 - Document all exported functions using
   [`roxygen2`](https://cran.r-project.org/package=roxygen2)
 - Write tests using [`testthat`](https://cran.r-project.org/package=testthat)
-- For changes that affect the user, add a bullet at the top of NEWS.md below
+- For changes that affect the user, add a bullet at the top of `NEWS.md` below
   the current development version
