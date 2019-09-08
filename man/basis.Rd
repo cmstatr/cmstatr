@@ -9,6 +9,7 @@
 \alias{basis_pooled_sd}
 \alias{basis_hk_ext}
 \alias{basis_nonparametric_large_sample}
+\alias{basis_anova}
 \title{Calculate basis values}
 \usage{
 basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
@@ -26,6 +27,8 @@ basis_hk_ext(data = NULL, x, p = 0.9, conf = 0.95,
 
 basis_nonparametric_large_sample(data = NULL, x, p = 0.9,
   conf = 0.95)
+
+basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95)
 }
 \arguments{
 \item{data}{a data.frame}
@@ -52,7 +55,7 @@ This object has the following fields:
   \item{\code{conf}}{the value of \eqn{conf} supplied}
   \item{\code{data}}{a copy of the data used in the calculation}
   \item{\code{groups}}{a copy of the groups variable.
-                       Only used for pooling methods.}
+                       Only used for pooling and ANOVA methods.}
   \item{\code{n}}{the number of observations}
   \item{\code{r}}{the number of groups, if a pooling method was used.
                   Otherwise it is NULL.}
@@ -102,7 +105,7 @@ first and \code{j-th} order statistic are used to calculate the basis value.
 In this approach, the \code{j-th} order statistic is selected to minimize
 the difference between the tolerance limit (assuming that the order
 statistics are equal to the expected values from a standard normal
-distribtion) and the population quantile for a standard normal
+distribution) and the population quantile for a standard normal
 distribution. This approach is described in Vangel (1994). The results
 of this function have been
 verified against example results from the program STAT-17: agreement is
@@ -116,6 +119,12 @@ a sum of binomials to determine the rank of the ordered statistic
 corresponding with the desired tolerance limit (basis value). Results
 of this function have been verified against results of the STAT-17
 program.
+
+\code{basis_anova} calculates basis values using the ANOVA method.
+\code{x} specifies the data (normally strength) and \code{group}
+indicates the group corresponding to each observation. This method is
+described in CMH-17-1G. This function has been verified against the
+results of the STAT-17 program.
 
 \code{basis_pooled_sd} calculates basis values by pooling the data from
 several groups together. \code{x} specifies the data (normally strength)

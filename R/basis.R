@@ -84,7 +84,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' In this approach, the \code{j-th} order statistic is selected to minimize
 #' the difference between the tolerance limit (assuming that the order
 #' statistics are equal to the expected values from a standard normal
-#' distribtion) and the population quantile for a standard normal
+#' distribution) and the population quantile for a standard normal
 #' distribution. This approach is described in Vangel (1994). The results
 #' of this function have been
 #' verified against example results from the program STAT-17: agreement is
@@ -98,6 +98,12 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' corresponding with the desired tolerance limit (basis value). Results
 #' of this function have been verified against results of the STAT-17
 #' program.
+#'
+#' \code{basis_anova} calculates basis values using the ANOVA method.
+#' \code{x} specifies the data (normally strength) and \code{group}
+#' indicates the group corresponding to each observation. This method is
+#' described in CMH-17-1G. This function has been verified against the
+#' results of the STAT-17 program.
 #'
 #' \code{basis_pooled_sd} calculates basis values by pooling the data from
 #' several groups together. \code{x} specifies the data (normally strength)
@@ -119,7 +125,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'   \item{\code{conf}}{the value of \eqn{conf} supplied}
 #'   \item{\code{data}}{a copy of the data used in the calculation}
 #'   \item{\code{groups}}{a copy of the groups variable.
-#'                        Only used for pooling methods.}
+#'                        Only used for pooling and ANOVA methods.}
 #'   \item{\code{n}}{the number of observations}
 #'   \item{\code{r}}{the number of groups, if a pooling method was used.
 #'                   Otherwise it is NULL.}
@@ -615,8 +621,8 @@ basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
 #' table. This indicates a disagreement in that sample size at which
 #' the rank should change. This is likely due to numerical
 #' differences in this function and the procedure used to generate the tables.
-#' However, the disagrement is limited to sample 6500 for A-Basis; no
-#' discrepencies have been noted for B-Basis. Since these sample sizes are
+#' However, the disagreement is limited to sample 6500 for A-Basis; no
+#' discrepancies have been noted for B-Basis. Since these sample sizes are
 #' uncommon for composite materials
 #' testing, and the difference between subsequent order statistics will be
 #' very small for samples this large, this difference will have no practical
@@ -710,6 +716,87 @@ basis_nonparametric_large_sample <- function(data = NULL, x, p = 0.90,
   x_ordered <- sort(res$data)
   r <- nonparametric_binomial_rank(res$n, p, conf)
   res$basis <- x_ordered[r]
+
+  return(res)
+}
+
+#' @rdname basis
+#' @importFrom rlang enquo eval_tidy
+#' @export
+basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
+  # TODO: Must have at least two groups
+  res <- list()
+  class(res) <- "basis"
+
+  res$call <- match.call()
+  res$distribution <- "ANOVA"
+  res$p <- p
+  res$conf <- conf
+
+  verify_tidy_input(
+    df = data,
+    x = x,
+    c = match.call(),
+    arg_name = "x")
+  res$data <- eval_tidy(enquo(x), data)
+
+  verify_tidy_input(
+    df = data,
+    x = groups,
+    c = match.call(),
+    arg_name = "groups")
+  res$groups <- eval_tidy(enquo(groups), data)
+
+  res$n <- length(res$data)
+  res$r <- length(levels(as.factor(res$groups)))
+
+  grand_mean <- mean(res$data)
+
+  ssb <- sum(sapply(
+    levels(as.factor(res$groups)),
+    function(g) {
+      group_data <- res$data[res$groups == g]
+      length(group_data) * mean(group_data) ^ 2
+    }
+  )) - res$n * grand_mean ^ 2
+
+  sst <- sum(sapply(
+    res$data,
+    function(xi) {
+      xi ^ 2
+    }
+  )) - res$n * grand_mean ^ 2
+
+  sse <- sst - ssb
+
+  msb <- ssb / (res$r - 1)
+  mse <- sse / (res$n - res$r)
+
+  n_star <- sum(sapply(
+    levels(as.factor(res$groups)),
+    function(g) {
+      group_data <- res$data[res$groups == g]
+      length(group_data) ^ 2 / res$n
+    }
+  ))
+
+  effective_batch <- (res$n - n_star) / (res$r - 1)
+
+  pop_sd <- sqrt(
+    msb / effective_batch + (effective_batch - 1) / effective_batch * mse
+  )
+
+  u <- msb / mse
+
+  k0 <- k_factor_normal(res$n, p, conf)
+  k1 <- k_factor_normal(res$r, p, conf)
+
+  w <- sqrt(u / (u + effective_batch - 1))
+
+  tol_factor <- (k0 - k1 / sqrt(effective_batch) + (k1 - k0) * w) /
+    (1 - 1 / sqrt(effective_batch))
+
+  res$basis <- grand_mean - tol_factor * pop_sd
 
   return(res)
 }
