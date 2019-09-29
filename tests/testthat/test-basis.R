@@ -121,7 +121,7 @@ test_that("(normal) basis value approx equals percentile for large samples", {
   expect_lt(abs(basis - q), 0.1)
 })
 
-test_that("normal basis value matches STAT17 result", {
+test_that("normal basis value matches STAT17/ASAP result", {
   data <- c(
     137.4438,
     139.5395,
@@ -145,15 +145,29 @@ test_that("normal basis value matches STAT17 result", {
 
   res <- basis_normal(x = data, p = 0.9, conf = 0.95)
   expect_equal(res$basis, 129.287, tolerance = 0.0005)
-  expect_output(print(res), "b-basis.*129.2", ignore.case = TRUE)
+  expect_output(print(res), "b-basis.*129\\.2", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
 
   res <- basis_normal(x = data, p = 0.99, conf = 0.95)
   expect_equal(res$basis, 120.336, tolerance = 0.0005)
-  expect_output(print(res), "a-basis.*120.3", ignore.case = TRUE)
+  expect_output(print(res), "a-basis.*120\\.3", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
 
   expect_match(res$distribution, "normal", ignore.case = TRUE)
+  expect_equal(res$modcv, FALSE)
+
+  res <- basis_normal(x = data, p = 0.9, conf = 0.95, modcv = TRUE)
+  expect_equal(res$basis, 124.400886535644, tolerance = 0.005)
+  expect_output(print(res), "b-basis.*124")
+  expect_output(print(res), "normal", ignore.case = TRUE)
+  expect_output(print(res), "modified", ignore.case = TRUE)
+  expect_equal(res$modcv, TRUE)
+
+  res <- basis_normal(x = data, p = 0.99, conf = 0.95, modcv = TRUE)
+  expect_equal(res$basis, 111.999949509182, tolerance = 0.005)
+  expect_output(print(res), "a-basis.*112\\.0")
+  expect_output(print(res), "normal", ignore.case = TRUE)
+  expect_output(print(res), "modified", ignore.case = TRUE)
 })
 
 test_that("log-normal basis value matches STAT17 result", {

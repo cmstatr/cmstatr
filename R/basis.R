@@ -156,7 +156,7 @@ NULL
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
 #' @export
-basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
+basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95, modcv = FALSE) {
   res <- list()
   class(res) <- "basis"
 
@@ -165,6 +165,8 @@ basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res$p <- p
   res$conf <- conf
   res$groups <- NULL
+  res$modcv <- NULL
+
 
   verify_tidy_input(
     df = data,
@@ -175,7 +177,15 @@ basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 
   res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
-  res$basis <- mean(res$data) - k * sd(res$data)
+
+  cv <- sd(res$data) / mean(res$data)
+  res$cv <- cv
+  if (modcv == TRUE) {
+    cv <- calc_cv_star(cv)
+    res$modcv <- cv
+  }
+
+  res$basis <- mean(res$data) * (1 - k * cv)
 
   return(res)
 }
@@ -220,6 +230,10 @@ print.basis <- function(x, ...) {
     cat(", r = ", x$r)
   }
   cat(" )\n")
+
+  if (!is.null(x$modcv)) {
+    cat("Modified CV ( Original CV =", x$cv, "/ Mod CV* =", x$modcv, ")\n")
+  }
 
   if (x$conf == 0.95 & x$p == 0.9) {
     cat("B-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")

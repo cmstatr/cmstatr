@@ -12,7 +12,7 @@
 \alias{basis_anova}
 \title{Calculate basis values}
 \usage{
-basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
+basis_normal(data = NULL, x, p = 0.9, conf = 0.95, modcv = FALSE)
 
 basis_lognormal(data = NULL, x, p = 0.9, conf = 0.95)
 
