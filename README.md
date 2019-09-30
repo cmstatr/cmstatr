@@ -12,7 +12,7 @@ This package is not yet on CRAN. For now, install from `github` using
 
 ```r
 install.packages("devtools")
-devtools::install_github("ComtekAdvancedStructures/cmstatr", build_vignettes = TRUE, force = TRUE,
+devtools::install_github("ComtekAdvancedStructures/cmstatr", build_vignettes = TRUE,
                          build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
