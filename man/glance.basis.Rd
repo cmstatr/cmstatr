@@ -39,10 +39,10 @@ x <- rnorm(20, 100, 5)
 b <- basis_normal(x = x)
 glance(b)
 
-#> ## A tibble: 1 x 6
-#>      p  conf distribution  n r     basis
-#>  <dbl> <dbl> <chr>     <int> <lgl> <dbl>
-#>      1   0.9  0.95 Normal 20 NA    87.8
+# ## A tibble: 1 x 6
+#       p  conf distribution  n r     basis
+#   <dbl> <dbl> <chr>     <int> <lgl> <dbl>
+# 1   0.9  0.95 Normal       20 NA    87.8
 
 }
 \seealso{
