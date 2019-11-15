@@ -1156,3 +1156,19 @@ test_that("ANOVA results match STAT17 for sample data", {
   expect_output(print(res), "ANOVA", ignore.case = TRUE)
   expect_match(res$distribution, "ANOVA", ignore.case = TRUE)
 })
+
+test_that("glance.basis produces expected value", {
+  # Sample data from CMH-17-1G Section 8.3.11.2.2
+
+  res <- cmh_17_1g_8_3_11_1_1_ETW2 %>%
+    basis_anova(strength, batch)
+
+  glance_res <- glance(res)
+
+  expect_equal(glance_res[["p"]][1], 0.9)
+  expect_equal(glance_res[["conf"]][1], 0.95)
+  expect_equal(glance_res[["distribution"]][1], "ANOVA")
+  expect_equal(glance_res[["n"]][1], nrow(cmh_17_1g_8_3_11_1_1_ETW2))
+  expect_equal(glance_res[["r"]][1], 3)
+  expect_equal(glance_res[["basis"]][1], 63.2, tolerance = 0.05)
+})
