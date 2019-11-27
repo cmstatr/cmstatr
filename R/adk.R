@@ -146,7 +146,7 @@ ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
 #' @importFrom tibble tibble
 #'
 #' @export
-glance.adk <- function(x, ...) {
+glance.adk <- function(x, ...) {  # nolint
   with(
     x,
     tibble::tibble(

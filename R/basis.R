@@ -217,7 +217,7 @@ new_basis <- function() {
 #' @importFrom tibble tibble
 #'
 #' @export
-glance.basis <- function(x, ...) {
+glance.basis <- function(x, ...) {  # nolint
   with(
     x,
     tibble::tibble(
