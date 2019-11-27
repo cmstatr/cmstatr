@@ -47,7 +47,7 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
 
   cur_mnr <- max(abs(res$data - mean(res$data)) / sd(res$data))
   res$mnr <- cur_mnr
-  cur_crit <- maximum_normed_residual_critical(length(res$data), alpha)
+  cur_crit <- maximum_normed_residual_crit(length(res$data), alpha)
   res$crit <- cur_crit
 
   res$outliers <- data.frame(index = c(), value = c())
@@ -64,16 +64,16 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
       res$n_outliers <- res$n_outliers + 1
       cur_data <- cur_data[-worst_index]
       cur_mnr <- max(abs(cur_data - mean(cur_data)) / sd(cur_data))
-      cur_crit <- maximum_normed_residual_critical(length(cur_data), alpha)
+      cur_crit <- maximum_normed_residual_crit(length(cur_data), alpha)
     }
   }
 
   return(res)
 }
 
-maximum_normed_residual_critical <- function(n, alpha) {
+maximum_normed_residual_crit <- function(n, alpha) {
   t <- qt(p = 1 - alpha / (2 * n), df = n - 2, lower.tail = TRUE, log.p = FALSE)
-  return( (n - 1) / sqrt(n) * sqrt(t ^ 2 / (n - 2 + t ^ 2)))
+  return((n - 1) / sqrt(n) * sqrt(t ^ 2 / (n - 2 + t ^ 2)))
 }
 
 #' @export

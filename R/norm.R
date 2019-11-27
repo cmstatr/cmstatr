@@ -26,7 +26,7 @@
 #' thickness is used for both.
 #'
 #' The formula applied is:
-#' \deqn{normalized value = test value \\frac{t_{measured}}{t_{nominal}}}{normalized value = test value * t_measured / t_nominal}
+#' \deqn{normalized value = test value * t_measured / t_nominal}
 #'
 #' If you need to normalize based on fiber volume fraction (or another method),
 #' you will first need to calculate the nominal cured ply thickness (or laminate

@@ -27,8 +27,8 @@ Returns an object of class \code{adk}. This object has the following fields:
   \item{\code{k}}{the number of groups}
   \item{\code{f}}{the value of the F test statistic}
   \item{\code{p}}{the computed p-value}
-  \item{\code{reject_equal_variance}}{a boolean value indicating whether the null
-    hypothesis that all samples have the same variance is rejected}
+  \item{\code{reject_equal_variance}}{a boolean value indicating whether the
+    null hypothesis that all samples have the same variance is rejected}
 }
 }
 \description{

@@ -21,8 +21,8 @@
 #'   \item{\code{k}}{the number of groups}
 #'   \item{\code{f}}{the value of the F test statistic}
 #'   \item{\code{p}}{the computed p-value}
-#'   \item{\code{reject_equal_variance}}{a boolean value indicating whether the null
-#'     hypothesis that all samples have the same variance is rejected}
+#'   \item{\code{reject_equal_variance}}{a boolean value indicating whether the
+#'     null hypothesis that all samples have the same variance is rejected}
 #' }
 #'
 #' @details
@@ -86,7 +86,7 @@ levene_test <- function(data, x, groups, alpha = 0.05) {
 
   f_stat_denomenator <- sum(sapply(transformed_groups, function(group_data) {
     group_data_minus_group_mean <- group_data - mean(group_data)
-    res <- sum( (group_data_minus_group_mean) ^ 2) / (n - k)
+    res <- sum((group_data_minus_group_mean) ^ 2) / (n - k)
     return(res)
   }))
 

@@ -74,20 +74,20 @@ NULL
 # to the function \code{...} to the function \code{dist}.
 anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
                              dist_name, dist, alpha, ...) {
-  F0 <- dist
+  f0 <- dist
   x0_sorted <- sort(x0)
   n <- length(x0_sorted)
   ii <- 1:n
-  U <- F0(x0_sorted, ...)
-  A <- -n - sum( (2 * ii - 1) / n * (log(U) + log(1 - rev(U))))
+  u <- f0(x0_sorted, ...)
+  a <- -n - sum((2 * ii - 1) / n * (log(u) + log(1 - rev(u))))
 
   res <- list(
     call = call,
     dist = dist_name,
     data = x0,
     n = n,
-    A = A,
-    osl = ad_p_unknown_param_fcn(A, n),
+    A = a,  # nolint
+    osl = ad_p_unknown_param_fcn(a, n),
     alpha = alpha
   )
 
