@@ -301,8 +301,8 @@ k_equiv <- function(alpha, n) {
   # The function f returns a penalty value for use in numerical optimization.
   # The first parameter, k, should be a vector of c(k1, k2).
   f <- function(k, n, alpha) {
-    Fx1 <- 1 - (stats::pnorm(-k[1], lower.tail = FALSE)) ** n
-    Fxbar <- stats::pnorm(sqrt(n) * (-k[2]))
+    fx1 <- 1 - (stats::pnorm(-k[1], lower.tail = FALSE)) ** n
+    fxbar <- stats::pnorm(sqrt(n) * (-k[2]))
 
     logh <- function(t) {
       stats::dnorm(t, log = TRUE) - stats::pnorm(t, lower.tail = FALSE,
@@ -318,13 +318,13 @@ k_equiv <- function(alpha, n) {
 
     lambda_hat <- stats::uniroot(
       function(lambda) {
-        ( (n - 1) / n) * h_minus_t(lambda) - k[1] + k[2]
+        ((n - 1) / n) * h_minus_t(lambda) - k[1] + k[2]
       },
       interval = c(-1000, 1000),
       extendInt = "yes"
     )$root
 
-    A <- function(t, n) {
+    a_fcn <- function(t, n) {
       hmt <- h_minus_t(t)
       exp(
         - (n - 1) * logh(t) +
@@ -333,16 +333,18 @@ k_equiv <- function(alpha, n) {
       ) * sqrt(ifelse(t > 60, t ** -2, 1 - h(t) * hmt))
     }
 
-    Fx1xbar.numerator <- stats::pnorm(sqrt(n) * (-k[2])) * stats::integrate(
+    fx1xbar_numerator <- stats::pnorm(sqrt(n) * (-k[2])) * stats::integrate(
       function(t) {
-        A(t, n)
+        a_fcn(t, n)
       },
       lower = -Inf,
       upper = lambda_hat,
       subdivisions = 1000L
     )$value + stats::integrate(
       function(t) {
-        stats::pnorm(sqrt(n) * (-k[1] + (n - 1) / n * h_minus_t(t))) * A(t, n)
+        stats::pnorm(
+          sqrt(n) * (-k[1] + (n - 1) / n * h_minus_t(t))
+        ) * a_fcn(t, n)
       },
       lower = lambda_hat,
       upper = Inf,
@@ -350,16 +352,16 @@ k_equiv <- function(alpha, n) {
       rel.tol = 1e-8
     )$value
 
-    Fx1xbar.denominator <- stats::integrate(function(t) A(t, n),
+    fx1xbar_denominator <- stats::integrate(function(t) a_fcn(t, n),
                                             lower = -Inf, upper = Inf)$value
-    Fx1xbar <- Fx1xbar.numerator / Fx1xbar.denominator
+    fx1xbar <- fx1xbar_numerator / fx1xbar_denominator
 
     # Use the sum of the absolute values of the two functions being solved as
     # the penalty function. However, it was found empirically that the first
     # function listed is more sensitive, so give it a higher weight to aid in
     # finding hte correct solution
     return(
-      abs(Fx1 + Fxbar - Fx1xbar - alpha) * 100 + abs(Fx1 - Fxbar)
+      abs(fx1 + fxbar - fx1xbar - alpha) * 100 + abs(fx1 - fxbar)
     )
   }
 
@@ -456,7 +458,8 @@ k_equiv <- function(alpha, n) {
 #' @details
 #' There are several optional arguments to this function. Either (but not both)
 #' \code{data_sample} or all of \code{n_sample}, \code{mean_sample} and
-#' \code{sd_sample} must be supplied. And, either (but not both) \code{data_qual}
+#' \code{sd_sample} must be supplied. And, either (but not both)
+#' \code{data_qual}
 #' (and also \code{df_qual} if \code{data_qual} is a column name and not a
 #' vector) or all of \code{n_qual}, \code{mean_qual} and \code{sd_qual} must
 #' be supplied. If these requirements are violated, warning(s) or error(s) will
@@ -589,7 +592,7 @@ equiv_change_mean <- function(df_qual = NULL, data_qual = NULL,
   }
 
   sp <- sqrt(
-    ( (n_qual - 1) * sd_qual ** 2 + (n_sample - 1) * sd_sample ** 2) /
+    ((n_qual - 1) * sd_qual ** 2 + (n_sample - 1) * sd_sample ** 2) /
       (n_qual + n_sample - 2)
   )
   res$sp <- sp

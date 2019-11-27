@@ -208,7 +208,7 @@ test_that(
   "Critical MNR values match those published in CMH-17-1G, Table 8.5.7", {
     cmh_17_cv %>%
       rowwise() %>%
-      mutate(calc_mnr_crit = maximum_normed_residual_critical(n, 0.05)) %>%
+      mutate(calc_mnr_crit = maximum_normed_residual_crit(n, 0.05)) %>%
       mutate(check = expect_lte(abs(calc_mnr_crit - c), 0.001))
 })
 

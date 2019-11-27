@@ -81,7 +81,7 @@ ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
   res$alpha <- alpha
 
   grps <- lapply(levels(as.factor(res[["groups"]])),
-                 function(l){
+                 function(l) {
                    res[["data"]][res[["groups"]] == l]
                  }
   )

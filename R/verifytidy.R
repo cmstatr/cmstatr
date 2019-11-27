@@ -8,7 +8,8 @@
 # @param c the call
 # @param arg_name the name of the vector argument being targeted
 #
-#' @importFrom rlang enquo eval_tidy abort quo_text call_name call_args call_args_names
+#' @importFrom rlang enquo eval_tidy abort quo_text call_name
+#' @importFrom rlang call_args call_args_names
 verify_tidy_input <- function(df, x, c, arg_name) {
   if (is.vector(df)) {
     cname <- call_name(c)
