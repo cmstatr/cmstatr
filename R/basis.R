@@ -92,7 +92,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' agreement can be as poor as 1% with the result of this function being
 #' more conservative than STAT-17.
 #'
-#' \code{basis_nonparametric_large_sample} calculates the basis value
+#' \code{basis_nonpara_large_sample} calculates the basis value
 #' using the large sample method described in CMH-17-1G. This method uses
 #' a sum of binomials to determine the rank of the ordered statistic
 #' corresponding with the desired tolerance limit (basis value). Results
@@ -235,7 +235,7 @@ print.basis <- function(x, ...) {
     cat(x$basis, "\n")
   } else if (is.data.frame(x$basis)) {
     col_width <- max(nchar(as.character(x$basis[["group"]]))) + 2
-    for (j in 1:nrow(x$basis)) {
+    for (j in seq(along.with = x$basis$group)) {
       cat(format(x$basis[["group"]][j], width = col_width))
       cat(x$basis[["value"]][j], "\n")
     }
@@ -286,8 +286,8 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 
   k_integrand <- function(z) {
     return(
-      z ^ (res$n - 2) * exp( (z - 1) * sum(a)) /
-        ( (1 / res$n) * sum( exp(a * z))) ^ res$n
+      z ^ (res$n - 2) * exp((z - 1) * sum(a)) /
+        ((1 / res$n) * sum(exp(a * z))) ^ res$n
     )
   }
 
@@ -300,8 +300,8 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 
   h2 <- function(z) {
     return(
-      k * z ^ (res$n - 2) * exp( (z - 1) * sum(a)) /
-        ( (1 / res$n) * sum( exp(a * z))) ^ res$n
+      k * z ^ (res$n - 2) * exp((z - 1) * sum(a)) /
+        ((1 / res$n) * sum(exp(a * z))) ^ res$n
     )
   }
 
@@ -353,7 +353,7 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
   res$n <- length(res$data)
   res$r <- length(levels(as.factor(res$groups)))
 
-  pooled_sd <- sqrt(sum( (norm_data - 1) ^ 2) / (res$n - res$r))
+  pooled_sd <- sqrt(sum((norm_data - 1) ^ 2) / (res$n - res$r))
 
   basis <- sapply(levels(as.factor(res$groups)), function(g) {
     nj <- length(res$data[res$groups == g])
@@ -401,7 +401,7 @@ basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
     sum(
       sapply(levels(as.factor(res$groups)), function(g) {
         xj_bar <- mean(res$data[res$groups == g])
-        sum( (res$data[res$groups == g] - xj_bar) ^ 2)
+        sum((res$data[res$groups == g] - xj_bar) ^ 2)
       })
     ) / (res$n - res$r))
 
@@ -427,7 +427,7 @@ hk_ext_h <- function(z, n, i, j, p) {
   # for z >= 1
   qb <- pbeta(1 - p, j, n - j + 1)
   int <- integrate(function(t) {
-      pbeta( ( (1 - p) / t) ^ (1 / z), i, j - i) * dbeta(t, j, n - j + 1)
+      pbeta(((1 - p) / t) ^ (1 / z), i, j - i) * dbeta(t, j, n - j + 1)
     },
     lower = 1 - p, upper = 1)
   if (int$message != "OK") {
@@ -514,7 +514,7 @@ hk_ext_z_j_opt <- function(n, p, conf) {
   # for the purposes of determining which value of j is optimum
   # per Vangel's approach.
   expected_order_statistic <- function(i, n) {
-    qnorm( (i - 0.5) / n)
+    qnorm((i - 0.5) / n)
   }
 
   # Try all the allowable values of j to find the value of T
@@ -525,12 +525,12 @@ hk_ext_z_j_opt <- function(n, p, conf) {
     hk_ext_z(n, i, ji, p, conf)
   })
 
-  err_vals <- sapply(1:length(j), function(index) {
+  err_vals <- sapply(seq(along.with = j), function(index) {
     ji <- j[index]
     zi <- z_vals[index]
-    E1 <- expected_order_statistic(i, n)
-    E2 <- expected_order_statistic(ji, n)
-    abs(zi * E1 + (1 - zi) * E2 - qnorm(p))
+    e1 <- expected_order_statistic(i, n)
+    e2 <- expected_order_statistic(ji, n)
+    abs(zi * e1 + (1 - zi) * e2 - qnorm(p))
   })
 
   list(
@@ -592,7 +592,7 @@ basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
 #' limits for large samples. This function should only be used for
 #' computing B-Basis for samples larger than 28 or A-Basis for samples
 #' larger than 298. This function is used by
-#' \code{\link{basis_nonparametric_large_sample}}.
+#' \code{\link{basis_nonpara_large_sample}}.
 #'
 #' @param n the sample size
 #' @param p the desired quantile for the tolerance limit
@@ -636,20 +636,20 @@ basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
-#' @seealso \code{\link{basis_nonparametric_large_sample}}
+#' @seealso \code{\link{basis_nonpara_large_sample}}
 #'
 #' @export
-nonparametric_binomial_rank <- function(n, p, conf) {
+nonpara_binomial_rank <- function(n, p, conf) {
   p <- 1 - p
 
-  E <- function(r) {
+  e_fcn <- function(r) {
     sum(sapply(r:n, function(w) {
       exp(lchoose(n, w) + w * log(p) + (n - w) * log(1 - p))
     }))
   }
 
   r1 <- 1
-  e1 <- E(r1)
+  e1 <- e_fcn(r1)
 
   if (e1 < conf) {
     stop(paste0(
@@ -658,7 +658,7 @@ nonparametric_binomial_rank <- function(n, p, conf) {
   }
 
   r2 <- n
-  e2 <- E(r2)
+  e2 <- e_fcn(r2)
 
   if (e2 > conf) {
     stop(paste0(
@@ -670,20 +670,20 @@ nonparametric_binomial_rank <- function(n, p, conf) {
     if (abs(r2 - r1) == 1) {
       break
     }
-    rm <- round( (r1 + r2) / 2, digits = 0)
-    Em <- E(rm)
+    rm <- round((r1 + r2) / 2, digits = 0)
+    em <- e_fcn(rm)
 
     # nolint start
     # We know that the following holds, and we want this to continue to hold:
     # E1 > conf
     # E2 < conf
     # nolint end
-    if (Em > conf) {
+    if (em > conf) {
       r1 <- rm
-      e1 <- Em
+      e1 <- em
     } else {
       r2 <- rm
-      e2 <- Em
+      e2 <- em
     }
   }
   r1
@@ -693,8 +693,8 @@ nonparametric_binomial_rank <- function(n, p, conf) {
 #' @importFrom rlang enquo eval_tidy
 #'
 #' @export
-basis_nonparametric_large_sample <- function(data = NULL, x, p = 0.90,
-                                             conf = 0.95) {
+basis_nonpara_large_sample <- function(data = NULL, x, p = 0.90,
+                                       conf = 0.95) {
   res <- list()
   class(res) <- "basis"
 
@@ -714,7 +714,7 @@ basis_nonparametric_large_sample <- function(data = NULL, x, p = 0.90,
   res$n <- length(res$data)
 
   x_ordered <- sort(res$data)
-  r <- nonparametric_binomial_rank(res$n, p, conf)
+  r <- nonpara_binomial_rank(res$n, p, conf)
   res$basis <- x_ordered[r]
 
   return(res)

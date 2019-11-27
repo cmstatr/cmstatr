@@ -91,7 +91,8 @@ a sample. This is normally used to check for properties such as modulus.
 \details{
 There are several optional arguments to this function. Either (but not both)
 \code{data_sample} or all of \code{n_sample}, \code{mean_sample} and
-\code{sd_sample} must be supplied. And, either (but not both) \code{data_qual}
+\code{sd_sample} must be supplied. And, either (but not both)
+\code{data_qual}
 (and also \code{df_qual} if \code{data_qual} is a column name and not a
 vector) or all of \code{n_qual}, \code{mean_qual} and \code{sd_qual} must
 be supplied. If these requirements are violated, warning(s) or error(s) will
