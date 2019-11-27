@@ -154,18 +154,18 @@ test_that("normal basis value matches STAT17/ASAP result", {
   expect_output(print(res), "normal", ignore.case = TRUE)
 
   expect_match(res$distribution, "normal", ignore.case = TRUE)
-  expect_equal(res$modcv, FALSE)
+  expect_null(res$modcv)
 
   res <- basis_normal(x = data, p = 0.9, conf = 0.95, modcv = TRUE)
   expect_equal(res$basis, 124.400886535644, tolerance = 0.005)
-  expect_output(print(res), "b-basis.*124")
+  expect_output(print(res), "b-basis.*124", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
   expect_output(print(res), "modified", ignore.case = TRUE)
-  expect_equal(res$modcv, TRUE)
+  expect_gt(res$modcv, 0)
 
   res <- basis_normal(x = data, p = 0.99, conf = 0.95, modcv = TRUE)
   expect_equal(res$basis, 111.999949509182, tolerance = 0.005)
-  expect_output(print(res), "a-basis.*112\\.0")
+  expect_output(print(res), "a-basis.*112", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
   expect_output(print(res), "modified", ignore.case = TRUE)
 })

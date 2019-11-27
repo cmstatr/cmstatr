@@ -167,7 +167,6 @@ basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95, modcv = FALSE) {
   res$groups <- NULL
   res$modcv <- NULL
 
-
   verify_tidy_input(
     df = data,
     x = x,
