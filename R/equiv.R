@@ -506,11 +506,8 @@ equiv_change_mean <- function(df_qual = NULL, data_qual = NULL,
                               sd_qual = NULL, data_sample = NULL,
                               n_sample = NULL, mean_sample = NULL,
                               sd_sample = NULL, alpha, modcv = FALSE) {
-  if (alpha <= 0) {
-    stop("alpha must be positive")
-  }
-  if (alpha >= 1) {
-    stop("alpha must be less than 1")
+  if (alpha <= 0 | alpha >= 1) {
+    stop("alpha must be positive and less than 1")
   }
 
   if (!is.null(df_qual)) {
@@ -552,24 +549,8 @@ equiv_change_mean <- function(df_qual = NULL, data_qual = NULL,
     sd_qual <- stats::sd(data_qual)
   }
 
-  if (is.null(n_sample)) {
-    stop("n_sample not set")
-  }
-  if (is.null(mean_sample)) {
-    stop("mean_sample not set")
-  }
-  if (is.null(sd_sample)) {
-    stop("sd_sample not set")
-  }
-  if (is.null(n_qual)) {
-    stop("n_qual not set")
-  }
-  if (is.null(mean_qual)) {
-    stop("mean_qual not set")
-  }
-  if (is.null(sd_qual)) {
-    stop("sd_qual not set")
-  }
+  verify_equiv_change_mean_var(n_sample, mean_sample, sd_sample,
+                               n_qual, mean_qual, sd_qual)
 
   res <- list()
   class(res) <- "equiv_change_mean"
@@ -612,6 +593,29 @@ equiv_change_mean <- function(df_qual = NULL, data_qual = NULL,
   res$result <- ifelse(-t_req <= t0 & t0 <= t_req, "PASS", "FAIL")
 
   return(res)
+}
+
+
+verify_equiv_change_mean_var <- function(n_sample, mean_sample, sd_sample,
+                                         n_qual, mean_qual, sd_qual) {
+  if (is.null(n_sample)) {
+    stop("n_sample not set")
+  }
+  if (is.null(mean_sample)) {
+    stop("mean_sample not set")
+  }
+  if (is.null(sd_sample)) {
+    stop("sd_sample not set")
+  }
+  if (is.null(n_qual)) {
+    stop("n_qual not set")
+  }
+  if (is.null(mean_qual)) {
+    stop("mean_qual not set")
+  }
+  if (is.null(sd_qual)) {
+    stop("sd_qual not set")
+  }
 }
 
 
