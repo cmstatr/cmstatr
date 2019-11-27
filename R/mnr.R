@@ -76,6 +76,59 @@ maximum_normed_residual_crit <- function(n, alpha) {
   return((n - 1) / sqrt(n) * sqrt(t ^ 2 / (n - 2 + t ^ 2)))
 }
 
+#' Glance at a \code{mnr} (maximum normed residual) object
+#'
+#' @description
+#' Glance accepts an object of type \code{mnr} and returns a
+#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' one row of summaries.
+#'
+#' Glance does not do any calculations: it just gathers the results in a
+#' tibble.
+#'
+#' @param x an \code{mnr} object
+#' @param ... Additional arguments. Not used. Included only to match generic
+#'            signature.
+#'
+#'
+#' @return
+#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' columns:
+#'
+#' \item{\code{mnr}}{the computed MNR test statistic}
+#' \item{\code{crit}}{the critical value given the sample size and the
+#'                    significance level}
+#' \item{\code{n_outliers}}{the number of outliers found}
+#'
+#'
+#' @seealso
+#' \code{\link{maximum_normed_residual}}
+#'
+#' @examples
+#' x <- c(rnorm(20, 100, 5), 10)
+#' m <- maximum_normed_residual(x = x)
+#' glance(m)
+#'
+#' ## # A tibble: 1 x 3
+#' ##     mnr  crit n_outliers
+#' ##   <dbl> <dbl>      <dbl>
+#' ## 1  4.25  2.73          1
+#'
+#' @method glance mnr
+#' @importFrom tibble tibble
+#'
+#' @export
+glance.mnr <- function(x, ...) {  # nolint
+  with(
+    x,
+    tibble::tibble(
+      mnr = mnr,
+      crit = crit,
+      n_outliers = n_outliers
+    )
+  )
+}
+
 #' @export
 print.mnr <- function(x, ...) {
   cat("\nCall:\n",

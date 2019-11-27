@@ -308,3 +308,24 @@ test_that("Both vectors and data.frames can be passed to the MNR function", {
   expect_equal(nrow(res2$outliers), 1)  # one outlier for this batch
   expect_equal(res2$n_outliers, 1)
 })
+
+test_that("glance method returns expected results", {
+  df <- tribble(
+    ~batch, ~strength,
+    3, 107.676986,
+    3, 108.960241,
+    3, 116.12264,
+    3, 80.2334815,
+    3, 106.14557,
+    3, 104.667866,
+    3, 104.234953
+  )
+
+  mnr_res <- df %>%
+    maximum_normed_residual(strength, alpha = 0.05)
+  glance_res <- glance(mnr_res)
+
+  expect_equal(glance_res$mnr, 2.119, tolerance = 0.001)
+  expect_equal(glance_res$crit, 2.02, tolerance = 0.001)
+  expect_equal(glance_res$n_outliers, 1)
+})
