@@ -86,7 +86,7 @@ maximum_normed_residual_crit <- function(n, alpha) {
 #' Glance does not do any calculations: it just gathers the results in a
 #' tibble.
 #'
-#' @param x an \code{mnr} object
+#' @param x An \code{mnr} object
 #' @param ... Additional arguments. Not used. Included only to match generic
 #'            signature.
 #'
@@ -127,6 +127,87 @@ glance.mnr <- function(x, ...) {  # nolint
       n_outliers = n_outliers
     )
   )
+}
+
+#' Augment data with information from an \code{mnr} object
+#'
+#' @description
+#' Augment accepts an \code{mnr} object (returned from the function
+#' \code{\link{maximum_normed_residual}}) and a dataset and adds the column
+#' \code{.outlier} to the dataset. The column \code{.outlier} is a logical
+#' vector indicating whether each observation is an outlier.
+#'
+#' When passing data into \code{augment} using the \code{data} argument,
+#' the data must be exactly the data that was passed to
+#' \code{maximum_normed_residual}.
+#'
+#' @param x an \code{mnr} object created by
+#'          \code{\link{maximum_normed_residual}}
+#' @param data a \code{data.frame} or
+#'             \code{\link[tibble:tibble]{tibble::tibble}}
+#'             containing the original data that was passed to
+#'             \code{maximum_normed_residual}
+#' @param ... Additional arguments. Not used. Included only to match generic
+#'            signature.
+#'
+#' @return
+#' When \code{data} is supplied, \code{augment} returns \code{data}, but with
+#' one column appended. When \code{data} is not supplied, \code{augment}
+#' returns a new \code{\link[tibble:tibble]{tibble::tibble}} with the column
+#' \code{values} containing the original values used by
+#' \code{maximum_normed_residaul} plus one additional column. The additional
+#' column is:
+#'
+#' \item{\code{.outler}}{a logical value indicating whether the observation
+#'                       is an outlier}
+#'
+#' @examples
+#' data <- data.frame(strength = c(80, 98, 96, 97, 98, 120))
+#' m <- maximum_normed_residual(data, strength)
+#'
+#' # augment can be called with the original data
+#' augment(m, data)
+#'
+#' ##   strength .outlier
+#' ## 1       80    FALSE
+#' ## 2       98    FALSE
+#' ## 3       96    FALSE
+#' ## 4       97    FALSE
+#' ## 5       98    FALSE
+#' ## 6      120    FALSE
+#'
+#' # or augment can be called without the orignal data and it will be
+#' # reconstructed
+#' augment(m)
+#'
+#' ## # A tibble: 6 x 2
+#' ##   values .outlier
+#' ##    <dbl> <lgl>
+#' ## 1     80 FALSE
+#' ## 2     98 FALSE
+#' ## 3     96 FALSE
+#' ## 4     97 FALSE
+#' ## 5     98 FALSE
+#' ## 6    120 FALSE
+#'
+#' @seealso
+#' \code{\link{maximum_normed_residual}}
+#'
+#' @method augment mnr
+#' @importFrom tibble tibble
+#' @importFrom dplyr mutate
+#'
+#' @export
+augment.mnr <- function(x, data = x$data, ...) {  # nolint
+  if (is.data.frame(data)) {
+    df <- data
+  } else {
+    df <- tibble::tibble(values = data)
+  }
+
+  res <- mutate(df, .outlier = FALSE)
+  res$.outlier[x$outliers$index] <- TRUE
+  res
 }
 
 #' @export

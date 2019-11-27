@@ -329,3 +329,33 @@ test_that("glance method returns expected results", {
   expect_equal(glance_res$crit, 2.02, tolerance = 0.001)
   expect_equal(glance_res$n_outliers, 1)
 })
+
+
+test_that("augment method returns expected results", {
+  df <- tribble(
+    ~batch, ~strength,
+    3, 107.676986,
+    3, 108.960241,
+    3, 116.12264,
+    3, 80.2334815,
+    3, 106.14557,
+    3, 104.667866,
+    3, 204.234953
+  )
+
+  mnr_res <- df %>%
+    maximum_normed_residual(strength, alpha = 0.05)
+
+  # not passing along the original data
+  augment_res <- augment(mnr_res)
+  expect_equal(df$strength, augment_res$values)
+  expect_equal(augment_res$.outlier,
+               c(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE))
+
+  # passing along the original data.frame
+  augment_res <- augment(mnr_res, df)
+  expect_equal(df$strength, augment_res$strength)
+  expect_equal(df$batch, augment_res$batch)
+  expect_equal(augment_res$.outlier,
+               c(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE))
+})

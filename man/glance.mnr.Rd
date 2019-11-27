@@ -7,7 +7,7 @@
 \method{glance}{mnr}(x, ...)
 }
 \arguments{
-\item{x}{an \code{mnr} object}
+\item{x}{An \code{mnr} object}
 
 \item{...}{Additional arguments. Not used. Included only to match generic
 signature.}
