@@ -101,7 +101,7 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
 }
 
 
-#' Glance at a n \code{anderson_darling} object
+#' Glance at an \code{anderson_darling} object
 #'
 #' @description
 #' Glance accepts an object of type basis and returns a

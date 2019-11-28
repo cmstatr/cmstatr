@@ -2,7 +2,7 @@
 % Please edit documentation in R/adtest.R
 \name{glance.anderson_darling}
 \alias{glance.anderson_darling}
-\title{Glance at a n \code{anderson_darling} object}
+\title{Glance at an \code{anderson_darling} object}
 \usage{
 \method{glance}{anderson_darling}(x, ...)
 }
