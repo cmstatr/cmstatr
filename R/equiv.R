@@ -193,6 +193,89 @@ equiv_mean_extremum <- function(df_qual = NULL, data_qual = NULL,
   return(res)
 }
 
+#' Glance at an \code{equiv_mean_extremum} object
+#'
+#' @description
+#' Glance accepts an object of type \code{equiv_mean_extremum} and returns a
+#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' one row of summaries.
+#'
+#' Glance does not do any calculations: it just gathers the results in a
+#' tibble.
+#'
+#' @param x an equiv_mean_extremum object returned from
+#'          \code{\link{equiv_mean_extremum}}
+#' @param ... Additional arguments. Not used. Included only to match generic
+#'            signature.
+#'
+#'
+#' @return
+#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' columns:
+#'
+#' \item{\code{alpha}}{the value of alpha passed to this function}
+#' \item{\code{n_sample}}{the number of observations in the sample for which
+#'   equivalency is being checked. This is either the value \code{n_sample}
+#'   passed to this function or the length of the vector \code{data_sample}.}
+#' \item{\code{modcv}}{logical value indicating whether the acceptance
+#'   thresholds are calculated using the modified CV approach}
+#' \item{\code{threshold_min_indiv}}{The calculated threshold value for
+#'   minimum individual}
+#' \item{\code{threshold_mean}}{The calculated threshold value for mean}
+#' \item{\code{result_min_indiv}}{a character vector of either "PASS" or
+#'   "FAIL" indicating whether the data from \code{data_sample} passes the
+#'   test for minimum individual. If \code{data_sample} was not supplied,
+#'   this value will be \code{NULL}}
+#' \item{\code{result_mean}}{a character vector of either "PASS" or
+#'   "FAIL" indicating whether the data from \code{data_sample} passes the
+#'   test for mean. If \code{data_sample} was not supplied, this value will
+#'   be  \code{NULL}}
+#' \item{\code{min_sample}}{The minimum value from the vector
+#'   \code{data_sample}. if \code{data_sample} was not supplied, this will
+#'   have a value of \code{NULL}}
+#' \item{\code{mean_sample}}{The mean value from the vector
+#'   \code{data_sample}. If \code{data_sample} was not supplied, this will
+#'   have a value of \code{NULL}}
+#'
+#'
+#' @seealso
+#' \code{\link{equiv_mean_extremum}}
+#'
+#' @examples
+#' x0 <- rnorm(30, 100, 4)
+#' x1 <- rnorm(5, 91, 7)
+#' eq <- equiv_mean_extremum(data_qual = x0, data_sample = x1, alpha = 0.01)
+#' glance(eq)
+#'
+#' ## # A tibble: 1 x 9
+#' ##   alpha n_sample modcv threshold_min_indiv threshold_mean
+#' ##   <dbl>    <int> <lgl>               <dbl>          <dbl>
+#' ## 1  0.01        5 FALSE                86.2           94.9
+#' ## # … with 4 more variables: result_min_indiv <chr>, result_mean <chr>,
+#' ## #   min_sample <dbl>, mean_sample <dbl>
+#'
+#' @method glance equiv_mean_extremum
+#' @importFrom tibble tibble
+#'
+#' @export
+glance.equiv_mean_extremum <- function(x, ...) {  # nolint
+  with(
+    x,
+    tibble::tibble(
+      alpha = alpha,
+      n_sample = n_sample,
+      modcv = modcv,
+      threshold_min_indiv = threshold_min_indiv,
+      threshold_mean = threshold_mean,
+      result_min_indiv = result_min_indiv,
+      result_mean = result_mean,
+      min_sample = min_sample,
+      mean_sample = mean_sample
+    )
+  )
+}
+
+
 #' Nicely formats the results from \code{\link{equiv_mean_extremum}}
 #'
 #'
@@ -692,7 +775,7 @@ verify_equiv_change_mean_var <- function(n_sample, mean_sample, sd_sample,
 #' ##   alpha n_sample mean_sample sd_sample n_qual mean_qual sd_qual modcv
 #' ##   <dbl>    <int>       <dbl>     <dbl>  <int>     <dbl>   <dbl> <lgl>
 #' ## 1  0.01        5        85.8      9.93     30      100.    3.90 FALSE
-#' ## # … with 13 more variables: sp <dbl>, t0 <dbl>, t_req <dbl>,
+#' ## # … with 6 more variables: sp <dbl>, t0 <dbl>, t_req <dbl>,
 #' ## #   threshold_min <dbl>, threshold_max <dbl>, result <chr>
 #'
 #' @method glance equiv_change_mean

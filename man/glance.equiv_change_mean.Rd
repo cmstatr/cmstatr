@@ -74,7 +74,7 @@ glance(eq)
 ##   alpha n_sample mean_sample sd_sample n_qual mean_qual sd_qual modcv
 ##   <dbl>    <int>       <dbl>     <dbl>  <int>     <dbl>   <dbl> <lgl>
 ## 1  0.01        5        85.8      9.93     30      100.    3.90 FALSE
-## # … with 13 more variables: sp <dbl>, t0 <dbl>, t_req <dbl>,
+## # … with 6 more variables: sp <dbl>, t0 <dbl>, t_req <dbl>,
 ## #   threshold_min <dbl>, threshold_max <dbl>, result <chr>
 
 }

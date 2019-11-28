@@ -123,6 +123,25 @@ test_that("check three ways of specifying qual data are same (mean_ext)", {
   expect_equal(res1, res3)
 })
 
+test_that("check that glance.equiv_mean_extremum produces expected results", {
+  data_sample <- c(145.055, 148.329, 142.667, 141.795, 144.139,
+                   135.923, 136.177, 133.523, 134.350)
+  res <- equiv_mean_extremum(alpha = 0.05, data_sample = data_sample,
+                             mean_qual = 141.310, sd_qual = 6.415,
+                             modcv = TRUE)
+  res <- glance(res)
+
+  expect_equal(res$alpha[1], 0.05)
+  expect_equal(res$n_sample[1], 9)
+  expect_equal(res$modcv[1], TRUE)
+  expect_equal(res$threshold_min_indiv[1], 117.024, tolerance = 1e-2)
+  expect_equal(res$threshold_mean[1], 135.630, tolerance = 1e-2)
+  expect_equal(res$result_min_indiv[1], "PASS")
+  expect_equal(res$result_mean[1], "PASS")
+  expect_equal(res$min_sample[1], min(data_sample))
+  expect_equal(res$mean_sample[1], mean(data_sample))
+})
+
 test_that("check equiv_change_mean against HYTEQ using some example data", {
   res <- equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
                            sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
