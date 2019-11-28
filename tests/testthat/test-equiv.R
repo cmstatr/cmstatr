@@ -212,3 +212,26 @@ test_that("check four ways of specifying qual data are same (chg in mean)", {
   expect_equal(res1, res3)
   expect_equal(res1, res4)
 })
+
+test_that("glance.equiv_change_mean produces expected results", {
+  res <- equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
+                           sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+                           sd_qual = 0.162)
+
+  res <- glance(res)
+
+  expect_equal(res$alpha[1], 0.05)
+  expect_equal(res$n_sample[1], 9)
+  expect_equal(res$mean_sample[1], 9.02)
+  expect_equal(res$sd_sample[1], 0.15785)
+  expect_equal(res$n_qual[1], 28)
+  expect_equal(res$mean_qual[1], 9.24)
+  expect_equal(res$sd_qual[1], 0.162)
+  expect_equal(res$sp[1], 0.1608, tolerance = 5e-4)
+  expect_equal(res$t0[1], -3.570, tolerance = 5e-3)
+  expect_equal(res$t_req[1], 2.030, tolerance = 5e-3)
+  expect_equal(res$threshold_min[1], 9.115, tolerance = 5e-3)
+  expect_equal(res$threshold_max[1], 9.365, tolerance = 5e-3)
+  expect_equal(res$modcv[1], FALSE)
+  expect_equal(res$result[1], "FAIL")
+})

@@ -2,7 +2,7 @@
 % Please edit documentation in R/equiv.R
 \name{equiv_change_mean}
 \alias{equiv_change_mean}
-\title{Change in mean value}
+\title{Equivalency based on change in mean value}
 \usage{
 equiv_change_mean(df_qual = NULL, data_qual = NULL, n_qual = NULL,
   mean_qual = NULL, sd_qual = NULL, data_sample = NULL,
