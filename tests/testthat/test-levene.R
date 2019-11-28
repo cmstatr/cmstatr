@@ -141,3 +141,18 @@ test_that("Levene's test matches results from STAT17", {
     levene_test(strength, batch)
   expect_equal(res$f, 0.123, tolerance = 0.005)
 })
+
+test_that("glance produces expected results", {
+  res <- df %>%
+    levene_test(strength, condition, alpha = 0.05)
+
+  glance_res <- glance(res)
+
+  expect_equal(glance_res$alpha[1], 0.05)
+  expect_equal(glance_res$n[1], 102)
+  expect_equal(glance_res$k[1], 5)
+  expect_equal(glance_res$f[1], 0.896, tolerance = 0.005)
+  expect_equal(glance_res$p[1], 0.469, tolerance = 0.005)
+  expect_false(glance_res$reject_equal_variance[1])
+
+})

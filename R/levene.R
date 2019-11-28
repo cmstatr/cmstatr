@@ -100,6 +100,70 @@ levene_test <- function(data, x, groups, alpha = 0.05) {
   return(res)
 }
 
+
+#' Glance at a \code{levene} object
+#'
+#' @description
+#' Glance accepts an object of type \code{levele} and returns a
+#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' one row of summaries.
+#'
+#' Glance does not do any calculations: it just gathers the results in a
+#' tibble.
+#'
+#' @param x a \code{levene} object returned from \code{\link{levene_test}}
+#' @param ... Additional arguments. Not used. Included only to match generic
+#'            signature.
+#'
+#'
+#' @return
+#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' columns:
+#'
+#' \item{\code{alpha}}{the value of alpha specified}
+#' \item{\code{n}}{the total number of observations}
+#' \item{\code{k}}{the number of groups}
+#' \item{\code{f}}{the value of the F test statistic}
+#' \item{\code{p}}{the computed p-value}
+#' \item{\code{reject_equal_variance}}{a boolean value indicating whether the
+#'       null hypothesis that all samples have the same variance is rejected}
+#'
+#'
+#' @seealso
+#' \code{\link{levene_test}}
+#'
+#' @examples
+#' df <- data.frame(
+#'   groups = c(rep("A", 5), rep("B", 6)),
+#'   strength = c(rnorm(5, 100, 6), rnorm(6, 105, 7))
+#' )
+#' levene_result <- levene_test(df, strength, groups)
+#' glance(levene_result)
+#'
+#' ## # A tibble: 1 x 6
+#' ##   alpha     n     k     f      p reject_equal_variance
+#' ##   <dbl> <int> <int> <dbl>  <dbl> <lgl>
+#' ## 1  0.05    11     2  3.93 0.0788 FALSE
+#'
+#' @method glance levene
+#' @importFrom tibble tibble
+#'
+#' @export
+glance.levene <- function(x, ...) {  # nolint
+  with(
+    x,
+    tibble::tibble(
+      alpha = alpha,
+      n = n,
+      k = k,
+      f = f,
+      p = p,
+      reject_equal_variance = reject_equal_variance
+    )
+  )
+}
+
+
 #' @export
 print.levene <- function(x, ...) {
   cat("\nCall:\n",

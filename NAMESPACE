@@ -3,6 +3,7 @@
 S3method(augment,mnr)
 S3method(glance,adk)
 S3method(glance,basis)
+S3method(glance,levene)
 S3method(glance,mnr)
 S3method(print,adk)
 S3method(print,anderson_darling)
