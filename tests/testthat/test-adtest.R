@@ -224,3 +224,35 @@ test_that("print.anderson_darling contains expected values", {
                 ignore.case = TRUE)
   expect_true(res_vec$reject_distribution)
 })
+
+test_that("glance method produces expected results", {
+  x <- c(
+    137.4438,
+    139.5395,
+    150.89,
+    141.4474,
+    141.8203,
+    151.8821,
+    143.9245,
+    132.9732,
+    136.6419,
+    138.1723,
+    148.7668,
+    143.283,
+    143.5429,
+    141.7023,
+    137.4732,
+    152.338,
+    144.1589,
+    128.5218
+  )
+  res <- anderson_darling_lognormal(x = x)
+  glance_res <- glance(res)
+
+  expect_equal(glance_res$osl[1], 0.480, tolerance = 0.002)
+  expect_equal(glance_res$dist[1], "Lognormal")
+  expect_equal(glance_res$n[1], 18)
+  expect_equal(glance_res$A[1], 0.277, tolerance = 0.005)
+  expect_equal(glance_res$alpha, 0.05)
+  expect_equal(glance_res$reject_distribution, FALSE)
+})

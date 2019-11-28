@@ -141,6 +141,11 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
 #' ad <- anderson_darling_weibull(x = x)
 #' glance(ad)
 #'
+#' ## # A tibble: 1 x 6
+#' ##   dist        n     A        osl alpha reject_distribution
+#' ##   <chr>   <int> <dbl>      <dbl> <dbl> <lgl>
+#' ## 1 Weibull   100  2.62 0.00000207  0.05 TRUE
+#'
 #' @method glance anderson_darling
 #' @importFrom tibble tibble
 #'

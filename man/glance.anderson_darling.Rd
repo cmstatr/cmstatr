@@ -41,6 +41,11 @@ x <- rnorm(100, 100, 4)
 ad <- anderson_darling_weibull(x = x)
 glance(ad)
 
+## # A tibble: 1 x 6
+##   dist        n     A        osl alpha reject_distribution
+##   <chr>   <int> <dbl>      <dbl> <dbl> <lgl>
+## 1 Weibull   100  2.62 0.00000207  0.05 TRUE
+
 }
 \seealso{
 \code{\link{anderson_darling}}
