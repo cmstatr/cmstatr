@@ -276,12 +276,6 @@ glance.equiv_mean_extremum <- function(x, ...) {  # nolint
 }
 
 
-#' Nicely formats the results from \code{\link{equiv_mean_extremum}}
-#'
-#'
-#' @param x the equiv_mean_extremum object to be printed
-#' @param ... additional arguments to be passed to \code{\link[base]{format}}
-#'
 #' @export
 print.equiv_mean_extremum <- function(x, ...) {
   cat("\nCall:\n",
@@ -805,11 +799,6 @@ glance.equiv_change_mean <- function(x, ...) {  # nolint
 }
 
 
-#' Nicely formats the results of \code{\link{equiv_change_mean}}
-#'
-#' @param x the equiv_change_mean object to be printed
-#' @param ... additional arguments to be passed to \code{\link[base]{format}}
-#'
 #' @export
 print.equiv_change_mean <- function(x, ...) {
   cat("\nCall:\n",
