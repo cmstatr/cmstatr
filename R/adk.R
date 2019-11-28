@@ -99,6 +99,68 @@ ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
   return(res)
 }
 
+#' Glance at a \code{adk} (Anderson-Darling k-Sample) object
+#'
+#' @description
+#' Glance accepts an object of type basis and returns a
+#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' one row of summaries.
+#'
+#' Glance does not do any calculations: it just gathers the results in a
+#' tibble.
+#'
+#' @param x an \code{adk} object
+#' @param ... Additional arguments. Not used. Included only to match generic
+#'            signature.
+#'
+#'
+#' @return
+#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' columns:
+#'
+#' \item{\code{alpha}}{the significance level for the test}
+#' \item{\code{n}}{the sample size for the test}
+#' \item{\code{k}}{the number of samples}
+#' \item{\code{sigma}}{the computed standard deviation of the test statistic}
+#' \item{\code{ad}}{the test statistic}
+#' \item{\code{p}}{the p-value of the test}
+#' \item{\code{reject_same_dist}}{whether the test concludes that the samples
+#'                                are drawn from different populations}
+#'
+#'
+#' @seealso
+#' \code{\link{ad_ksample}}
+#'
+#' @examples
+#' x <- c(rnorm(20, 100, 5), rnorm(20, 105, 6))
+#' k <- c(rep(1, 20), rep(2, 20))
+#' a <- ad_ksample(x = x, groups = k)
+#' glance(a)
+#'
+#' ## A tibble: 1 x 7
+#' ##   alpha     n     k sigma    ad       p reject_same_dist
+#' ##   <dbl> <int> <int> <dbl> <dbl>   <dbl> <lgl>
+#' ## 1 0.025    40     2 0.727  4.37 0.00487 TRUE
+#'
+#' @method glance adk
+#' @importFrom tibble tibble
+#'
+#' @export
+glance.adk <- function(x, ...) {  # nolint
+  with(
+    x,
+    tibble::tibble(
+      alpha = alpha,
+      n = n,
+      k = k,
+      sigma = sigma,
+      ad = ad,
+      p = p,
+      reject_same_dist = reject_same_dist
+    )
+  )
+}
+
 #' @export
 print.adk <- function(x, ...) {
   cat("\nCall:\n",

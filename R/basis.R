@@ -152,13 +152,129 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @name basis
 NULL
 
+new_basis <- function() {
+  res <- list()
+  class(res) <- "basis"
+
+  res$call <- NA
+  res$distribution <- NA
+  res$p <- NA
+  res$conf <- NA
+  res$groups <- NA
+  res$data <- NA
+  res$n <- NA
+  res$r <- NA
+  res$basis <- NA
+
+  return(res)
+}
+
+
+#' Glance at a basis object
+#'
+#' @description
+#' Glance accepts an object of type basis and returns a
+#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' one row of summaries.
+#'
+#' Glance does not do any calculations: it just gathers the results in a
+#' tibble.
+#'
+#' @param x a basis object
+#' @param ... Additional arguments. Not used. Included only to match generic
+#'            signature.
+#'
+#'
+#' @return
+#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' columns:
+#'
+#' \item{\code{p}}{the the proportion of the population that the basis value
+#'        should be below. Normally 0.90 or 0.99}
+#' \item{\code{conf}}{The confidence level. Normally 0.95}
+#' \item{\code{distribution}}{A string representing the distribution assumed
+#'        when calculating the basis value}
+#' \item{\code{r}}{the sample size}
+#' \item{\code{r}}{the number of groups used in the calculation. This will
+#'        be \code{NA} for single-point basis values}
+#' \item{\code{basis}}{the basis value}
+#'
+#'
+#' @seealso
+#' \code{\link{basis}}
+#'
+#' @examples
+#' x <- rnorm(20, 100, 5)
+#' b <- basis_normal(x = x)
+#' glance(b)
+#'
+#' # ## A tibble: 1 x 6
+#' #       p  conf distribution  n r     basis
+#' #   <dbl> <dbl> <chr>     <int> <lgl> <dbl>
+#' # 1   0.9  0.95 Normal       20 NA    87.8
+#'
+#' @method glance basis
+#' @importFrom tibble tibble
+#'
+#' @export
+glance.basis <- function(x, ...) {  # nolint
+  with(
+    x,
+    tibble::tibble(
+      p = p,
+      conf = conf,
+      distribution = distribution,
+      n = n,
+      r = r,
+      basis = basis
+    )
+  )
+}
+
+#' @export
+print.basis <- function(x, ...) {
+  cat("\nCall:\n",
+      paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
+
+  cat("Distribution: ", x$distribution, "\t")
+
+  cat("( n = ", x$n)
+  if (!is.null(x$r) & !is.na(x$r)) {
+    cat(", r = ", x$r)
+  }
+  cat(" )\n")
+
+  if (x$conf == 0.95 & x$p == 0.9) {
+    cat("B-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
+  }
+  else if (x$conf == 0.95 & x$p == 0.99) {
+    cat("A-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
+  }
+  else {
+    cat("Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
+  }
+
+  if (is.numeric(x$basis)) {
+    cat(x$basis, "\n")
+  } else if (is.data.frame(x$basis)) {
+    col_width <- max(nchar(as.character(x$basis[["group"]]))) + 2
+    for (j in seq(along.with = x$basis$group)) {
+      cat(format(x$basis[["group"]][j], width = col_width))
+      cat(x$basis[["value"]][j], "\n")
+    }
+  } else {
+    stop("`basis` is an unexpected data type")
+  }
+
+  cat("\n")
+}
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
 #' @export
 basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
-  res <- list()
-  class(res) <- "basis"
+  res <- new_basis()
 
   res$call <- match.call()
   res$distribution <- "Normal"
@@ -185,8 +301,7 @@ basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 #' @importFrom stats sd
 #' @export
 basis_lognormal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
-  res <- list()
-  class(res) <- "basis"
+  res <- new_basis()
 
   res$call <- match.call()
   res$distribution <- "Lognormal"
@@ -253,8 +368,7 @@ print.basis <- function(x, ...) {
 #'
 #' @export
 basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
-  res <- list()
-  class(res) <- "basis"
+  res <- new_basis()
 
   res$call <- match.call()
   res$distribution <- "Weibull"
@@ -327,8 +441,7 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 #' @importFrom rlang enquo eval_tidy
 #' @export
 basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
-  res <- list()
-  class(res) <- "basis"
+  res <- new_basis()
 
   res$call <- match.call()
   res$distribution <- "Normal - Pooled CV"
@@ -372,8 +485,7 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
 #' @importFrom rlang enquo eval_tidy
 #' @export
 basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
-  res <- list()
-  class(res) <- "basis"
+  res <- new_basis()
 
   res$call <- match.call()
   res$distribution <- "Normal - Pooled Standard Deviation"
@@ -546,8 +658,7 @@ hk_ext_z_j_opt <- function(n, p, conf) {
 basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
                        method = c("optimum-order", "woodward-frawley")) {
   method <- match.arg(method)
-  res <- list()
-  class(res) <- "basis"
+  res <- new_basis()
 
   res$call <- match.call()
   res$distribution <- paste0(
@@ -695,8 +806,7 @@ nonpara_binomial_rank <- function(n, p, conf) {
 #' @export
 basis_nonpara_large_sample <- function(data = NULL, x, p = 0.90,
                                        conf = 0.95) {
-  res <- list()
-  class(res) <- "basis"
+  res <- new_basis()
 
   res$call <- match.call()
   res$distribution <- "Nonparametric (large sample)"
@@ -725,8 +835,7 @@ basis_nonpara_large_sample <- function(data = NULL, x, p = 0.90,
 #' @export
 basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
   # TODO: Must have at least two groups
-  res <- list()
-  class(res) <- "basis"
+  res <- new_basis()
 
   res$call <- match.call()
   res$distribution <- "ANOVA"
