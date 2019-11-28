@@ -118,21 +118,19 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' @return an object of class \code{basis}
 #' This object has the following fields:
-#' \describe{
-#'   \item{\code{call}}{the expression used to call this function}
-#'   \item{\code{distribution}}{the distribution used (normal, etc.)}
-#'   \item{\code{p}}{the value of \eqn{p} supplied}
-#'   \item{\code{conf}}{the value of \eqn{conf} supplied}
-#'   \item{\code{data}}{a copy of the data used in the calculation}
-#'   \item{\code{groups}}{a copy of the groups variable.
-#'                        Only used for pooling and ANOVA methods.}
-#'   \item{\code{n}}{the number of observations}
-#'   \item{\code{r}}{the number of groups, if a pooling method was used.
-#'                   Otherwise it is NULL.}
-#'   \item{\code{basis}}{the basis value computed. This is a number
-#'                       except when pooling methods are used, in
-#'                       which case it is a data.frame.}
-#' }
+#' \item{\code{call}}{the expression used to call this function}
+#' \item{\code{distribution}}{the distribution used (normal, etc.)}
+#' \item{\code{p}}{the value of \eqn{p} supplied}
+#' \item{\code{conf}}{the value of \eqn{conf} supplied}
+#' \item{\code{data}}{a copy of the data used in the calculation}
+#' \item{\code{groups}}{a copy of the groups variable.
+#'                      Only used for pooling and ANOVA methods.}
+#' \item{\code{n}}{the number of observations}
+#' \item{\code{r}}{the number of groups, if a pooling method was used.
+#'                 Otherwise it is NULL.}
+#' \item{\code{basis}}{the basis value computed. This is a number
+#'                     except when pooling methods are used, in
+#'                     which case it is a data.frame.}
 #'
 #' @seealso \code{\link{hk_ext_z_j_opt}}
 #' @seealso \code{\link{k_factor_normal}}

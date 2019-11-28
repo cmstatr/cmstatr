@@ -13,22 +13,20 @@
 #'
 #' @return
 #' Returns an object of class \code{adk}. This object has the following fields:
- #' \describe{
-#'   \item{\code{call}}{the expression used to call this function}
-#'   \item{\code{data}}{the original data used to compute the ADK}
-#'   \item{\code{groups}}{a vector of the groups used in the computation}
-#'   \item{\code{alpha}}{the value of alpha specified}
-#'   \item{\code{n}}{the total number of observations}
-#'   \item{\code{k}}{the number of groups}
-#'   \item{\code{sigma}}{the computed standard deviation of the test statistic}
-#'   \item{\code{ad}}{the value of the Anderson-Darling k-Sample test
-#'     statistic}
-#'   \item{\code{p}}{the computed p-value}
-#'   \item{\code{reject_same_dist}}{a boolean value indicating whether the null
-#'     hypothesis that all samples come from the same distribution is rejected}
-#'   \item{\code{raw}}{the original results returned from
-#'     \link[kSamples]{ad.test}}
-#' }
+#' \item{\code{call}}{the expression used to call this function}
+#' \item{\code{data}}{the original data used to compute the ADK}
+#' \item{\code{groups}}{a vector of the groups used in the computation}
+#' \item{\code{alpha}}{the value of alpha specified}
+#' \item{\code{n}}{the total number of observations}
+#' \item{\code{k}}{the number of groups}
+#' \item{\code{sigma}}{the computed standard deviation of the test statistic}
+#' \item{\code{ad}}{the value of the Anderson-Darling k-Sample test
+#'   statistic}
+#' \item{\code{p}}{the computed p-value}
+#' \item{\code{reject_same_dist}}{a boolean value indicating whether the null
+#'   hypothesis that all samples come from the same distribution is rejected}
+#' \item{\code{raw}}{the original results returned from
+#'   \link[kSamples]{ad.test}}
 #'
 #'
 #' @details

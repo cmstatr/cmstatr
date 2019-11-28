@@ -27,42 +27,40 @@
 #' Returns an object of class \code{equiv_mean_extremum}. This object is a list
 #' with the following named elements:
 #'
-#' \describe{
-#'   \item{\code{call}}{the expression used to call this function}
-#'   \item{\code{alpha}}{the value of alpha passed to this function}
-#'   \item{\code{n_sample}}{the number of observations in the sample for which
-#'     equivalency is being checked. This is either the value \code{n_sample}
-#'     passed to this function or the length of the vector \code{data_sample}.}
-#'   \item{\code{k1}}{the factor used to calculate the minimum individual
-#'     threshold. The minimum individual threshold is calculated as
-#'     \eqn{Wmin = qual_mean - k1 * qual_sd}}
-#'   \item{\code{k2}}{the factor used to calculate the threshold for mean. The
-#'     threshold for mean is calculated as
-#'     \eqn{Wmean = qual_mean - k2 * qual_sd}}
-#'   \item{\code{modcv}}{logical value indicating whether the acceptance
-#'     thresholds are calculated using the modified CV approach}
-#'   \item{\code{cv}}{the coefficient of variation of the qualification data.
-#'     This value is not modified, even if \code{modcv=TRUE}}
-#'   \item{\code{cv_star}}{The modified coefficient of variation. If
-#'     \code{modcv=FALSE}, this will be \code{NULL}}
-#'   \item{\code{threshold_min_indiv}}{The calculated threshold value for
-#'     minimum individual}
-#'   \item{\code{threshold_mean}}{The calculated threshold value for mean}
-#'   \item{\code{result_min_indiv}}{a character vector of either "PASS" or
-#'     "FAIL" indicating whether the data from \code{data_sample} passes the
-#'     test for minimum individual. If \code{data_sample} was not supplied,
-#'     this value will be \code{NULL}}
-#'   \item{\code{result_mean}}{a character vector of either "PASS" or
-#'     "FAIL" indicating whether the data from \code{data_sample} passes the
-#'     test for mean. If \code{data_sample} was not supplied, this value will
-#'     be  \code{NULL}}
-#'   \item{\code{min_sample}}{The minimum value from the vector
-#'     \code{data_sample}. if \code{data_sample} was not supplied, this will
-#'     have a value of \code{NULL}}
-#'   \item{\code{mean_sample}}{The mean value from the vector
-#'     \code{data_sample}. If \code{data_sample} was not supplied, this will
-#'     have a value of \code{NULL}}
-#' }
+#' \item{\code{call}}{the expression used to call this function}
+#' \item{\code{alpha}}{the value of alpha passed to this function}
+#' \item{\code{n_sample}}{the number of observations in the sample for which
+#'   equivalency is being checked. This is either the value \code{n_sample}
+#'   passed to this function or the length of the vector \code{data_sample}.}
+#' \item{\code{k1}}{the factor used to calculate the minimum individual
+#'   threshold. The minimum individual threshold is calculated as
+#'   \eqn{Wmin = qual_mean - k1 * qual_sd}}
+#' \item{\code{k2}}{the factor used to calculate the threshold for mean. The
+#'   threshold for mean is calculated as
+#'   \eqn{Wmean = qual_mean - k2 * qual_sd}}
+#' \item{\code{modcv}}{logical value indicating whether the acceptance
+#'   thresholds are calculated using the modified CV approach}
+#' \item{\code{cv}}{the coefficient of variation of the qualification data.
+#'   This value is not modified, even if \code{modcv=TRUE}}
+#' \item{\code{cv_star}}{The modified coefficient of variation. If
+#'   \code{modcv=FALSE}, this will be \code{NULL}}
+#' \item{\code{threshold_min_indiv}}{The calculated threshold value for
+#'   minimum individual}
+#' \item{\code{threshold_mean}}{The calculated threshold value for mean}
+#' \item{\code{result_min_indiv}}{a character vector of either "PASS" or
+#'   "FAIL" indicating whether the data from \code{data_sample} passes the
+#'   test for minimum individual. If \code{data_sample} was not supplied,
+#'   this value will be \code{NULL}}
+#' \item{\code{result_mean}}{a character vector of either "PASS" or
+#'   "FAIL" indicating whether the data from \code{data_sample} passes the
+#'   test for mean. If \code{data_sample} was not supplied, this value will
+#'   be  \code{NULL}}
+#' \item{\code{min_sample}}{The minimum value from the vector
+#'   \code{data_sample}. if \code{data_sample} was not supplied, this will
+#'   have a value of \code{NULL}}
+#' \item{\code{mean_sample}}{The mean value from the vector
+#'   \code{data_sample}. If \code{data_sample} was not supplied, this will
+#'   have a value of \code{NULL}}
 #'
 #' @details
 #' There are several optional arguments to this function. However, you can't
@@ -84,17 +82,17 @@
 #' @examples
 #' equiv_mean_extremum(alpha = 0.01, n_sample = 6,
 #'                     mean_qual = 100, sd_qual = 5.5, modcv = TRUE)
-#' #
-#' # Call:
-#' # equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
-#' #                     alpha = 0.01, modcv = TRUE)
-#' #
-#' # Modified CV used: CV* = 0.0675 ( CV = 0.055 )
-#' #
-#' # For alpha = 0.01 and n = 6
-#' # ( k1 = 3.128346 and k2 = 1.044342 )
-#' #               Min Individual      Sample Mean
-#' # Thresholds:         78.88367         92.95069
+#' ##
+#' ## Call:
+#' ## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
+#' ##                     alpha = 0.01, modcv = TRUE)
+#' ##
+#' ## Modified CV used: CV* = 0.0675 ( CV = 0.055 )
+#' ##
+#' ## For alpha = 0.01 and n = 6
+#' ## ( k1 = 3.128346 and k2 = 1.044342 )
+#' ##               Min Individual      Sample Mean
+#' ## Thresholds:         78.88367         92.95069
 #'
 #' @seealso
 #' \code{\link{k_equiv}}
@@ -344,6 +342,7 @@ print.equiv_mean_extremum <- function(x, ...) {
 #' k <- k_equiv(0.01, 5)
 #' acceptance_limit_min <- qual_mean - qual_sd * k[1]
 #' acceptance_limit_mean <- qual_mean - qual_sd * k[2]
+#'
 #' @export
 k_equiv <- function(alpha, n) {
   # If you are making changes to this function, you should run the full
@@ -491,46 +490,44 @@ k_equiv <- function(alpha, n) {
 #'   should be used. Defaults to \code{FALSE}
 #'
 #' @return
-#' \describe{
-#'   \item{\code{call}}{the expression used to call this function}
-#'   \item{\code{alpha}}{the value of alpha passed to this function}
-#'   \item{\code{n_sample}}{the number of observations in the sample for which
-#'     equivalency is being checked. This is either the value \code{n_sample}
-#'     passed to this function or the length of the vector \code{data_sample}.}
-#'   \item{\code{mean_sample}}{the mean of the observations in the sample for
-#'     which equivalency is being checked. This is either the value
-#'     \code{mean_sample} passed to this function or the mean of the vector
-#'     \code{data-sample}.}
-#'   \item{\code{sd_sample}}{the standard deviation of the observations in the
-#'     sample for which equivalency is being checked. This is either the value
-#'     \code{mean_sample} passed to this function or the standard deviation of
-#'     the vector \code{data-sample}.}
-#'   \item{\code{n_qual}}{the number of observations in the qualification data
-#'     to which the sample is being compared for equivalency. This is either
-#'     the value \code{n_qual} passed to this function or the length of the
-#'     vector \code{data_qual}.}
-#'   \item{\code{mean_qual}}{the mean of the qualification data to which the
-#'     sample is being compared for equivalency. This is either the value
-#'     \code{mean_qual} passed to this function or the mean of the vector
-#'     \code{data_qual}.}
-#'   \item{\code{sd_qual}}{the standard deviation of the qualification data to
-#'     which the sample is being compared for equivalency. This is either the
-#'     value \code{mean_qual} passed to this function or the standard deviation
-#'     of the vector \code{data_qual}.}
-#'   \item{\code{modcv}}{logical value indicating whether the equivalency
-#'     calculations were performed using the modified CV approach}
-#'   \item{\code{sp}}{the value of the pooled standard deviation. If
-#'     \code{modecv = TRUE}, this pooled standard deviation includes the
-#'     modification to the qualification CV.}
-#'   \item{\code{t0}}{the test statistic}
-#'   \item{\code{t_req}}{the t-value for \eqn{\alpha / 2} and
-#'     \eqn{df = n1 + n2 -2}}
-#'   \item{\code{threshold}}{a vector with two elements corresponding to the
-#'     minimum and maximum values of the sample mean that would result in a
-#'     pass}
-#'   \item{\code{result}}{a character vector of either "PASS" or "FAIL"
-#'     indicating the result of the test for change in mean}
-#' }
+#' \item{\code{call}}{the expression used to call this function}
+#' \item{\code{alpha}}{the value of alpha passed to this function}
+#' \item{\code{n_sample}}{the number of observations in the sample for which
+#'   equivalency is being checked. This is either the value \code{n_sample}
+#'   passed to this function or the length of the vector \code{data_sample}.}
+#' \item{\code{mean_sample}}{the mean of the observations in the sample for
+#'   which equivalency is being checked. This is either the value
+#'   \code{mean_sample} passed to this function or the mean of the vector
+#'   \code{data-sample}.}
+#' \item{\code{sd_sample}}{the standard deviation of the observations in the
+#'   sample for which equivalency is being checked. This is either the value
+#'   \code{mean_sample} passed to this function or the standard deviation of
+#'   the vector \code{data-sample}.}
+#' \item{\code{n_qual}}{the number of observations in the qualification data
+#'   to which the sample is being compared for equivalency. This is either
+#'   the value \code{n_qual} passed to this function or the length of the
+#'   vector \code{data_qual}.}
+#' \item{\code{mean_qual}}{the mean of the qualification data to which the
+#'   sample is being compared for equivalency. This is either the value
+#'   \code{mean_qual} passed to this function or the mean of the vector
+#'   \code{data_qual}.}
+#' \item{\code{sd_qual}}{the standard deviation of the qualification data to
+#'   which the sample is being compared for equivalency. This is either the
+#'   value \code{mean_qual} passed to this function or the standard deviation
+#'   of the vector \code{data_qual}.}
+#' \item{\code{modcv}}{logical value indicating whether the equivalency
+#'   calculations were performed using the modified CV approach}
+#' \item{\code{sp}}{the value of the pooled standard deviation. If
+#'   \code{modecv = TRUE}, this pooled standard deviation includes the
+#'   modification to the qualification CV.}
+#' \item{\code{t0}}{the test statistic}
+#' \item{\code{t_req}}{the t-value for \eqn{\alpha / 2} and
+#'   \eqn{df = n1 + n2 -2}}
+#' \item{\code{threshold}}{a vector with two elements corresponding to the
+#'   minimum and maximum values of the sample mean that would result in a
+#'   pass}
+#' \item{\code{result}}{a character vector of either "PASS" or "FAIL"
+#'   indicating the result of the test for change in mean}
 #'
 #' @details
 #' There are several optional arguments to this function. Either (but not both)
@@ -561,20 +558,20 @@ k_equiv <- function(alpha, n) {
 #' equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
 #'                   sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
 #'                   sd_qual = 0.162, modcv = TRUE)
-#' #
-#' # Call:
-#' # equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162,
-#' #                   n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785,
-#' #                   alpha = 0.05,modcv = TRUE)
-#' #
-#' # For alpha = 0.05
-#' # Modified CV used
-#' #                   Qualificaiton        Sample
-#' #           Number        28               9
-#' #             Mean       9.24             9.02
-#' #               SD      0.162           0.15785
-#' #           Result               PASS
-#' #    Passing Range       8.856695 to 9.623305
+#'
+#' ## Call:
+#' ## equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162,
+#' ##                   n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785,
+#' ##                   alpha = 0.05,modcv = TRUE)
+#' ##
+#' ## For alpha = 0.05
+#' ## Modified CV used
+#' ##                   Qualificaiton        Sample
+#' ##           Number        28               9
+#' ##             Mean       9.24             9.02
+#' ##               SD      0.162           0.15785
+#' ##           Result               PASS
+#' ##    Passing Range       8.856695 to 9.623305
 #'
 #' @export
 #'
