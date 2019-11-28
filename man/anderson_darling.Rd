@@ -33,9 +33,12 @@ fields.
   \item{\code{A}}{the Anderson-Darling test statistic}
   \item{\code{osl}}{the significance level, assuming the
     parameters of the distribution are estimated from the data}
- \item{\code{alpha}}{the required significance level for the test to
+  \item{\code{alpha}}{the required significance level for the test to
    conclude that the data is drawn from the specified distribution.
    This value is given by the user.}
+  \item{\code{reject_distribution}}{a logical value indicating whether
+   the hypothesis that the data is drawn from the specified distribution
+   should be rejected}
 }
 }
 \description{

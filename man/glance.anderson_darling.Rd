@@ -24,6 +24,9 @@ columns:
  \item{\code{alpha}}{the required significance level for the test to
    conclude that the data is drawn from the specified distribution.
    This value is given by the user.}
+\item{\code{reject_distribution}}{a logical value indicating whether
+   the hypothesis that the data is drawn from the specified distribution
+   should be rejected}
 }
 \description{
 Glance accepts an object of type basis and returns a

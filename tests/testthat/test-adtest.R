@@ -216,9 +216,11 @@ test_that("print.anderson_darling contains expected values", {
   # conclusion should be printed
   expect_output(print(res_vec), "conclusion.*is drawn.*alpha.*0.05",
                 ignore.case = TRUE)
+  expect_false(res_vec$reject_distribution)
 
   # if alpha is adjusted to be above OSL, the conclusion should be reversed
   res_vec <- anderson_darling_normal(x = data$strength, alpha = 0.470)
   expect_output(print(res_vec), "conclusion.*is not drawn.*alpha.*0.47",
                 ignore.case = TRUE)
+  expect_true(res_vec$reject_distribution)
 })

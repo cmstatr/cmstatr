@@ -22,9 +22,12 @@
 #'   \item{\code{A}}{the Anderson-Darling test statistic}
 #'   \item{\code{osl}}{the significance level, assuming the
 #'     parameters of the distribution are estimated from the data}
-#'  \item{\code{alpha}}{the required significance level for the test to
+#'   \item{\code{alpha}}{the required significance level for the test to
 #'    conclude that the data is drawn from the specified distribution.
 #'    This value is given by the user.}
+#'   \item{\code{reject_distribution}}{a logical value indicating whether
+#'    the hypothesis that the data is drawn from the specified distribution
+#'    should be rejected}
 #' }
 #'
 #' @details
@@ -90,6 +93,7 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
     osl = ad_p_unknown_param_fcn(a, n),
     alpha = alpha
   )
+  res$reject_distribution <- res$osl <= res$alpha
 
   class(res) <- "anderson_darling"
 
@@ -124,6 +128,9 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
 #'  \item{\code{alpha}}{the required significance level for the test to
 #'    conclude that the data is drawn from the specified distribution.
 #'    This value is given by the user.}
+#' \item{\code{reject_distribution}}{a logical value indicating whether
+#'    the hypothesis that the data is drawn from the specified distribution
+#'    should be rejected}
 #'
 #'
 #' @seealso
@@ -146,7 +153,8 @@ glance.anderson_darling <- function(x, ...) {  # nolint
       n = n,
       A = A,  # nolint
       osl = osl,
-      alpha = alpha
+      alpha = alpha,
+      reject_distribution = reject_distribution
     )
   )
 }
@@ -164,12 +172,12 @@ print.anderson_darling <- function(x, ...) {
     x$osl,
     " (assuming unknown parameters)\n"
   )
-  if (x$osl > x$alpha) {
-    cat("Conclusion: Sample is drawn from a",
+  if (x$reject_distribution) {
+    cat("Conclusion: Sample is not drawn from a",
         x$dist,
         "distribution (alpha = ", x$alpha, ")")
   } else {
-    cat("Conclusion: Sample is not drawn from a",
+    cat("Conclusion: Sample is drawn from a",
         x$dist,
         "distribution (alpha = ", x$alpha, ")")
   }
