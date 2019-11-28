@@ -96,6 +96,61 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
   return(res)
 }
 
+
+#' Glance at a n \code{anderson_darling} object
+#'
+#' @description
+#' Glance accepts an object of type basis and returns a
+#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' one row of summaries.
+#'
+#' Glance does not do any calculations: it just gathers the results in a
+#' tibble.
+#'
+#' @param x an \code{anderson_darling} object
+#' @param ... Additional arguments. Not used. Included only to match generic
+#'            signature.
+#'
+#'
+#' @return
+#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' columns:
+#'
+#' \item{\code{dist}}{the distribution used}
+#' \item{\code{n}}{the number of observations in the sample}
+#' \item{\code{A}}{the Anderson-Darling test statistic}
+#' \item{\code{osl}}{the significance level, assuming the
+#'     parameters of the distribution are estimated from the data}
+#'  \item{\code{alpha}}{the required significance level for the test to
+#'    conclude that the data is drawn from the specified distribution.
+#'    This value is given by the user.}
+#'
+#'
+#' @seealso
+#' \code{\link{anderson_darling}}
+#'
+#' @examples
+#' x <- rnorm(100, 100, 4)
+#' ad <- anderson_darling_weibull(x = x)
+#' glance(ad)
+#'
+#' @method glance anderson_darling
+#' @importFrom tibble tibble
+#'
+#' @export
+glance.anderson_darling <- function(x, ...) {  # nolint
+  with(
+    x,
+    tibble::tibble(
+      dist = dist,
+      n = n,
+      A = A,  # nolint
+      osl = osl,
+      alpha = alpha
+    )
+  )
+}
+
 #' @export
 print.anderson_darling <- function(x, ...) {
   cat("\nCall:\n",
