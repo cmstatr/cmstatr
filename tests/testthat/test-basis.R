@@ -1157,6 +1157,16 @@ test_that("ANOVA results match STAT17 for sample data", {
   expect_match(res$distribution, "ANOVA", ignore.case = TRUE)
 })
 
+test_that("ANOVA produces an error when there is only one group", {
+  strength <- rep(10, 1)
+  batch <- rep(10, 1)
+
+  expect_error(
+    basis_anova(x = strength, groups = batch),
+    "fewer than 2"
+  )
+})
+
 test_that("glance.basis produces expected value", {
   # Sample data from CMH-17-1G Section 8.3.11.2.2
 

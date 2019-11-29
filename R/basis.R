@@ -832,7 +832,6 @@ basis_nonpara_large_sample <- function(data = NULL, x, p = 0.90,
 #' @importFrom rlang enquo eval_tidy
 #' @export
 basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
-  # TODO: Must have at least two groups
   res <- new_basis()
 
   res$call <- match.call()
@@ -853,6 +852,10 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
     c = match.call(),
     arg_name = "groups")
   res$groups <- eval_tidy(enquo(groups), data)
+
+  if (length(unique(res$groups)) < 2) {
+    stop("ANOVA cannot be computed with fewer than 2 groups")
+  }
 
   res$n <- length(res$data)
   res$r <- length(levels(as.factor(res$groups)))
