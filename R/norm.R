@@ -88,3 +88,109 @@ normalize_group_mean <- function(x, groups) {
 
   return(x / group_means)
 }
+
+#' Calculate the modified CV from the CV
+#'
+#' @description
+#' This function calculates the Modified CV based on an (unmodified) CV.
+#' The modified CV is calculated based on the rules in CMH-17-1G. Those
+#' rules are:
+#'
+#' \itemize{
+#'   \item{}{For CV < 4\%, CV* = 6\%}
+#'   \item{}{For 4\% <= CV < 8\%, CV* = CV / 2 + 4\%}
+#'   \item{}{For CV > 8\%, CV* = CV}
+#' }
+#'
+#' @param cv The CV to modify
+#'
+#' @return
+#' The value of the modified CV
+#'
+#' @references
+#' "Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,"
+#' SAE International, CMH-17-1G, Mar. 2012.
+#'
+#' @export
+calc_cv_star <- function(cv) {
+  if (cv < 0.04) {
+    cv <- 0.06
+  } else if (cv < 0.08) {
+    cv <- cv / 2 + 0.04
+  } else {
+    cv <- cv
+  }
+  return(cv)
+}
+
+#' Transforms data according to the modified CV rule
+#'
+#' @description
+#' Transforms data according to the modified CV rules. Takes a vector
+#' containing the observations and a vector containing the groups that
+#' each observation belongs to and transforms the data. The modified CV
+#' is computed within each group and each observation is transformed
+#' according to:
+#'
+#' \deqn{\frac{S_i^*}{S_i} (x_i - \bar{x_i}) + \bar{x_i}}{
+#'   Si*/Si (xi-x_bar_i) + x_bar_i
+#' }
+#'
+#' Where Si* is the modified standard deviation (mod CV times mean) for
+#' the group; Si is the standard deviation for the group, x_bar_i is
+#' the group mean and xi is the observation.
+#'
+#' @param x a vector of data to transform
+#' @param groups a vector indicating the group to which each observation in
+#'        \code{x} belongs. If this is NULL, the data will be treated as
+#'        unstructured (without grouping)
+#'
+#' @return
+#' A vector of transformed data
+#'
+#' @example
+#' # Transform data according to the modified CV transformation
+#' # and report the original and modified CV for each condition
+#'
+#' carbon.fabric %>%
+#'   filter(test == "FT") %>%
+#'   mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
+#'   group_by(condition) %>%
+#'   summarize(cv = sd(strength) / mean(strength),
+#'             mod_cv = sd(trans_strength) / mean(trans_strength))
+#'
+#' ## # A tibble: 3 x 3
+#' ##   condition     cv mod_cv
+#' ##   <chr>      <dbl>  <dbl>
+#' ## 1 CTD       0.0423 0.0612
+#' ## 2 ETW       0.0369 0.0600
+#' ## 3 RTD       0.0621 0.0711
+#'
+#' @seealso
+#' \code{\link{calc_cv_star}}
+#'
+#' @export
+transform_mod_cv <- function(x, groups = NULL) {
+  if (is.null(groups)) {
+    groups <- rep("A", length(x))
+  }
+
+  if (length(x) != length(groups)) {
+    stop("x and groups must be the same length")
+  }
+
+  res <- sapply(seq(along.with = x), function(i) {
+    xi <- x[i]
+    cur_group <- x[groups == groups[i]]
+    s <- sd(cur_group)
+    x_bar <- mean(cur_group)
+    cv <- s / x_bar
+    cv_star <- calc_cv_star(cv)
+    s_star <- cv_star * x_bar
+
+    s_star / s * (xi - x_bar) + x_bar
+  })
+
+  res
+}
