@@ -23,9 +23,33 @@ each observation belongs to and transforms the data. The modified CV
 is computed within each group and each observation is transformed
 according to:
 
-\deqn{\frac{S^*}{S} \left(x_i - \bar{x_i}\right) + \bar{x_i}}{
-  S*/S (xi-x_bar_i) + x_bar_i
+\deqn{\frac{S_i^*}{S_i} (x_i - \bar{x_i}) + \bar{x_i}}{
+  Si*/Si (xi-x_bar_i) + x_bar_i
 }
+
+Where Si* is the modified standard deviation (mod CV times mean) for
+the group; Si is the standard deviation for the group, x_bar_i is
+the group mean and xi is the observation.
+}
+\examples{
+# Transform data according to the modified CV transformation
+# and report the original and modified CV for each condition
+
+library(tidyverse)
+carbon.fabric \%>\%
+  filter(test == "FT") \%>\%
+  mutate(trans_strength = transform_mod_cv(strength, condition)) \%>\%
+  group_by(condition) \%>\%
+  summarize(cv = sd(strength) / mean(strength),
+            mod_cv = sd(trans_strength) / mean(trans_strength))
+
+## # A tibble: 3 x 3
+##   condition     cv mod_cv
+##   <chr>      <dbl>  <dbl>
+## 1 CTD       0.0423 0.0612
+## 2 ETW       0.0369 0.0600
+## 3 RTD       0.0621 0.0711
+
 }
 \seealso{
 \code{\link{calc_cv_star}}

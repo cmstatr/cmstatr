@@ -154,20 +154,6 @@ test_that("normal basis value matches STAT17/ASAP result", {
   expect_output(print(res), "normal", ignore.case = TRUE)
 
   expect_match(res$distribution, "normal", ignore.case = TRUE)
-  expect_null(res$modcv)
-
-  res <- basis_normal(x = data, p = 0.9, conf = 0.95, modcv = TRUE)
-  expect_equal(res$basis, 124.400886535644, tolerance = 0.005)
-  expect_output(print(res), "b-basis.*124", ignore.case = TRUE)
-  expect_output(print(res), "normal", ignore.case = TRUE)
-  expect_output(print(res), "modified", ignore.case = TRUE)
-  expect_gt(res$modcv, 0)
-
-  res <- basis_normal(x = data, p = 0.99, conf = 0.95, modcv = TRUE)
-  expect_equal(res$basis, 111.999949509182, tolerance = 0.005)
-  expect_output(print(res), "a-basis.*112", ignore.case = TRUE)
-  expect_output(print(res), "normal", ignore.case = TRUE)
-  expect_output(print(res), "modified", ignore.case = TRUE)
 })
 
 test_that("log-normal basis value matches STAT17 result", {
@@ -456,6 +442,58 @@ test_that("Pooled CV results match CMH17STATS", {
   expect_equal(res_a$basis$value[res_a$basis$group == "ETW2"],
                45.40, tolerance = 0.01)
   expect_output(print(res_a), "a-basis", ignore.case = TRUE)
+})
+
+test_that("Pooled data matches CMH17-STATS with mod CV, SD pooling", {
+  # pooled SD modified CV results
+  # pooled data fails Levene's test after mod CV transform
+  # based on `poolable_data` dataset with ETW2 removed
+
+  data <- filter(poolable_data, condition != "ETW2")
+
+  res_b <- basis_pooled_sd(data, strength, condition, modcv = TRUE)
+
+  expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
+               92.25, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "RTD"],
+               85.91, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "ETW"],
+               52.97, tolerance = 0.01)
+
+  res_a <- basis_pooled_sd(data, strength, condition,
+                           p = 0.99, conf = 0.95, modcv = TRUE)
+  expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
+               83.81, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
+               77.48, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "ETW"],
+               44.47, tolerance = 0.01)
+})
+
+test_that("Pooled data matches CMH17-STATS with mod CV, CV pooling", {
+  # pooled CV modified CV results
+  # pooled data passes Levene's test after mod CV transform
+  # based on `poolable_data` dataset with ETW2 removed
+
+  data <- filter(poolable_data, condition != "ETW2")
+
+  res_b <- basis_pooled_cv(data, strength, condition, modcv = TRUE)
+
+  expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
+               90.31, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "RTD"],
+               84.83, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "ETW"],
+               56.43, tolerance = 0.01)
+
+  res_a <- basis_pooled_cv(data, strength, condition,
+                           p = 0.99, conf = 0.95, modcv = TRUE)
+  expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
+               80.57, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
+               75.69, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "ETW"],
+               50.33, tolerance = 0.01)
 })
 
 vangel1994 <- tribble(

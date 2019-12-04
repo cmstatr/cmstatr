@@ -21,6 +21,9 @@ columns:
 \item{\code{conf}}{The confidence level. Normally 0.95}
 \item{\code{distribution}}{A string representing the distribution assumed
        when calculating the basis value}
+\item{\code{modcv}}{a logical value indicating whether the modified
+                    CV approach was used. Only applicable to pooling
+                    methods.}
 \item{\code{r}}{the sample size}
 \item{\code{r}}{the number of groups used in the calculation. This will
        be \code{NA} for single-point basis values}

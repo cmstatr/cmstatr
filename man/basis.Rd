@@ -12,15 +12,17 @@
 \alias{basis_anova}
 \title{Calculate basis values}
 \usage{
-basis_normal(data = NULL, x, p = 0.9, conf = 0.95, modcv = FALSE)
+basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
 
 basis_lognormal(data = NULL, x, p = 0.9, conf = 0.95)
 
 basis_weibull(data = NULL, x, p = 0.9, conf = 0.95)
 
-basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95)
+basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95,
+  modcv = FALSE)
 
-basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95)
+basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95,
+  modcv = FALSE)
 
 basis_hk_ext(data = NULL, x, p = 0.9, conf = 0.95,
   method = c("optimum-order", "woodward-frawley"))
@@ -40,6 +42,9 @@ basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95)
 
 \item{groups}{the variable in the data.frame representing the groups}
 
+\item{modcv}{a logical value indicating whether the modified CV approach
+should be used. Only applicable to pooling methods.}
+
 \item{method}{the method for Hanson-Koopmans nonparametric basis values.
 should be "optimum-order" for B-Basis and "woodward-frawley"
 for A-Basis.}
@@ -51,9 +56,14 @@ This object has the following fields:
 \item{\code{distribution}}{the distribution used (normal, etc.)}
 \item{\code{p}}{the value of \eqn{p} supplied}
 \item{\code{conf}}{the value of \eqn{conf} supplied}
+\item{\code{modcv}}{a logical value indicating whether the modified
+                    CV approach was used. Only applicable to pooling
+                    methods.}
 \item{\code{data}}{a copy of the data used in the calculation}
 \item{\code{groups}}{a copy of the groups variable.
                      Only used for pooling and ANOVA methods.}
+\item{\code{modcv_transformed_data}}{the data after the modified CV
+                                     transformation}
 \item{\code{n}}{the number of observations}
 \item{\code{r}}{the number of groups, if a pooling method was used.
                 Otherwise it is NULL.}
@@ -150,4 +160,6 @@ vol. 23, no. 4. pp. 1137–1154, 1994.
 \code{\link{hk_ext_z_j_opt}}
 
 \code{\link{k_factor_normal}}
+
+\code{\link{transform_mod_cv}}
 }
