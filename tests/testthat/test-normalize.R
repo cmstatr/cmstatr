@@ -130,4 +130,6 @@ test_that("Modified CV transform produces values that match CMH17-STATS", {
   expect_equal(res$mod_cv[res$condition == "RTD"], 0.0690, tolerance = 1e-4)
   expect_equal(res$cv[res$condition == "ETW"], 0.0723, tolerance = 1e-4)
   expect_equal(res$mod_cv[res$condition == "ETW"], 0.0761, tolerance = 1e-4)
+  expect_equal(res$cv[res$condition == "ETW2"], 0.0836, tolerance = 1e-4)
+  expect_equal(res$mod_cv[res$condition == "ETW2"], 0.0836, tolerance = 1e-4)
 })
