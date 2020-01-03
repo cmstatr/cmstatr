@@ -2,12 +2,21 @@
 % Please edit documentation in R/norm.R
 \name{transform_mod_cv}
 \alias{transform_mod_cv}
+\alias{transform_mod_cv_2}
 \title{Transforms data according to the modified CV rule}
 \usage{
+transform_mod_cv_2(x, conditions, batches)
+
 transform_mod_cv(x, groups = NULL)
 }
 \arguments{
 \item{x}{a vector of data to transform}
+
+\item{conditions}{a vector indicating the condition to which each
+observation belongs}
+
+\item{batches}{a vector indicating the batch to which each observation
+belongs}
 
 \item{groups}{a vector indicating the group to which each observation in
 \code{x} belongs. If this is NULL, the data will be treated as
@@ -17,11 +26,20 @@ unstructured (without grouping)}
 A vector of transformed data
 }
 \description{
-Transforms data according to the modified CV rules. Takes a vector
+Two versions of this transformation are implemented. The first version,
+\code{transform_mod_cv()}, transforms the data in a single group (with
+no other structure) according to the modified CV rules.
+
+The second
+version, \code{transform_mod_cv_2()}, transforms data that is structured
+according to both condition and batch.
+}
+\details{
+\code{transform_mod_cv()} takes a vector
 containing the observations and a vector containing the groups that
 each observation belongs to and transforms the data. The modified CV
-is computed within each group and each observation is transformed
-according to:
+is computed independently within each group and each observation is
+transformed according to:
 
 \deqn{\frac{S_i^*}{S_i} (x_i - \bar{x_i}) + \bar{x_i}}{
   Si*/Si (xi-x_bar_i) + x_bar_i
@@ -30,6 +48,35 @@ according to:
 Where Si* is the modified standard deviation (mod CV times mean) for
 the group; Si is the standard deviation for the group, x_bar_i is
 the group mean and xi is the observation.
+
+\code{transform_mod_cv_2()} takes a vector containing the observations
+plus a vector containing the corresponding conditions and a vector
+containing the batches. This function first calculates the modified
+CV value from the data from each condition (independently). Then,
+within each condition, the transformation
+\code{transform_mod_cv(x, batches)}
+is applied to produce the transformed data \deqn{x'}{\prime{x}}.
+This transformed data is further transformed using the following
+equation.
+
+\deqn{x'' = C (x'_i - x_bar_i) + x_bar_i}{
+  x\prime\prime = C \left(x_i\prime - \bar{x_i}\right) + \bar{x_i}
+}
+
+Where:
+
+\deqn{C = sqrt(SSE* / SSE')}{
+  C = \sqrt\left(\frac{SSE^{*}}{SSE^{\prime}}\right)
+}
+
+\deqn{SSE\* = (n-1) (CV\* x_bar)^2 - sum(n_i(x_bar_i-x_bar)^2)}{
+  SSE^{\*} = \left(n-1\right)\left(CV^{\*} \bar{x}\right)^2 -
+  \sum\left[n_i \left(\bar{x_i}-\bar{x}\right)^2\right]
+}
+
+\deqn{SSE' = sum(x'_i - x_bar_i)^2}{
+  SSE\prime = \sum\left(x_i\prime - \bar{x_i}\right)^2
+}
 }
 \examples{
 # Transform data according to the modified CV transformation
