@@ -9,7 +9,7 @@
 #' @param x a vector
 #'
 #' @return
-#' The calcualted CV
+#' The calculated CV
 #'
 #' @export
 cv <- function(x) {
