@@ -10,7 +10,7 @@ cv(x)
 \item{x}{a vector}
 }
 \value{
-The calcualted CV
+The calculated CV
 }
 \description{
 The coefficient of variation (CV) is the ratio of the standard

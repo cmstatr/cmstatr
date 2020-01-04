@@ -17,6 +17,8 @@ A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
 columns:
 
 \item{\code{alpha}}{the value of alpha specified}
+\item{\code{modcv}}{a logical value indicating whether the modified
+                    CV approach was used.}
 \item{\code{n}}{the total number of observations}
 \item{\code{k}}{the number of groups}
 \item{\code{f}}{the value of the F test statistic}
@@ -40,10 +42,10 @@ df <- data.frame(
 levene_result <- levene_test(df, strength, groups)
 glance(levene_result)
 
-## # A tibble: 1 x 6
-##   alpha     n     k     f      p reject_equal_variance
-##   <dbl> <int> <int> <dbl>  <dbl> <lgl>
-## 1  0.05    11     2  3.93 0.0788 FALSE
+## # A tibble: 1 x 7
+##   alpha modcv     n     k      f     p reject_equal_variance
+##   <dbl> <lgl> <int> <int>  <dbl> <dbl> <lgl>
+## 1  0.05 FALSE    11     2 0.0191 0.893 FALSE
 
 }
 \seealso{

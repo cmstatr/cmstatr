@@ -180,6 +180,13 @@ test_that("carbon.fabric.2 equality of variances - modCV (step 28)", {
     levene_test(trans_strength, condition)
 
   expect_equal(res$f, 2.862, tolerance = 0.075)
+
+  # Test again, using the modcv argument
+  res <- carbon.fabric.2 %>%
+    filter(test == "FC") %>%
+    levene_test(strength, condition, modcv = TRUE)
+
+  expect_equal(res$f, 2.862, tolerance = 0.075)
 })
 
 test_that("carbon.fabric.2 pooled sd basis values - modCV (step 30)", {
@@ -187,6 +194,20 @@ test_that("carbon.fabric.2 pooled sd basis values - modCV (step 30)", {
     filter(test == "FC") %>%
     mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
     basis_pooled_sd(trans_strength, condition)
+
+  res$basis %>%
+    mutate(expected = case_when(group == "CTD" ~ 88.64,
+                                group == "RTD" ~ 79.48,
+                                group == "ETW" ~ 47.95,
+                                group == "ETW2" ~ 41.68,
+                                group == "ETD" ~ 65.97,
+                                TRUE ~ 0)) %>%
+    mutate(expect_equal(value, expected, tolerance = 0.005))
+
+  # Test again, using the modcv argument
+  res <- carbon.fabric.2 %>%
+    filter(test == "FC") %>%
+    basis_pooled_sd(strength, condition, modcv = TRUE)
 
   res$basis %>%
     mutate(expected = case_when(group == "CTD" ~ 88.64,
@@ -207,6 +228,14 @@ test_that("carbon.fabric.2 equality of norm variance - modCV (step 31)", {
     levene_test(norm_strength, condition)
 
   expect_equal(res$f, 0.226, tolerance = 0.05)
+
+  # Test again, using the modcv argument
+  res <- carbon.fabric.2 %>%
+    filter(test == "FC") %>%
+    mutate(norm_strength = normalize_group_mean(strength, condition)) %>%
+    levene_test(norm_strength, condition, modcv = TRUE)
+
+  expect_equal(res$f, 0.226, tolerance = 0.05)
 })
 
 test_that("carbon.fabric.2 pooled CV basis values - modCV (step 39-41)", {
@@ -214,6 +243,20 @@ test_that("carbon.fabric.2 pooled CV basis values - modCV (step 39-41)", {
     filter(test == "FC") %>%
     mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
     basis_pooled_cv(trans_strength, condition)
+
+  res$basis %>%
+    mutate(expected = case_when(group == "CTD" ~ 85.98,
+                                group == "RTD" ~ 77.99,
+                                group == "ETW" ~ 50.50,
+                                group == "ETW2" ~ 45.02,
+                                group == "ETD" ~ 66.22,
+                                TRUE ~ 0)) %>%
+    mutate(expect_equal(value, expected, tolerance = 0.005))
+
+  # Test again, using the modcv argument
+  res <- carbon.fabric.2 %>%
+    filter(test == "FC") %>%
+    basis_pooled_cv(strength, condition, modcv = TRUE)
 
   res$basis %>%
     mutate(expected = case_when(group == "CTD" ~ 85.98,
