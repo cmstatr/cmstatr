@@ -45,6 +45,8 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @param groups the variable in the data.frame representing the groups
 #' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
 #' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
+#' @param modcv a logical value indicating whether the modified CV approach
+#'              should be used. Only applicable to pooling methods.
 #' @param method the method for Hanson-Koopmans nonparametric basis values.
 #'               should be "optimum-order" for B-Basis and "woodward-frawley"
 #'               for A-Basis.
@@ -122,9 +124,14 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' \item{\code{distribution}}{the distribution used (normal, etc.)}
 #' \item{\code{p}}{the value of \eqn{p} supplied}
 #' \item{\code{conf}}{the value of \eqn{conf} supplied}
+#' \item{\code{modcv}}{a logical value indicating whether the modified
+#'                     CV approach was used. Only applicable to pooling
+#'                     methods.}
 #' \item{\code{data}}{a copy of the data used in the calculation}
 #' \item{\code{groups}}{a copy of the groups variable.
 #'                      Only used for pooling and ANOVA methods.}
+#' \item{\code{modcv_transformed_data}}{the data after the modified CV
+#'                                      transformation}
 #' \item{\code{n}}{the number of observations}
 #' \item{\code{r}}{the number of groups, if a pooling method was used.
 #'                 Otherwise it is NULL.}
@@ -134,6 +141,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' @seealso \code{\link{hk_ext_z_j_opt}}
 #' @seealso \code{\link{k_factor_normal}}
+#' @seealso \code{\link{transform_mod_cv}}
 #'
 #' @references
 #' J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -156,10 +164,12 @@ new_basis <- function() {
 
   res$call <- NA
   res$distribution <- NA
+  res$modcv <- FALSE
   res$p <- NA
   res$conf <- NA
   res$groups <- NA
-  res$data <- NA
+  res$data <- NULL
+  res$modcv_transformed_data <- NULL
   res$n <- NA
   res$r <- NA
   res$basis <- NA
@@ -192,6 +202,9 @@ new_basis <- function() {
 #' \item{\code{conf}}{The confidence level. Normally 0.95}
 #' \item{\code{distribution}}{A string representing the distribution assumed
 #'        when calculating the basis value}
+#' \item{\code{modcv}}{a logical value indicating whether the modified
+#'                     CV approach was used. Only applicable to pooling
+#'                     methods.}
 #' \item{\code{r}}{the sample size}
 #' \item{\code{r}}{the number of groups used in the calculation. This will
 #'        be \code{NA} for single-point basis values}
@@ -222,6 +235,7 @@ glance.basis <- function(x, ...) {  # nolint
       p = p,
       conf = conf,
       distribution = distribution,
+      modcv = modcv,
       n = n,
       r = r,
       basis = basis
@@ -241,6 +255,10 @@ print.basis <- function(x, ...) {
     cat(", r = ", x$r)
   }
   cat(" )\n")
+
+  if (x$modcv == TRUE) {
+    cat("Modified CV Approach Used", "\n")
+  }
 
   if (x$conf == 0.95 & x$p == 0.9) {
     cat("B-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
@@ -289,7 +307,11 @@ basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 
   res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
-  res$basis <- mean(res$data) - k * sd(res$data)
+
+  cv <- sd(res$data) / mean(res$data)
+  res$cv <- cv
+
+  res$basis <- mean(res$data) * (1 - k * cv)
 
   return(res)
 }
@@ -319,44 +341,6 @@ basis_lognormal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   res$basis <- exp(mean(log(res$data)) - k * sd(log(res$data)))
 
   return(res)
-}
-
-#' @export
-print.basis <- function(x, ...) {
-  cat("\nCall:\n",
-      paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
-
-  cat("Distribution: ", x$distribution, "\t")
-
-  cat("( n = ", x$n)
-  if (!is.null(x$r)) {
-    cat(", r = ", x$r)
-  }
-  cat(" )\n")
-
-  if (x$conf == 0.95 & x$p == 0.9) {
-    cat("B-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
-  }
-  else if (x$conf == 0.95 & x$p == 0.99) {
-    cat("A-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
-  }
-  else {
-    cat("Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
-  }
-
-  if (is.numeric(x$basis)) {
-    cat(x$basis, "\n")
-  } else if (is.data.frame(x$basis)) {
-    col_width <- max(nchar(as.character(x$basis[["group"]]))) + 2
-    for (j in seq(along.with = x$basis$group)) {
-      cat(format(x$basis[["group"]][j], width = col_width))
-      cat(x$basis[["value"]][j], "\n")
-    }
-  } else {
-    stop("`basis` is an unexpected data type")
-  }
-
-  cat("\n")
 }
 
 #' @rdname basis
@@ -438,7 +422,8 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @export
-basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
+basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
+                            modcv = FALSE) {
   res <- new_basis()
 
   res$call <- match.call()
@@ -460,17 +445,26 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
     arg_name = "groups")
   res$groups <- eval_tidy(enquo(groups), data)
 
-  norm_data <- normalize_group_mean(res$data, res$groups)
-  res$n <- length(res$data)
+  if (modcv == TRUE) {
+    res$modcv <- TRUE
+    res$modcv_transformed_data <- transform_mod_cv(res$data, res$groups)
+    data_to_use <- res$modcv_transformed_data
+  } else {
+    res$modcv <- FALSE
+    data_to_use <- res$data
+  }
+
+  norm_data <- normalize_group_mean(data_to_use, res$groups)
+  res$n <- length(data_to_use)
   res$r <- length(levels(as.factor(res$groups)))
 
   pooled_sd <- sqrt(sum((norm_data - 1) ^ 2) / (res$n - res$r))
 
   basis <- sapply(levels(as.factor(res$groups)), function(g) {
-    nj <- length(res$data[res$groups == g])
+    nj <- length(data_to_use[res$groups == g])
     z <- qnorm(p)
     kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
-    xj_bar <- mean(res$data[res$groups == g])
+    xj_bar <- mean(data_to_use[res$groups == g])
     xj_bar * (1 - kj * pooled_sd)
   })
 
@@ -482,7 +476,8 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @export
-basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
+basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
+                            modcv = FALSE) {
   res <- new_basis()
 
   res$call <- match.call()
@@ -504,22 +499,31 @@ basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
     arg_name = "groups")
   res$groups <- eval_tidy(enquo(groups), data)
 
-  res$n <- length(res$data)
+  if (modcv == TRUE) {
+    res$modcv <- TRUE
+    res$modcv_transformed_data <- transform_mod_cv(res$data, res$groups)
+    data_to_use <- res$modcv_transformed_data
+  } else {
+    res$modcv <- FALSE
+    data_to_use <- res$data
+  }
+
+  res$n <- length(data_to_use)
   res$r <- length(levels(as.factor(res$groups)))
 
   pooled_sd <- sqrt(
     sum(
       sapply(levels(as.factor(res$groups)), function(g) {
-        xj_bar <- mean(res$data[res$groups == g])
-        sum((res$data[res$groups == g] - xj_bar) ^ 2)
+        xj_bar <- mean(data_to_use[res$groups == g])
+        sum((data_to_use[res$groups == g] - xj_bar) ^ 2)
       })
     ) / (res$n - res$r))
 
   basis <- sapply(levels(as.factor(res$groups)), function(g) {
-    nj <- length(res$data[res$groups == g])
+    nj <- length(data_to_use[res$groups == g])
     z <- qnorm(p)
     kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
-    xj_bar <- mean(res$data[res$groups == g])
+    xj_bar <- mean(data_to_use[res$groups == g])
     xj_bar - kj * pooled_sd
   })
 

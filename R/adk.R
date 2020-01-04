@@ -76,7 +76,15 @@ ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
     arg_name = "groups")
   res$groups <- eval_tidy(enquo(groups), data)
 
+  if (length(res$data) != length(res$groups)) {
+    stop("Error: `x` and `groups` must be of same length.")
+  }
+
   res$alpha <- alpha
+
+  td <- NULL
+
+  res$transformed_data <- td
 
   grps <- lapply(levels(as.factor(res[["groups"]])),
                  function(l) {

@@ -88,3 +88,222 @@ normalize_group_mean <- function(x, groups) {
 
   return(x / group_means)
 }
+
+#' Calculate the modified CV from the CV
+#'
+#' @description
+#' This function calculates the Modified CV based on an (unmodified) CV.
+#' The modified CV is calculated based on the rules in CMH-17-1G. Those
+#' rules are:
+#'
+#' \itemize{
+#'   \item{}{For CV < 4\%, CV* = 6\%}
+#'   \item{}{For 4\% <= CV < 8\%, CV* = CV / 2 + 4\%}
+#'   \item{}{For CV > 8\%, CV* = CV}
+#' }
+#'
+#' @param cv The CV to modify
+#'
+#' @return
+#' The value of the modified CV
+#'
+#' @references
+#' "Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,"
+#' SAE International, CMH-17-1G, Mar. 2012.
+#'
+#' @export
+calc_cv_star <- function(cv) {
+  if (cv < 0.04) {
+    cv <- 0.06
+  } else if (cv < 0.08) {
+    cv <- cv / 2 + 0.04
+  } else {
+    cv <- cv
+  }
+  return(cv)
+}
+
+#' Transforms data according to the modified CV rule
+#'
+#' @description
+#' Two versions of this transformation are implemented. The first version,
+#' \code{transform_mod_cv()}, transforms the data in a single group (with
+#' no other structure) according to the modified CV rules.
+#'
+#' The second
+#' version, \code{transform_mod_cv_2()}, transforms data that is structured
+#' according to both condition and batch.
+#'
+#' @details
+#' \code{transform_mod_cv()} takes a vector
+#' containing the observations and a vector containing the groups that
+#' each observation belongs to and transforms the data. The modified CV
+#' is computed independently within each group and each observation is
+#' transformed according to:
+#'
+#' \deqn{\frac{S_i^*}{S_i} (x_i - \bar{x_i}) + \bar{x_i}}{
+#'   Si*/Si (xi-x_bar_i) + x_bar_i
+#' }
+#'
+#' Where Si* is the modified standard deviation (mod CV times mean) for
+#' the group; Si is the standard deviation for the group, x_bar_i is
+#' the group mean and xi is the observation.
+#'
+#' \code{transform_mod_cv_2()} takes a vector containing the observations
+#' plus a vector containing the corresponding conditions and a vector
+#' containing the batches. This function first calculates the modified
+#' CV value from the data from each condition (independently). Then,
+#' within each condition, the transformation
+#' \code{transform_mod_cv(x, batches)}
+#' is applied to produce the transformed data \deqn{x'}{\prime{x}}.
+#' This transformed data is further transformed using the following
+#' equation.
+#'
+#' \deqn{x'' = C (x'_i - x_bar_i) + x_bar_i}{
+#'   x\prime\prime = C \left(x_i\prime - \bar{x_i}\right) + \bar{x_i}
+#' }
+#'
+#' Where:
+#'
+#' \deqn{C = sqrt(SSE* / SSE')}{
+#'   C = \sqrt\left(\frac{SSE^{*}}{SSE^{\prime}}\right)
+#' }
+#'
+#' \deqn{SSE\* = (n-1) (CV\* x_bar)^2 - sum(n_i(x_bar_i-x_bar)^2)}{
+#'   SSE^{\*} = \left(n-1\right)\left(CV^{\*} \bar{x}\right)^2 -
+#'   \sum\left[n_i \left(\bar{x_i}-\bar{x}\right)^2\right]
+#' }
+#'
+#' \deqn{SSE' = sum(x'_i - x_bar_i)^2}{
+#'   SSE\prime = \sum\left(x_i\prime - \bar{x_i}\right)^2
+#' }
+#'
+#'
+#' @param x a vector of data to transform
+#' @param groups a vector indicating the group to which each observation in
+#'        \code{x} belongs. If this is NULL, the data will be treated as
+#'        unstructured (without grouping)
+#' @param conditions a vector indicating the condition to which each
+#'        observation belongs
+#' @param batches a vector indicating the batch to which each observation
+#'        belongs
+#'
+#' @return
+#' A vector of transformed data
+#'
+#' @examples
+#' # Transform data according to the modified CV transformation
+#' # and report the original and modified CV for each condition
+#'
+#' library(tidyverse)
+#' carbon.fabric %>%
+#'   filter(test == "FT") %>%
+#'   mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
+#'   group_by(condition) %>%
+#'   summarize(cv = sd(strength) / mean(strength),
+#'             mod_cv = sd(trans_strength) / mean(trans_strength))
+#'
+#' ## # A tibble: 3 x 3
+#' ##   condition     cv mod_cv
+#' ##   <chr>      <dbl>  <dbl>
+#' ## 1 CTD       0.0423 0.0612
+#' ## 2 ETW       0.0369 0.0600
+#' ## 3 RTD       0.0621 0.0711
+#'
+#' @seealso
+#' \code{\link{calc_cv_star}}
+#'
+#' @name transform_mod_cv
+NULL
+
+
+transform_mod_cv_2_within_condition <- function(x, batches, cv_star) {  # nolint
+  if (length(x) != length(batches)) {
+    stop("x and batches must be the same length")
+  }
+
+  x_prime <- transform_mod_cv(x, batches)
+  n <- length(x)
+  x_bar <- mean(x)
+
+  sse_prime <- sum(sapply(seq(along.with = x), function(i) {
+    x_prime_i <- x_prime[i]
+    x_bar_i <- mean(x[batches == batches[i]])
+    (x_prime_i - x_bar_i) ^ 2
+  }))
+
+  sse_star <- (n - 1) * (cv_star * x_bar) ^ 2 -
+    sum(sapply(unique(batches), function(gi) {
+      n_i <- sum(batches == gi)
+      x_bar_i <- mean(x[batches == gi])
+      n_i * (x_bar_i - x_bar) ^ 2
+    }))
+
+  c_prime <- sqrt(sse_star / sse_prime)
+
+  res <- sapply(seq(along.with = x), function(i) {
+    x_bar_i <- mean(x[batches == batches[i]])
+    c_prime * (x_prime[i] - x_bar_i) + x_bar_i
+  })
+
+  res
+}
+
+#' @rdname transform_mod_cv
+#' @export
+transform_mod_cv_2 <- function(x, conditions, batches) {
+  if (is.null(batches)) {
+    batches <- rep("A", length(x))
+  }
+
+  if (is.null(conditions)) {
+    conditions <- rep("A", length(x))
+  }
+
+  if (length(x) != length(batches)) {
+    stop("x and batches must be the same length")
+  }
+
+  if (length(x) != length(conditions)) {
+    stop("x and conditions must be the same length")
+  }
+
+  res <- numeric(0)
+
+  for (ci in unique(conditions)) {
+    x_condition <- x[conditions == ci]
+    cv_star <- calc_cv_star(sd(x_condition) / mean(x_condition))
+    res[conditions == ci] <- transform_mod_cv_2_within_condition(
+      x_condition, batches[conditions == ci], cv_star
+    )
+  }
+
+  res
+}
+
+#' @rdname transform_mod_cv
+#' @export
+transform_mod_cv <- function(x, groups = NULL) {
+  if (is.null(groups)) {
+    groups <- rep("A", length(x))
+  }
+
+  if (length(x) != length(groups)) {
+    stop("x and groups must be the same length")
+  }
+
+  res <- sapply(seq(along.with = x), function(i) {
+    xi <- x[i]
+    cur_group <- x[groups == groups[i]]
+    s <- sd(cur_group)
+    x_bar <- mean(cur_group)
+    cv <- s / x_bar
+    cv_star <- calc_cv_star(cv)
+    s_star <- cv_star * x_bar
+
+    s_star / s * (xi - x_bar) + x_bar
+  })
+
+  res
+}

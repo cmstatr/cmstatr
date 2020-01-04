@@ -830,16 +830,3 @@ print.equiv_change_mean <- function(x, ...) {
                                     format(x$threshold[2], ...))
   )
 }
-
-# a helper function to calculate the value of the modified CV. This function is
-# not exported
-calc_cv_star <- function(cv) {
-  if (cv < 0.04) {
-    cv <- 0.06
-  } else if (cv < 0.08) {
-    cv <- cv / 2 + 0.04
-  } else {
-    cv <- cv
-  }
-  return(cv)
-}
