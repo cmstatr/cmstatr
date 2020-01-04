@@ -437,7 +437,6 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     c = match.call(),
     arg_name = "x")
   res$data <- eval_tidy(enquo(x), data)
-  data_to_use <- res$data
 
   verify_tidy_input(
     df = data,
@@ -450,6 +449,9 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     res$modcv <- TRUE
     res$modcv_transformed_data <- transform_mod_cv(res$data, res$groups)
     data_to_use <- res$modcv_transformed_data
+  } else {
+    res$modcv <- FALSE
+    data_to_use <- res$data
   }
 
   norm_data <- normalize_group_mean(data_to_use, res$groups)
@@ -489,7 +491,6 @@ basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     c = match.call(),
     arg_name = "x")
   res$data <- eval_tidy(enquo(x), data)
-  data_to_use <- res$data
 
   verify_tidy_input(
     df = data,
@@ -502,6 +503,9 @@ basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     res$modcv <- TRUE
     res$modcv_transformed_data <- transform_mod_cv(res$data, res$groups)
     data_to_use <- res$modcv_transformed_data
+  } else {
+    res$modcv <- FALSE
+    data_to_use <- res$data
   }
 
   res$n <- length(data_to_use)
