@@ -4,7 +4,7 @@
 \alias{levene_test}
 \title{Levene's Test for Equality of Variance}
 \usage{
-levene_test(data, x, groups, alpha = 0.05)
+levene_test(data, x, groups, alpha = 0.05, modcv = FALSE)
 }
 \arguments{
 \item{data}{a data.frame}
@@ -15,21 +15,26 @@ Levene's test (usually strength)}
 \item{groups}{a variable in the data.frame that defines the groups}
 
 \item{alpha}{the significance level (default 0.05)}
+
+\item{modcv}{a logical value indicating whether the modified CV approach
+should be used.}
 }
 \value{
 Returns an object of class \code{adk}. This object has the following fields:
-\describe{
-  \item{\code{call}}{the expression used to call this function}
-  \item{\code{data}}{the original data used to compute the ADK}
-  \item{\code{groups}}{a vector of the groups used in the computation}
-  \item{\code{alpha}}{the value of alpha specified}
-  \item{\code{n}}{the total number of observations}
-  \item{\code{k}}{the number of groups}
-  \item{\code{f}}{the value of the F test statistic}
-  \item{\code{p}}{the computed p-value}
-  \item{\code{reject_equal_variance}}{a boolean value indicating whether the null
-    hypothesis that all samples have the same variance is rejected}
-}
+\item{\code{call}}{the expression used to call this function}
+\item{\code{data}}{the original data used to compute the ADK}
+\item{\code{groups}}{a vector of the groups used in the computation}
+\item{\code{alpha}}{the value of alpha specified}
+\item{\code{modcv}}{a logical value indicating whether the modified
+                    CV approach was used.}
+\item{\code{n}}{the total number of observations}
+\item{\code{k}}{the number of groups}
+\item{\code{f}}{the value of the F test statistic}
+\item{\code{p}}{the computed p-value}
+\item{\code{reject_equal_variance}}{a boolean value indicating whether the
+  null hypothesis that all samples have the same variance is rejected}
+\item{\code{modcv_transformed_data}}{the data after the modified CV
+                                     transformation}
 }
 \description{
 This function performs the Levene's test for equality of variance.

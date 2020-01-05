@@ -190,3 +190,21 @@ test_that("ADK test matches example from CMH-17-1G", {
   expect_output(print(res), ".*k.*3")
   expect_output(print(res), "Conclusion: Samples do not come")
 })
+
+test_that("glance.adk produces expected output", {
+  res <- carbon.fabric %>%
+    filter(test == "WT") %>%
+    filter(condition == "RTD") %>%
+    ad_ksample(strength, batch)
+
+  glance_res <- glance(res)
+
+  expect_equal(glance_res[["alpha"]][1], 0.025)
+  expect_equal(glance_res[["n"]][1], 18)
+  expect_equal(glance_res[["k"]][1], 3)
+  expect_equal(glance_res[["sigma"]], 0.944, tolerance = 0.001)
+  expect_equal(glance_res[["ad"]][1], 0.456 * (res$k - 1))
+  expect_equal(glance_res[["p"]][1], 0.96, tolerance = 0.001)
+  expect_equal(glance_res[["reject_same_dist"]], FALSE)
+
+})

@@ -8,7 +8,7 @@
 \alias{basis_pooled_cv}
 \alias{basis_pooled_sd}
 \alias{basis_hk_ext}
-\alias{basis_nonparametric_large_sample}
+\alias{basis_nonpara_large_sample}
 \alias{basis_anova}
 \title{Calculate basis values}
 \usage{
@@ -18,15 +18,16 @@ basis_lognormal(data = NULL, x, p = 0.9, conf = 0.95)
 
 basis_weibull(data = NULL, x, p = 0.9, conf = 0.95)
 
-basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95)
+basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95,
+  modcv = FALSE)
 
-basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95)
+basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95,
+  modcv = FALSE)
 
 basis_hk_ext(data = NULL, x, p = 0.9, conf = 0.95,
   method = c("optimum-order", "woodward-frawley"))
 
-basis_nonparametric_large_sample(data = NULL, x, p = 0.9,
-  conf = 0.95)
+basis_nonpara_large_sample(data = NULL, x, p = 0.9, conf = 0.95)
 
 basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95)
 }
@@ -41,6 +42,9 @@ basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95)
 
 \item{groups}{the variable in the data.frame representing the groups}
 
+\item{modcv}{a logical value indicating whether the modified CV approach
+should be used. Only applicable to pooling methods.}
+
 \item{method}{the method for Hanson-Koopmans nonparametric basis values.
 should be "optimum-order" for B-Basis and "woodward-frawley"
 for A-Basis.}
@@ -48,21 +52,24 @@ for A-Basis.}
 \value{
 an object of class \code{basis}
 This object has the following fields:
-\describe{
-  \item{\code{call}}{the expression used to call this function}
-  \item{\code{distribution}}{the distribution used (normal, etc.)}
-  \item{\code{p}}{the value of \eqn{p} supplied}
-  \item{\code{conf}}{the value of \eqn{conf} supplied}
-  \item{\code{data}}{a copy of the data used in the calculation}
-  \item{\code{groups}}{a copy of the groups variable.
-                       Only used for pooling and ANOVA methods.}
-  \item{\code{n}}{the number of observations}
-  \item{\code{r}}{the number of groups, if a pooling method was used.
-                  Otherwise it is NULL.}
-  \item{\code{basis}}{the basis value computed. This is a number
-                      except when pooling methods are used, in
-                      which case it is a data.frame.}
-}
+\item{\code{call}}{the expression used to call this function}
+\item{\code{distribution}}{the distribution used (normal, etc.)}
+\item{\code{p}}{the value of \eqn{p} supplied}
+\item{\code{conf}}{the value of \eqn{conf} supplied}
+\item{\code{modcv}}{a logical value indicating whether the modified
+                    CV approach was used. Only applicable to pooling
+                    methods.}
+\item{\code{data}}{a copy of the data used in the calculation}
+\item{\code{groups}}{a copy of the groups variable.
+                     Only used for pooling and ANOVA methods.}
+\item{\code{modcv_transformed_data}}{the data after the modified CV
+                                     transformation}
+\item{\code{n}}{the number of observations}
+\item{\code{r}}{the number of groups, if a pooling method was used.
+                Otherwise it is NULL.}
+\item{\code{basis}}{the basis value computed. This is a number
+                    except when pooling methods are used, in
+                    which case it is a data.frame.}
 }
 \description{
 Calculate the basis value for a given data set. There are various functions
@@ -113,7 +120,7 @@ typically well within 0.2%, however, for a few sample sizes, the
 agreement can be as poor as 1% with the result of this function being
 more conservative than STAT-17.
 
-\code{basis_nonparametric_large_sample} calculates the basis value
+\code{basis_nonpara_large_sample} calculates the basis value
 using the large sample method described in CMH-17-1G. This method uses
 a sum of binomials to determine the rank of the ordered statistic
 corresponding with the desired tolerance limit (basis value). Results
@@ -153,4 +160,6 @@ vol. 23, no. 4. pp. 1137–1154, 1994.
 \code{\link{hk_ext_z_j_opt}}
 
 \code{\link{k_factor_normal}}
+
+\code{\link{transform_mod_cv}}
 }

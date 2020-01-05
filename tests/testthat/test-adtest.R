@@ -22,17 +22,17 @@ test_that("AD test gives same results for a data frame and a vector", {
       80.7564920650884,
       79.3614980225488
     ))
-  res.vec1 <- anderson_darling_normal(
+  res_vec1 <- anderson_darling_normal(
     x = data$strength)
 
   # value from STAT17 (0.0840)
-  expect_equal(res.vec1$osl, 0.0840, tolerance = 0.002)
+  expect_equal(res_vec1$osl, 0.0840, tolerance = 0.002)
 
-  res.df <- anderson_darling_normal(
+  res_df <- anderson_darling_normal(
     data,
     strength)
 
-  expect_equal(res.vec1$osl, res.df$osl)
+  expect_equal(res_vec1$osl, res_df$osl)
 })
 
 test_that("AD test matches results from STAT17 (normal)", {
@@ -57,11 +57,11 @@ test_that("AD test matches results from STAT17 (normal)", {
       144.1589,
       128.5218
     ))
-  res.vec <- anderson_darling_normal(x = data$strength)
-  expect_equal(res.vec$osl, 0.465, tolerance = 0.002)
+  res_vec <- anderson_darling_normal(x = data$strength)
+  expect_equal(res_vec$osl, 0.465, tolerance = 0.002)
   # Do it again but pass in a data.frame
-  res.df <- anderson_darling_normal(data, strength)
-  expect_equal(res.vec$osl, res.df$osl)
+  res_df <- anderson_darling_normal(data, strength)
+  expect_equal(res_vec$osl, res_df$osl)
 })
 
 test_that("AD test matches results from STAT17 (lognormal)", {
@@ -86,11 +86,11 @@ test_that("AD test matches results from STAT17 (lognormal)", {
       144.1589,
       128.5218
     ))
-  res.vec <- anderson_darling_lognormal(x = data$strength)
-  expect_equal(res.vec$osl, 0.480, tolerance = 0.002)
+  res_vec <- anderson_darling_lognormal(x = data$strength)
+  expect_equal(res_vec$osl, 0.480, tolerance = 0.002)
   # Do it again but pass in a data.frame
-  res.df <- anderson_darling_lognormal(data, strength)
-  expect_equal(res.vec$osl, res.df$osl)
+  res_df <- anderson_darling_lognormal(data, strength)
+  expect_equal(res_vec$osl, res_df$osl)
 })
 
 test_that("AD test matches results from STAT17 (weibull)", {
@@ -117,11 +117,11 @@ test_that("AD test matches results from STAT17 (weibull)", {
     )
   )
   # OSL: 0.179
-  res.vec <- anderson_darling_weibull(x = data$strength)
-  expect_equal(res.vec$osl, 0.179, tolerance = 0.002)
+  res_vec <- anderson_darling_weibull(x = data$strength)
+  expect_equal(res_vec$osl, 0.179, tolerance = 0.002)
   # Do it again but pass in a data.frame
-  res.df <- anderson_darling_weibull(data, strength)
-  expect_equal(res.vec$osl, res.df$osl)
+  res_df <- anderson_darling_weibull(data, strength)
+  expect_equal(res_vec$osl, res_df$osl)
 })
 
 test_that("ad_p_unknown_parameters matches normal results from Lawless", {
@@ -129,8 +129,8 @@ test_that("ad_p_unknown_parameters matches normal results from Lawless", {
   # J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
   # New York: Wiley, 1982.
   # See page 458
-  fcn <- function(A, n) {
-    ad_p_normal_unknown_param(A / (1 + 4 / n - 25 / n ^ 2), n)
+  fcn <- function(a, n) {
+    ad_p_normal_unknown_param(a / (1 + 4 / n - 25 / n ^ 2), n)
   }
 
   n <- 5
@@ -160,8 +160,8 @@ test_that("ad_p_unknown_parameters matches weibull results from Lawless", {
   # J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
   # New York: Wiley, 1982.
   # See p. 455
-  fcn <- function(A, n) {
-    ad_p_weibull_unknown_param(A / (1 + 0.2 / sqrt(n)), n)
+  fcn <- function(a, n) {
+    ad_p_weibull_unknown_param(a / (1 + 0.2 / sqrt(n)), n)
   }
 
   n <- 5
@@ -208,17 +208,51 @@ test_that("print.anderson_darling contains expected values", {
       144.1589,
       128.5218
     ))
-  res.vec <- anderson_darling_normal(x = data$strength)
+  res_vec <- anderson_darling_normal(x = data$strength)
   # should include the distribution
-  expect_output(print(res.vec), "distribution.*normal", ignore.case = TRUE)
+  expect_output(print(res_vec), "distribution.*normal", ignore.case = TRUE)
   # should include the signficance for known parameters
-  expect_output(print(res.vec), "sig.*0.464.*unknown", ignore.case = TRUE)
+  expect_output(print(res_vec), "sig.*0.464.*unknown", ignore.case = TRUE)
   # conclusion should be printed
-  expect_output(print(res.vec), "conclusion.*is drawn.*alpha.*0.05",
+  expect_output(print(res_vec), "conclusion.*is drawn.*alpha.*0.05",
                 ignore.case = TRUE)
+  expect_false(res_vec$reject_distribution)
 
   # if alpha is adjusted to be above OSL, the conclusion should be reversed
-  res.vec <- anderson_darling_normal(x = data$strength, alpha = 0.470)
-  expect_output(print(res.vec), "conclusion.*is not drawn.*alpha.*0.47",
+  res_vec <- anderson_darling_normal(x = data$strength, alpha = 0.470)
+  expect_output(print(res_vec), "conclusion.*is not drawn.*alpha.*0.47",
                 ignore.case = TRUE)
+  expect_true(res_vec$reject_distribution)
+})
+
+test_that("glance method produces expected results", {
+  x <- c(
+    137.4438,
+    139.5395,
+    150.89,
+    141.4474,
+    141.8203,
+    151.8821,
+    143.9245,
+    132.9732,
+    136.6419,
+    138.1723,
+    148.7668,
+    143.283,
+    143.5429,
+    141.7023,
+    137.4732,
+    152.338,
+    144.1589,
+    128.5218
+  )
+  res <- anderson_darling_lognormal(x = x)
+  glance_res <- glance(res)
+
+  expect_equal(glance_res$osl[1], 0.480, tolerance = 0.002)
+  expect_equal(glance_res$dist[1], "Lognormal")
+  expect_equal(glance_res$n[1], 18)
+  expect_equal(glance_res$A[1], 0.277, tolerance = 0.005)
+  expect_equal(glance_res$alpha, 0.05)
+  expect_equal(glance_res$reject_distribution, FALSE)
 })

@@ -121,7 +121,7 @@ test_that("(normal) basis value approx equals percentile for large samples", {
   expect_lt(abs(basis - q), 0.1)
 })
 
-test_that("normal basis value matches STAT17 result", {
+test_that("normal basis value matches STAT17/ASAP result", {
   data <- c(
     137.4438,
     139.5395,
@@ -145,12 +145,12 @@ test_that("normal basis value matches STAT17 result", {
 
   res <- basis_normal(x = data, p = 0.9, conf = 0.95)
   expect_equal(res$basis, 129.287, tolerance = 0.0005)
-  expect_output(print(res), "b-basis.*129.2", ignore.case = TRUE)
+  expect_output(print(res), "b-basis.*129\\.2", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
 
   res <- basis_normal(x = data, p = 0.99, conf = 0.95)
   expect_equal(res$basis, 120.336, tolerance = 0.0005)
-  expect_output(print(res), "a-basis.*120.3", ignore.case = TRUE)
+  expect_output(print(res), "a-basis.*120\\.3", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
 
   expect_match(res$distribution, "normal", ignore.case = TRUE)
@@ -283,7 +283,7 @@ test_that("Non-parametric (large sample) basis value matches STAT17 result", {
     144.0896, 141.8029, 130.0149, 140.8813, 137.7864
   )
 
-  res <- basis_nonparametric_large_sample(x = data, p = 0.9, conf = 0.95)
+  res <- basis_nonpara_large_sample(x = data, p = 0.9, conf = 0.95)
   expect_equal(res$basis, 122.738297, tolerance = 0.005)
   expect_output(print(res), "b-basis.*122", ignore.case = TRUE)
   expect_output(print(res), "nonparametric", ignore.case = TRUE)
@@ -442,6 +442,58 @@ test_that("Pooled CV results match CMH17STATS", {
   expect_equal(res_a$basis$value[res_a$basis$group == "ETW2"],
                45.40, tolerance = 0.01)
   expect_output(print(res_a), "a-basis", ignore.case = TRUE)
+})
+
+test_that("Pooled data matches CMH17-STATS with mod CV, SD pooling", {
+  # pooled SD modified CV results
+  # pooled data fails Levene's test after mod CV transform
+  # based on `poolable_data` dataset with ETW2 removed
+
+  data <- filter(poolable_data, condition != "ETW2")
+
+  res_b <- basis_pooled_sd(data, strength, condition, modcv = TRUE)
+
+  expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
+               92.25, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "RTD"],
+               85.91, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "ETW"],
+               52.97, tolerance = 0.01)
+
+  res_a <- basis_pooled_sd(data, strength, condition,
+                           p = 0.99, conf = 0.95, modcv = TRUE)
+  expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
+               83.81, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
+               77.48, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "ETW"],
+               44.47, tolerance = 0.01)
+})
+
+test_that("Pooled data matches CMH17-STATS with mod CV, CV pooling", {
+  # pooled CV modified CV results
+  # pooled data passes Levene's test after mod CV transform
+  # based on `poolable_data` dataset with ETW2 removed
+
+  data <- filter(poolable_data, condition != "ETW2")
+
+  res_b <- basis_pooled_cv(data, strength, condition, modcv = TRUE)
+
+  expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
+               90.31, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "RTD"],
+               84.83, tolerance = 0.01)
+  expect_equal(res_b$basis$value[res_b$basis$group == "ETW"],
+               56.43, tolerance = 0.01)
+
+  res_a <- basis_pooled_cv(data, strength, condition,
+                           p = 0.99, conf = 0.95, modcv = TRUE)
+  expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
+               80.57, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
+               75.69, tolerance = 0.01)
+  expect_equal(res_a$basis$value[res_a$basis$group == "ETW"],
+               50.33, tolerance = 0.01)
 })
 
 vangel1994 <- tribble(
@@ -951,21 +1003,21 @@ test_that("Non-parametric ranks for A-Basis match CMH-17-1G Table 8.5.13", {
   cmh_17_1g_8_5_13 %>%
     mutate(ra_lag = lag(ra)) %>%
     rowwise() %>%
-    mutate(r_calc = nonparametric_binomial_rank(n, 0.99, 0.95)) %>%
+    mutate(r_calc = nonpara_binomial_rank(n, 0.99, 0.95)) %>%
     mutate(expect_equal(ra, r_calc,
                         label = glue(
                           "Mismatch in r for n={n}. rA={ra}, r_calc={r_calc}"
                           ))) %>%
     filter(n > 299 & n < 6500) %>%
     # the rank for one sample larger should be the same
-    mutate(r_calc_plus = nonparametric_binomial_rank(n + 1, 0.99, 0.95)) %>%
+    mutate(r_calc_plus = nonpara_binomial_rank(n + 1, 0.99, 0.95)) %>%
     mutate(expect_equal(ra, r_calc_plus,
                         label = glue(
                           "Mismatch in r for n={n + 1}. rA={ra}, ",
                           "r_calc={r_calc_plus}"
                         ))) %>%
     # the rank for one sample smaller should be the previous one
-    mutate(r_calc_minus = nonparametric_binomial_rank(n - 1, 0.99, 0.95)) %>%
+    mutate(r_calc_minus = nonpara_binomial_rank(n - 1, 0.99, 0.95)) %>%
     mutate(expect_equal(ra_lag, r_calc_minus,
                         label = glue(
                           "Mismatch in r for n={n - 1}. rA={ra_lag}, ",
@@ -1089,13 +1141,13 @@ test_that("Non-parametric ranks for BA-Basis match CMH-17-1G Table 8.5.12", {
   cmh_17_1g_8_5_12 %>%
     mutate(rb_lag = lag(rb)) %>%
     rowwise() %>%
-    mutate(r_calc = nonparametric_binomial_rank(n, 0.9, 0.95)) %>%
+    mutate(r_calc = nonpara_binomial_rank(n, 0.9, 0.95)) %>%
     mutate(expect_equal(rb, r_calc,
                         label = glue(
                           "Mismatch in r for n={n}. rB={rb}, r_calc={r_calc}"
                         ))) %>%
     # the rank for one sample larger should be the same
-    mutate(r_calc_plus = nonparametric_binomial_rank(n + 1, 0.9, 0.95)) %>%
+    mutate(r_calc_plus = nonpara_binomial_rank(n + 1, 0.9, 0.95)) %>%
     mutate(expect_equal(rb, r_calc_plus,
                         label = glue(
                           "Mismatch in r for n={n + 1}. rB={rb}, ",
@@ -1105,7 +1157,7 @@ test_that("Non-parametric ranks for BA-Basis match CMH-17-1G Table 8.5.12", {
     # the rank for one sample smaller should be the previous one
     # above n=275, Table 8.5.12 does not have consecutive ranks, so we can't
     # use the lag trick below to check sample sizes of n-1
-    mutate(r_calc_minus = nonparametric_binomial_rank(n - 1, 0.9, 0.95)) %>%
+    mutate(r_calc_minus = nonpara_binomial_rank(n - 1, 0.9, 0.95)) %>%
     mutate(expect_equal(rb_lag, r_calc_minus,
                         label = glue(
                           "Mismatch in r for n={n - 1}. rB={rb_lag}, ",
@@ -1113,7 +1165,7 @@ test_that("Non-parametric ranks for BA-Basis match CMH-17-1G Table 8.5.12", {
                         )))
 })
 
-cmh_17_1g_8_3_11_1_1_ETW2 <- tribble(
+cmh_17_1g_8_3_11_1_1_etw2 <- tribble(
   ~batch, ~strength,
   1, 99.0239966,
   1, 103.341238,
@@ -1140,7 +1192,7 @@ cmh_17_1g_8_3_11_1_1_ETW2 <- tribble(
 test_that("ANOVA results match STAT17 for sample data", {
   # Sample data from CMH-17-1G Section 8.3.11.2.2
 
-  res <- cmh_17_1g_8_3_11_1_1_ETW2 %>%
+  res <- cmh_17_1g_8_3_11_1_1_etw2 %>%
     basis_anova(strength, batch)
 
   expect_equal(res$basis, 63.2, tolerance = 0.05)
@@ -1148,11 +1200,37 @@ test_that("ANOVA results match STAT17 for sample data", {
   expect_output(print(res), "ANOVA", ignore.case = TRUE)
   expect_match(res$distribution, "ANOVA", ignore.case = TRUE)
 
-  res <- cmh_17_1g_8_3_11_1_1_ETW2 %>%
+  res <- cmh_17_1g_8_3_11_1_1_etw2 %>%
     basis_anova(strength, batch, p = 0.99, conf = 0.95)
 
   expect_equal(res$basis, 34.6, tolerance = 0.05)
   expect_output(print(res), "a-basis.*34\\.", ignore.case = TRUE)
   expect_output(print(res), "ANOVA", ignore.case = TRUE)
   expect_match(res$distribution, "ANOVA", ignore.case = TRUE)
+})
+
+test_that("ANOVA produces an error when there is only one group", {
+  strength <- rep(10, 1)
+  batch <- rep(10, 1)
+
+  expect_error(
+    basis_anova(x = strength, groups = batch),
+    "fewer than 2"
+  )
+})
+
+test_that("glance.basis produces expected value", {
+  # Sample data from CMH-17-1G Section 8.3.11.2.2
+
+  res <- cmh_17_1g_8_3_11_1_1_etw2 %>%
+    basis_anova(strength, batch)
+
+  glance_res <- glance(res)
+
+  expect_equal(glance_res[["p"]][1], 0.9)
+  expect_equal(glance_res[["conf"]][1], 0.95)
+  expect_equal(glance_res[["distribution"]][1], "ANOVA")
+  expect_equal(glance_res[["n"]][1], nrow(cmh_17_1g_8_3_11_1_1_etw2))
+  expect_equal(glance_res[["r"]][1], 3)
+  expect_equal(glance_res[["basis"]][1], 63.2, tolerance = 0.05)
 })

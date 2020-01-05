@@ -9,22 +9,25 @@
 #'          Levene's test (usually strength)
 #' @param groups a variable in the data.frame that defines the groups
 #' @param alpha the significance level (default 0.05)
+#' @param modcv a logical value indicating whether the modified CV approach
+#'              should be used.
 #'
 #' @return
 #' Returns an object of class \code{adk}. This object has the following fields:
-#' \describe{
-#'   \item{\code{call}}{the expression used to call this function}
-#'   \item{\code{data}}{the original data used to compute the ADK}
-#'   \item{\code{groups}}{a vector of the groups used in the computation}
-#'   \item{\code{alpha}}{the value of alpha specified}
-#'   \item{\code{n}}{the total number of observations}
-#'   \item{\code{k}}{the number of groups}
-#'   \item{\code{f}}{the value of the F test statistic}
-#'   \item{\code{p}}{the computed p-value}
-#'   \item{\code{reject_equal_variance}}{a boolean value indicating whether the null
-#'     hypothesis that all samples have the same variance is rejected}
-#' }
-#'
+#' \item{\code{call}}{the expression used to call this function}
+#' \item{\code{data}}{the original data used to compute the ADK}
+#' \item{\code{groups}}{a vector of the groups used in the computation}
+#' \item{\code{alpha}}{the value of alpha specified}
+#' \item{\code{modcv}}{a logical value indicating whether the modified
+#'                     CV approach was used.}
+#' \item{\code{n}}{the total number of observations}
+#' \item{\code{k}}{the number of groups}
+#' \item{\code{f}}{the value of the F test statistic}
+#' \item{\code{p}}{the computed p-value}
+#' \item{\code{reject_equal_variance}}{a boolean value indicating whether the
+#'   null hypothesis that all samples have the same variance is rejected}
+#' \item{\code{modcv_transformed_data}}{the data after the modified CV
+#'                                      transformation}
 #' @details
 #' This function performs the Levene's test for equality of variance. The
 #' data is transformed as follows:
@@ -43,7 +46,7 @@
 #' @importFrom stats var.test median pf
 #'
 #' @export
-levene_test <- function(data, x, groups, alpha = 0.05) {
+levene_test <- function(data, x, groups, alpha = 0.05, modcv = FALSE) {
   res <- list()
   class(res) <- "levene"
 
@@ -67,6 +70,15 @@ levene_test <- function(data, x, groups, alpha = 0.05) {
   res$groups <- group_vector
   res$alpha <- alpha
 
+  if (modcv == TRUE) {
+    res$modcv <- TRUE
+    res$modcv_transformed_data <- transform_mod_cv(data_vector, group_vector)
+    data_vector <- res$modcv_transformed_data
+  } else {
+    res$modcv <- FALSE
+    res$modcv_transformed_data <- NULL
+  }
+
   transformed_groups <- lapply(levels(as.factor(group_vector)), function(lvl) {
     group_data <- data_vector[group_vector == lvl]
     w <- abs(group_data - median(group_data))
@@ -86,7 +98,7 @@ levene_test <- function(data, x, groups, alpha = 0.05) {
 
   f_stat_denomenator <- sum(sapply(transformed_groups, function(group_data) {
     group_data_minus_group_mean <- group_data - mean(group_data)
-    res <- sum( (group_data_minus_group_mean) ^ 2) / (n - k)
+    res <- sum((group_data_minus_group_mean) ^ 2) / (n - k)
     return(res)
   }))
 
@@ -100,11 +112,83 @@ levene_test <- function(data, x, groups, alpha = 0.05) {
   return(res)
 }
 
+
+#' Glance at a \code{levene} object
+#'
+#' @description
+#' Glance accepts an object of type \code{levele} and returns a
+#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' one row of summaries.
+#'
+#' Glance does not do any calculations: it just gathers the results in a
+#' tibble.
+#'
+#' @param x a \code{levene} object returned from \code{\link{levene_test}}
+#' @param ... Additional arguments. Not used. Included only to match generic
+#'            signature.
+#'
+#'
+#' @return
+#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' columns:
+#'
+#' \item{\code{alpha}}{the value of alpha specified}
+#' \item{\code{modcv}}{a logical value indicating whether the modified
+#'                     CV approach was used.}
+#' \item{\code{n}}{the total number of observations}
+#' \item{\code{k}}{the number of groups}
+#' \item{\code{f}}{the value of the F test statistic}
+#' \item{\code{p}}{the computed p-value}
+#' \item{\code{reject_equal_variance}}{a boolean value indicating whether the
+#'       null hypothesis that all samples have the same variance is rejected}
+#'
+#'
+#' @seealso
+#' \code{\link{levene_test}}
+#'
+#' @examples
+#' df <- data.frame(
+#'   groups = c(rep("A", 5), rep("B", 6)),
+#'   strength = c(rnorm(5, 100, 6), rnorm(6, 105, 7))
+#' )
+#' levene_result <- levene_test(df, strength, groups)
+#' glance(levene_result)
+#'
+#' ## # A tibble: 1 x 7
+#' ##   alpha modcv     n     k      f     p reject_equal_variance
+#' ##   <dbl> <lgl> <int> <int>  <dbl> <dbl> <lgl>
+#' ## 1  0.05 FALSE    11     2 0.0191 0.893 FALSE
+#'
+#' @method glance levene
+#' @importFrom tibble tibble
+#'
+#' @export
+glance.levene <- function(x, ...) {  # nolint
+  with(
+    x,
+    tibble::tibble(
+      alpha = alpha,
+      modcv = modcv,
+      n = n,
+      k = k,
+      f = f,
+      p = p,
+      reject_equal_variance = reject_equal_variance
+    )
+  )
+}
+
+
 #' @export
 print.levene <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
   cat("n = ", x$n, "\tk = ", x$k, "\n")
+
+  if (x$modcv == TRUE) {
+    cat("Modified CV Approach Used", "\n")
+  }
+
   cat("F = ", x$f, "\tp-value = ", x$p, "\n")
   if (x$reject_equal_variance) {
     cat("Conclusion: Samples have unequal variance ( alpha=",

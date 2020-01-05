@@ -10,6 +10,7 @@ Guenther
 ieee
 Koopmans
 Levene's
+lm
 Marsaglia
 MNR
 normed
@@ -19,6 +20,7 @@ RTD
 SAE
 Scholz
 Technometrics
+tibble
 Vangel
 Vangel's
 woodward
