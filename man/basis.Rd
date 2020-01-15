@@ -12,11 +12,14 @@
 \alias{basis_anova}
 \title{Calculate basis values}
 \usage{
-basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
+basis_normal(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
+  override = c())
 
-basis_lognormal(data = NULL, x, p = 0.9, conf = 0.95)
+basis_lognormal(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
+  override = c())
 
-basis_weibull(data = NULL, x, p = 0.9, conf = 0.95)
+basis_weibull(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
+  override = c())
 
 basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95,
   modcv = FALSE)
@@ -36,9 +39,14 @@ basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95)
 
 \item{x}{the variable in the data.frame for which to find the basis value}
 
+\item{batch}{the variable in the data.frame that contains the batches.}
+
 \item{p}{should be 0.90 for B-Basis and 0.99 for A-Basis}
 
 \item{conf}{confidence interval. Should be 0.95 for both A- and B-Basis}
+
+\item{override}{a list of names of diagnostic tests to override,
+if desired.}
 
 \item{groups}{the variable in the data.frame representing the groups}
 
@@ -62,8 +70,14 @@ This object has the following fields:
 \item{\code{data}}{a copy of the data used in the calculation}
 \item{\code{groups}}{a copy of the groups variable.
                      Only used for pooling and ANOVA methods.}
+\item{\code{batch}}{a copy of the batch data used for diagnostic tests}
 \item{\code{modcv_transformed_data}}{the data after the modified CV
                                      transformation}
+\item{\code{override}}{a vector of the names of diagnostic tests that
+                       were overridden. \code{NULL} if none were
+                       overridden}
+\item{\code{diagnostic_failures}}{a vector containing any diagnostic tests
+                                  that produced failures}
 \item{\code{n}}{the number of observations}
 \item{\code{r}}{the number of groups, if a pooling method was used.
                 Otherwise it is NULL.}
@@ -75,7 +89,9 @@ This object has the following fields:
 Calculate the basis value for a given data set. There are various functions
 to calculate the basis values for different distributions. For B-Basis,
 set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.90} and
-\eqn{conf=0.95}
+\eqn{conf=0.95}. These functions also preform some automated diagnostic
+tests of the data prior to calculating the basis values. These tests can be
+overridden if needed.
 }
 \details{
 \code{data} is an optional argument. If \code{data} is given, it should
@@ -86,11 +102,33 @@ value of \code{x} is expected to be a variable within \code{data}. If
 
 \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 the standard deviation from the mean using. \eqn{k} is given by
-the function \code{\link{k_factor_normal}}.
+the function \code{\link{k_factor_normal}}. This function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and a diagnostic test for normality (using
+\code{\link{anderson_darling_normal}}).
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
 
 \code{basis_lognormal} calculates the basis value in the same way
 that \code{basis_normal} does, except that the natural logarithm of the
 data is taken.
+
+\code{basis_lognormal} function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and a diagnostic test for normality (using
+\code{\link{anderson_darling_lognormal}}).
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
 
 \code{basis_weibull} calculates the basis value for data distributed
 according to a Weibull distribution. The confidence interval for the
@@ -98,6 +136,18 @@ quantile requested is calculated using the conditional method, as
 described in Lawless (1982) Section 4.1.2b. This has good agreement
 with tables published in CMH-17-1G. Results differ between this function
 and STAT17 by approximately 0.5%.
+
+\code{basis_weibull} function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and a diagnostic test for normality (using
+\code{\link{anderson_darling_weibull}}).
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
 
 \code{basis_hk_ext} calculates the basis value using the Extended
 Hanson-Koopmans method, as described in CMH-17-1G and Vangel (1994).
@@ -162,4 +212,14 @@ vol. 23, no. 4. pp. 1137–1154, 1994.
 \code{\link{k_factor_normal}}
 
 \code{\link{transform_mod_cv}}
+
+\code{\link{maximum_normed_residual}}
+
+\code{\link{anderson_darling_normal}}
+
+\code{\link{anderson_darling_lognormal}}
+
+\code{\link{anderson_darling_weibull}}
+
+\code{\link{ad_ksample}}
 }

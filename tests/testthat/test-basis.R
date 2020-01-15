@@ -106,7 +106,8 @@ test_that("kA factors are correct for normal distribution", {
 test_that("(normal) basis value equals mean when sd = 0", {
   expect_equal(
     (data.frame(x = rep(100, 10)) %>%
-      basis_normal(x, p = 0.9, conf = 0.95))$basis,
+      basis_normal(x, p = 0.9, conf = 0.95,
+                   override = "anderson_darling_normal"))$basis,
     100
   )
 })
@@ -156,6 +157,88 @@ test_that("normal basis value matches STAT17/ASAP result", {
   expect_match(res$distribution, "normal", ignore.case = TRUE)
 })
 
+test_that("normal basis values produce expected diagnostic failures", {
+  set.seed(100)
+  x <- c(runif(25), runif(25, max = 2), 200)
+  batch <- c(rep("A", 25), rep("B", 26))
+
+  expect_warning(
+    res <- basis_normal(x = x, batch = batch),
+    regexp = paste("(outliers_within_batch",
+                   "between_batch_variability",
+                   "outliers",
+                   "anderson_darling_normal)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$batch, batch)
+  expect_equal(res$diagnostic_failures,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "anderson_darling_normal"))
+  expect_length(res$override, 0)
+
+  expect_output(print(res),
+                regexp = paste("failed.+",
+                               "outliers_within_batch",
+                               "between_batch_variability",
+                               "outliers",
+                               "anderson_darling_normal",
+                               sep = ".+"))
+  output <- capture_output(print(res))
+  expect_false(grepl("overridden", output, ignore.case = TRUE))
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_normal(x = x, batch = batch,
+                      override = c("outliers_within_batch",
+                                   "between_batch_variability",
+                                   "outliers",
+                                   "anderson_darling_normal"))
+
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "anderson_darling_normal"))
+  expect_length(res$diagnostic_failures, 0)
+
+  expect_output(print(res),
+                regexp = paste("overridden.+",
+                               "outliers_within_batch",
+                               "between_batch_variability",
+                               "outliers",
+                               "anderson_darling_normal",
+                               sep = ".+"))
+  output <- capture_output(print(res))
+  expect_false(grepl("failed", output, ignore.case = TRUE))
+
+  # call basis_normal without batch
+  expect_warning(
+    res <- basis_normal(x = x),
+    regexp = "(outliers)|(anderson_darling_normal)",
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$diagnostic_failures,
+               c("outliers",
+                 "anderson_darling_normal"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_normal(x = x,
+                      override = c("outliers",
+                                   "anderson_darling_normal"))
+
+  expect_equal(res$override,
+               c("outliers",
+                 "anderson_darling_normal"))
+  expect_length(res$diagnostic_failures, 0)
+})
+
 test_that("log-normal basis value matches STAT17 result", {
   data <- c(
     137.4438,
@@ -194,6 +277,68 @@ test_that("log-normal basis value matches STAT17 result", {
   expect_match(res$distribution, "normal", ignore.case = TRUE)
 })
 
+test_that("lognormal basis values produce expected diagnostic failures", {
+  set.seed(100)
+  x <- c(runif(25), runif(25, max = 2), 200)
+  batch <- c(rep("A", 25), rep("B", 26))
+
+  expect_warning(
+    res <- basis_lognormal(x = x, batch = batch),
+    regexp = paste("(outliers_within_batch",
+                   "between_batch_variability",
+                   "outliers",
+                   "anderson_darling_lognormal)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$batch, batch)
+  expect_equal(res$diagnostic_failures,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "anderson_darling_lognormal"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_lognormal(x = x, batch = batch,
+                      override = c("outliers_within_batch",
+                                   "between_batch_variability",
+                                   "outliers",
+                                   "anderson_darling_lognormal"))
+
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "anderson_darling_lognormal"))
+  expect_length(res$diagnostic_failures, 0)
+
+  # call basis_normal without batch
+  expect_warning(
+    res <- basis_lognormal(x = x),
+    regexp = "(outliers)|(anderson_darling_lognormal)",
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$diagnostic_failures,
+               c("outliers",
+                 "anderson_darling_lognormal"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_lognormal(x = x,
+                      override = c("outliers",
+                                   "anderson_darling_lognormal"))
+
+  expect_equal(res$override,
+               c("outliers",
+                 "anderson_darling_lognormal"))
+  expect_length(res$diagnostic_failures, 0)
+})
+
 test_that("Weibull basis value matches STAT17 result", {
   data <- c(
     137.4438,
@@ -230,6 +375,68 @@ test_that("Weibull basis value matches STAT17 result", {
   expect_output(print(res), "weibull", ignore.case = TRUE)
 
   expect_match(res$distribution, "weibull", ignore.case = TRUE)
+})
+
+test_that("weibull basis values produce expected diagnostic failures", {
+  set.seed(100)
+  x <- c(rnorm(10, 100, 2), rnorm(10, 103, 2), 120)
+  batch <- c(rep("A", 10), rep("B", 11))
+
+  expect_warning(
+    res <- basis_weibull(x = x, batch = batch),
+    regexp = paste("(outliers_within_batch",
+                   "between_batch_variability",
+                   "outliers",
+                   "anderson_darling_weibull)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$batch, batch)
+  expect_equal(res$diagnostic_failures,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "anderson_darling_weibull"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_weibull(x = x, batch = batch,
+                         override = c("outliers_within_batch",
+                                      "between_batch_variability",
+                                      "outliers",
+                                      "anderson_darling_weibull"))
+
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "anderson_darling_weibull"))
+  expect_length(res$diagnostic_failures, 0)
+
+  # call basis_normal without batch
+  expect_warning(
+    res <- basis_weibull(x = x),
+    regexp = "(outliers)|(anderson_darling_weibull)",
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$diagnostic_failures,
+               c("outliers",
+                 "anderson_darling_weibull"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_weibull(x = x,
+                         override = c("outliers",
+                                      "anderson_darling_weibull"))
+
+  expect_equal(res$override,
+               c("outliers",
+                 "anderson_darling_weibull"))
+  expect_length(res$diagnostic_failures, 0)
 })
 
 test_that("Non-parametric (small sample) basis value matches STAT17 result", {

@@ -38,13 +38,18 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' Calculate the basis value for a given data set. There are various functions
 #' to calculate the basis values for different distributions. For B-Basis,
 #' set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.90} and
-#' \eqn{conf=0.95}
+#' \eqn{conf=0.95}. These functions also preform some automated diagnostic
+#' tests of the data prior to calculating the basis values. These tests can be
+#' overridden if needed.
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame for which to find the basis value
+#' @param batch the variable in the data.frame that contains the batches.
 #' @param groups the variable in the data.frame representing the groups
 #' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
 #' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
+#' @param override a list of names of diagnostic tests to override,
+#'                 if desired.
 #' @param modcv a logical value indicating whether the modified CV approach
 #'              should be used. Only applicable to pooling methods.
 #' @param method the method for Hanson-Koopmans nonparametric basis values.
@@ -60,11 +65,33 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 #' the standard deviation from the mean using. \eqn{k} is given by
-#' the function \code{\link{k_factor_normal}}.
+#' the function \code{\link{k_factor_normal}}. This function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for normality (using
+#' \code{\link{anderson_darling_normal}}).
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
 #'
 #' \code{basis_lognormal} calculates the basis value in the same way
 #' that \code{basis_normal} does, except that the natural logarithm of the
 #' data is taken.
+#'
+#' \code{basis_lognormal} function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for normality (using
+#' \code{\link{anderson_darling_lognormal}}).
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
 #'
 #' \code{basis_weibull} calculates the basis value for data distributed
 #' according to a Weibull distribution. The confidence interval for the
@@ -72,6 +99,18 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' described in Lawless (1982) Section 4.1.2b. This has good agreement
 #' with tables published in CMH-17-1G. Results differ between this function
 #' and STAT17 by approximately 0.5%.
+#'
+#' \code{basis_weibull} function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for normality (using
+#' \code{\link{anderson_darling_weibull}}).
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
 #'
 #' \code{basis_hk_ext} calculates the basis value using the Extended
 #' Hanson-Koopmans method, as described in CMH-17-1G and Vangel (1994).
@@ -118,6 +157,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' and \code{group} indicates the group corresponding to each observation.
 #' This method is described in CMH-17-1G.
 #'
+#'
 #' @return an object of class \code{basis}
 #' This object has the following fields:
 #' \item{\code{call}}{the expression used to call this function}
@@ -130,8 +170,14 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' \item{\code{data}}{a copy of the data used in the calculation}
 #' \item{\code{groups}}{a copy of the groups variable.
 #'                      Only used for pooling and ANOVA methods.}
+#' \item{\code{batch}}{a copy of the batch data used for diagnostic tests}
 #' \item{\code{modcv_transformed_data}}{the data after the modified CV
 #'                                      transformation}
+#' \item{\code{override}}{a vector of the names of diagnostic tests that
+#'                        were overridden. \code{NULL} if none were
+#'                        overridden}
+#' \item{\code{diagnostic_failures}}{a vector containing any diagnostic tests
+#'                                   that produced failures}
 #' \item{\code{n}}{the number of observations}
 #' \item{\code{r}}{the number of groups, if a pooling method was used.
 #'                 Otherwise it is NULL.}
@@ -142,6 +188,11 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @seealso \code{\link{hk_ext_z_j_opt}}
 #' @seealso \code{\link{k_factor_normal}}
 #' @seealso \code{\link{transform_mod_cv}}
+#' @seealso \code{\link{maximum_normed_residual}}
+#' @seealso \code{\link{anderson_darling_normal}}
+#' @seealso \code{\link{anderson_darling_lognormal}}
+#' @seealso \code{\link{anderson_darling_weibull}}
+#' @seealso \code{\link{ad_ksample}}
 #'
 #' @references
 #' J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -167,9 +218,12 @@ new_basis <- function() {
   res$modcv <- FALSE
   res$p <- NA
   res$conf <- NA
-  res$groups <- NA
   res$data <- NULL
+  res$groups <- NA
+  res$batch <- NULL
   res$modcv_transformed_data <- NULL
+  res$override <- character(0)
+  res$diagnostic_failures <- character(0)
   res$n <- NA
   res$r <- NA
   res$basis <- NA
@@ -243,6 +297,15 @@ glance.basis <- function(x, ...) {  # nolint
   )
 }
 
+print_diagnostic_helper <- function(heading, vec) {
+  if (!is.null(vec) & length(vec) > 0) {
+    cat(heading, "\n")
+    cat("    `")
+    cat(paste(vec, collapse = "`,\n    `"))
+    cat("`\n")
+  }
+}
+
 #' @export
 print.basis <- function(x, ...) {
   cat("\nCall:\n",
@@ -259,6 +322,11 @@ print.basis <- function(x, ...) {
   if (x$modcv == TRUE) {
     cat("Modified CV Approach Used", "\n")
   }
+
+  print_diagnostic_helper("The following diagnostic tests failed:",
+                          x$diagnostic_failures)
+  print_diagnostic_helper("The following diagnostic tests were overridden:",
+                          x$override)
 
   if (x$conf == 0.95 & x$p == 0.9) {
     cat("B-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
@@ -285,11 +353,38 @@ print.basis <- function(x, ...) {
   cat("\n")
 }
 
+single_point_rules <- list(
+  outliers_within_batch = function(x, batch, ...) {
+    group_mnr <- sapply(unique(batch), function(b) {
+      x_group <- x[batch == b]
+      mnr <- maximum_normed_residual(x = x_group)
+      mnr$n_outliers == 0
+    })
+    all(group_mnr)
+  },
+  between_batch_variability = function(x, batch, ...) {
+    adk <- ad_ksample(x = x, groups = batch, alpha = 0.025)
+    !adk$reject_same_dist
+  },
+  outliers = function(x, ...) {
+    mnr <- maximum_normed_residual(x = x)
+    mnr$n_outliers == 0
+  }
+)
+
+basis_normal_rules <- single_point_rules
+basis_normal_rules[["anderson_darling_normal"]] <-
+  function(x, ...) {
+    ad <- anderson_darling_normal(x = x)
+    ! ad$reject_distribution
+  }
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
 #' @export
-basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
+basis_normal <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
+                         override = c()) {
   res <- new_basis()
 
   res$call <- match.call()
@@ -305,6 +400,18 @@ basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
     arg_name = "x")
   res$data <- eval_tidy(enquo(x), data)
 
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+  res$batch <- eval_tidy(enquo(batch), data)
+
+  res$override <- override
+  check_result <- perform_checks(basis_normal_rules, x = res$data,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
+
   res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
 
@@ -316,11 +423,19 @@ basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   return(res)
 }
 
+basis_lognormal_rules <- single_point_rules
+basis_lognormal_rules[["anderson_darling_lognormal"]] <-
+  function(x, ...) {
+    ad <- anderson_darling_lognormal(x = x)
+    ! ad$reject_distribution
+  }
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
 #' @export
-basis_lognormal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
+basis_lognormal <- function(data = NULL, x, batch = NULL, p = 0.90,
+                            conf = 0.95, override = c()) {
   res <- new_basis()
 
   res$call <- match.call()
@@ -336,6 +451,18 @@ basis_lognormal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
     arg_name = "x")
   res$data <- eval_tidy(enquo(x), data)
 
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+  res$batch <- eval_tidy(enquo(batch), data)
+
+  res$override <- override
+  check_result <- perform_checks(basis_lognormal_rules, x = res$data,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
+
   res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
   res$basis <- exp(mean(log(res$data)) - k * sd(log(res$data)))
@@ -343,13 +470,21 @@ basis_lognormal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
   return(res)
 }
 
+basis_weibull_rules <- single_point_rules
+basis_weibull_rules[["anderson_darling_weibull"]] <-
+  function(x, ...) {
+    ad <- anderson_darling_weibull(x = x)
+    ! ad$reject_distribution
+  }
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats qweibull integrate pchisq uniroot
 #' @importFrom MASS fitdistr
 #'
 #' @export
-basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
+basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
+                          conf = 0.95, override = c()) {
   res <- new_basis()
 
   res$call <- match.call()
@@ -364,6 +499,18 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
     c = match.call(),
     arg_name = "x")
   res$data <- eval_tidy(enquo(x), data)
+
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+  res$batch <- eval_tidy(enquo(batch), data)
+
+  res$override <- override
+  check_result <- perform_checks(basis_weibull_rules, x = res$data,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   res$n <- length(res$data)
 
@@ -409,10 +556,10 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 
   pr_fcn <- function(t) {
     int_res <- integrate(Vectorize(function(z) pr_zp_integrand(z, t)), 0, Inf)
-    return(int_res$value - 0.95)
+    return(int_res$value - conf)
   }
 
-  res_root <- uniroot(pr_fcn, c(-10, 10), extendInt = "yes")
+  res_root <- uniroot(pr_fcn, c(0, 10), extendInt = "yes")
 
   res$basis <- exp(u_hat - res_root$root * b_hat)
 
