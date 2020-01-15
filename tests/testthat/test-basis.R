@@ -477,6 +477,88 @@ test_that("Non-parametric (small sample) basis value matches STAT17 result", {
                "nonparametric.*Woodward-Frawley", ignore.case = TRUE)
 })
 
+test_that("non-para (small) basis values produce expected diag failures", {
+  set.seed(100)
+  x_small <- c(rnorm(10, 100, 2), rnorm(10, 103, 2), 120)
+  batch_small <- c(rep("A", 10), rep("B", 11))
+  x_large <- c(rnorm(200, 100, 2), rnorm(100, 103, 2), 120)
+  batch_large <- c(rep("A", 200), rep("B", 101))
+
+  # woodward-frawley is only for A-Basis. Should fail if we calculate B-Basis
+  expect_warning(
+    res <- basis_hk_ext(
+      x = x_large, batch = batch_large, method = "woodward-frawley"),
+    regexp = paste("(outliers_within_batch",
+                   "between_batch_variability",
+                   "outliers",
+                   "correct_method_used",
+                   "sample_size)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$batch, batch_large)
+  expect_equal(res$diagnostic_failures,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "correct_method_used",
+                 "sample_size"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_hk_ext(x = x_large, batch = batch_large,
+                      method = "woodward-frawley",
+                      override = c("outliers_within_batch",
+                                   "between_batch_variability",
+                                   "outliers",
+                                   "correct_method_used",
+                                   "sample_size"))
+
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "correct_method_used",
+                 "sample_size"))
+  expect_length(res$diagnostic_failures, 0)
+
+  # optimum-order is only for B-Basis. Should fail if we calculate A-Basis
+  expect_warning(
+    res <- basis_hk_ext(
+      x = x_large, batch = batch_large, method = "optimum-order",
+      p = 0.99, conf = 0.95),
+    regexp = paste("(outliers_within_batch",
+                   "between_batch_variability",
+                   "outliers",
+                   "correct_method_used",
+                   "sample_size)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # call basis_normal without batch
+  expect_warning(
+    res <- basis_hk_ext(x = x_small, method = "optimum-order"),
+    regexp = "(outliers)",
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$diagnostic_failures,
+               c("outliers"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_hk_ext(x = x_small, method = "optimum-order",
+                      override = c("outliers"))
+
+  expect_equal(res$override,
+               c("outliers"))
+  expect_length(res$diagnostic_failures, 0)
+})
+
 test_that("Non-parametric (large sample) basis value matches STAT17 result", {
   data <- c(
     137.3603, 135.6665, 136.6914, 154.7919, 159.2037, 137.3277, 128.821,

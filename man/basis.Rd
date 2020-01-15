@@ -27,8 +27,8 @@ basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95,
 basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95,
   modcv = FALSE)
 
-basis_hk_ext(data = NULL, x, p = 0.9, conf = 0.95,
-  method = c("optimum-order", "woodward-frawley"))
+basis_hk_ext(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
+  method = c("optimum-order", "woodward-frawley"), override = c())
 
 basis_nonpara_large_sample(data = NULL, x, p = 0.9, conf = 0.95)
 
@@ -163,12 +163,26 @@ In this approach, the \code{j-th} order statistic is selected to minimize
 the difference between the tolerance limit (assuming that the order
 statistics are equal to the expected values from a standard normal
 distribution) and the population quantile for a standard normal
-distribution. This approach is described in Vangel (1994). The results
-of this function have been
+distribution. This approach is described in Vangel (1994). This second
+method (for use when calculating B-Basis values) is called
+"optimum-order" in this package.
+The results of this function have been
 verified against example results from the program STAT-17: agreement is
 typically well within 0.2%, however, for a few sample sizes, the
 agreement can be as poor as 1% with the result of this function being
 more conservative than STAT-17.
+
+\code{basis_hk_ext} function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and performs a pair of tests that the sample size and method selected
+follow the guidance described above.
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
 
 \code{basis_nonpara_large_sample} calculates the basis value
 using the large sample method described in CMH-17-1G. This method uses

@@ -126,12 +126,26 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' the difference between the tolerance limit (assuming that the order
 #' statistics are equal to the expected values from a standard normal
 #' distribution) and the population quantile for a standard normal
-#' distribution. This approach is described in Vangel (1994). The results
-#' of this function have been
+#' distribution. This approach is described in Vangel (1994). This second
+#' method (for use when calculating B-Basis values) is called
+#' "optimum-order" in this package.
+#' The results of this function have been
 #' verified against example results from the program STAT-17: agreement is
 #' typically well within 0.2%, however, for a few sample sizes, the
 #' agreement can be as poor as 1% with the result of this function being
 #' more conservative than STAT-17.
+#'
+#' \code{basis_hk_ext} function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and performs a pair of tests that the sample size and method selected
+#' follow the guidance described above.
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
 #'
 #' \code{basis_nonpara_large_sample} calculates the basis value
 #' using the large sample method described in CMH-17-1G. This method uses
@@ -800,12 +814,39 @@ hk_ext_z_j_opt <- function(n, p, conf) {
   )
 }
 
+basis_hk_ext_rules <- single_point_rules
+basis_hk_ext_rules[["correct_method_used"]] <-
+  function(method, p, conf, ...) {
+    if (p == 0.90 & conf == 0.95) {
+      # B-Basis
+      return(method == "optimum-order")
+    } else if (p == 0.99 & conf == 0.95) {
+      # A-Basis
+      return(method == "woodward-frawley")
+    } else {
+      return(TRUE)
+    }
+  }
+basis_hk_ext_rules[["sample_size"]] <-
+  function(n, p, conf, ...) {
+    if (p == 0.90 & conf == 0.95) {
+      # B-Basis
+      return(n <= 28)
+    } else if (p == 0.99 & conf == 0.95) {
+      # A-Basis
+      return(n <= 299)
+    } else {
+      return(TRUE)
+    }
+  }
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #'
 #' @export
-basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
-                       method = c("optimum-order", "woodward-frawley")) {
+basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
+                       method = c("optimum-order", "woodward-frawley"),
+                       override = c()) {
   method <- match.arg(method)
   res <- new_basis()
 
@@ -825,8 +866,22 @@ basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
     c = match.call(),
     arg_name = "x")
   res$data <- eval_tidy(enquo(x), data)
-
   res$n <- length(res$data)
+
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+  res$batch <- eval_tidy(enquo(batch), data)
+
+  res$override <- override
+  check_result <- perform_checks(basis_hk_ext_rules, x = res$data,
+                                 batch = res$batch, n = res$n,
+                                 p = res$p, conf = res$conf,
+                                 method = method,
+                                 override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   if (method == "optimum-order") {
     zj <- hk_ext_z_j_opt(res$n, p, conf)
