@@ -1,3 +1,9 @@
+# Version 0.4.0
+- Updated argument names for functions:
+  - `transform_mod_cv`
+  - `transform_mod_cv_2`
+  - `normalize_group_mean`
+
 # Version 0.3.0
 - Added modified CV functionality
 - Added glance and augment methods for most objects
