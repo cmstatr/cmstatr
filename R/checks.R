@@ -1,5 +1,4 @@
 
-
 #' Performs a list of checks according to specified rules
 #'
 #' @description
@@ -12,6 +11,10 @@
 #' @param rules a named list of rules
 #' @param override a vector of names of rules to ignore
 #' @param ... arguments to pass to the rules
+#'
+#' @return
+#' a named vector of logicals. TRUE if the test passed or was not run
+#' due to a missing argument. FALSE if the test failed.
 #'
 #' @noRd
 #'
@@ -43,8 +46,11 @@ perform_checks <- function(rules, override = c(), ...) {
                  paste(all_formal_names[missing_formals], collapse = "`, `"),
                  "` not specified")
         )
-        return(FALSE)
+        return(TRUE)
       }
+    } else {
+      # in override list
+      return(TRUE)
     }
   })
 }
