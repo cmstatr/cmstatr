@@ -579,6 +579,75 @@ test_that("Non-parametric (large sample) basis value matches STAT17 result", {
   expect_match(res$distribution, "nonparametric.*large", ignore.case = TRUE)
 })
 
+test_that("non-para (large) basis values produce expected diag failures", {
+  set.seed(100)
+  x_small <- c(rnorm(13, 100, 2), rnorm(13, 103, 2), 120)
+  batch_small <- c(rep("A", 13), rep("B", 14))
+  x_large <- c(rnorm(200, 100, 2), rnorm(100, 103, 2), 120)
+  batch_large <- c(rep("A", 200), rep("B", 101))
+
+  expect_warning(
+    res <- basis_nonpara_large_sample(
+      x = x_large, batch = batch_large),
+    regexp = paste("(outliers_within_batch",
+                   "between_batch_variability",
+                   "outliers)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$batch, batch_large)
+  expect_equal(res$diagnostic_failures,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_nonpara_large_sample(x = x_large, batch = batch_large,
+                      override = c("outliers_within_batch",
+                                   "between_batch_variability",
+                                   "outliers"))
+
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers"))
+  expect_length(res$diagnostic_failures, 0)
+
+  expect_warning(
+    res <- basis_nonpara_large_sample(
+      x = x_large, batch = batch_large,
+      p = 0.99, conf = 0.95),
+    regexp = paste("(outliers_within_batch",
+                   "between_batch_variability",
+                   "outliers)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # call basis_normal without batch
+  expect_warning(
+    res <- basis_nonpara_large_sample(x = x_large),
+    regexp = "(outliers)",
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$diagnostic_failures,
+               c("outliers"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_nonpara_large_sample(x = x_large,
+                      override = c("outliers"))
+
+  expect_equal(res$override,
+               c("outliers"))
+  expect_length(res$diagnostic_failures, 0)
+})
+
 # data from CMH-17-1G Section 8.3.11.1.2
 poolable_data <- tribble(
   ~batch, ~strength, ~condition,

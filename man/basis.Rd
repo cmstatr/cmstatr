@@ -30,7 +30,8 @@ basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95,
 basis_hk_ext(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
   method = c("optimum-order", "woodward-frawley"), override = c())
 
-basis_nonpara_large_sample(data = NULL, x, p = 0.9, conf = 0.95)
+basis_nonpara_large_sample(data = NULL, x, batch = NULL, p = 0.9,
+  conf = 0.95, override = c())
 
 basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95)
 }
@@ -190,6 +191,17 @@ a sum of binomials to determine the rank of the ordered statistic
 corresponding with the desired tolerance limit (basis value). Results
 of this function have been verified against results of the STAT-17
 program.
+
+\code{basis_nonpara_large_sample} function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and performs a test that the sample size is sufficiently large.
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
 
 \code{basis_anova} calculates basis values using the ANOVA method.
 \code{x} specifies the data (normally strength) and \code{group}

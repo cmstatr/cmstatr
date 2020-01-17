@@ -154,6 +154,17 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' of this function have been verified against results of the STAT-17
 #' program.
 #'
+#' \code{basis_nonpara_large_sample} function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and performs a test that the sample size is sufficiently large.
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
+#'
 #' \code{basis_anova} calculates basis values using the ANOVA method.
 #' \code{x} specifies the data (normally strength) and \code{group}
 #' indicates the group corresponding to each observation. This method is
@@ -1004,12 +1015,27 @@ nonpara_binomial_rank <- function(n, p, conf) {
   r1
 }
 
+basis_nonpara_large_sample_rules <- single_point_rules
+basis_nonpara_large_sample_rules[["sample_size"]] <-
+  function(n, p, conf, ...) {
+    if (p == 0.90 & conf == 0.95) {
+      # B-Basis
+      return(n >= 28)
+    } else if (p == 0.99 & conf == 0.95) {
+      # A-Basis
+      return(n >= 299)
+    } else {
+      return(TRUE)
+    }
+  }
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #'
 #' @export
-basis_nonpara_large_sample <- function(data = NULL, x, p = 0.90,
-                                       conf = 0.95) {
+basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
+                                       p = 0.90, conf = 0.95,
+                                       override = c()) {
   res <- new_basis()
 
   res$call <- match.call()
@@ -1024,8 +1050,21 @@ basis_nonpara_large_sample <- function(data = NULL, x, p = 0.90,
     c = match.call(),
     arg_name = "x")
   res$data <- eval_tidy(enquo(x), data)
-
   res$n <- length(res$data)
+
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+  res$batch <- eval_tidy(enquo(batch), data)
+
+  res$override <- override
+  check_result <- perform_checks(basis_nonpara_large_sample_rules,
+                                 x = res$data, batch = res$batch, n = res$n,
+                                 p = res$p, conf = res$conf,
+                                 override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   x_ordered <- sort(res$data)
   r <- nonpara_binomial_rank(res$n, p, conf)
