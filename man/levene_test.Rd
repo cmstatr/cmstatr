@@ -4,7 +4,7 @@
 \alias{levene_test}
 \title{Levene's Test for Equality of Variance}
 \usage{
-levene_test(data, x, groups, alpha = 0.05, modcv = FALSE)
+levene_test(data = NULL, x, groups, alpha = 0.05, modcv = FALSE)
 }
 \arguments{
 \item{data}{a data.frame}

@@ -33,7 +33,8 @@ basis_hk_ext(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
 basis_nonpara_large_sample(data = NULL, x, batch = NULL, p = 0.9,
   conf = 0.95, override = c())
 
-basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95)
+basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95,
+  override = c())
 }
 \arguments{
 \item{data}{a data.frame}
@@ -204,10 +205,14 @@ and a diagnostic test for between batch variability (using
 for these diagnostic tests.
 
 \code{basis_anova} calculates basis values using the ANOVA method.
-\code{x} specifies the data (normally strength) and \code{group}
+\code{x} specifies the data (normally strength) and \code{groups}
 indicates the group corresponding to each observation. This method is
-described in CMH-17-1G. This function has been verified against the
-results of the STAT-17 program.
+described in CMH-17-1G. This function automatically performs a diagnostic
+test for outliers within each group
+(using \code{\link{maximum_normed_residual}}) and a test for between
+group variability (using \code{\link{ad_ksample}}) as well as checking
+that the data contains at least 5 groups.
+This function has been verified against the results of the STAT-17 program.
 
 \code{basis_pooled_sd} calculates basis values by pooling the data from
 several groups together. \code{x} specifies the data (normally strength)

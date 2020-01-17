@@ -166,10 +166,14 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' for these diagnostic tests.
 #'
 #' \code{basis_anova} calculates basis values using the ANOVA method.
-#' \code{x} specifies the data (normally strength) and \code{group}
+#' \code{x} specifies the data (normally strength) and \code{groups}
 #' indicates the group corresponding to each observation. This method is
-#' described in CMH-17-1G. This function has been verified against the
-#' results of the STAT-17 program.
+#' described in CMH-17-1G. This function automatically performs a diagnostic
+#' test for outliers within each group
+#' (using \code{\link{maximum_normed_residual}}) and a test for between
+#' group variability (using \code{\link{ad_ksample}}) as well as checking
+#' that the data contains at least 5 groups.
+#' This function has been verified against the results of the STAT-17 program.
 #'
 #' \code{basis_pooled_sd} calculates basis values by pooling the data from
 #' several groups together. \code{x} specifies the data (normally strength)
@@ -1015,8 +1019,8 @@ nonpara_binomial_rank <- function(n, p, conf) {
   r1
 }
 
-basis_nonpara_large_sample_rules <- single_point_rules
-basis_nonpara_large_sample_rules[["sample_size"]] <-
+nonpara_large_sample_rules <- single_point_rules
+nonpara_large_sample_rules[["sample_size"]] <-
   function(n, p, conf, ...) {
     if (p == 0.90 & conf == 0.95) {
       # B-Basis
@@ -1060,7 +1064,7 @@ basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
   res$batch <- eval_tidy(enquo(batch), data)
 
   res$override <- override
-  check_result <- perform_checks(basis_nonpara_large_sample_rules,
+  check_result <- perform_checks(nonpara_large_sample_rules,
                                  x = res$data, batch = res$batch, n = res$n,
                                  p = res$p, conf = res$conf,
                                  override = override)
@@ -1073,10 +1077,29 @@ basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
   return(res)
 }
 
+anova_rules <- list(
+  outliers_within_group = function(x, groups, ...) {
+    group_mnr <- sapply(unique(groups), function(b) {
+      x_group <- x[groups == b]
+      mnr <- maximum_normed_residual(x = x_group)
+      mnr$n_outliers == 0
+    })
+    all(group_mnr)
+  },
+  equality_of_variance = function(x, groups, ...) {
+    lt <- levene_test(x = x, groups = groups)
+    !lt$reject_equal_variance
+  },
+  number_of_groups = function(r, ...) {
+    r >= 5
+  }
+)
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @export
-basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
+basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
+                        override = c()) {
   res <- new_basis()
 
   res$call <- match.call()
@@ -1098,12 +1121,18 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
     arg_name = "groups")
   res$groups <- eval_tidy(enquo(groups), data)
 
-  if (length(unique(res$groups)) < 2) {
+  res$n <- length(res$data)
+  res$r <- length(levels(as.factor(res$groups)))
+
+  if (res$r < 2) {
     stop("ANOVA cannot be computed with fewer than 2 groups")
   }
 
-  res$n <- length(res$data)
-  res$r <- length(levels(as.factor(res$groups)))
+  res$override <- override
+  check_result <- perform_checks(rules = anova_rules,
+                                 x = res$data, groups = res$groups,
+                                 r = res$r, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   grand_mean <- mean(res$data)
 
@@ -1130,7 +1159,7 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
   n_star <- sum(sapply(
     levels(as.factor(res$groups)),
     function(g) {
-      group_data <- res$data[res$groups == g]
+      group_data <- res$data[res$group == g]
       length(group_data) ^ 2 / res$n
     }
   ))

@@ -1551,7 +1551,9 @@ test_that("ANOVA results match STAT17 for sample data", {
   # Sample data from CMH-17-1G Section 8.3.11.2.2
 
   res <- cmh_17_1g_8_3_11_1_1_etw2 %>%
-    basis_anova(strength, batch)
+    basis_anova(strength, batch,
+                override = c("equality_of_variance",
+                             "number_of_groups"))
 
   expect_equal(res$basis, 63.2, tolerance = 0.05)
   expect_output(print(res), "b-basis.*63\\.2", ignore.case = TRUE)
@@ -1559,7 +1561,9 @@ test_that("ANOVA results match STAT17 for sample data", {
   expect_match(res$distribution, "ANOVA", ignore.case = TRUE)
 
   res <- cmh_17_1g_8_3_11_1_1_etw2 %>%
-    basis_anova(strength, batch, p = 0.99, conf = 0.95)
+    basis_anova(strength, batch, p = 0.99, conf = 0.95,
+                override = c("equality_of_variance",
+                             "number_of_groups"))
 
   expect_equal(res$basis, 34.6, tolerance = 0.05)
   expect_output(print(res), "a-basis.*34\\.", ignore.case = TRUE)
@@ -1572,16 +1576,53 @@ test_that("ANOVA produces an error when there is only one group", {
   batch <- rep(10, 1)
 
   expect_error(
-    basis_anova(x = strength, groups = batch),
+    basis_anova(x = strength, group = batch),
     "fewer than 2"
   )
+})
+
+test_that("anova basis values produce expected diagnostic failures", {
+  set.seed(100)
+  x <- c(rnorm(30, 100, 1), rnorm(30, 100, 10), 80)
+  batch <- c(rep("A", 30), rep("B", 30), "A")
+
+  expect_warning(
+    res <- basis_anova(x = x, group = batch),
+    regexp = paste("(outliers_within_group",
+                   "equality_of_variance",
+                   "number_of_groups)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # Check that res$... contains the correct value
+  expect_equal(res$group, batch)
+  expect_equal(res$diagnostic_failures,
+               c("outliers_within_group",
+                 "equality_of_variance",
+                 "number_of_groups"))
+  expect_length(res$override, 0)
+
+  # overriding the diagnostics should eliminate the warnings
+  res <- basis_anova(x = x, group = batch,
+                     override = c("outliers_within_group",
+                                  "equality_of_variance",
+                                  "number_of_groups"))
+
+  expect_equal(res$override,
+               c("outliers_within_group",
+                 "equality_of_variance",
+                 "number_of_groups"))
+  expect_length(res$diagnostic_failures, 0)
 })
 
 test_that("glance.basis produces expected value", {
   # Sample data from CMH-17-1G Section 8.3.11.2.2
 
   res <- cmh_17_1g_8_3_11_1_1_etw2 %>%
-    basis_anova(strength, batch)
+    basis_anova(strength, batch,
+                override = c("between_group_variability",
+                             "number_of_groups"))
 
   glance_res <- glance(res)
 
