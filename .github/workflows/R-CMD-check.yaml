@@ -64,7 +64,7 @@ jobs:
         if: contains(matrix.config.runbranch, github.ref)
         run: Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)" -e "remotes::install_cran('rcmdcheck')"
 
-      - name: Check
+      - name: Check - ${{matrix.config.runbranch}} - $${{github.ref}} - $${{contains(matrix.config.runbranch, github.ref)}}
         if: contains(matrix.config.runbranch, github.ref)
         run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning', check_dir = 'check')"
 
