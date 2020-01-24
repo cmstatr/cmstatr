@@ -1,3 +1,5 @@
+[![R build status](https://github.com/ComtekAdvancedStructures/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/ComtekAdvancedStructures/cmstatr/actions?workflow=R-CMD-check)
+
 # cmstatr
 Statistical tools for composite materials.
 
