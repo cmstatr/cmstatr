@@ -21,11 +21,11 @@ basis_lognormal(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
 basis_weibull(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
   override = c())
 
-basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95,
-  modcv = FALSE)
+basis_pooled_cv(data = NULL, x, groups, batch = NULL, p = 0.9,
+  conf = 0.95, modcv = FALSE, override = c())
 
-basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95,
-  modcv = FALSE)
+basis_pooled_sd(data = NULL, x, groups, batch = NULL, p = 0.9,
+  conf = 0.95, modcv = FALSE, override = c())
 
 basis_hk_ext(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
   method = c("optimum-order", "woodward-frawley"), override = c())
@@ -224,6 +224,21 @@ implemented in ASAP 2008.
 several groups together. \code{x} specifies the data (normally strength)
 and \code{group} indicates the group corresponding to each observation.
 This method is described in CMH-17-1G.
+
+\code{basis_pooled_sd} and \code{basis_pooled_cv} both automatically
+perform a number of diagnostic tests. Using
+\code{\link{maximum_normed_residual}}, they check that there are no
+outliers within each group and batch (provided that \code{batch}) is
+specified. They check the between batch variability using
+\code{\link{ad_ksample}}. They check that there are no outliers within
+each group (pooling all batches) using
+\code{\link{maximum_normed_residual}}. They check for the normality
+of the pooled data using \code{\link{anderson_darling_normal}}.
+\code{basis_pooled_sd} checks for equality of variance of all
+data using \code{\link{levene_test}} and \code{basis_pooled_cv}
+checks for equality of variances of all data after transforming it
+using \code{\link{normalize_group_mean}}
+using \code{\link{levene_test}}.
 }
 \references{
 J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -253,4 +268,6 @@ vol. 23, no. 4. pp. 1137–1154, 1994.
 \code{\link{anderson_darling_weibull}}
 
 \code{\link{ad_ksample}}
+
+\code{\link{normalize_group_mean}}
 }

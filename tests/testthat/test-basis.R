@@ -648,6 +648,112 @@ test_that("non-para (large) basis values produce expected diag failures", {
   expect_length(res$diagnostic_failures, 0)
 })
 
+# data from CMH-17-1G Section 8.3.11.1.1
+cmh_17_8_3_11_1_1 <- tribble(
+  ~batch, ~strength, ~condition,
+  1, 118.3774604, "CTD", 1, 84.9581364, "RTD", 1, 83.7436035, "ETD",
+  1, 123.6035612, "CTD", 1, 92.4891822, "RTD", 1, 84.3831677, "ETD",
+  1, 115.2238092, "CTD", 1, 96.8212659, "RTD", 1, 94.8030433, "ETD",
+  1, 112.6379744, "CTD", 1, 109.030325, "RTD", 1, 94.3931537, "ETD",
+  1, 116.5564277, "CTD", 1, 97.8212659, "RTD", 1, 101.702222, "ETD",
+  1, 123.1649896, "CTD", 1, 100.921519, "RTD", 1, 86.5372121, "ETD",
+  2, 128.5589027, "CTD", 1, 103.699444, "RTD", 1, 92.3772684, "ETD",
+  2, 113.1462103, "CTD", 2, 93.7908212, "RTD", 2, 89.2084024, "ETD",
+  2, 121.4248107, "CTD", 2, 107.526709, "RTD", 2, 100.686001, "ETD",
+  2, 134.3241906, "CTD", 2, 94.5769704, "RTD", 2, 81.0444192, "ETD",
+  2, 129.6405117, "CTD", 2, 93.8831373, "RTD", 2, 91.3398070, "ETD",
+  2, 117.9818658, "CTD", 2, 98.2296605, "RTD", 2, 93.1441939, "ETD",
+  3, 115.4505226, "CTD", 2, 111.346590, "RTD", 2, 85.8204168, "ETD",
+  3, 120.0369467, "CTD", 2, 100.817538, "RTD", 3, 94.8966273, "ETD",
+  3, 117.1631088, "CTD", 3, 100.382203, "RTD", 3, 95.8068520, "ETD",
+  3, 112.9302797, "CTD", 3, 91.5037811, "RTD", 3, 86.7842252, "ETD",
+  3, 117.9114501, "CTD", 3, 100.083233, "RTD", 3, 94.4011973, "ETD",
+  3, 120.1900159, "CTD", 3, 95.6393615, "RTD", 3, 96.7231171, "ETD",
+  3, 110.7295966, "CTD", 3, 109.304779, "RTD", 3, 89.9010384, "ETD",
+  3, 100.078562, "RTD", 3, 99.1205847, "RTD", 3, 89.3672306, "ETD",
+  1, 106.357525, "ETW", 1, 99.0239966, "ETW2",
+  1, 105.898733, "ETW", 1, 103.341238, "ETW2",
+  1, 88.4640082, "ETW", 1, 100.302130, "ETW2",
+  1, 103.901744, "ETW", 1, 98.4634133, "ETW2",
+  1, 80.2058219, "ETW", 1, 92.2647280, "ETW2",
+  1, 109.199597, "ETW", 1, 103.487693, "ETW2",
+  1, 61.0139431, "ETW", 1, 113.734763, "ETW2",
+  2, 99.3207107, "ETW", 2, 108.172659, "ETW2",
+  2, 115.861770, "ETW", 2, 108.426732, "ETW2",
+  2, 82.6133082, "ETW", 2, 116.260375, "ETW2",
+  2, 85.3690411, "ETW", 2, 121.049610, "ETW2",
+  2, 115.801622, "ETW", 2, 111.223082, "ETW2",
+  2, 44.3217741, "ETW", 2, 104.574843, "ETW2",
+  2, 117.328077, "ETW", 2, 103.222552, "ETW2",
+  2, 88.6782903, "ETW", 3, 99.3918538, "ETW2",
+  3, 107.676986, "ETW", 3, 87.3421658, "ETW2",
+  3, 108.960241, "ETW", 3, 102.730741, "ETW2",
+  3, 116.122640, "ETW", 3, 96.3694916, "ETW2",
+  3, 80.2334815, "ETW", 3, 99.5946088, "ETW2",
+  3, 106.145570, "ETW", 3, 97.0712407, "ETW2",
+  3, 104.667866, "ETW",
+  3, 104.234953, "ETW"
+)
+
+test_that("expected diagnostic failures are noted for pooling methods", {
+  # This test follows CMH-17-1G Section
+  expect_warning(res <- basis_pooled_sd(cmh_17_8_3_11_1_1, strength,
+                         condition, batch),
+                 regexp = paste("(outliers_within_batch",
+                                "outliers_within_group",
+                                "between_group_variability",
+                                "pooled_data_normal)",
+                                sep = ")|("),
+                 all = TRUE)
+
+  expect_warning(
+    res <- cmh_17_8_3_11_1_1 %>%
+      filter(condition != "ETW2") %>%
+      basis_pooled_sd(strength, condition, batch),
+    regexp = paste("(outliers_within_batch",
+                   "outliers_within_group",
+                   "pooled_data_normal)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # removing both ETW and ETW2 should remove all diagnostic failures
+  res <- cmh_17_8_3_11_1_1 %>%
+    filter(condition != "ETW2" & condition != "ETW") %>%
+    basis_pooled_sd(strength, condition, batch)
+
+  expect_equal(res$basis$value[res$basis$group == "CTD"], 108.70, tolerance = 0.02)
+  expect_equal(res$basis$value[res$basis$group == "RTD"], 88.52, tolerance = 0.02)
+  expect_equal(res$basis$value[res$basis$group == "ETD"], 80.68, tolerance = 0.02)
+
+  expect_warning(res <- basis_pooled_cv(cmh_17_8_3_11_1_1, strength,
+                                        condition, batch),
+                 regexp = paste("(outliers_within_batch",
+                                "outliers_within_group",
+                                "between_group_variability",
+                                "pooled_data_normal",
+                                "normalized_variance_equal)",
+                                sep = ")|("),
+                 all = TRUE)
+
+  expect_warning(
+    res <- cmh_17_8_3_11_1_1 %>%
+      filter(condition != "ETW2") %>%
+      basis_pooled_cv(strength, condition, batch),
+    regexp = paste("(outliers_within_batch",
+                   "outliers_within_group",
+                   "pooled_data_normal",
+                   "normalized_variance_equal)",
+                   sep = ")|("),
+    all = TRUE
+  )
+
+  # removing both ETW and ETW2 should remove all diagnostic failures
+  res <- cmh_17_8_3_11_1_1 %>%
+    filter(condition != "ETW2" & condition != "ETW") %>%
+    basis_pooled_cv(strength, condition, batch)
+})
+
 # data from CMH-17-1G Section 8.3.11.1.2
 poolable_data <- tribble(
   ~batch, ~strength, ~condition,
@@ -737,7 +843,14 @@ poolable_data <- tribble(
 )
 
 test_that("Pooled SD results match ASAP results", {
-  res_b <- basis_pooled_sd(poolable_data, strength, condition)
+  # This data fails the anderson-darling test for normality for the
+  # transformed data
+  expect_warning(
+    res_b <- basis_pooled_sd(poolable_data, strength, condition),
+    regexp = "pooled_data_normal",
+    all = TRUE
+  )
+
   expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
                93.64, tolerance = 0.01)
   expect_equal(res_b$basis$value[res_b$basis$group == "RTD"],
@@ -757,7 +870,8 @@ test_that("Pooled SD results match ASAP results", {
   expect_output(print(res_b), "ETW2.*47\\.07", ignore.case = TRUE)
 
   res_a <- basis_pooled_sd(poolable_data, strength, condition,
-                           p = 0.99, conf = 0.95)
+                           p = 0.99, conf = 0.95,
+                           override = "pooled_data_normal")
   expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
                86.19, tolerance = 0.01)
   expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
@@ -769,7 +883,13 @@ test_that("Pooled SD results match ASAP results", {
 })
 
 test_that("Pooled CV results match CMH17STATS", {
-  res_b <- basis_pooled_cv(poolable_data, strength, condition)
+  # This data fails the anderson-darling test for normality for the
+  # transformed data
+  expect_warning(
+    res_b <- basis_pooled_cv(poolable_data, strength, condition),
+    regexp = "pooled_data_normal",
+    all = TRUE
+  )
 
   expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
                90.89, tolerance = 0.01)
@@ -790,7 +910,8 @@ test_that("Pooled CV results match CMH17STATS", {
   expect_output(print(res_b), "ETW2.*50\\.5", ignore.case = TRUE)
 
   res_a <- basis_pooled_cv(poolable_data, strength, condition,
-                           p = 0.99, conf = 0.95)
+                           p = 0.99, conf = 0.95,
+                           override = "pooled_data_normal")
   expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
                81.62, tolerance = 0.01)
   expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],

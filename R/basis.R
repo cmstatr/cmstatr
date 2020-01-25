@@ -186,6 +186,20 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' and \code{group} indicates the group corresponding to each observation.
 #' This method is described in CMH-17-1G.
 #'
+#' \code{basis_pooled_sd} and \code{basis_pooled_cv} both automatically
+#' perform a number of diagnostic tests. Using
+#' \code{\link{maximum_normed_residual}}, they check that there are no
+#' outliers within each group and batch (provided that \code{batch}) is
+#' specified. They check the between batch variability using
+#' \code{\link{ad_ksample}}. They check that there are no outliers within
+#' each group (pooling all batches) using
+#' \code{\link{maximum_normed_residual}}. They check for the normality
+#' of the pooled data using \code{\link{anderson_darling_normal}}.
+#' \code{basis_pooled_sd} checks for equality of variance of all
+#' data using \code{\link{levene_test}} and \code{basis_pooled_cv}
+#' checks for equality of variances of all data after transforming it
+#' using \code{\link{normalize_group_mean}}
+#' using \code{\link{levene_test}}.
 #'
 #' @return an object of class \code{basis}
 #' This object has the following fields:
@@ -222,6 +236,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @seealso \code{\link{anderson_darling_lognormal}}
 #' @seealso \code{\link{anderson_darling_weibull}}
 #' @seealso \code{\link{ad_ksample}}
+#' @seealso \code{\link{normalize_group_mean}}
 #'
 #' @references
 #' J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -595,11 +610,58 @@ basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
   return(res)
 }
 
+pooled_rules <- list(
+  outliers_within_batch = function(x, groups, batch, ...) {
+    group_batch_mnr <- sapply(unique(groups), function(g) {
+      batch_mnr <- sapply(unique(batch), function(b) {
+        x_group <- x[batch == b & groups == g]
+        if (length(x_group) == 0) {
+          return(TRUE)
+        }
+        mnr <- maximum_normed_residual(x = x_group)
+        return(mnr$n_outliers == 0)
+      })
+      all(batch_mnr)
+    })
+    all(group_batch_mnr)
+  },
+  between_group_variability = function(x, groups, batch, ...) {
+    group_adk <- sapply(unique(groups), function(g) {
+      x_group <- x[groups == g]
+      batch_group <- batch[groups == g]
+      adk <- ad_ksample(x = x_group, groups = batch_group)
+      !adk$reject_same_dist
+    })
+    all(group_adk)
+  },
+  outliers_within_group = function(x, groups, ...) {
+    group_mnr <- sapply(unique(groups), function(g) {
+      x_group <- x[groups == g]
+      mnr <- maximum_normed_residual(x = x_group)
+      return(mnr$n_outliers == 0)
+    })
+    all(group_mnr)
+  },
+  pooled_data_normal = function(x, groups, ...) {
+    norm_x <- normalize_group_mean(x = x, group = groups)
+    ad <- anderson_darling_normal(x = norm_x)
+    !ad$reject_distribution
+  }
+)
+
+pooled_rules_cv <- pooled_rules
+pooled_rules_cv[["normalized_variance_equal"]] <- function(x, groups, ...) {
+  norm_x <- normalize_group_mean(x = x, group = groups)
+  lev <- levene_test(x = norm_x, groups = groups)
+  !lev$reject_equal_variance
+}
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @export
-basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
-                            modcv = FALSE) {
+basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
+                            p = 0.90, conf = 0.95, modcv = FALSE,
+                            override = c()) {
   res <- new_basis()
 
   res$call <- match.call()
@@ -620,6 +682,19 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     c = match.call(),
     arg_name = "groups")
   res$groups <- eval_tidy(enquo(groups), data)
+
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+  res$batch <- eval_tidy(enquo(batch), data)
+
+  res$override <- override
+  check_result <- perform_checks(pooled_rules_cv, x = res$data,
+                                 groups = res$groups,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   if (modcv == TRUE) {
     res$modcv <- TRUE
@@ -649,11 +724,18 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
   return(res)
 }
 
+pooled_rules_sd <- pooled_rules
+pooled_rules_sd[["pooled_variance_equal"]] <- function(x, condition, ...) {
+  lev <- levene_test(x = x, groups = condition)
+  !lev$reject_equal_variance
+}
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @export
-basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
-                            modcv = FALSE) {
+basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
+                            p = 0.90, conf = 0.95, modcv = FALSE,
+                            override = c()) {
   res <- new_basis()
 
   res$call <- match.call()
@@ -674,6 +756,19 @@ basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     c = match.call(),
     arg_name = "groups")
   res$groups <- eval_tidy(enquo(groups), data)
+
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+  res$batch <- eval_tidy(enquo(batch), data)
+
+  res$override <- override
+  check_result <- perform_checks(pooled_rules_sd, x = res$data,
+                                 groups = res$groups,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   if (modcv == TRUE) {
     res$modcv <- TRUE
