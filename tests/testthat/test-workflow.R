@@ -119,7 +119,8 @@ test_that("carbon.fabric.2 equality of normalized variance (step 31)", {
 test_that("carbon.fabric.2 pooled CV basis values match (step 39-41)", {
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    basis_pooled_cv(strength, condition)
+    basis_pooled_cv(strength, condition, batch,
+                    override = c("outliers_within_batch"))
 
   res$basis %>%
     mutate(expected = case_when(group == "CTD" ~ 86.91,

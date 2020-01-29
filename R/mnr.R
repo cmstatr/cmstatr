@@ -52,6 +52,10 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
 
   res$n_outliers <- 0
 
+  if (is.na(cur_mnr)) {
+    return(res)
+  }
+
   for (i in 1:(length(res$data) - 1)) {
     if (cur_mnr >= cur_crit) {
       worst_index <- which.max(abs(cur_data - mean(cur_data)))

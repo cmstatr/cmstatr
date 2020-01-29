@@ -53,7 +53,7 @@ normalize_ply_thickness <- function(strength, measured_thk, nom_thk) {
 #' when pooling data across environments.
 #'
 #' @param x the variable containing the data to normalized
-#' @param groups the variable containing the groups
+#' @param group the variable containing the groups
 #'
 #' @return
 #' Returns a vector of normalized values
@@ -70,8 +70,8 @@ normalize_ply_thickness <- function(strength, measured_thk, nom_thk) {
 #' @importFrom rlang enquo eval_tidy
 #'
 #' @export
-normalize_group_mean <- function(x, groups) {
-  if (length(x) != length(groups)) {
+normalize_group_mean <- function(x, group) {
+  if (length(x) != length(group)) {
     stop("The length of x and groups must be equal")
   }
 
@@ -79,8 +79,8 @@ normalize_group_mean <- function(x, groups) {
     return(numeric(0))
   }
 
-  group_means <- sapply(groups, function(g) {
-    cur_group <- x[groups == g]
+  group_means <- sapply(group, function(g) {
+    cur_group <- x[group == g]
     group_mean <- mean(cur_group)
     return(group_mean)
   },
@@ -181,12 +181,12 @@ calc_cv_star <- function(cv) {
 #'
 #'
 #' @param x a vector of data to transform
-#' @param groups a vector indicating the group to which each observation in
+#' @param group a vector indicating the group to which each observation in
 #'        \code{x} belongs. If this is NULL, the data will be treated as
 #'        unstructured (without grouping)
-#' @param conditions a vector indicating the condition to which each
+#' @param condition a vector indicating the condition to which each
 #'        observation belongs
-#' @param batches a vector indicating the batch to which each observation
+#' @param batch a vector indicating the batch to which each observation
 #'        belongs
 #'
 #' @return
@@ -218,32 +218,32 @@ calc_cv_star <- function(cv) {
 NULL
 
 
-transform_mod_cv_2_within_condition <- function(x, batches, cv_star) {  # nolint
-  if (length(x) != length(batches)) {
+transform_mod_cv_2_within_condition <- function(x, batch, cv_star) {  # nolint
+  if (length(x) != length(batch)) {
     stop("x and batches must be the same length")
   }
 
-  x_prime <- transform_mod_cv(x, batches)
+  x_prime <- transform_mod_cv(x, batch)
   n <- length(x)
   x_bar <- mean(x)
 
   sse_prime <- sum(sapply(seq(along.with = x), function(i) {
     x_prime_i <- x_prime[i]
-    x_bar_i <- mean(x[batches == batches[i]])
+    x_bar_i <- mean(x[batch == batch[i]])
     (x_prime_i - x_bar_i) ^ 2
   }))
 
   sse_star <- (n - 1) * (cv_star * x_bar) ^ 2 -
-    sum(sapply(unique(batches), function(gi) {
-      n_i <- sum(batches == gi)
-      x_bar_i <- mean(x[batches == gi])
+    sum(sapply(unique(batch), function(gi) {
+      n_i <- sum(batch == gi)
+      x_bar_i <- mean(x[batch == gi])
       n_i * (x_bar_i - x_bar) ^ 2
     }))
 
   c_prime <- sqrt(sse_star / sse_prime)
 
   res <- sapply(seq(along.with = x), function(i) {
-    x_bar_i <- mean(x[batches == batches[i]])
+    x_bar_i <- mean(x[batch == batch[i]])
     c_prime * (x_prime[i] - x_bar_i) + x_bar_i
   })
 
@@ -252,30 +252,30 @@ transform_mod_cv_2_within_condition <- function(x, batches, cv_star) {  # nolint
 
 #' @rdname transform_mod_cv
 #' @export
-transform_mod_cv_2 <- function(x, conditions, batches) {
-  if (is.null(batches)) {
-    batches <- rep("A", length(x))
+transform_mod_cv_2 <- function(x, condition, batch) {
+  if (is.null(batch)) {
+    batch <- rep("A", length(x))
   }
 
-  if (is.null(conditions)) {
-    conditions <- rep("A", length(x))
+  if (is.null(condition)) {
+    condition <- rep("A", length(x))
   }
 
-  if (length(x) != length(batches)) {
+  if (length(x) != length(batch)) {
     stop("x and batches must be the same length")
   }
 
-  if (length(x) != length(conditions)) {
+  if (length(x) != length(condition)) {
     stop("x and conditions must be the same length")
   }
 
   res <- numeric(0)
 
-  for (ci in unique(conditions)) {
-    x_condition <- x[conditions == ci]
+  for (ci in unique(condition)) {
+    x_condition <- x[condition == ci]
     cv_star <- calc_cv_star(sd(x_condition) / mean(x_condition))
-    res[conditions == ci] <- transform_mod_cv_2_within_condition(
-      x_condition, batches[conditions == ci], cv_star
+    res[condition == ci] <- transform_mod_cv_2_within_condition(
+      x_condition, batch[condition == ci], cv_star
     )
   }
 
@@ -284,18 +284,18 @@ transform_mod_cv_2 <- function(x, conditions, batches) {
 
 #' @rdname transform_mod_cv
 #' @export
-transform_mod_cv <- function(x, groups = NULL) {
-  if (is.null(groups)) {
-    groups <- rep("A", length(x))
+transform_mod_cv <- function(x, group = NULL) {
+  if (is.null(group)) {
+    group <- rep("A", length(x))
   }
 
-  if (length(x) != length(groups)) {
+  if (length(x) != length(group)) {
     stop("x and groups must be the same length")
   }
 
   res <- sapply(seq(along.with = x), function(i) {
     xi <- x[i]
-    cur_group <- x[groups == groups[i]]
+    cur_group <- x[group == group[i]]
     s <- sd(cur_group)
     x_bar <- mean(cur_group)
     cv <- s / x_bar
