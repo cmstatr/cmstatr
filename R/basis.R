@@ -404,15 +404,21 @@ single_point_rules <- list(
       mnr <- maximum_normed_residual(x = x_group)
       mnr$n_outliers == 0
     })
-    all(group_mnr)
+    ifelse(all(group_mnr), "",
+           paste0("Maximum normed residual test detected ",
+                  "outliers within one or more batch"))
   },
   between_batch_variability = function(x, batch, ...) {
     adk <- ad_ksample(x = x, groups = batch, alpha = 0.025)
-    !adk$reject_same_dist
+    ifelse(!adk$reject_same_dist, "",
+          paste0("Anderson-Darling k-Sample test indicates that ",
+                 "batches are drawn from different distributions"))
   },
   outliers = function(x, ...) {
     mnr <- maximum_normed_residual(x = x)
-    mnr$n_outliers == 0
+    ifelse(mnr$n_outliers == 0, "",
+           paste0("Maximum normed residual test detected outliers ",
+                  "within data"))
   }
 )
 
@@ -420,7 +426,9 @@ basis_normal_rules <- single_point_rules
 basis_normal_rules[["anderson_darling_normal"]] <-
   function(x, ...) {
     ad <- anderson_darling_normal(x = x)
-    ! ad$reject_distribution
+    ifelse(!ad$reject_distribution, "",
+           paste0("Anderson-Darling test rejects hypothesis that data ",
+                  "is drawn from a normal distribution"))
   }
 
 #' @rdname basis
@@ -471,7 +479,9 @@ basis_lognormal_rules <- single_point_rules
 basis_lognormal_rules[["anderson_darling_lognormal"]] <-
   function(x, ...) {
     ad <- anderson_darling_lognormal(x = x)
-    ! ad$reject_distribution
+    ifelse(!ad$reject_distribution, "",
+           paste0("Anderson-Darling test rejects hypothesis that data ",
+                  "is drawn from a log-normal distribution"))
   }
 
 #' @rdname basis
@@ -518,7 +528,9 @@ basis_weibull_rules <- single_point_rules
 basis_weibull_rules[["anderson_darling_weibull"]] <-
   function(x, ...) {
     ad <- anderson_darling_weibull(x = x)
-    ! ad$reject_distribution
+    ifelse(!ad$reject_distribution, "",
+           paste0("Anderson-Darling test rejects hypothesis that data ",
+                  "is drawn from a Weibull distribution"))
   }
 
 #' @rdname basis
@@ -623,7 +635,9 @@ pooled_rules <- list(
       })
       all(batch_mnr)
     })
-    all(group_batch_mnr)
+    ifelse(all(group_batch_mnr), "",
+           paste0("Maximum normed residual test detected ",
+                  "outliers within one or more batch and group"))
   },
   between_group_variability = function(x, groups, batch, ...) {
     group_adk <- sapply(unique(groups), function(g) {
@@ -632,7 +646,9 @@ pooled_rules <- list(
       adk <- ad_ksample(x = x_group, groups = batch_group)
       !adk$reject_same_dist
     })
-    all(group_adk)
+    ifelse(all(group_adk), "",
+           paste0("Anderson-Darling k-Sample test indicates that ",
+                  "batches are drawn from different distributions"))
   },
   outliers_within_group = function(x, groups, ...) {
     group_mnr <- sapply(unique(groups), function(g) {
@@ -640,12 +656,16 @@ pooled_rules <- list(
       mnr <- maximum_normed_residual(x = x_group)
       return(mnr$n_outliers == 0)
     })
-    all(group_mnr)
+    ifelse(all(group_mnr), "",
+           paste0("Maximum normed residual test detected ",
+                  "outliers within one or more group"))
   },
   pooled_data_normal = function(x, groups, ...) {
     norm_x <- normalize_group_mean(x = x, group = groups)
     ad <- anderson_darling_normal(x = norm_x)
-    !ad$reject_distribution
+    ifelse(!ad$reject_distribution, "",
+           paste0("Anderson-Darling test rejects hypothesis that pooled ",
+                  "data is drawn from a normal distribution"))
   }
 )
 
@@ -653,7 +673,9 @@ pooled_rules_cv <- pooled_rules
 pooled_rules_cv[["normalized_variance_equal"]] <- function(x, groups, ...) {
   norm_x <- normalize_group_mean(x = x, group = groups)
   lev <- levene_test(x = norm_x, groups = groups)
-  !lev$reject_equal_variance
+  return(ifelse(!lev$reject_equal_variance, "",
+                paste0("Levene's test rejected the hypothesis that the ",
+                       "variance of all groups are equal")))
 }
 
 #' @rdname basis
@@ -727,7 +749,9 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
 pooled_rules_sd <- pooled_rules
 pooled_rules_sd[["pooled_variance_equal"]] <- function(x, condition, ...) {
   lev <- levene_test(x = x, groups = condition)
-  !lev$reject_equal_variance
+  return(ifelse(!lev$reject_equal_variance, "",
+                paste0("Levene's test rejected the hypothesis that the ",
+                       "variance of all conditions are equal")))
 }
 
 #' @rdname basis
@@ -929,24 +953,32 @@ basis_hk_ext_rules[["correct_method_used"]] <-
   function(method, p, conf, ...) {
     if (p == 0.90 & conf == 0.95) {
       # B-Basis
-      return(method == "optimum-order")
+      return(ifelse(method == "optimum-order", "",
+                    paste0("For B-Basis, the optimum order method ",
+                           "should be used")))
     } else if (p == 0.99 & conf == 0.95) {
       # A-Basis
-      return(method == "woodward-frawley")
+      return(ifelse(method == "woodward-frawley", "",
+                    paste0("For A-Basis, the Woodward-Frawley method ",
+                           "should be used")))
     } else {
-      return(TRUE)
+      return("")
     }
   }
 basis_hk_ext_rules[["sample_size"]] <-
   function(n, p, conf, ...) {
     if (p == 0.90 & conf == 0.95) {
       # B-Basis
-      return(n <= 28)
+      return(ifelse(n <= 28, "",
+                    paste0("For B-Basis, Hanson-Koopmans should only be ",
+                           "used for samples of 28 or fewer observations")))
     } else if (p == 0.99 & conf == 0.95) {
       # A-Basis
-      return(n <= 299)
+      return(ifelse(n <= 299, "",
+                    paste0("For A-Basis, Hanson-Koopmans should only be ",
+                           "used for samples of 299 or fewer observations")))
     } else {
-      return(TRUE)
+      return("")
     }
   }
 
@@ -1119,10 +1151,14 @@ nonpara_large_sample_rules[["sample_size"]] <-
   function(n, p, conf, ...) {
     if (p == 0.90 & conf == 0.95) {
       # B-Basis
-      return(n >= 28)
+      return(ifelse(n >= 28, "",
+                    paste0("This method should only be used for ",
+                           "B-Basis for sample sizes larger than 28")))
     } else if (p == 0.99 & conf == 0.95) {
       # A-Basis
-      return(n >= 299)
+      return(ifelse(n >= 299, "",
+                    paste0("This method should only be used for ",
+                           "A-Basis for sample sizes larger than 299")))
     } else {
       return(TRUE)
     }
@@ -1179,14 +1215,19 @@ anova_rules <- list(
       mnr <- maximum_normed_residual(x = x_group)
       mnr$n_outliers == 0
     })
-    all(group_mnr)
+    ifelse(all(group_mnr), "",
+           paste0("Maximum normed residual test detected ",
+                  "outliers within one or more batch"))
   },
   equality_of_variance = function(x, groups, ...) {
     lt <- levene_test(x = x, groups = groups)
-    !lt$reject_equal_variance
+    ifelse(!lt$reject_equal_variance, "",
+           paste0("Levene's test rejected the hypothesis that the ",
+                  "variance of all groups is equal"))
   },
   number_of_groups = function(r, ...) {
-    r >= 5
+    ifelse(r >= 5, "",
+           "ANOVA should only be used for 5 or more groups")
   }
 )
 

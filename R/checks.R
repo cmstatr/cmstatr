@@ -33,8 +33,8 @@ perform_checks <- function(rules, override = c(), ...) {
         is.null(args[[cur_formal_name]]) & cur_formal_name != "..."
       })
       if (!any(missing_formals)) {
-        if (!do.call(cur_rule, args)) {
-          warn(paste0("`", cur_rule_name, "` failed."))
+        if ((message <- do.call(cur_rule, args)) != "") {
+          warn(paste0("`", cur_rule_name, "` failed: ", message))
           return(FALSE)
         }
         return(TRUE)

@@ -722,9 +722,12 @@ test_that("expected diagnostic failures are noted for pooling methods", {
     filter(condition != "ETW2" & condition != "ETW") %>%
     basis_pooled_sd(strength, condition, batch)
 
-  expect_equal(res$basis$value[res$basis$group == "CTD"], 108.70, tolerance = 0.02)
-  expect_equal(res$basis$value[res$basis$group == "RTD"], 88.52, tolerance = 0.02)
-  expect_equal(res$basis$value[res$basis$group == "ETD"], 80.68, tolerance = 0.02)
+  expect_equal(res$basis$value[res$basis$group == "CTD"], 108.70,
+               tolerance = 0.02)
+  expect_equal(res$basis$value[res$basis$group == "RTD"], 88.52,
+               tolerance = 0.02)
+  expect_equal(res$basis$value[res$basis$group == "ETD"], 80.68,
+               tolerance = 0.02)
 
   expect_warning(res <- basis_pooled_cv(cmh_17_8_3_11_1_1, strength,
                                         condition, batch),

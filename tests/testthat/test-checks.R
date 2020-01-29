@@ -3,13 +3,13 @@ context("Checks")
 test_that("perform_checks produces warnings unless overriden", {
   sample_rules <- list(
     positive = function(pos, ...) {
-      pos > 0
+      ifelse(pos > 0, "", "Not positive")
     },
     negative = function(neg, ...) {
-      neg < 0
+      ifelse(neg < 0, "", "Not negative")
     },
     zero = function(z, ...) {
-      z == 0
+      ifelse(z == 0, "", "Not zero")
     }
   )
 
@@ -39,16 +39,16 @@ test_that("perform_checks produces warnings unless overriden", {
 test_that("Messages are created for missing parameters", {
   sample_rules <- list(
     positive = function(pos, ...) {
-      pos > 0
+      ifelse(pos > 0, "", "Not positive")
     },
     negative = function(neg, ...) {
-      neg < 0
+      ifelse(neg < 0, "", "Not negative")
     },
     zero = function(z, ...) {
-      z == 0
+      ifelse(z == 0, "", "Not zero")
     },
     neg_or_zero = function(neg, z, ...) {
-      TRUE
+      ""
     }
   )
 
