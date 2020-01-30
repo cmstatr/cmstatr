@@ -253,23 +253,36 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @name basis
 NULL
 
-new_basis <- function() {
+new_basis <- function(
+  call,
+  distribution,
+  modcv,
+  p,
+  conf,
+  override,
+  data,
+  groups,
+  batch
+) {
   res <- list()
   class(res) <- "basis"
 
-  res$call <- NA
-  res$distribution <- NA
-  res$modcv <- FALSE
-  res$p <- NA
-  res$conf <- NA
-  res$data <- NULL
-  res$groups <- NA
-  res$batch <- NULL
-  res$modcv_transformed_data <- NULL
-  res$override <- character(0)
+  res$call <- call
+  res$distribution <- distribution
+  res$modcv <- modcv
+  res$p <- p
+  res$conf <- conf
+  res$data <- data
+  res$groups <- groups
+  res$batch <- batch
+  res$modcv_transformed_data <- NA
+  res$override <- override
   res$diagnostic_failures <- character(0)
-  res$n <- NA
+  res$n <- length(res$data)
   res$r <- NA
+  if (!is.null(groups) & !all(is.na(groups))) {
+    res$r <- length(levels(as.factor(groups)))
+  }
   res$basis <- NA
 
   return(res)
@@ -358,7 +371,7 @@ print.basis <- function(x, ...) {
   cat("Distribution: ", x$distribution, "\t")
 
   cat("( n = ", x$n)
-  if (!is.null(x$r) & !is.na(x$r)) {
+  if (!is.null(x$r) & !all(is.na(x$r))) {
     cat(", r = ", x$r)
   }
   cat(" )\n")
@@ -437,38 +450,37 @@ basis_normal_rules[["anderson_darling_normal"]] <-
 #' @export
 basis_normal <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
                          override = c()) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Normal"
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
-
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
   verify_tidy_input(
     df = data,
     x = batch,
     c = match.call(),
     arg_name = "batch")
-  res$batch <- eval_tidy(enquo(batch), data)
 
-  res$override <- override
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Normal",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
   check_result <- perform_checks(basis_normal_rules, x = res$data,
                                  batch = res$batch, override = override)
   res$diagnostic_failures <- names(check_result[!check_result])
 
-  res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
 
   cv <- sd(res$data) / mean(res$data)
-  res$cv <- cv
 
   res$basis <- mean(res$data) * (1 - k * cv)
 
@@ -490,34 +502,34 @@ basis_lognormal_rules[["anderson_darling_lognormal"]] <-
 #' @export
 basis_lognormal <- function(data = NULL, x, batch = NULL, p = 0.90,
                             conf = 0.95, override = c()) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Lognormal"
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
-
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
   verify_tidy_input(
     df = data,
     x = batch,
     c = match.call(),
     arg_name = "batch")
-  res$batch <- eval_tidy(enquo(batch), data)
 
-  res$override <- override
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Lognormal",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
   check_result <- perform_checks(basis_lognormal_rules, x = res$data,
                                  batch = res$batch, override = override)
   res$diagnostic_failures <- names(check_result[!check_result])
 
-  res$n <- length(res$data)
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
   res$basis <- exp(mean(log(res$data)) - k * sd(log(res$data)))
 
@@ -541,34 +553,33 @@ basis_weibull_rules[["anderson_darling_weibull"]] <-
 #' @export
 basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
                           conf = 0.95, override = c()) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Weibull"
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
-
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
   verify_tidy_input(
     df = data,
     x = batch,
     c = match.call(),
     arg_name = "batch")
-  res$batch <- eval_tidy(enquo(batch), data)
 
-  res$override <- override
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Weibull",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
   check_result <- perform_checks(basis_weibull_rules, x = res$data,
                                  batch = res$batch, override = override)
   res$diagnostic_failures <- names(check_result[!check_result])
-
-  res$n <- length(res$data)
 
   dist <- fitdistr(res$data, "weibull")
 
@@ -684,35 +695,36 @@ pooled_rules_cv[["normalized_variance_equal"]] <- function(x, groups, ...) {
 basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
                             p = 0.90, conf = 0.95, modcv = FALSE,
                             override = c()) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Normal - Pooled CV"
-  res$p <- p
-  res$conf <- conf
-
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
   verify_tidy_input(
     df = data,
     x = groups,
     c = match.call(),
     arg_name = "groups")
-  res$groups <- eval_tidy(enquo(groups), data)
 
   verify_tidy_input(
     df = data,
     x = batch,
     c = match.call(),
     arg_name = "batch")
-  res$batch <- eval_tidy(enquo(batch), data)
 
-  res$override <- override
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Normal - Pooled CV",
+    modcv = modcv,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = eval_tidy(enquo(groups), data),
+    batch = eval_tidy(enquo(batch), data)
+  )
+
   check_result <- perform_checks(pooled_rules_cv, x = res$data,
                                  groups = res$groups,
                                  batch = res$batch, override = override)
@@ -728,8 +740,6 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
   }
 
   norm_data <- normalize_group_mean(data_to_use, res$groups)
-  res$n <- length(data_to_use)
-  res$r <- length(levels(as.factor(res$groups)))
 
   pooled_sd <- sqrt(sum((norm_data - 1) ^ 2) / (res$n - res$r))
 
@@ -760,35 +770,36 @@ pooled_rules_sd[["pooled_variance_equal"]] <- function(x, condition, ...) {
 basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
                             p = 0.90, conf = 0.95, modcv = FALSE,
                             override = c()) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Normal - Pooled Standard Deviation"
-  res$p <- p
-  res$conf <- conf
-
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
   verify_tidy_input(
     df = data,
     x = groups,
     c = match.call(),
     arg_name = "groups")
-  res$groups <- eval_tidy(enquo(groups), data)
 
   verify_tidy_input(
     df = data,
     x = batch,
     c = match.call(),
     arg_name = "batch")
-  res$batch <- eval_tidy(enquo(batch), data)
 
-  res$override <- override
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Normal - Pooled Standard Deviation",
+    modcv = modcv,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = eval_tidy(enquo(groups), data),
+    batch = eval_tidy(enquo(batch), data)
+  )
+
   check_result <- perform_checks(pooled_rules_sd, x = res$data,
                                  groups = res$groups,
                                  batch = res$batch, override = override)
@@ -802,9 +813,6 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
     res$modcv <- FALSE
     data_to_use <- res$data
   }
-
-  res$n <- length(data_to_use)
-  res$r <- length(levels(as.factor(res$groups)))
 
   pooled_sd <- sqrt(
     sum(
@@ -990,34 +998,35 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
                        method = c("optimum-order", "woodward-frawley"),
                        override = c()) {
   method <- match.arg(method)
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- paste0(
-    "Nonparametric (Extended Hanson-Koopmans, ",
-    ifelse(method == "optimum-order", "optimum two-order-statistic method",
-           "Woodward-Frawley method"),
-    ")")
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
 
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
-  res$n <- length(res$data)
 
   verify_tidy_input(
     df = data,
     x = batch,
     c = match.call(),
     arg_name = "batch")
-  res$batch <- eval_tidy(enquo(batch), data)
 
-  res$override <- override
+  res <- new_basis(
+    call = match.call(),
+    distribution = paste0(
+      "Nonparametric (Extended Hanson-Koopmans, ",
+      ifelse(method == "optimum-order", "optimum two-order-statistic method",
+             "Woodward-Frawley method"),
+      ")"),
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
   check_result <- perform_checks(basis_hk_ext_rules, x = res$data,
                                  batch = res$batch, n = res$n,
                                  p = res$p, conf = res$conf,
@@ -1171,30 +1180,30 @@ nonpara_large_sample_rules[["sample_size"]] <-
 basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
                                        p = 0.90, conf = 0.95,
                                        override = c()) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Nonparametric (large sample)"
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
-
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
-  res$n <- length(res$data)
 
   verify_tidy_input(
     df = data,
     x = batch,
     c = match.call(),
     arg_name = "batch")
-  res$batch <- eval_tidy(enquo(batch), data)
 
-  res$override <- override
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Nonparametric (large sample)",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
   check_result <- perform_checks(nonpara_large_sample_rules,
                                  x = res$data, batch = res$batch, n = res$n,
                                  p = res$p, conf = res$conf,
@@ -1236,35 +1245,34 @@ anova_rules <- list(
 #' @export
 basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
                         override = c()) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "ANOVA"
-  res$p <- p
-  res$conf <- conf
-
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
   verify_tidy_input(
     df = data,
     x = groups,
     c = match.call(),
     arg_name = "groups")
-  res$groups <- eval_tidy(enquo(groups), data)
 
-  res$n <- length(res$data)
-  res$r <- length(levels(as.factor(res$groups)))
+  res <- new_basis(
+    call = match.call(),
+    distribution = "ANOVA",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = eval_tidy(enquo(groups), data),
+    batch = NA
+  )
 
   if (res$r < 2) {
     stop("ANOVA cannot be computed with fewer than 2 groups")
   }
 
-  res$override <- override
   check_result <- perform_checks(rules = anova_rules,
                                  x = res$data, groups = res$groups,
                                  r = res$r, override = override)
