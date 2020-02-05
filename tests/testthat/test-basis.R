@@ -697,12 +697,16 @@ cmh_17_8_3_11_1_1 <- tribble(
 
 test_that("expected diagnostic failures are noted for pooling methods", {
   # This test follows CMH-17-1G Section
+  # This section in CMH-17-1G shows the removal of one condition
+  # before running Levene's test on the pooled data, so this test
+  # will be skipped in this test.
   expect_warning(res <- basis_pooled_sd(cmh_17_8_3_11_1_1, strength,
                          condition, batch),
                  regexp = paste("(outliers_within_batch",
                                 "outliers_within_group",
                                 "between_group_variability",
-                                "pooled_data_normal)",
+                                "pooled_data_normal",
+                                "pooled_variance_equal)",
                                 sep = ")|("),
                  all = TRUE)
 
@@ -712,7 +716,8 @@ test_that("expected diagnostic failures are noted for pooling methods", {
       basis_pooled_sd(strength, condition, batch),
     regexp = paste("(outliers_within_batch",
                    "outliers_within_group",
-                   "pooled_data_normal)",
+                   "pooled_data_normal",
+                   "pooled_variance_equal)",
                    sep = ")|("),
     all = TRUE
   )
@@ -849,7 +854,8 @@ test_that("Pooled SD results match ASAP results", {
   # This data fails the anderson-darling test for normality for the
   # transformed data
   expect_warning(
-    res_b <- basis_pooled_sd(poolable_data, strength, condition),
+    res_b <- basis_pooled_sd(poolable_data, strength, condition,
+                             override = c("pooled_variance_equal")),
     regexp = "pooled_data_normal",
     all = TRUE
   )
@@ -874,7 +880,8 @@ test_that("Pooled SD results match ASAP results", {
 
   res_a <- basis_pooled_sd(poolable_data, strength, condition,
                            p = 0.99, conf = 0.95,
-                           override = "pooled_data_normal")
+                           override = c("pooled_data_normal",
+                                        "pooled_variance_equal"))
   expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
                86.19, tolerance = 0.01)
   expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
@@ -933,7 +940,8 @@ test_that("Pooled data matches CMH17-STATS with mod CV, SD pooling", {
 
   data <- filter(poolable_data, condition != "ETW2")
 
-  res_b <- basis_pooled_sd(data, strength, condition, modcv = TRUE)
+  res_b <- basis_pooled_sd(data, strength, condition, modcv = TRUE,
+                           override = c("pooled_variance_equal"))
 
   expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
                92.25, tolerance = 0.01)
@@ -943,7 +951,8 @@ test_that("Pooled data matches CMH17-STATS with mod CV, SD pooling", {
                52.97, tolerance = 0.01)
 
   res_a <- basis_pooled_sd(data, strength, condition,
-                           p = 0.99, conf = 0.95, modcv = TRUE)
+                           p = 0.99, conf = 0.95, modcv = TRUE,
+                           override = c("pooled_variance_equal"))
   expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
                83.81, tolerance = 0.01)
   expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
