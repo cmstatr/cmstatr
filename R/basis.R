@@ -746,7 +746,9 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
   basis <- sapply(levels(as.factor(res$groups)), function(g) {
     nj <- length(data_to_use[res$groups == g])
     z <- qnorm(p)
-    kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    suppressWarnings(
+      kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    )
     xj_bar <- mean(data_to_use[res$groups == g])
     xj_bar * (1 - kj * pooled_sd)
   })
@@ -757,8 +759,9 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
 }
 
 pooled_rules_sd <- pooled_rules
-pooled_rules_sd[["pooled_variance_equal"]] <- function(x, condition, ...) {
-  lev <- levene_test(x = x, groups = condition)
+pooled_rules_sd[["pooled_variance_equal"]] <- function(x, groups, ...) {
+
+  lev <- levene_test(x = x, groups = groups)
   return(ifelse(!lev$reject_equal_variance, "",
                 paste0("Levene's test rejected the hypothesis that the ",
                        "variance of all conditions are equal")))
@@ -825,7 +828,9 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
   basis <- sapply(levels(as.factor(res$groups)), function(g) {
     nj <- length(data_to_use[res$groups == g])
     z <- qnorm(p)
-    kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    suppressWarnings(
+      kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    )
     xj_bar <- mean(data_to_use[res$groups == g])
     xj_bar - kj * pooled_sd
   })
