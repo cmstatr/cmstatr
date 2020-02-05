@@ -9,6 +9,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+TODO: Show example of using nest() / unnest()
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -31,7 +33,7 @@ library(tidyverse)
 ```
 
 # Input Data
-`cmstatr` is build with the assumption that the data is in (so called)
+`cmstatr` is built with the assumption that the data is in (so called)
 [tidy data](http://vita.had.co.nz/papers/tidy-data.html) format. This means
 that the data is in a data frame and that each observation (i.e. test result)
 has its own row and that each variable has its own column. Included in this
@@ -69,8 +71,8 @@ function can be used to normalize strength or modulus data to a certain
 cured ply thickness. This function takes three arguments: the value to
 normalize (i.e.. strength or modulus), the measured thickness and the
 nominal thickness. In our case, the nominal cured ply thickness of the
-material is $0.0079$. We can then normalize the warp-tension data as
-follows:
+material is $0.0079$. We can then normalize the warp-tension and
+fill-compression data as follows:
 
 ```{r}
 norm_data <- carbon.fabric.2 %>%
@@ -117,10 +119,106 @@ value is calculated, but other population proportions and confidence bounds
 can be specified (for example, specify `p = 0.99, conf = 0.99` for A-Basis).
 
 ```{r}
-carbon.fabric.2 %>%
+norm_data %>%
   filter(test == "WT" & condition == "RTD") %>%
-  basis_normal(strength)
+  basis_normal(strength.norm)
 ```
+
+We see that the calculated B-Basis is $129.96$. We also see two messages
+issued by the `cmstatr` package. These messages relate to the automated
+diagnostic tests performed by the basis calculation functions. In this case
+we see messages that two of the diagnostic tests were not performed because
+we didn't specify the batch of each observation. The batch is not required
+for calculating single-point basis values, but it is required for performing
+batch-to-batch variability and within-batch outlier diagnostic tests.
+
+The `basis_normal` function performs the following diagnostic tests by default:
+
+- Within batch outliers using `maximum_normed_residual()`
+- Between batch variability using `ad_ksample()`
+- Outliers using `maximum_normed_residual()`
+- Normality of data using `anderson_darling_normal()`
+
+There are two ways that we can deal with the two messages that we see. We can
+specify the batch for each observation, or we can override those two
+diagnostic tests so that `cmstatr` doesn't run them.
+
+To override the two diagnostic tests, we set the argument `override` to a list
+of the names of the diagnostic tests that we want to skip. The names of the
+diagnostic tests that were not run are shown between backticks (\`) in the
+message. Our call to `basis_normal()` would be updated as follows:
+
+```{r}
+norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  basis_normal(strength.norm, 
+               override = c("outliers_within_batch",
+                            "between_batch_variability"))
+```
+
+Obviously, you should be cautious about overriding the diagnostic tests.
+There are certainly times when it is appropriate to do so, but sound
+engineering judgement is required.
+
+The better approach would be to specify the batch. This can be done as
+follows:
+
+```{r}
+norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  basis_normal(strength.norm, batch)
+```
+
+Now that batch is specified, we see that one of the diagnostic tests
+actually fails: the Anderson-Darling k-Sample test shows that the batches
+are not drawn from the same (unspecified) distribution. We can run this
+diagnostic test directly to investigate further:
+
+```{r}
+norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  ad_ksample(strength.norm, batch)
+```
+
+For the Anderson-Darling k-Sample test, $\alpha=0.025$ is normally used.
+In this case the p-value is $p=0.0026$, so it is no where near $\alpha$
+(note the number of decimal places).
+
+We can plot the distribution of this data and make a judgement call about
+whether to contiue.
+
+
+```{r}
+StatNcdf <- ggproto(
+  "stat_ncdf",
+  Stat,
+  compute_group = function(data, scales) {
+    x <- data$x
+    y = pnorm(x, mean(x), sd(x))
+    data.frame(x = x, y = y)
+  },
+  required_aes = c("x")
+  )
+
+stat_ncdf <- function(mapping = NULL, data = NULL, geom = "smooth",
+                      position = "identity", show.legend = NA,
+                       inherit.aes = TRUE, ...) {
+    layer(
+      stat = StatNcdf, data = data, geom = geom, position = position,
+      mapping = mapping, show.legend = show.legend,
+      inherit.aes = inherit.aes, params = list(...)
+    )
+}
+
+norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  group_by(batch) %>%
+  ggplot(aes(x = strength.norm, color = batch)) +
+  stat_ecdf(geom = "point", pad = TRUE) +
+  stat_ncdf() +
+  ggtitle("Distribution of Data For Each Batch")
+```
+
 
 # Calculating Basis Values by Pooling Across Environments
 In this section, we'll use the fill-compression data from the `carbon.fabric.2`
@@ -133,18 +231,26 @@ check if there are outliers within each batch and condition. The maximum
 normed residual test can be used for this. The `cmstatr` package provides the
 function `maximum_normed_residual` to do this. First, we'll group the data
 by condition and batch, then run the test on each group. The
-`maximum_normed_residual` function returns an object that contains the variable
-`n_outlier`, which we will report. Note that when `maximum_normed_residual` is
-inside a `summarize` function, we have to use the syntax `x = ...` to specify
-the data on which to perform the maximum normed residual test.
+`maximum_normed_residual` function returns an object that contains a number
+of values. We'll create a `data.frame` that contains those values.
+
+In order to do this, we need to use the `nest` function from the `tidyr`
+package. This is explained in detail
+[here](https://tidyr.tidyverse.org/articles/nest.html). Basically,
+`nest` allows a column of `list`s or a column of `data.frame`s to be
+added to a `data.frame`. Once nested, we can use the `glance` method
+to unpack the values returned by `maximum_normed_residual`.
+
 
 ```{r}
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition, batch) %>%
-  summarise(
-    n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers
-    )
+  nest() %>%
+  mutate(mnr = map(data, ~maximum_normed_residual(.x, strength.norm)),
+         tidied = map(mnr, glance)) %>%
+  select(-c(mnr, data)) %>%  # remove unneeded columns
+  unnest(tidied)
 ```
 
 ```{r include=FALSE}
@@ -165,15 +271,18 @@ None of the groups have outliers, so we can continue.
 # Batch-to-Batch Distribution
 Next, we will use the Anderson-Darling k-Sample test to check that each batch
 comes from the same distribution within each condition. We can use the
-`ad_ksample` function from `cmstatr` to do so:
+`ad_ksample` function from `cmstatr` to do so. Once again, we'll use `nest`/`unnest`
+and `glance` to do so.
 
 ```{r}
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
-  summarise(different_dist =
-           ad_ksample(x = strength.norm, groups = batch)$reject_same_dist
-  )
+  nest() %>%
+  mutate(adk = map(data, ~ad_ksample(.x, strength.norm, batch)),
+         tidied = map(adk, glance)) %>%
+  select(-c(data, adk)) %>%  # remove unneeded columns
+  unnest(tidied)
 ```
 
 ```{r include=FALSE}
@@ -189,7 +298,7 @@ if (!all(!(norm_data %>%
 
 For all conditions, the Anderson-Darling k-Sample test fails to reject the
 hypothesis that each batch comes from the same (unspecified) distribution.
-We can thus proceed to pooling the data
+We can thus proceed to pooling the data.
 
 ## Checking for Outliers Within Each Condition
 Just as we did when checking for outlier within each condition and each
@@ -200,7 +309,11 @@ for outliers within each condition.
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
-  summarise(n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers)
+  nest() %>%
+  mutate(mnr = map(data, ~maximum_normed_residual(.x, strength.norm)),
+         tidied = map(mnr, glance)) %>%
+  select(-c(mnr, data)) %>%  # remove unneeded columns
+  unnest(tidied)
 ```
 
 ```{r include=FALSE}
@@ -300,6 +413,11 @@ norm_data %>%
   filter(test == "FC") %>%
   basis_pooled_sd(strength.norm, condition)
 ```
+
+
+`outliers_within_batch` not run because parameter `batch` not specified
+`between_group_variability` not run because parameter `batch` not specified
+`pooled_variance_equal` not run because parameter `condition` not specified - TODO: WRONG!!!!
 
 
 # Equivalency
