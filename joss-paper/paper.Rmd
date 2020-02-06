@@ -1,0 +1,50 @@
+---
+title: "cmstatr: An R Package for Statistical Analysis of Composite Material Data"
+tags:
+  - R
+  - statistics
+  - composite materials
+  - material science
+authors:
+  - name: Stefan Kloppenborg
+    orcid: TBD
+    affiliation: 1
+affiliations:
+ - name: Comtek Advanced Structures, Ltd.
+   index: 1
+date: "1/29/2020"
+bibliography: paper.bib
+output:
+  md_document:
+    preserve_yaml: true
+    variant: markdown
+    pandoc_args: "--atx-headers"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Summary
+A number of statistical techniques are commonly used when analyzing
+strength datat for composite materials used in aerospace applications,
+such as carbon fiber and fiberglass.
+Currently, many users use MS Excel spreadsheets for performing this
+analysis. `cmstatr` is an R package that implements the statistical
+analysis techniques commonly used for composite material strength data.
+
+A set of statistical methods are described in CMH-17-1G [@CMH171G].
+The use of these methods is widely accepted by industry and civil
+aviation regulators.
+
+...excel tools...
+
+...reproducibility...
+
+...avoidance of lookup tables and approximations...
+
+...example use...
+
+...comparison with existing tools...
+
+

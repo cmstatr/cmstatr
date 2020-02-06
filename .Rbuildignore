@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 GenerateFakeData.R
 ^\.github
+^joss-paper
