@@ -9,8 +9,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-TODO: Show example of using nest() / unnest()
-
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -43,9 +41,6 @@ don't use it for anything other than learning this package). The data set
 of the data for now.
 
 ```{r}
-library(cmstatr)
-library(tidyverse)
-
 carbon.fabric.2 %>%
   head(10)
 ```
@@ -77,7 +72,9 @@ fill-compression data as follows:
 ```{r}
 norm_data <- carbon.fabric.2 %>%
   filter(test == "WT" | test == "FC") %>%
-  mutate(strength.norm = normalize_ply_thickness(strength, thickness / nplies, 0.0079))
+  mutate(strength.norm = normalize_ply_thickness(strength,
+                                                 thickness / nplies,
+                                                 0.0079))
 
 norm_data %>%
   head(10)
@@ -88,8 +85,13 @@ The simplest thing that you will likely do is to calculate a basis value based
 of a set of numbers that you consider as unstructured data. An example of this
 would be calculating the B-Basis of the `RTD` warp tension (`WT`) data.
 
-First, we need to determine how the data are distributed. We'll use an
-Anderson-Darling test to do so. The `cmstatr` package provides the function
+There are a number of diagnostic tests that we should run before actually
+calculating a B-Basis value. We'll talk about those later, but for now, let's
+just get right to checking how the data are distributed and calculating the
+B-Basis.
+
+We'll use an Anderson-Darling test to check if the data are normally
+distributed. The `cmstatr` package provides the function
 `anderson_darling_normal` and related functions for other distributions.
 We can run an Anderson-Darling test for normality on the warp tension RTD
 data as follows. We'll perform this test on the normalized strength.
@@ -140,12 +142,12 @@ The `basis_normal` function performs the following diagnostic tests by default:
 - Normality of data using `anderson_darling_normal()`
 
 There are two ways that we can deal with the two messages that we see. We can
-specify the batch for each observation, or we can override those two
-diagnostic tests so that `cmstatr` doesn't run them.
+pass in a column that specifies the batch for each observation, or we can
+override those two diagnostic tests so that `cmstatr` doesn't run them.
 
 To override the two diagnostic tests, we set the argument `override` to a list
 of the names of the diagnostic tests that we want to skip. The names of the
-diagnostic tests that were not run are shown between backticks (\`) in the
+diagnostic tests that were not run are shown between back-ticks (\`) in the
 message. Our call to `basis_normal()` would be updated as follows:
 
 ```{r}
@@ -158,7 +160,7 @@ norm_data %>%
 
 Obviously, you should be cautious about overriding the diagnostic tests.
 There are certainly times when it is appropriate to do so, but sound
-engineering judgement is required.
+engineering judgment is required.
 
 The better approach would be to specify the batch. This can be done as
 follows:
@@ -184,17 +186,18 @@ For the Anderson-Darling k-Sample test, $\alpha=0.025$ is normally used.
 In this case the p-value is $p=0.0026$, so it is no where near $\alpha$
 (note the number of decimal places).
 
-We can plot the distribution of this data and make a judgement call about
-whether to contiue.
+We can plot the distribution of this data and make a judgment call about
+whether to continue.
 
 
 ```{r}
 StatNcdf <- ggproto(
   "stat_ncdf",
   Stat,
-  compute_group = function(data, scales) {
+  compute_group = function(data, scales, n) {
     x <- data$x
-    y = pnorm(x, mean(x), sd(x))
+    x <- seq(from = min(x), to = max(x), length.out = n)
+    y = pnorm(x, mean(x), sd(x), lower.tail = TRUE)
     data.frame(x = x, y = y)
   },
   required_aes = c("x")
@@ -202,11 +205,11 @@ StatNcdf <- ggproto(
 
 stat_ncdf <- function(mapping = NULL, data = NULL, geom = "smooth",
                       position = "identity", show.legend = NA,
-                       inherit.aes = TRUE, ...) {
+                      inherit.aes = TRUE, n = 100, ...) {
     layer(
       stat = StatNcdf, data = data, geom = geom, position = position,
       mapping = mapping, show.legend = show.legend,
-      inherit.aes = inherit.aes, params = list(...)
+      inherit.aes = inherit.aes, params = list(n = n, ...)
     )
 }
 
@@ -219,6 +222,8 @@ norm_data %>%
   ggtitle("Distribution of Data For Each Batch")
 ```
 
+We can also run the other diagnostic test by themselves. These are described
+in more detail in the following sections.
 
 # Calculating Basis Values by Pooling Across Environments
 In this section, we'll use the fill-compression data from the `carbon.fabric.2`
@@ -239,7 +244,9 @@ package. This is explained in detail
 [here](https://tidyr.tidyverse.org/articles/nest.html). Basically,
 `nest` allows a column of `list`s or a column of `data.frame`s to be
 added to a `data.frame`. Once nested, we can use the `glance` method
-to unpack the values returned by `maximum_normed_residual`.
+to unpack the values returned by `maximum_normed_residual` into a
+one-row `data.frame`, and then use `unnest` to flatten this into a
+single `data.frame`.
 
 
 ```{r}
@@ -247,7 +254,8 @@ norm_data %>%
   filter(test == "FC") %>%
   group_by(condition, batch) %>%
   nest() %>%
-  mutate(mnr = map(data, ~maximum_normed_residual(.x, strength.norm)),
+  mutate(mnr = map(data,
+                   ~maximum_normed_residual(data = .x, x = strength.norm)),
          tidied = map(mnr, glance)) %>%
   select(-c(mnr, data)) %>%  # remove unneeded columns
   unnest(tidied)
@@ -271,15 +279,17 @@ None of the groups have outliers, so we can continue.
 # Batch-to-Batch Distribution
 Next, we will use the Anderson-Darling k-Sample test to check that each batch
 comes from the same distribution within each condition. We can use the
-`ad_ksample` function from `cmstatr` to do so. Once again, we'll use `nest`/`unnest`
-and `glance` to do so.
+`ad_ksample` function from `cmstatr` to do so. Once again, we'll use
+`nest`/`unnest` and `glance` to do so.
 
 ```{r}
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
   nest() %>%
-  mutate(adk = map(data, ~ad_ksample(.x, strength.norm, batch)),
+  mutate(adk = map(data, ~ad_ksample(data = .x,
+                                     x = strength.norm,
+                                     groups = batch)),
          tidied = map(adk, glance)) %>%
   select(-c(data, adk)) %>%  # remove unneeded columns
   unnest(tidied)
@@ -310,7 +320,8 @@ norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
   nest() %>%
-  mutate(mnr = map(data, ~maximum_normed_residual(.x, strength.norm)),
+  mutate(mnr = map(data, ~maximum_normed_residual(data = .x,
+                                                  x = strength.norm)),
          tidied = map(mnr, glance)) %>%
   select(-c(mnr, data)) %>%  # remove unneeded columns
   unnest(tidied)
@@ -336,7 +347,6 @@ Often it is desirable to pool data across several environments. There
 are two methods for doing so: "pooled standard deviation" and
 "pooled CV."
 
-
 First, we will check for
 equality of variance among the conditions. We will do so using Levene's test.
 The `cmstatr` package provides the function `levene_test` to do so.
@@ -357,7 +367,7 @@ if (!(norm_data %>%
 
 The result from Levene's test indicates that the variance for each condition
 is not equal. This indicates that the data cannot be pooled using the
-"pooled standard deviation" is inappropriate."
+"pooled standard deviation" method.
 
 We can check if the data can be pooled using the "pooled CV" method.
 We'll start by normalizing the data from each group to the group's mean.
@@ -411,23 +421,38 @@ using the "pooled CV" method.
 ```{r}
 norm_data %>%
   filter(test == "FC") %>%
-  basis_pooled_sd(strength.norm, condition)
+  basis_pooled_cv(strength.norm, condition, batch)
 ```
 
-
-`outliers_within_batch` not run because parameter `batch` not specified
-`between_group_variability` not run because parameter `batch` not specified
-`pooled_variance_equal` not run because parameter `condition` not specified - TODO: WRONG!!!!
-
-
-# Equivalency
-Eventually, once you've finished calculating all your basis values, you'll probably want to set specification requirements or evaluate site/process equivalency. `cmstatr` has functionality to do both.
-
-Let's say that you want to develop specification limits for warp tension that you're going to put in your material specification. You can do this as follows:
+The conditions listed in the output above are in alphabetical order. This
+probably isn't what you want. Instead, you probably want the conditions
+listed in a certain order. This can be done by ordering the data first as
+demonstrated below. You're probably just do this one in at the start of
+your analysis.
 
 ```{r}
-carbon.fabric %>%
-  filter(test == "WT" & condition == "RTD") %>%
+norm_data %>%
+  mutate(condition = ordered(condition,
+                             c("CTD", "RTD", "ETD", "ETW", "ETW2"))) %>%
+  filter(test == "FC") %>%
+  basis_pooled_cv(strength.norm, condition, batch)
+```
+
+# Equivalency
+Eventually, once you've finished calculating all your basis values,
+you'll probably want to set specification requirements or evaluate
+site/process equivalency. `cmstatr` has functionality to do both.
+
+Let's say that you want to develop specification limits for fill compression
+that you're going to put in your material specification. You can do this
+as follows:
+
+```{r}
+carbon.fabric.2 %>%
+  filter(test == "FC" & condition == "RTD") %>%
   equiv_mean_extremum(strength, n_sample = 5, alpha = 0.01)
 ```
 
+If you're determining equivalency limits for modulus, a different
+approach is generally used so that bilateral limits are set. `cmstatr`
+can do this as well, using the function `equiv_change_mean`.
