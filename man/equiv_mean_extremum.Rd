@@ -4,9 +4,16 @@
 \alias{equiv_mean_extremum}
 \title{Equivalency based on mean and extremum}
 \usage{
-equiv_mean_extremum(df_qual = NULL, data_qual = NULL,
-  mean_qual = NULL, sd_qual = NULL, data_sample = NULL,
-  n_sample = NULL, alpha, modcv = FALSE)
+equiv_mean_extremum(
+  df_qual = NULL,
+  data_qual = NULL,
+  mean_qual = NULL,
+  sd_qual = NULL,
+  data_sample = NULL,
+  n_sample = NULL,
+  alpha,
+  modcv = FALSE
+)
 }
 \arguments{
 \item{df_qual}{(optional) a data.frame containing the qualification data.
