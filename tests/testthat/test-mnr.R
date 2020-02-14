@@ -281,6 +281,12 @@ test_that(
 
 })
 
+test_that("Vectors with no variance produce reasonable results", {
+  x <- rep(100, 10)
+  res <- maximum_normed_residual(x = x)
+  expect_equal(res$n_outliers, 0)
+})
+
 test_that("Both vectors and data.frames can be passed to the MNR function", {
   df <- tribble(
     ~batch, ~strength,

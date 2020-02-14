@@ -38,13 +38,18 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' Calculate the basis value for a given data set. There are various functions
 #' to calculate the basis values for different distributions. For B-Basis,
 #' set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.90} and
-#' \eqn{conf=0.95}
+#' \eqn{conf=0.95}. These functions also preform some automated diagnostic
+#' tests of the data prior to calculating the basis values. These tests can be
+#' overridden if needed.
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame for which to find the basis value
+#' @param batch the variable in the data.frame that contains the batches.
 #' @param groups the variable in the data.frame representing the groups
 #' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
 #' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
+#' @param override a list of names of diagnostic tests to override,
+#'                 if desired.
 #' @param modcv a logical value indicating whether the modified CV approach
 #'              should be used. Only applicable to pooling methods.
 #' @param method the method for Hanson-Koopmans nonparametric basis values.
@@ -60,11 +65,33 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 #' the standard deviation from the mean using. \eqn{k} is given by
-#' the function \code{\link{k_factor_normal}}.
+#' the function \code{\link{k_factor_normal}}. This function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for normality (using
+#' \code{\link{anderson_darling_normal}}).
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
 #'
 #' \code{basis_lognormal} calculates the basis value in the same way
 #' that \code{basis_normal} does, except that the natural logarithm of the
 #' data is taken.
+#'
+#' \code{basis_lognormal} function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for normality (using
+#' \code{\link{anderson_darling_lognormal}}).
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
 #'
 #' \code{basis_weibull} calculates the basis value for data distributed
 #' according to a Weibull distribution. The confidence interval for the
@@ -72,6 +99,18 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' described in Lawless (1982) Section 4.1.2b. This has good agreement
 #' with tables published in CMH-17-1G. Results differ between this function
 #' and STAT17 by approximately 0.5%.
+#'
+#' \code{basis_weibull} function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for normality (using
+#' \code{\link{anderson_darling_weibull}}).
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
 #'
 #' \code{basis_hk_ext} calculates the basis value using the Extended
 #' Hanson-Koopmans method, as described in CMH-17-1G and Vangel (1994).
@@ -87,12 +126,26 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' the difference between the tolerance limit (assuming that the order
 #' statistics are equal to the expected values from a standard normal
 #' distribution) and the population quantile for a standard normal
-#' distribution. This approach is described in Vangel (1994). The results
-#' of this function have been
+#' distribution. This approach is described in Vangel (1994). This second
+#' method (for use when calculating B-Basis values) is called
+#' "optimum-order" in this package.
+#' The results of this function have been
 #' verified against example results from the program STAT-17: agreement is
 #' typically well within 0.2%, however, for a few sample sizes, the
 #' agreement can be as poor as 1% with the result of this function being
 #' more conservative than STAT-17.
+#'
+#' \code{basis_hk_ext} function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and performs a pair of tests that the sample size and method selected
+#' follow the guidance described above.
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
 #'
 #' \code{basis_nonpara_large_sample} calculates the basis value
 #' using the large sample method described in CMH-17-1G. This method uses
@@ -101,11 +154,26 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' of this function have been verified against results of the STAT-17
 #' program.
 #'
+#' \code{basis_nonpara_large_sample} function also performs
+#' a diagnostic test for outliers (using
+#' \code{\link{maximum_normed_residual}})
+#' and performs a test that the sample size is sufficiently large.
+#' If the argument \code{batch} is given, this function also performs
+#' a diagnostic test for outliers within
+#' each batch (using \code{\link{maximum_normed_residual}})
+#' and a diagnostic test for between batch variability (using
+#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' for these diagnostic tests.
+#'
 #' \code{basis_anova} calculates basis values using the ANOVA method.
-#' \code{x} specifies the data (normally strength) and \code{group}
+#' \code{x} specifies the data (normally strength) and \code{groups}
 #' indicates the group corresponding to each observation. This method is
-#' described in CMH-17-1G. This function has been verified against the
-#' results of the STAT-17 program.
+#' described in CMH-17-1G. This function automatically performs a diagnostic
+#' test for outliers within each group
+#' (using \code{\link{maximum_normed_residual}}) and a test for between
+#' group variability (using \code{\link{ad_ksample}}) as well as checking
+#' that the data contains at least 5 groups.
+#' This function has been verified against the results of the STAT-17 program.
 #'
 #' \code{basis_pooled_sd} calculates basis values by pooling the data from
 #' several groups together. \code{x} specifies the data (normally strength)
@@ -117,6 +185,21 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' several groups together. \code{x} specifies the data (normally strength)
 #' and \code{group} indicates the group corresponding to each observation.
 #' This method is described in CMH-17-1G.
+#'
+#' \code{basis_pooled_sd} and \code{basis_pooled_cv} both automatically
+#' perform a number of diagnostic tests. Using
+#' \code{\link{maximum_normed_residual}}, they check that there are no
+#' outliers within each group and batch (provided that \code{batch}) is
+#' specified. They check the between batch variability using
+#' \code{\link{ad_ksample}}. They check that there are no outliers within
+#' each group (pooling all batches) using
+#' \code{\link{maximum_normed_residual}}. They check for the normality
+#' of the pooled data using \code{\link{anderson_darling_normal}}.
+#' \code{basis_pooled_sd} checks for equality of variance of all
+#' data using \code{\link{levene_test}} and \code{basis_pooled_cv}
+#' checks for equality of variances of all data after transforming it
+#' using \code{\link{normalize_group_mean}}
+#' using \code{\link{levene_test}}.
 #'
 #' @return an object of class \code{basis}
 #' This object has the following fields:
@@ -130,8 +213,14 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' \item{\code{data}}{a copy of the data used in the calculation}
 #' \item{\code{groups}}{a copy of the groups variable.
 #'                      Only used for pooling and ANOVA methods.}
+#' \item{\code{batch}}{a copy of the batch data used for diagnostic tests}
 #' \item{\code{modcv_transformed_data}}{the data after the modified CV
 #'                                      transformation}
+#' \item{\code{override}}{a vector of the names of diagnostic tests that
+#'                        were overridden. \code{NULL} if none were
+#'                        overridden}
+#' \item{\code{diagnostic_failures}}{a vector containing any diagnostic tests
+#'                                   that produced failures}
 #' \item{\code{n}}{the number of observations}
 #' \item{\code{r}}{the number of groups, if a pooling method was used.
 #'                 Otherwise it is NULL.}
@@ -142,6 +231,12 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @seealso \code{\link{hk_ext_z_j_opt}}
 #' @seealso \code{\link{k_factor_normal}}
 #' @seealso \code{\link{transform_mod_cv}}
+#' @seealso \code{\link{maximum_normed_residual}}
+#' @seealso \code{\link{anderson_darling_normal}}
+#' @seealso \code{\link{anderson_darling_lognormal}}
+#' @seealso \code{\link{anderson_darling_weibull}}
+#' @seealso \code{\link{ad_ksample}}
+#' @seealso \code{\link{normalize_group_mean}}
 #'
 #' @references
 #' J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -158,20 +253,36 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @name basis
 NULL
 
-new_basis <- function() {
+new_basis <- function(
+  call,
+  distribution,
+  modcv,
+  p,
+  conf,
+  override,
+  data,
+  groups,
+  batch
+) {
   res <- list()
   class(res) <- "basis"
 
-  res$call <- NA
-  res$distribution <- NA
-  res$modcv <- FALSE
-  res$p <- NA
-  res$conf <- NA
-  res$groups <- NA
-  res$data <- NULL
-  res$modcv_transformed_data <- NULL
-  res$n <- NA
+  res$call <- call
+  res$distribution <- distribution
+  res$modcv <- modcv
+  res$p <- p
+  res$conf <- conf
+  res$data <- data
+  res$groups <- groups
+  res$batch <- batch
+  res$modcv_transformed_data <- NA
+  res$override <- override
+  res$diagnostic_failures <- character(0)
+  res$n <- length(res$data)
   res$r <- NA
+  if (!is.null(groups) & !all(is.na(groups))) {
+    res$r <- length(levels(as.factor(groups)))
+  }
   res$basis <- NA
 
   return(res)
@@ -243,6 +354,15 @@ glance.basis <- function(x, ...) {  # nolint
   )
 }
 
+print_diagnostic_helper <- function(heading, vec) {
+  if (!is.null(vec) & length(vec) > 0) {
+    cat(heading, "\n")
+    cat("    `")
+    cat(paste(vec, collapse = "`,\n    `"))
+    cat("`\n")
+  }
+}
+
 #' @export
 print.basis <- function(x, ...) {
   cat("\nCall:\n",
@@ -251,7 +371,7 @@ print.basis <- function(x, ...) {
   cat("Distribution: ", x$distribution, "\t")
 
   cat("( n = ", x$n)
-  if (!is.null(x$r) & !is.na(x$r)) {
+  if (!is.null(x$r) & !all(is.na(x$r))) {
     cat(", r = ", x$r)
   }
   cat(" )\n")
@@ -259,6 +379,11 @@ print.basis <- function(x, ...) {
   if (x$modcv == TRUE) {
     cat("Modified CV Approach Used", "\n")
   }
+
+  print_diagnostic_helper("The following diagnostic tests failed:",
+                          x$diagnostic_failures)
+  print_diagnostic_helper("The following diagnostic tests were overridden:",
+                          x$override)
 
   if (x$conf == 0.95 & x$p == 0.9) {
     cat("B-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
@@ -285,63 +410,140 @@ print.basis <- function(x, ...) {
   cat("\n")
 }
 
+single_point_rules <- list(
+  outliers_within_batch = function(x, batch, ...) {
+    group_mnr <- sapply(unique(batch), function(b) {
+      x_group <- x[batch == b]
+      mnr <- maximum_normed_residual(x = x_group)
+      mnr$n_outliers == 0
+    })
+    ifelse(all(group_mnr), "",
+           paste0("Maximum normed residual test detected ",
+                  "outliers within one or more batch"))
+  },
+  between_batch_variability = function(x, batch, ...) {
+    adk <- ad_ksample(x = x, groups = batch, alpha = 0.025)
+    ifelse(!adk$reject_same_dist, "",
+          paste0("Anderson-Darling k-Sample test indicates that ",
+                 "batches are drawn from different distributions"))
+  },
+  outliers = function(x, ...) {
+    mnr <- maximum_normed_residual(x = x)
+    ifelse(mnr$n_outliers == 0, "",
+           paste0("Maximum normed residual test detected outliers ",
+                  "within data"))
+  }
+)
+
+basis_normal_rules <- single_point_rules
+basis_normal_rules[["anderson_darling_normal"]] <-
+  function(x, ...) {
+    ad <- anderson_darling_normal(x = x)
+    ifelse(!ad$reject_distribution, "",
+           paste0("Anderson-Darling test rejects hypothesis that data ",
+                  "is drawn from a normal distribution"))
+  }
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
 #' @export
-basis_normal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Normal"
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
-
+basis_normal <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
+                         override = c()) {
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
-  res$n <- length(res$data)
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Normal",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
+  check_result <- perform_checks(basis_normal_rules, x = res$data,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
+
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
 
   cv <- sd(res$data) / mean(res$data)
-  res$cv <- cv
 
   res$basis <- mean(res$data) * (1 - k * cv)
 
   return(res)
 }
 
+basis_lognormal_rules <- single_point_rules
+basis_lognormal_rules[["anderson_darling_lognormal"]] <-
+  function(x, ...) {
+    ad <- anderson_darling_lognormal(x = x)
+    ifelse(!ad$reject_distribution, "",
+           paste0("Anderson-Darling test rejects hypothesis that data ",
+                  "is drawn from a log-normal distribution"))
+  }
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats sd
 #' @export
-basis_lognormal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Lognormal"
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
-
+basis_lognormal <- function(data = NULL, x, batch = NULL, p = 0.90,
+                            conf = 0.95, override = c()) {
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
-  res$n <- length(res$data)
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Lognormal",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
+  check_result <- perform_checks(basis_lognormal_rules, x = res$data,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
+
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
   res$basis <- exp(mean(log(res$data)) - k * sd(log(res$data)))
 
   return(res)
 }
+
+basis_weibull_rules <- single_point_rules
+basis_weibull_rules[["anderson_darling_weibull"]] <-
+  function(x, ...) {
+    ad <- anderson_darling_weibull(x = x)
+    ifelse(!ad$reject_distribution, "",
+           paste0("Anderson-Darling test rejects hypothesis that data ",
+                  "is drawn from a Weibull distribution"))
+  }
 
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
@@ -349,23 +551,35 @@ basis_lognormal <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 #' @importFrom MASS fitdistr
 #'
 #' @export
-basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Weibull"
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
-
+basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
+                          conf = 0.95, override = c()) {
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
-  res$n <- length(res$data)
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Weibull",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
+  check_result <- perform_checks(basis_weibull_rules, x = res$data,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   dist <- fitdistr(res$data, "weibull")
 
@@ -409,41 +623,112 @@ basis_weibull <- function(data = NULL, x, p = 0.90, conf = 0.95) {
 
   pr_fcn <- function(t) {
     int_res <- integrate(Vectorize(function(z) pr_zp_integrand(z, t)), 0, Inf)
-    return(int_res$value - 0.95)
+    return(int_res$value - conf)
   }
 
-  res_root <- uniroot(pr_fcn, c(-10, 10), extendInt = "yes")
+  res_root <- uniroot(pr_fcn, c(0, 10), extendInt = "yes")
 
   res$basis <- exp(u_hat - res_root$root * b_hat)
 
   return(res)
 }
 
+pooled_rules <- list(
+  outliers_within_batch = function(x, groups, batch, ...) {
+    group_batch_mnr <- sapply(unique(groups), function(g) {
+      batch_mnr <- sapply(unique(batch), function(b) {
+        x_group <- x[batch == b & groups == g]
+        if (length(x_group) == 0) {
+          return(TRUE)
+        }
+        mnr <- maximum_normed_residual(x = x_group)
+        return(mnr$n_outliers == 0)
+      })
+      all(batch_mnr)
+    })
+    ifelse(all(group_batch_mnr), "",
+           paste0("Maximum normed residual test detected ",
+                  "outliers within one or more batch and group"))
+  },
+  between_group_variability = function(x, groups, batch, ...) {
+    group_adk <- sapply(unique(groups), function(g) {
+      x_group <- x[groups == g]
+      batch_group <- batch[groups == g]
+      adk <- ad_ksample(x = x_group, groups = batch_group)
+      !adk$reject_same_dist
+    })
+    ifelse(all(group_adk), "",
+           paste0("Anderson-Darling k-Sample test indicates that ",
+                  "batches are drawn from different distributions"))
+  },
+  outliers_within_group = function(x, groups, ...) {
+    group_mnr <- sapply(unique(groups), function(g) {
+      x_group <- x[groups == g]
+      mnr <- maximum_normed_residual(x = x_group)
+      return(mnr$n_outliers == 0)
+    })
+    ifelse(all(group_mnr), "",
+           paste0("Maximum normed residual test detected ",
+                  "outliers within one or more group"))
+  },
+  pooled_data_normal = function(x, groups, ...) {
+    norm_x <- normalize_group_mean(x = x, group = groups)
+    ad <- anderson_darling_normal(x = norm_x)
+    ifelse(!ad$reject_distribution, "",
+           paste0("Anderson-Darling test rejects hypothesis that pooled ",
+                  "data is drawn from a normal distribution"))
+  }
+)
+
+pooled_rules_cv <- pooled_rules
+pooled_rules_cv[["normalized_variance_equal"]] <- function(x, groups, ...) {
+  norm_x <- normalize_group_mean(x = x, group = groups)
+  lev <- levene_test(x = norm_x, groups = groups)
+  return(ifelse(!lev$reject_equal_variance, "",
+                paste0("Levene's test rejected the hypothesis that the ",
+                       "variance of all groups are equal")))
+}
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @export
-basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
-                            modcv = FALSE) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Normal - Pooled CV"
-  res$p <- p
-  res$conf <- conf
-
+basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
+                            p = 0.90, conf = 0.95, modcv = FALSE,
+                            override = c()) {
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
   verify_tidy_input(
     df = data,
     x = groups,
     c = match.call(),
     arg_name = "groups")
-  res$groups <- eval_tidy(enquo(groups), data)
+
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Normal - Pooled CV",
+    modcv = modcv,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = eval_tidy(enquo(groups), data),
+    batch = eval_tidy(enquo(batch), data)
+  )
+
+  check_result <- perform_checks(pooled_rules_cv, x = res$data,
+                                 groups = res$groups,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   if (modcv == TRUE) {
     res$modcv <- TRUE
@@ -455,15 +740,15 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
   }
 
   norm_data <- normalize_group_mean(data_to_use, res$groups)
-  res$n <- length(data_to_use)
-  res$r <- length(levels(as.factor(res$groups)))
 
   pooled_sd <- sqrt(sum((norm_data - 1) ^ 2) / (res$n - res$r))
 
   basis <- sapply(levels(as.factor(res$groups)), function(g) {
     nj <- length(data_to_use[res$groups == g])
     z <- qnorm(p)
-    kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    suppressWarnings(
+      kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    )
     xj_bar <- mean(data_to_use[res$groups == g])
     xj_bar * (1 - kj * pooled_sd)
   })
@@ -473,31 +758,55 @@ basis_pooled_cv <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
   return(res)
 }
 
+pooled_rules_sd <- pooled_rules
+pooled_rules_sd[["pooled_variance_equal"]] <- function(x, groups, ...) {
+
+  lev <- levene_test(x = x, groups = groups)
+  return(ifelse(!lev$reject_equal_variance, "",
+                paste0("Levene's test rejected the hypothesis that the ",
+                       "variance of all conditions are equal")))
+}
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @export
-basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
-                            modcv = FALSE) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Normal - Pooled Standard Deviation"
-  res$p <- p
-  res$conf <- conf
-
+basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
+                            p = 0.90, conf = 0.95, modcv = FALSE,
+                            override = c()) {
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
   verify_tidy_input(
     df = data,
     x = groups,
     c = match.call(),
     arg_name = "groups")
-  res$groups <- eval_tidy(enquo(groups), data)
+
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Normal - Pooled Standard Deviation",
+    modcv = modcv,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = eval_tidy(enquo(groups), data),
+    batch = eval_tidy(enquo(batch), data)
+  )
+
+  check_result <- perform_checks(pooled_rules_sd, x = res$data,
+                                 groups = res$groups,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   if (modcv == TRUE) {
     res$modcv <- TRUE
@@ -507,9 +816,6 @@ basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     res$modcv <- FALSE
     data_to_use <- res$data
   }
-
-  res$n <- length(data_to_use)
-  res$r <- length(levels(as.factor(res$groups)))
 
   pooled_sd <- sqrt(
     sum(
@@ -522,7 +828,9 @@ basis_pooled_sd <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
   basis <- sapply(levels(as.factor(res$groups)), function(g) {
     nj <- length(data_to_use[res$groups == g])
     z <- qnorm(p)
-    kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    suppressWarnings(
+      kj <- qt(conf, df = res$n - res$r, ncp = z * sqrt(nj)) / sqrt(nj)
+    )
     xj_bar <- mean(data_to_use[res$groups == g])
     xj_bar - kj * pooled_sd
   })
@@ -653,33 +961,83 @@ hk_ext_z_j_opt <- function(n, p, conf) {
   )
 }
 
+basis_hk_ext_rules <- single_point_rules
+basis_hk_ext_rules[["correct_method_used"]] <-
+  function(method, p, conf, ...) {
+    if (p == 0.90 & conf == 0.95) {
+      # B-Basis
+      return(ifelse(method == "optimum-order", "",
+                    paste0("For B-Basis, the optimum order method ",
+                           "should be used")))
+    } else if (p == 0.99 & conf == 0.95) {
+      # A-Basis
+      return(ifelse(method == "woodward-frawley", "",
+                    paste0("For A-Basis, the Woodward-Frawley method ",
+                           "should be used")))
+    } else {
+      return("")
+    }
+  }
+basis_hk_ext_rules[["sample_size"]] <-
+  function(n, p, conf, ...) {
+    if (p == 0.90 & conf == 0.95) {
+      # B-Basis
+      return(ifelse(n <= 28, "",
+                    paste0("For B-Basis, Hanson-Koopmans should only be ",
+                           "used for samples of 28 or fewer observations")))
+    } else if (p == 0.99 & conf == 0.95) {
+      # A-Basis
+      return(ifelse(n <= 299, "",
+                    paste0("For A-Basis, Hanson-Koopmans should only be ",
+                           "used for samples of 299 or fewer observations")))
+    } else {
+      return("")
+    }
+  }
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #'
 #' @export
-basis_hk_ext <- function(data = NULL, x, p = 0.90, conf = 0.95,
-                       method = c("optimum-order", "woodward-frawley")) {
+basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
+                       method = c("optimum-order", "woodward-frawley"),
+                       override = c()) {
   method <- match.arg(method)
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- paste0(
-    "Nonparametric (Extended Hanson-Koopmans, ",
-    ifelse(method == "optimum-order", "optimum two-order-statistic method",
-           "Woodward-Frawley method"),
-    ")")
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
 
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
-  res$n <- length(res$data)
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+
+  res <- new_basis(
+    call = match.call(),
+    distribution = paste0(
+      "Nonparametric (Extended Hanson-Koopmans, ",
+      ifelse(method == "optimum-order", "optimum two-order-statistic method",
+             "Woodward-Frawley method"),
+      ")"),
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
+  check_result <- perform_checks(basis_hk_ext_rules, x = res$data,
+                                 batch = res$batch, n = res$n,
+                                 p = res$p, conf = res$conf,
+                                 method = method,
+                                 override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   if (method == "optimum-order") {
     zj <- hk_ext_z_j_opt(res$n, p, conf)
@@ -802,28 +1160,60 @@ nonpara_binomial_rank <- function(n, p, conf) {
   r1
 }
 
+nonpara_large_sample_rules <- single_point_rules
+nonpara_large_sample_rules[["sample_size"]] <-
+  function(n, p, conf, ...) {
+    if (p == 0.90 & conf == 0.95) {
+      # B-Basis
+      return(ifelse(n >= 28, "",
+                    paste0("This method should only be used for ",
+                           "B-Basis for sample sizes larger than 28")))
+    } else if (p == 0.99 & conf == 0.95) {
+      # A-Basis
+      return(ifelse(n >= 299, "",
+                    paste0("This method should only be used for ",
+                           "A-Basis for sample sizes larger than 299")))
+    } else {
+      return(TRUE)
+    }
+  }
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #'
 #' @export
-basis_nonpara_large_sample <- function(data = NULL, x, p = 0.90,
-                                       conf = 0.95) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "Nonparametric (large sample)"
-  res$p <- p
-  res$conf <- conf
-  res$groups <- NULL
-
+basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
+                                       p = 0.90, conf = 0.95,
+                                       override = c()) {
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
-  res$n <- length(res$data)
+  verify_tidy_input(
+    df = data,
+    x = batch,
+    c = match.call(),
+    arg_name = "batch")
+
+  res <- new_basis(
+    call = match.call(),
+    distribution = "Nonparametric (large sample)",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = NA,
+    batch = eval_tidy(enquo(batch), data)
+  )
+
+  check_result <- perform_checks(nonpara_large_sample_rules,
+                                 x = res$data, batch = res$batch, n = res$n,
+                                 p = res$p, conf = res$conf,
+                                 override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   x_ordered <- sort(res$data)
   r <- nonpara_binomial_rank(res$n, p, conf)
@@ -832,37 +1222,66 @@ basis_nonpara_large_sample <- function(data = NULL, x, p = 0.90,
   return(res)
 }
 
+anova_rules <- list(
+  outliers_within_group = function(x, groups, ...) {
+    group_mnr <- sapply(unique(groups), function(b) {
+      x_group <- x[groups == b]
+      mnr <- maximum_normed_residual(x = x_group)
+      mnr$n_outliers == 0
+    })
+    ifelse(all(group_mnr), "",
+           paste0("Maximum normed residual test detected ",
+                  "outliers within one or more batch"))
+  },
+  equality_of_variance = function(x, groups, ...) {
+    lt <- levene_test(x = x, groups = groups)
+    ifelse(!lt$reject_equal_variance, "",
+           paste0("Levene's test rejected the hypothesis that the ",
+                  "variance of all groups is equal"))
+  },
+  number_of_groups = function(r, ...) {
+    ifelse(r >= 5, "",
+           "ANOVA should only be used for 5 or more groups")
+  }
+)
+
 #' @rdname basis
 #' @importFrom rlang enquo eval_tidy
 #' @export
-basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
-  res <- new_basis()
-
-  res$call <- match.call()
-  res$distribution <- "ANOVA"
-  res$p <- p
-  res$conf <- conf
-
+basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
+                        override = c()) {
   verify_tidy_input(
     df = data,
     x = x,
     c = match.call(),
     arg_name = "x")
-  res$data <- eval_tidy(enquo(x), data)
 
   verify_tidy_input(
     df = data,
     x = groups,
     c = match.call(),
     arg_name = "groups")
-  res$groups <- eval_tidy(enquo(groups), data)
 
-  if (length(unique(res$groups)) < 2) {
+  res <- new_basis(
+    call = match.call(),
+    distribution = "ANOVA",
+    modcv = FALSE,
+    p = p,
+    conf = conf,
+    override = override,
+    data = eval_tidy(enquo(x), data),
+    groups = eval_tidy(enquo(groups), data),
+    batch = NA
+  )
+
+  if (res$r < 2) {
     stop("ANOVA cannot be computed with fewer than 2 groups")
   }
 
-  res$n <- length(res$data)
-  res$r <- length(levels(as.factor(res$groups)))
+  check_result <- perform_checks(rules = anova_rules,
+                                 x = res$data, groups = res$groups,
+                                 r = res$r, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   grand_mean <- mean(res$data)
 
@@ -889,7 +1308,7 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95) {
   n_star <- sum(sapply(
     levels(as.factor(res$groups)),
     function(g) {
-      group_data <- res$data[res$groups == g]
+      group_data <- res$data[res$group == g]
       length(group_data) ^ 2 / res$n
     }
   ))

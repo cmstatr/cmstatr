@@ -46,7 +46,7 @@
 #' @importFrom stats var.test median pf
 #'
 #' @export
-levene_test <- function(data, x, groups, alpha = 0.05, modcv = FALSE) {
+levene_test <- function(data = NULL, x, groups, alpha = 0.05, modcv = FALSE) {
   res <- list()
   class(res) <- "levene"
 

@@ -4,12 +4,12 @@
 \alias{normalize_group_mean}
 \title{Normalize values to group means}
 \usage{
-normalize_group_mean(x, groups)
+normalize_group_mean(x, group)
 }
 \arguments{
 \item{x}{the variable containing the data to normalized}
 
-\item{groups}{the variable containing the groups}
+\item{group}{the variable containing the groups}
 }
 \value{
 Returns a vector of normalized values

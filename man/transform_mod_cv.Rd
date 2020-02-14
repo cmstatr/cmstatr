@@ -5,20 +5,20 @@
 \alias{transform_mod_cv_2}
 \title{Transforms data according to the modified CV rule}
 \usage{
-transform_mod_cv_2(x, conditions, batches)
+transform_mod_cv_2(x, condition, batch)
 
-transform_mod_cv(x, groups = NULL)
+transform_mod_cv(x, group = NULL)
 }
 \arguments{
 \item{x}{a vector of data to transform}
 
-\item{conditions}{a vector indicating the condition to which each
+\item{condition}{a vector indicating the condition to which each
 observation belongs}
 
-\item{batches}{a vector indicating the batch to which each observation
+\item{batch}{a vector indicating the batch to which each observation
 belongs}
 
-\item{groups}{a vector indicating the group to which each observation in
+\item{group}{a vector indicating the group to which each observation in
 \code{x} belongs. If this is NULL, the data will be treated as
 unstructured (without grouping)}
 }

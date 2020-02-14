@@ -12,33 +12,89 @@
 \alias{basis_anova}
 \title{Calculate basis values}
 \usage{
-basis_normal(data = NULL, x, p = 0.9, conf = 0.95)
+basis_normal(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  override = c()
+)
 
-basis_lognormal(data = NULL, x, p = 0.9, conf = 0.95)
+basis_lognormal(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  override = c()
+)
 
-basis_weibull(data = NULL, x, p = 0.9, conf = 0.95)
+basis_weibull(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  override = c()
+)
 
-basis_pooled_cv(data = NULL, x, groups, p = 0.9, conf = 0.95,
-  modcv = FALSE)
+basis_pooled_cv(
+  data = NULL,
+  x,
+  groups,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  modcv = FALSE,
+  override = c()
+)
 
-basis_pooled_sd(data = NULL, x, groups, p = 0.9, conf = 0.95,
-  modcv = FALSE)
+basis_pooled_sd(
+  data = NULL,
+  x,
+  groups,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  modcv = FALSE,
+  override = c()
+)
 
-basis_hk_ext(data = NULL, x, p = 0.9, conf = 0.95,
-  method = c("optimum-order", "woodward-frawley"))
+basis_hk_ext(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  method = c("optimum-order", "woodward-frawley"),
+  override = c()
+)
 
-basis_nonpara_large_sample(data = NULL, x, p = 0.9, conf = 0.95)
+basis_nonpara_large_sample(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  override = c()
+)
 
-basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95)
+basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95, override = c())
 }
 \arguments{
 \item{data}{a data.frame}
 
 \item{x}{the variable in the data.frame for which to find the basis value}
 
+\item{batch}{the variable in the data.frame that contains the batches.}
+
 \item{p}{should be 0.90 for B-Basis and 0.99 for A-Basis}
 
 \item{conf}{confidence interval. Should be 0.95 for both A- and B-Basis}
+
+\item{override}{a list of names of diagnostic tests to override,
+if desired.}
 
 \item{groups}{the variable in the data.frame representing the groups}
 
@@ -62,8 +118,14 @@ This object has the following fields:
 \item{\code{data}}{a copy of the data used in the calculation}
 \item{\code{groups}}{a copy of the groups variable.
                      Only used for pooling and ANOVA methods.}
+\item{\code{batch}}{a copy of the batch data used for diagnostic tests}
 \item{\code{modcv_transformed_data}}{the data after the modified CV
                                      transformation}
+\item{\code{override}}{a vector of the names of diagnostic tests that
+                       were overridden. \code{NULL} if none were
+                       overridden}
+\item{\code{diagnostic_failures}}{a vector containing any diagnostic tests
+                                  that produced failures}
 \item{\code{n}}{the number of observations}
 \item{\code{r}}{the number of groups, if a pooling method was used.
                 Otherwise it is NULL.}
@@ -75,7 +137,9 @@ This object has the following fields:
 Calculate the basis value for a given data set. There are various functions
 to calculate the basis values for different distributions. For B-Basis,
 set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.90} and
-\eqn{conf=0.95}
+\eqn{conf=0.95}. These functions also preform some automated diagnostic
+tests of the data prior to calculating the basis values. These tests can be
+overridden if needed.
 }
 \details{
 \code{data} is an optional argument. If \code{data} is given, it should
@@ -86,11 +150,33 @@ value of \code{x} is expected to be a variable within \code{data}. If
 
 \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 the standard deviation from the mean using. \eqn{k} is given by
-the function \code{\link{k_factor_normal}}.
+the function \code{\link{k_factor_normal}}. This function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and a diagnostic test for normality (using
+\code{\link{anderson_darling_normal}}).
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
 
 \code{basis_lognormal} calculates the basis value in the same way
 that \code{basis_normal} does, except that the natural logarithm of the
 data is taken.
+
+\code{basis_lognormal} function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and a diagnostic test for normality (using
+\code{\link{anderson_darling_lognormal}}).
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
 
 \code{basis_weibull} calculates the basis value for data distributed
 according to a Weibull distribution. The confidence interval for the
@@ -98,6 +184,18 @@ quantile requested is calculated using the conditional method, as
 described in Lawless (1982) Section 4.1.2b. This has good agreement
 with tables published in CMH-17-1G. Results differ between this function
 and STAT17 by approximately 0.5%.
+
+\code{basis_weibull} function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and a diagnostic test for normality (using
+\code{\link{anderson_darling_weibull}}).
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
 
 \code{basis_hk_ext} calculates the basis value using the Extended
 Hanson-Koopmans method, as described in CMH-17-1G and Vangel (1994).
@@ -113,12 +211,26 @@ In this approach, the \code{j-th} order statistic is selected to minimize
 the difference between the tolerance limit (assuming that the order
 statistics are equal to the expected values from a standard normal
 distribution) and the population quantile for a standard normal
-distribution. This approach is described in Vangel (1994). The results
-of this function have been
+distribution. This approach is described in Vangel (1994). This second
+method (for use when calculating B-Basis values) is called
+"optimum-order" in this package.
+The results of this function have been
 verified against example results from the program STAT-17: agreement is
 typically well within 0.2%, however, for a few sample sizes, the
 agreement can be as poor as 1% with the result of this function being
 more conservative than STAT-17.
+
+\code{basis_hk_ext} function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and performs a pair of tests that the sample size and method selected
+follow the guidance described above.
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
 
 \code{basis_nonpara_large_sample} calculates the basis value
 using the large sample method described in CMH-17-1G. This method uses
@@ -127,11 +239,26 @@ corresponding with the desired tolerance limit (basis value). Results
 of this function have been verified against results of the STAT-17
 program.
 
+\code{basis_nonpara_large_sample} function also performs
+a diagnostic test for outliers (using
+\code{\link{maximum_normed_residual}})
+and performs a test that the sample size is sufficiently large.
+If the argument \code{batch} is given, this function also performs
+a diagnostic test for outliers within
+each batch (using \code{\link{maximum_normed_residual}})
+and a diagnostic test for between batch variability (using
+\code{\link{ad_ksample}}). The argument \code{batch} is only used
+for these diagnostic tests.
+
 \code{basis_anova} calculates basis values using the ANOVA method.
-\code{x} specifies the data (normally strength) and \code{group}
+\code{x} specifies the data (normally strength) and \code{groups}
 indicates the group corresponding to each observation. This method is
-described in CMH-17-1G. This function has been verified against the
-results of the STAT-17 program.
+described in CMH-17-1G. This function automatically performs a diagnostic
+test for outliers within each group
+(using \code{\link{maximum_normed_residual}}) and a test for between
+group variability (using \code{\link{ad_ksample}}) as well as checking
+that the data contains at least 5 groups.
+This function has been verified against the results of the STAT-17 program.
 
 \code{basis_pooled_sd} calculates basis values by pooling the data from
 several groups together. \code{x} specifies the data (normally strength)
@@ -143,6 +270,21 @@ implemented in ASAP 2008.
 several groups together. \code{x} specifies the data (normally strength)
 and \code{group} indicates the group corresponding to each observation.
 This method is described in CMH-17-1G.
+
+\code{basis_pooled_sd} and \code{basis_pooled_cv} both automatically
+perform a number of diagnostic tests. Using
+\code{\link{maximum_normed_residual}}, they check that there are no
+outliers within each group and batch (provided that \code{batch}) is
+specified. They check the between batch variability using
+\code{\link{ad_ksample}}. They check that there are no outliers within
+each group (pooling all batches) using
+\code{\link{maximum_normed_residual}}. They check for the normality
+of the pooled data using \code{\link{anderson_darling_normal}}.
+\code{basis_pooled_sd} checks for equality of variance of all
+data using \code{\link{levene_test}} and \code{basis_pooled_cv}
+checks for equality of variances of all data after transforming it
+using \code{\link{normalize_group_mean}}
+using \code{\link{levene_test}}.
 }
 \references{
 J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -162,4 +304,16 @@ vol. 23, no. 4. pp. 1137–1154, 1994.
 \code{\link{k_factor_normal}}
 
 \code{\link{transform_mod_cv}}
+
+\code{\link{maximum_normed_residual}}
+
+\code{\link{anderson_darling_normal}}
+
+\code{\link{anderson_darling_lognormal}}
+
+\code{\link{anderson_darling_weibull}}
+
+\code{\link{ad_ksample}}
+
+\code{\link{normalize_group_mean}}
 }
