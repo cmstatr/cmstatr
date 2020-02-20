@@ -12,29 +12,75 @@
 \alias{basis_anova}
 \title{Calculate basis values}
 \usage{
-basis_normal(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
-  override = c())
+basis_normal(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  override = c()
+)
 
-basis_lognormal(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
-  override = c())
+basis_lognormal(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  override = c()
+)
 
-basis_weibull(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
-  override = c())
+basis_weibull(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  override = c()
+)
 
-basis_pooled_cv(data = NULL, x, groups, batch = NULL, p = 0.9,
-  conf = 0.95, modcv = FALSE, override = c())
+basis_pooled_cv(
+  data = NULL,
+  x,
+  groups,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  modcv = FALSE,
+  override = c()
+)
 
-basis_pooled_sd(data = NULL, x, groups, batch = NULL, p = 0.9,
-  conf = 0.95, modcv = FALSE, override = c())
+basis_pooled_sd(
+  data = NULL,
+  x,
+  groups,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  modcv = FALSE,
+  override = c()
+)
 
-basis_hk_ext(data = NULL, x, batch = NULL, p = 0.9, conf = 0.95,
-  method = c("optimum-order", "woodward-frawley"), override = c())
+basis_hk_ext(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  method = c("optimum-order", "woodward-frawley"),
+  override = c()
+)
 
-basis_nonpara_large_sample(data = NULL, x, batch = NULL, p = 0.9,
-  conf = 0.95, override = c())
+basis_nonpara_large_sample(
+  data = NULL,
+  x,
+  batch = NULL,
+  p = 0.9,
+  conf = 0.95,
+  override = c()
+)
 
-basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95,
-  override = c())
+basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95, override = c())
 }
 \arguments{
 \item{data}{a data.frame}

@@ -17,6 +17,7 @@ LazyData: true
 Imports:
     dplyr,
     generics,
+    ggplot2,
     kSamples,
     MASS,
     rlang,
@@ -30,7 +31,8 @@ Suggests:
     spelling,
     testthat,
     tidyr,
-    tidyverse
-RoxygenNote: 6.1.1
+    tidyverse,
+    vdiffr
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Language: en-US
