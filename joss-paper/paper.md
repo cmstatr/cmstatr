@@ -7,7 +7,7 @@ authors:
   name: Stefan Kloppenborg
   orcid: '0000-0002-1908-5214'
 bibliography: 'paper.bib'
-date: '1/29/2020'
+date: '3/4/2020'
 output:
   md_document:
     pandoc_args: '--atx-headers'
@@ -38,10 +38,11 @@ structural failure due to material variability is minimized. To do so,
 the designer must select Design Values for each material and compare
 those to the stresses experienced by those materials. These Design
 Values are selected so that, with $95\%$ confidence, the Design Value is
-$99\%$ or $90\%$ lower confidence bound of the material strength,
-depending on the type of structure. These one-sided tolerance bounds are
-referred to as A-Basis and B-Basis values, respectively. Computing these
-A- and B-Basis values is the main problem that `cmstatr` addresses.
+either the $99\%$ or $90\%$ lower confidence bound of the material
+strength, depending on the type of structure. These one-sided tolerance
+bounds are referred to as A-Basis and B-Basis values, respectively.
+Computing these A- and B-Basis values is the main problem that `cmstatr`
+addresses.
 
 A set of statistical methods are described in a publication called the
 Composites Materials Handbook, or CMH-17-1G [@CMH171G]. The use of these
@@ -49,10 +50,21 @@ methods is widely accepted by industry and civil aviation regulators.
 The methods described in CMH-17-1G are implemented in `cmstatr`.
 
 The MS Excel spreadsheets typically used, such as `STAT-17` [@STAT-17],
-`ASAP` [@Raju_Tomblin_2008] and `CMH-17 STATS` \[INSERT CITATION\], use
+`ASAP` [@Raju_Tomblin_2008] and `CMH17-STATS` [@CMH17-STATS], use
 password-protected `VBA` macros to perform the computations. As such,
 the code cannot be audited by the user. `cmstatr` aims to address this
 by providing open-source code for performing these computations.
+
+# Statement of Need
+
+The purpose of `cmstatr` is to:
+
+-   Provide a consistent user interface for computing A- and B-Basis
+    values and performing the related diagnostic tests in the `R`
+    programming environment
+-   Allow auditing of the code used to compute A- and B-Basis values
+-   Enable users to automate computation workflows or to perform
+    simulation studies
 
 # Implementation Goals
 
@@ -61,7 +73,7 @@ are written to work with the `tidyverse` [@tidyverse] and most functions
 have similar argument lists. The intent is to make the package easy to
 learn and use.
 
-The implementation of `cmstatr` also aims to avoid the use of lookup
+The implementation of `cmstatr` also aims to avoid the use of look-up
 tables and minimize the use of approximations. While this decision leads
 to increased computation time, the typically small data sets (tens to
 hundreds of observations) associated with composite material test data,
@@ -77,17 +89,6 @@ as the `tidyverse` package.
 library(cmstatr)
 library(tidyverse)
 ```
-
-    ## ── Attaching packages ───────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
-
-    ## ✓ ggplot2 3.2.1     ✓ purrr   0.3.3
-    ## ✓ tibble  2.1.3     ✓ dplyr   0.8.4
-    ## ✓ tidyr   1.0.2     ✓ stringr 1.4.0
-    ## ✓ readr   1.3.1     ✓ forcats 0.4.0
-
-    ## ── Conflicts ──────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
 
 `cmstatr` contains some example data sets, which can be used to
 demonstrate the features of the package. One of those data sets ---
@@ -155,7 +156,7 @@ normed residual test for outliers within the data, and the
 Anderson-Darling test for a particular distribution [@Lawless_1982].
 
 Two non-parametric basis calculations, based on [@Guenther_1969] and
-[@Vangel_1994] are implemented. These functions perform the same
+[@Vangel_1994] are also implemented. These functions perform the same
 diagnostic tests, but skip the Anderson-Darling test for a particular
 distribution.
 
@@ -199,7 +200,7 @@ carbon.fabric.2 %>%
     ## B-Basis:   ( p =  0.9 , conf =  0.95 )
     ## 122.9315
 
-`cmstatr` provides functions for calculating basis values based on data
+`cmstatr` provides functions for calculating basis values using data
 pooled across environments, as recommended by [@CMH171G]. These
 functions use the variance observed in different environmental
 conditions in the computation, but acknowledge the different mean values
@@ -207,11 +208,13 @@ under each environmental condition.
 
 Another common statistical technique is to determine if a sample is
 drawn from a particular population. This is often used to determine if
-data from a second manufacturing site supports the same basis values.
-The test often recommended for this is a test considering both the mean
-and minimum individual value [@Vangel_2002]. This test has higher power
-than some other tests that could be used. `cmstatr` also provides
-functions for computing limits based on this test. For example:
+data from a second manufacturing site supports the basis values
+determined from test data generated at the first manufacturing source.
+The statistical test often recommended for this application considers
+both the mean and minimum individual value [@Vangel_2002]. This
+statistical test has higher power than some other tests that could be
+used. `cmstatr` also provides functions for computing limits based on
+this test. For example:
 
 ``` {.r}
 carbon.fabric.2 %>%
@@ -230,10 +233,34 @@ carbon.fabric.2 %>%
     ##                    Min Individual      Sample Mean 
     ##      Thresholds:         121.4921         135.0655
 
-# Comparison With Existing Tools
+# Validation and Comparison With Existing Tools
+
+Where possible, `cmstatr` has been verified against the examples given
+in the articles in which the statistical methods were published. Unit
+tests have been written so that this verification is re-checked
+routinely to prevent unintended regressions. Agreement between `cmstatr`
+and the examples in the original articles is within the expected numeric
+accuracy.
+
+`cmstatr` has also been verified against existing software, such as
+`STAT-17` [@STAT-17], `ASAP` [@Raju_Tomblin_2008] and `CMH17-STATS`
+[@CMH17-STATS] using several example data sets. Agreement between
+`cmstatr` and this other software is generally good, but some results
+differ slightly, likely due to approximations used in the software.
+Comparison between `cmstatr` and this other software is performed within
+various unit tests to guard against future regressions.
+
+The tests are automatically run each time a change is made to the code
+of `cmstatr` using a continuous integration service. Additionally,
+`CRAN` runs `R CMD check` on each package routinely.
 
 # Reproducibility
 
-It is envisioned that many users of `cmstatr` will...
+It is envisioned that many users of `cmstatr` will use it within an R
+Notebook or a Jupyter Notebook. It is further envisioned that this
+notebook will be directly converted into the statistical analysis
+report. If this is done, the reader of the statistical report will be
+able to verify all of the detailed steps used in the statistical
+analysis.
 
 # References {#references .unnumbered}
