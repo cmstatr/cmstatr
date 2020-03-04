@@ -58,7 +58,7 @@ This package expects [`tidy
 data`](https://www.jstatsoft.org/article/view/v059i10). That is,
 individual observations should be in rows and variables in columns.
 
-Where possible, this package uses general solutions. Lookup tables are
+Where possible, this package uses general solutions. Look-up tables are
 avoided wherever possible.
 
 # Issues
