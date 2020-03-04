@@ -94,7 +94,8 @@ test_that("carbon.fabric.2 equality of variances matches (step 28)", {
 test_that("carbon.fabric.2 pooled sd basis values match (step 30)", {
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    basis_pooled_sd(strength, condition)
+    basis_pooled_sd(strength, condition,
+                    override = c("pooled_variance_equal"))
 
   res$basis %>%
     mutate(expected = case_when(group == "CTD" ~ 89.22,
@@ -119,7 +120,8 @@ test_that("carbon.fabric.2 equality of normalized variance (step 31)", {
 test_that("carbon.fabric.2 pooled CV basis values match (step 39-41)", {
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    basis_pooled_cv(strength, condition)
+    basis_pooled_cv(strength, condition, batch,
+                    override = c("outliers_within_batch"))
 
   res$basis %>%
     mutate(expected = case_when(group == "CTD" ~ 86.91,
@@ -193,7 +195,8 @@ test_that("carbon.fabric.2 pooled sd basis values - modCV (step 30)", {
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
     mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
-    basis_pooled_sd(trans_strength, condition)
+    basis_pooled_sd(trans_strength, condition,
+                    override = c("pooled_variance_equal"))
 
   res$basis %>%
     mutate(expected = case_when(group == "CTD" ~ 88.64,
@@ -207,7 +210,8 @@ test_that("carbon.fabric.2 pooled sd basis values - modCV (step 30)", {
   # Test again, using the modcv argument
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    basis_pooled_sd(strength, condition, modcv = TRUE)
+    basis_pooled_sd(strength, condition, modcv = TRUE,
+                    override = c("pooled_variance_equal"))
 
   res$basis %>%
     mutate(expected = case_when(group == "CTD" ~ 88.64,

@@ -174,10 +174,10 @@ print.adk <- function(x, ...) {
   cat("N = ", x$n, "\tk = ", x$k, "\n")
   cat("ADK = ", x$ad, "\tp-value = ", x$p, "\n")
   if (x$reject_same_dist) {
-    cat("Conclusion: Samples do not come from the same distribution (alpha=",
+    cat("Conclusion: Samples do not come from the same distribution (alpha =",
         x$alpha, ")\n\n")
   } else {
-    cat("Conclusion: Samples come from the same distribution ( alpha=",
+    cat("Conclusion: Samples come from the same distribution ( alpha =",
         x$alpha, ")\n\n")
   }
 }

@@ -9,16 +9,15 @@ library(cmstatr)
 library(tidyverse)
 
 ## ------------------------------------------------------------------------
-library(cmstatr)
-library(tidyverse)
-
 carbon.fabric.2 %>%
   head(10)
 
 ## ------------------------------------------------------------------------
 norm_data <- carbon.fabric.2 %>%
   filter(test == "WT" | test == "FC") %>%
-  mutate(strength.norm = normalize_ply_thickness(strength, thickness / nplies, 0.0079))
+  mutate(strength.norm = normalize_ply_thickness(strength,
+                                                 thickness / nplies,
+                                                 0.0079))
 
 norm_data %>%
   head(10)
@@ -38,17 +37,68 @@ if (0.05 >= (norm_data %>%
   }
 
 ## ------------------------------------------------------------------------
-carbon.fabric.2 %>%
+norm_data %>%
   filter(test == "WT" & condition == "RTD") %>%
-  basis_normal(strength)
+  basis_normal(strength.norm)
+
+## ------------------------------------------------------------------------
+norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  basis_normal(strength.norm, 
+               override = c("outliers_within_batch",
+                            "between_batch_variability"))
+
+## ------------------------------------------------------------------------
+norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  basis_normal(strength.norm, batch)
+
+## ------------------------------------------------------------------------
+norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  ad_ksample(strength.norm, batch)
+
+## ------------------------------------------------------------------------
+StatNcdf <- ggproto(
+  "stat_ncdf",
+  Stat,
+  compute_group = function(data, scales, n) {
+    x <- data$x
+    x <- seq(from = min(x), to = max(x), length.out = n)
+    y = pnorm(x, mean(x), sd(x), lower.tail = TRUE)
+    data.frame(x = x, y = y)
+  },
+  required_aes = c("x")
+  )
+
+stat_ncdf <- function(mapping = NULL, data = NULL, geom = "smooth",
+                      position = "identity", show.legend = NA,
+                      inherit.aes = TRUE, n = 100, ...) {
+    layer(
+      stat = StatNcdf, data = data, geom = geom, position = position,
+      mapping = mapping, show.legend = show.legend,
+      inherit.aes = inherit.aes, params = list(n = n, ...)
+    )
+}
+
+norm_data %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  group_by(batch) %>%
+  ggplot(aes(x = strength.norm, color = batch)) +
+  stat_ecdf(geom = "point", pad = TRUE) +
+  stat_ncdf() +
+  ggtitle("Distribution of Data For Each Batch")
 
 ## ------------------------------------------------------------------------
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition, batch) %>%
-  summarise(
-    n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers
-    )
+  nest() %>%
+  mutate(mnr = map(data,
+                   ~maximum_normed_residual(data = .x, x = strength.norm)),
+         tidied = map(mnr, glance)) %>%
+  select(-c(mnr, data)) %>%  # remove unneeded columns
+  unnest(tidied)
 
 ## ----include=FALSE-------------------------------------------------------
 if ((norm_data %>%
@@ -66,9 +116,13 @@ if ((norm_data %>%
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
-  summarise(different_dist =
-           ad_ksample(x = strength.norm, groups = batch)$reject_same_dist
-  )
+  nest() %>%
+  mutate(adk = map(data, ~ad_ksample(data = .x,
+                                     x = strength.norm,
+                                     groups = batch)),
+         tidied = map(adk, glance)) %>%
+  select(-c(data, adk)) %>%  # remove unneeded columns
+  unnest(tidied)
 
 ## ----include=FALSE-------------------------------------------------------
 if (!all(!(norm_data %>%
@@ -84,7 +138,12 @@ if (!all(!(norm_data %>%
 norm_data %>%
   filter(test == "FC") %>%
   group_by(condition) %>%
-  summarise(n_outliers = maximum_normed_residual(x = strength.norm)$n_outliers)
+  nest() %>%
+  mutate(mnr = map(data, ~maximum_normed_residual(data = .x,
+                                                  x = strength.norm)),
+         tidied = map(mnr, glance)) %>%
+  select(-c(mnr, data)) %>%  # remove unneeded columns
+  unnest(tidied)
 
 ## ----include=FALSE-------------------------------------------------------
 if ((norm_data %>%
@@ -145,10 +204,17 @@ if ((norm_data %>%
 ## ------------------------------------------------------------------------
 norm_data %>%
   filter(test == "FC") %>%
-  basis_pooled_sd(strength.norm, condition)
+  basis_pooled_cv(strength.norm, condition, batch)
 
 ## ------------------------------------------------------------------------
-carbon.fabric %>%
-  filter(test == "WT" & condition == "RTD") %>%
+norm_data %>%
+  mutate(condition = ordered(condition,
+                             c("CTD", "RTD", "ETD", "ETW", "ETW2"))) %>%
+  filter(test == "FC") %>%
+  basis_pooled_cv(strength.norm, condition, batch)
+
+## ------------------------------------------------------------------------
+carbon.fabric.2 %>%
+  filter(test == "FC" & condition == "RTD") %>%
   equiv_mean_extremum(strength, n_sample = 5, alpha = 0.01)
 
