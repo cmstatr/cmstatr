@@ -27,7 +27,7 @@ columns:
       null hypothesis that all samples have the same variance is rejected}
 }
 \description{
-Glance accepts an object of type \code{levele} and returns a
+Glance accepts an object of type \code{levene} and returns a
 \code{\link[tibble:tibble]{tibble::tibble}} with
 one row of summaries.
 

@@ -15,8 +15,8 @@ normalize_group_mean(x, group)
 Returns a vector of normalized values
 }
 \description{
-This function computes the mean of each group, then divides each value by
-the group mean for the group to which it belongs. This is commonly done
+This function computes the mean of each group, then divides each group by
+their corresponding group mean. This is commonly done
 when pooling data across environments.
 }
 \details{
@@ -24,7 +24,7 @@ Computes the mean for each group, then divides each value by the mean for
 the corresponding group.
 }
 \references{
-“Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
 }

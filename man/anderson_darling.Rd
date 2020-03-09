@@ -40,12 +40,12 @@ fields.
  should be rejected}
 }
 \description{
-Calculates the Anderson-Darling test statistic for a sample, given
-a particular distribution and computes the significance level.
+Calculates the Anderson-Darling test statistic for a sample given
+a particular distribution, and computes the significance level.
 }
 \details{
 The Anderson-Darling test statistic is calculated for the distribution
-given.
+given by the user.
 
 The significance level is calculated assuming that the parameters
 of the distribution are unknown; these parameters are estimate from the
@@ -74,7 +74,7 @@ published values in Lawless (1982).
 J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
 New York: Wiley, 1982.
 
-"Composites Materials Handbook, Volume 1. Polymer Matrix
+"Composite Materials Handbook, Volume 1. Polymer Matrix
 Composites Guideline for Characterization of Structural
 Materials," SAE International, CMH-17-1G, Mar. 2012.
 }

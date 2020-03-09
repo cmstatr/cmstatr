@@ -44,7 +44,7 @@ table. This indicates a disagreement in that sample size at which
 the rank should change. This is likely due to numerical
 differences in this function and the procedure used to generate the tables.
 However, the disagreement is limited to sample 6500 for A-Basis; no
-discrepancies have been noted for B-Basis. Since these sample sizes are
+discrepancies have been identified for B-Basis. Since these sample sizes are
 uncommon for composite materials
 testing, and the difference between subsequent order statistics will be
 very small for samples this large, this difference will have no practical
@@ -54,7 +54,7 @@ effect on computed tolerance limits.
 W. Guenther, “Determination of Sample Size for Distribution-Free
 Tolerance Limits,” Jan. 1969
 
-“Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
 }
