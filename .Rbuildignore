@@ -3,3 +3,5 @@
 GenerateFakeData.R
 ^\.github
 ^joss-paper
+^LICENSE
+^README.Rmd

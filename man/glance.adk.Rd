@@ -26,7 +26,7 @@ columns:
                                are drawn from different populations}
 }
 \description{
-Glance accepts an object of type basis and returns a
+Glance accepts an object of type \code{adk} and returns a
 \code{\link[tibble:tibble]{tibble::tibble}} with
 one row of summaries.
 
