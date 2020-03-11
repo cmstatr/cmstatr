@@ -16,11 +16,11 @@ affiliations:
 date: "3/4/2020"
 bibliography: paper.bib
 output:
-  pdf_document: default
   md_document:
     preserve_yaml: true
     variant: markdown
     pandoc_args: "--atx-headers"
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -31,9 +31,9 @@ knitr::opts_chunk$set(echo = TRUE)
 Strength data for composite materials used in aerospace applications,
 such as carbon fiber and fiberglass reinforced composites, are normally analyzed 
 using statistical methods because of the 
-inherenet variabilities in the constituent materials and in the processing.
+inherent variability in the constituent materials and in the processing.
 The design standards for civil aviation require that the probability
-of structural failure due to these variabilities to be minimized, and to do
+of structural failure due to this variability to be minimized, and to do
 so, the designer must use what are called "Design Values" for each material 
 in stress analyses and ensure they
 exceed the actual stresses experienced by those materials in service. 
@@ -66,7 +66,8 @@ The purpose of `cmstatr` is to:
 - Provide a consistent user interface for computing A- and B-Basis
   values and performing the related diagnostic tests in the `R`
   programming environment
-- Allow auditing of the code used to compute A- and B-Basis values
+- Allow auditing of the code used to compute A- and B-Basis values,
+  and performing the related diagnostic tests
 - Enable users to automate computation workflows or to perform
   simulation studies
 
@@ -79,7 +80,7 @@ learn and use.
 
 The implementation of `cmstatr` also aims to avoid the use of look-up 
 tables
-that are prevailent in calculation spreadsheets and minimize the use of 
+that are prevalent in calculation spreadsheets and minimize the use of 
 approximations. 
 While this decision leads to increased computation time, the typically small 
 data sets (tens to hundreds
@@ -101,7 +102,7 @@ will be used in the following example. This data set contains results from
 several mechanical tests of a typical composite material, and contains the
 typical measurements obtained from a test lab. In the following
 examples, results from tension testing in the warp fiber direction (`WT`) 
-per ASTM D3039 will be used. 
+will be used.
 Part of this data set is shown below.
 
 ```{r}
@@ -112,17 +113,17 @@ carbon.fabric.2 %>%
 
 One common task is to calculate B-Basis values. The
 single-point basis functions perform the following tests:
+
 - the maximum normed residual test for outliers within a batch [@CMH171G],
 - the Anderson-Darling k-Sample test to check if batches are drawn from
   the same (unspecified) distribution [@Scholz_Stephens_1987], 
 - the maximum normed residual test for outliers within the data, and 
 - the Anderson-Darling test for a particular probability 
-distribution [@Lawless_1982].
+  distribution [@Lawless_1982].
 
 Assuming that the data from the warp tension (WT) tested at 
 elevated-temperature/wet condition (ETW) follows
-a normal distribution, then this can be done using the function 
-for a normal distrisbution:
+a normal distribution, then this can be done using the function:
 
 ```{r}
 carbon.fabric.2 %>%
@@ -168,35 +169,13 @@ carbon.fabric.2 %>%
 
 `cmstatr` also provides functions for calculating basis values from
 data pooled across multiple testing environments, as recommended by [@CMH171G]. 
-These
-functions calculate a global variance from the data in all tested environmental 
-conditions, 
-then they apply the global variance to the individual mean values of each 
-condition to find the corresponding basis values.
-
-Another common statistical analysis provided by `cmstatr` is for determining 
-whether
-a sample is drawn from an existing population. This is often used to determine 
-if test data from
-a second manufacturing site supports the basis values determined from test
-data generated at the first manufacturing source. The statistical test
-often recommended for this application generates limits to the mean and minimum
-individual value [@Vangel_2002] that the new sample must exceed. `cmstatr` 
-provides 
-functions for
-computing the limits based on this test. This statistical test has higher 
-power than
-some other tests that are available. 
-
-For example:
-
-
-```{r}
-carbon.fabric.2 %>%
-  filter(test == "WT") %>%
-  filter(condition == "RTD")  %>%
-  equiv_mean_extremum(strength, n_sample = 8, alpha = 0.05)
-```
+There are two methods of pooling: both calculate a measure of global variation
+from the data in all tested environmental conditions, 
+then they calculate a basis value for each condition using the measure of
+the global variation and the individual mean values of each 
+condition. The two methods of pooling have different underlying assumptions
+and hence the data must pass a different set diagnostic tests for each of
+the two functions.
 
 # Validation and Comparison With Existing Tools
 Where possible, `cmstatr` has been verified against the examples given
@@ -208,10 +187,10 @@ examples in the original articles is within the expected numeric accuracy.
 `cmstatr` has also been verified against existing software, such as
 `STAT-17` [@STAT-17], `ASAP` [@Raju_Tomblin_2008] and
 `CMH17-STATS` [@CMH17-STATS] using several example data sets.
-Agreement between `cmstatr` and the other softwares is generally good,
+Agreement between `cmstatr` and the other software is generally good,
 but some results differ slightly, likely due to approximations used
 in the software.
-Comparison between `cmstatr` and the other softwares is performed
+Comparison between `cmstatr` and the other software is performed
 within various unit tests to guard against future regressions.
 
 The tests are automatically run each time a change is made to the code
