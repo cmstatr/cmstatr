@@ -13,7 +13,7 @@ calc_cv_star(cv)
 The value of the modified CV
 }
 \description{
-This function calculates the Modified CV based on an (unmodified) CV.
+This function calculates the Modified CV based on a (unmodified) CV.
 The modified CV is calculated based on the rules in CMH-17-1G. Those
 rules are:
 
@@ -24,7 +24,7 @@ rules are:
 }
 }
 \references{
-"Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+"Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,"
 SAE International, CMH-17-1G, Mar. 2012.
 }

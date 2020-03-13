@@ -57,8 +57,8 @@ columns:
   indicating the result of the test for change in mean}
 }
 \description{
-Glance accepts an object of type basis and returns a
-\code{\link[tibble:tibble]{tibble::tibble}} with
+Glance accepts an object of type \code{equiv_change_mean}
+ and returns a \code{\link[tibble:tibble]{tibble::tibble}} with
 one row of summaries.
 
 Glance does not do any calculations: it just gathers the results in a

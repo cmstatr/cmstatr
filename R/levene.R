@@ -38,7 +38,7 @@
 #' performed on the transformed data.
 #'
 #' @references
-#' “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
@@ -116,7 +116,7 @@ levene_test <- function(data = NULL, x, groups, alpha = 0.05, modcv = FALSE) {
 #' Glance at a \code{levene} object
 #'
 #' @description
-#' Glance accepts an object of type \code{levele} and returns a
+#' Glance accepts an object of type \code{levene} and returns a
 #' \code{\link[tibble:tibble]{tibble::tibble}} with
 #' one row of summaries.
 #'

@@ -22,7 +22,7 @@ Calculate k factor for basis values (\eqn{kB}, \eqn{kA}) with normal
 distribution
 }
 \details{
-This function calculates the k factors for use in determining A- and
+This function calculates the k factors used when determining A- and
 B-Basis values for normally distributed data. To get \eqn{kB}, set
 \code{p = 0.90} and \code{conf = 0.95}. To get \eqn{kA}, set
 \code{p = 0.99} and \code{conf = 0.95}.

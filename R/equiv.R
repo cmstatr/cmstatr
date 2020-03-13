@@ -2,7 +2,7 @@
 #' Equivalency based on mean and extremum
 #'
 #' @description
-#' Determine equivalency or equivalency thresholds based on both minimum
+#' Determines equivalency or equivalency thresholds based on both minimum
 #' individual and mean.
 #'
 #' @param df_qual (optional) a data.frame containing the qualification data.
@@ -696,8 +696,8 @@ verify_equiv_change_mean_var <- function(n_sample, mean_sample, sd_sample,
 #' Glance at a \code{equiv_change_mean} object
 #'
 #' @description
-#' Glance accepts an object of type basis and returns a
-#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' Glance accepts an object of type \code{equiv_change_mean}
+#'  and returns a \code{\link[tibble:tibble]{tibble::tibble}} with
 #' one row of summaries.
 #'
 #' Glance does not do any calculations: it just gathers the results in a

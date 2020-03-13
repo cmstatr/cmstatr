@@ -6,7 +6,7 @@
 #' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
 #'
 #' @details
-#' This function calculates the k factors for use in determining A- and
+#' This function calculates the k factors used when determining A- and
 #' B-Basis values for normally distributed data. To get \eqn{kB}, set
 #' \code{p = 0.90} and \code{conf = 0.95}. To get \eqn{kA}, set
 #' \code{p = 0.99} and \code{conf = 0.95}.
@@ -37,10 +37,10 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @description
 #' Calculate the basis value for a given data set. There are various functions
 #' to calculate the basis values for different distributions. For B-Basis,
-#' set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.90} and
+#' set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.99} and
 #' \eqn{conf=0.95}. These functions also preform some automated diagnostic
-#' tests of the data prior to calculating the basis values. These tests can be
-#' overridden if needed.
+#' tests of the data prior to calculating the basis values. These diagnostic
+#' tests can be overridden if needed.
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame for which to find the basis value
@@ -64,9 +64,9 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' \code{data} is not specified, \code{x} must be a vector.
 #'
 #' \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
-#' the standard deviation from the mean using. \eqn{k} is given by
-#' the function \code{\link{k_factor_normal}}. This function also performs
-#' a diagnostic test for outliers (using
+#' the standard deviation from the mean. \eqn{k} is given by
+#' the function \code{\link{k_factor_normal}}. \code{basis_normal} also
+#' performs a diagnostic test for outliers (using
 #' \code{\link{maximum_normed_residual}})
 #' and a diagnostic test for normality (using
 #' \code{\link{anderson_darling_normal}}).
@@ -98,7 +98,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' quantile requested is calculated using the conditional method, as
 #' described in Lawless (1982) Section 4.1.2b. This has good agreement
 #' with tables published in CMH-17-1G. Results differ between this function
-#' and STAT17 by approximately 0.5%.
+#' and STAT17 by approximately 0.5\%.
 #'
 #' \code{basis_weibull} function also performs
 #' a diagnostic test for outliers (using
@@ -115,7 +115,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' \code{basis_hk_ext} calculates the basis value using the Extended
 #' Hanson-Koopmans method, as described in CMH-17-1G and Vangel (1994).
 #' For nonparametric distributions, this function should be used for samples
-#' up to n=28 for B-Basis and up to 299 for A-Basis.
+#' up to n=28 for B-Basis and up to \eqn{n=299} for A-Basis.
 #' This method uses a pair of order statistics to determine the basis value.
 #' CMH-17-1G suggests that for A-Basis, the first and last order statistic
 #' is used: this is called the "woodward-frawley" method in this package,
@@ -129,13 +129,13 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' distribution. This approach is described in Vangel (1994). This second
 #' method (for use when calculating B-Basis values) is called
 #' "optimum-order" in this package.
-#' The results of this function have been
-#' verified against example results from the program STAT-17: agreement is
-#' typically well within 0.2%, however, for a few sample sizes, the
-#' agreement can be as poor as 1% with the result of this function being
-#' more conservative than STAT-17.
+#' The results of \code{basis_hk_ext} have been
+#' verified against example results from the program STAT-17. Agreement is
+#' typically well within 0.2\%, however, for a few sample sizes, the
+#' agreement can be as poor as 1\% with the result of this function
+#' being more conservative than STAT-17.
 #'
-#' \code{basis_hk_ext} function also performs
+#' \code{basis_hk_ext} also performs
 #' a diagnostic test for outliers (using
 #' \code{\link{maximum_normed_residual}})
 #' and performs a pair of tests that the sample size and method selected
@@ -154,7 +154,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' of this function have been verified against results of the STAT-17
 #' program.
 #'
-#' \code{basis_nonpara_large_sample} function also performs
+#' \code{basis_nonpara_large_sample} also performs
 #' a diagnostic test for outliers (using
 #' \code{\link{maximum_normed_residual}})
 #' and performs a test that the sample size is sufficiently large.
@@ -242,7 +242,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' J. F. Lawless, Statistical Models and Methods for Lifetime Data.
 #' New York: John Wiley & Sons, 1982.
 #'
-#' “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
@@ -1093,7 +1093,7 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #' the rank should change. This is likely due to numerical
 #' differences in this function and the procedure used to generate the tables.
 #' However, the disagreement is limited to sample 6500 for A-Basis; no
-#' discrepancies have been noted for B-Basis. Since these sample sizes are
+#' discrepancies have been identified for B-Basis. Since these sample sizes are
 #' uncommon for composite materials
 #' testing, and the difference between subsequent order statistics will be
 #' very small for samples this large, this difference will have no practical
@@ -1103,7 +1103,7 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #' W. Guenther, “Determination of Sample Size for Distribution-Free
 #' Tolerance Limits,” Jan. 1969
 #'
-#' “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'

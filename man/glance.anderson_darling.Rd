@@ -29,8 +29,8 @@ columns:
    should be rejected}
 }
 \description{
-Glance accepts an object of type basis and returns a
-\code{\link[tibble:tibble]{tibble::tibble}} with
+Glance accepts an object of type \code{anderson_darling} and
+returns a \code{\link[tibble:tibble]{tibble::tibble}} with
 one row of summaries.
 
 Glance does not do any calculations: it just gathers the results in a
