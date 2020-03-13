@@ -25,6 +25,10 @@ We'll need to load a few packages in order to proceed.
 ```{r message=FALSE}
 library(tidyverse)
 library(cmstatr)
+library(stats)
+library(fitdistrplus)
+library(ggplot2)
+library(ggsci)
 ```
 
 Throughout this vignette, we'll use one of the example data sets that
@@ -39,6 +43,8 @@ the `ordered` function.
 dat <- carbon.fabric.2 %>%
   filter(test == "WT") %>%
   mutate(condition = ordered(condition, c("CTD", "RTD", "ETW", "ETW2")))
+
+dat
 ```
 
 We'll then calculate the B-Basis value using pooling by standard deviation.
@@ -79,75 +85,176 @@ dat %>%
   geom_hline(aes(yintercept = value),
              data = b_basis$basis %>% rename(condition = group), color = "blue") +
   facet_grid(. ~ condition) +
-  theme_bw()
+  theme_bw() +
+  ggtitle("Batch Plot") +
+  theme(plot.title = element_text(hjust = 0.5)) 
 ```
 
-
-# Property Graphs
-
-
-
 # Quantile Plots
+A quantile plot provides a graphical summary of sample values. 
+This plot displays the sample values and the percentage. A quantile 
+plot can  be used to examine the symmetry and tail sizes of the 
+underlying distribution. Sharp rises may indicate the presence
+of outliers. 
 
-
+```{r}
+dat %>%
+  filter(test == "WT") %>%
+  ggplot(aes(x = strength, color = condition)) +
+  stat_ecdf(geom = "point") +
+  coord_flip() +
+  theme_bw() +
+  ggtitle("Quantile Plot") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_npg()
+```
 
 # Normal Plots
 NOTE: This one is a bit more complicated. It will be addressed at a later time.
 
 
 # Normal Score Plots
+The normal scores plot calculates the normal score and plots it against the normal score. 
+Normal plots are usful to investigate distributions of data. A sample from a normal distribution 
+will ressemble a straight line plot. 
 
+```{r}
+dat %>%
+  group_by(condition) %>%
+  mutate(norm.score = scale(strength)) %>%
+  ggplot(aes(x = norm.score, y = strength, colour = condition)) +
+  geom_point() +
+  ggtitle("Normal Scores Plot") +
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  scale_color_npg()
+```
 
 # Q-Q Plots
 
-
-# Default Template Text
-Remove this section. This is just the default text that RStudio adds to a blank vignette.
-
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+A Q-Q plot sets two sets of quanitles against one another. 
+IF both quantiles come from the same distribution, the line of points
+formed should be rather straight. A 45 degree reference line is also
+plotted. If the data sets being plotted are from the same distribution, 
+the points should fall roughly along the reference line. 
+```{r}
+dat %>%
+  ggplot(aes(sample = dat$strength, colour = condition)) +
+  geom_qq() +
+  geom_qq_line() +
+  ggtitle("Q-Q Plot") +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+# Property Plots
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+Property plots allow for a variety of properties for a group to be 
+compared to other preoperties within the same group, as well as to 
+other group properties. The properties included in this plot are A-Basis, 
+B-Basis, Pooled A and B-Basis, Pooled modified cv A and B-Basis, Mean,
+Max, and Min for each group.
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+First, the distribution of each group must be determined. Once the 
+distirbution has been determined, the proper basis calculation based 
+on that distribution should be filled in below. For example, if the
+distribution for the CTD group is lognormal, basis_normal should be 
+changed to basis_lognormal (only for that condition).
 
-## More Examples
+```{r}
+basis_fcn <- tribble(
+  ~condition, ~fcn,
+  "CTD", "basis_normal",
+  "RTD", "basis_normal",
+  "ETW", "basis_hk_ext",
+  "ETW2", "basis_normal"
+)
+```
+This section calculates the single point A and B basis, as well as the mean, max, and min. 
+```{r}
+single.point.results <- dat %>%
+  group_by(condition) %>%
+  nest() %>%
+  inner_join(basis_fcn, by = "condition") %>%
+  mutate(b.basis = map(data, ~do.call(fcn, list(.x, x = .x$strength, batch = .x$batch, override = "between_batch_variability"))),
+         a.basis = map(data, ~do.call(fcn, list(.x, x = .x$strength, batch = .x$batch, override = "between_batch_variability", p = 0.99))),
+         tidied.bbasis = map(b.basis, glance),
+         tidied.abasis = map(a.basis, glance),
+         min = map(data, ~min(.x$strength)), 
+         max = map(data, ~max(.x$strength)), 
+         mean = map(data, ~mean(.x$strength))) %>%
+  unnest(cols = c(tidied.bbasis)) %>%
+  dplyr::select(-c(conf, n, modcv, distribution, p, b.basis, r, a.basis)) %>%
+  rename(b.basis = basis) %>%
+  unnest(tidied.abasis, mean, max, min) %>% 
+  rename(a.basis = basis) %>%
+  dplyr::select(c(a.basis, b.basis, mean, max, min))
+```
+This section calculates the pooled A and B basis. 
+```{r}
+pooled.b.results <- dat %>%
+  basis_pooled_cv(strength, condition, batch, override = c("between_group_variability", "normalized_variance_equal")) %>%
+  glance() %>%
+  as.data.frame() %>%
+  dplyr::select(c(basis)) 
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+pooled.a.results <- dat %>%
+  basis_pooled_cv(strength, condition, batch, override = c("between_group_variability", "normalized_variance_equal"), p = 0.99) %>%
+  glance() %>%
+  as.data.frame() %>%
+  dplyr::select(c(basis))
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+pooled.a.results <- pooled.a.results$basis %>%
+  rename(condition = group, a.basis.grouped = value)
+
+pooled.b.results <- pooled.b.results$basis %>%
+  rename(condition = group, b.basis.grouped = value)
+
+pooled.results <- pooled.a.results %>%
+  inner_join(pooled.b.results, by = "condition")
+ 
+```
+This section calclates the A and B basis using the "Pooled Modified CV" method. 
+```{r}
+pooled.b.results.modcv <- carbon.fabric.2 %>%
+  filter(test == "WT") %>%
+  basis_pooled_cv(strength, condition, batch, override = c("between_group_variability", "normalized_variance_equal"), modcv = TRUE) %>%
+  glance() %>%
+  as.data.frame() %>%
+  dplyr::select(c(basis)) 
+
+pooled.a.results.modcv <- carbon.fabric.2 %>%
+  filter(test == "WT") %>%
+  basis_pooled_cv(strength, condition, batch, override = c("between_group_variability", "normalized_variance_equal"), p = 0.99, modcv = TRUE) %>%
+  glance() %>%
+  as.data.frame() %>%
+  dplyr::select(c(basis))
+
+pooled.a.results.modcv <- pooled.a.results.modcv$basis %>%
+  rename(condition = group, a.basis.grouped.modcv = value)
+
+pooled.b.results.modcv <- pooled.b.results.modcv$basis %>%
+  rename(condition = group, b.basis.grouped.modcv = value)
+
+pooled.results.modcv <- pooled.a.results.modcv %>%
+  inner_join(pooled.b.results.modcv, by = "condition") %>%
+  inner_join(pooled.results, by = "condition")
 ```
 
-Also a quote using `>`:
+```{r}
+property_plot_results <- single.point.results %>%
+  inner_join(pooled.results.modcv, by = "condition")
+```
+This section plots the properties for all conditions. 
+```{r}
+property_values <- colnames(property_plot_results)[-1]
+property_plot_results %>%
+  gather("test", "value", property_values) %>%
+  ggplot(aes(x = condition, y = value, color = test)) +
+  geom_point(size = 3) +
+  ggtitle("Property Graph") +
+  theme(plot.title = element_text(hjust = 0.5))+ 
+  scale_color_jco()
+```
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+
+
+
