@@ -12,13 +12,16 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 6
 )
 ```
 
 This vignette demonstrates how to create some of the graphs commonly used
 when analyzing composite material data. Here, we rely on the
-[ggplot2](https://ggplot2.tidyverse.org/) package for graphing.
+[ggplot2](https://ggplot2.tidyverse.org/) package for graphing. This package
+can be loaded either on its own, or through the `tidyverse` meta-package, whic
+also includes packages such as `dplyr` that we will also use.
 
 We'll need to load a few packages in order to proceed.
 
@@ -33,28 +36,30 @@ example. We'll load the example data in a variable as follows. By default
 the condition will be in an arbitrary order, but throughout the visualization,
 we'll want the conditions shown in a particular order (from coldest and dryest
 to hottest and wettest). We can define the order of the conditions using
-the `ordered` function.
+the `ordered` function. For brevity, only the first few rows of the dataset
+are displayed below.
 
 ```{r}
 dat <- carbon.fabric.2 %>%
   filter(test == "WT") %>%
   mutate(condition = ordered(condition, c("CTD", "RTD", "ETW", "ETW2")))
 
-dat
+dat %>%
+  head(10)
 ```
 
-We'll then calculate the B-Basis value using pooling by standard deviation.
-This dataset happens to fail some of the diagnostic tests, but for the
+We'll then calculate the B-Basis value using the pooling by standard deviation
+method. This dataset happens to fail some of the diagnostic tests, but for the
 purpose of this example, we'll ignore those failures using the
 `override` argument.
 
 ```{r}
-b_basis <- dat %>%
+b_basis_pooled <- dat %>%
   basis_pooled_cv(strength, condition, batch,
                   override = c("between_group_variability",
                                "normalized_variance_equal"))
 
-b_basis
+b_basis_pooled
 ```
 
 The object returned from `basis_pooled_cv` contains a number of values.
@@ -63,7 +68,7 @@ and the corresponding basis values. This looks like the following. We'll
 use this in the visualizations.
 
 ```{r}
-b_basis$basis
+b_basis_pooled$basis
 ```
 
 
@@ -76,13 +81,20 @@ the mean. The two hinges correspond with the first and third
 quantiles and the whiskers extend to the most extreme data point,
 or 1.5 times the inner quantile range.
 
+In the code below, we use the function `rename` to rename the
+column `group` to `condition`. The `data.frame` produced by
+`basis_pooled_cv` uses the columns `value` and `group`, but
+to match the data, we need the column with the conditions
+to be named `condition`.
+
 ```{r}
 dat %>%
   ggplot(aes(x = batch, y = strength)) +
   geom_boxplot() +
   geom_jitter(width = 0.25) +
   geom_hline(aes(yintercept = value),
-             data = b_basis$basis %>% rename(condition = group), color = "blue") +
+             data = b_basis_pooled$basis %>% rename(condition = group),
+             color = "blue") +
   facet_grid(. ~ condition) +
   theme_bw() +
   ggtitle("Batch Plot")
@@ -90,14 +102,12 @@ dat %>%
 
 # Quantile Plots
 A quantile plot provides a graphical summary of sample values. 
-This plot displays the sample values and the percentage. A quantile 
-plot can  be used to examine the symmetry and tail sizes of the 
-underlying distribution. Sharp rises may indicate the presence
-of outliers. 
+This plot displays the sample values and the corresponding quantile.
+A quantile  plot can  be used to examine the symmetry and tail sizes of the
+underlying distribution. Sharp rises may indicate the presence of outliers. 
 
 ```{r}
 dat %>%
-  filter(test == "WT") %>%
   ggplot(aes(x = strength, color = condition)) +
   stat_ecdf(geom = "point") +
   coord_flip() +
@@ -105,14 +115,31 @@ dat %>%
   ggtitle("Quantile Plot")
 ```
 
-# Normal Plots
-NOTE: This one is a bit more complicated. It will be addressed at a later time.
+# Normal Survival Function Plots
+An empirical survival function, and the corresponding normal survival
+function can be plotted using two `ggplot` "stat" functions provided
+by `cmstatr`. In the example below, the empirical survival function
+is plotted for each condition, and the survival function for a normal
+distribution with the mean and varaince from the data is also plotted
+(the survival function is 1 minus the cumulative distribution function).
+This type of plot can be used to identify how closely the data follows
+a normal distribution, and also to compare the distributions of the
+various conditions.
+
+```{r}
+dat %>%
+  ggplot(aes(x = strength, color = condition)) +
+  stat_normal_surv_func() +
+  stat_esf() +
+  theme_bw() +
+  ggtitle("Normal Survival Function Plot")
+```
 
 
 # Normal Score Plots
-The normal scores plot calculates the normal score and plots it against the normal score. 
-Normal plots are usful to investigate distributions of data. A sample from a normal distribution 
-will ressemble a straight line plot. 
+The normal scores plot calculates the normal score and plots it against
+the normal score. Normal plots are usful to investigate distributions of
+the data.
 
 ```{r}
 dat %>%
@@ -126,9 +153,9 @@ dat %>%
 
 # Q-Q Plots
 
-A Q-Q plot sets two sets of quanitles against one another. 
-If both quantiles come from the same distribution, the points should
-fall on a straight line. A line is also plotted showing
+A Q-Q plot compares the data against the
+theoretical quantiles for a particular distribution.
+A line is also plotted showing
 the normal distribution with mean and variance from the data. If the data
 exactly followed a normal distribution, all points would fall on this line.
 
@@ -148,11 +175,11 @@ Property plots allow for a variety of properties for a group to be
 compared to other preoperties within the same group, as well as to 
 other group properties. The properties included in this plot are A-Basis, 
 B-Basis, Pooled A- and B-Basis, Pooled modified cv A and B-Basis, Mean,
-Max, and Min for each group.
+and Min for each group.
 
 The property plots will take a bit of work to construct.
 
-First, the distribution of each group must be determined. Once the 
+First, the distribution of each group must be determined. Once the
 distirbution has been determined, the proper basis calculation based 
 on that distribution should be filled in below. We also have a
 column in the tables below for extra arguments to pass to the `basis`
@@ -197,8 +224,10 @@ single_point_fcn <- function(group_x, group_batch, cond, basis_fcn, p) {
 
 single_point_results <- dat %>%
   group_by(condition) %>%
-  summarise(single_point_b_basis = single_point_fcn(strength, batch, condition, b_basis_fcn, 0.90),
-            single_point_a_basis = single_point_fcn(strength, batch, condition, a_basis_fcn, 0.99),
+  summarise(single_point_b_basis = single_point_fcn(
+              strength, batch, condition, b_basis_fcn, 0.90),
+            single_point_a_basis = single_point_fcn(
+              strength, batch, condition, a_basis_fcn, 0.99),
             minimum = min(strength),
             mean = mean(strength)) %>%
   mutate(condition = ordered(condition, c("CTD", "RTD", "ETW", "ETW2")))
@@ -209,29 +238,30 @@ single_point_results
 In the above code, we also ensure that the condition column is still
 in the order we expect.
 
-Next, we'll calculate the A- and B-Basis values using the pooling method.
+We've already computed the B-Basis of the data using a pooling method.
+We'll do the same for A-Basis:
 
 ```{r}
-pooled_b_results <- dat %>%
-  basis_pooled_cv(strength, condition, batch,
+a_basis_pooled <- dat %>%
+  basis_pooled_cv(strength, condition, batch, p = 0.99,
                   override = c("between_group_variability",
                                "normalized_variance_equal"))
 
-pooled_b_results
+a_basis_pooled
 ```
 
-The returned object has a property called `basis`, which is a `data.frame`
-for the pooling methods.
+As we saw before, the returned object has a property called `basis`,
+which is a `data.frame` for the pooling methods.
 
 ```{r}
-pooled_b_results$basis
+a_basis_pooled$basis
 ```
 
 We can take this `data.frame` and change the column names
 to suit our needs.
 
 ```{r}
-pooled_b_results$basis %>%
+a_basis_pooled$basis %>%
   rename(condition = group,
          b_basis_pooled = value)
 ```
@@ -240,29 +270,23 @@ We can combine all these steps into one statement. We'll also ensure
 that the conditions are listed in the order we want.
 
 ```{r}
-b_basis_pooled_results <- (dat %>%
-  basis_pooled_cv(strength, condition, batch,
-                  override = c("between_group_variability",
-                               "normalized_variance_equal")))$basis %>%
-  rename(condition = group,
-         b_basis_pooled = value) %>%
-  mutate(condition = ordered(condition, c("CTD", "RTD", "ETW", "ETW2")))
-
-b_basis_pooled_results
-```
-
-And the same thing for A-Basis:
-
-```{r}
-a_basis_pooled_results <- (dat %>%
-  basis_pooled_cv(strength, condition, batch, p = 0.99,
-                  override = c("between_group_variability",
-                               "normalized_variance_equal")))$basis %>%
+a_basis_pooled_results <- a_basis_pooled$basis %>%
   rename(condition = group,
          a_basis_pooled = value) %>%
   mutate(condition = ordered(condition, c("CTD", "RTD", "ETW", "ETW2")))
 
 a_basis_pooled_results
+```
+
+And the same thing for B-Basis:
+
+```{r}
+b_basis_pooled_results <- b_basis_pooled$basis %>%
+  rename(condition = group,
+         b_basis_pooled = value) %>%
+  mutate(condition = ordered(condition, c("CTD", "RTD", "ETW", "ETW2")))
+
+b_basis_pooled_results
 ```
 
 We can use the function `inner_join` from the `dplyr` package to combine
