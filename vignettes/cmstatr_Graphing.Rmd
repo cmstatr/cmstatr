@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 This vignette demonstrates how to create some of the graphs commonly used
 when analyzing composite material data. Here, we rely on the
 [ggplot2](https://ggplot2.tidyverse.org/) package for graphing. This package
-can be loaded either on its own, or through the `tidyverse` meta-package, whic
+can be loaded either on its own, or through the `tidyverse` meta-package, which
 also includes packages such as `dplyr` that we will also use.
 
 We'll need to load a few packages in order to proceed.
@@ -34,9 +34,9 @@ Throughout this vignette, we'll use one of the example data sets that
 comes with `cmstatr` and we'll focus on the warp-tension data as an
 example. We'll load the example data in a variable as follows. By default
 the condition will be in an arbitrary order, but throughout the visualization,
-we'll want the conditions shown in a particular order (from coldest and dryest
+we'll want the conditions shown in a particular order (from coldest and driest
 to hottest and wettest). We can define the order of the conditions using
-the `ordered` function. For brevity, only the first few rows of the dataset
+the `ordered` function. For brevity, only the first few rows of the data set
 are displayed below.
 
 ```{r}
@@ -49,7 +49,7 @@ dat %>%
 ```
 
 We'll then calculate the B-Basis value using the pooling by standard deviation
-method. This dataset happens to fail some of the diagnostic tests, but for the
+method. This data set happens to fail some of the diagnostic tests, but for the
 purpose of this example, we'll ignore those failures using the
 `override` argument.
 
@@ -74,9 +74,9 @@ b_basis_pooled$basis
 
 # Batch Plots
 Batch plots are used to identify differences between batches.
-Simple batch plots can be created using boxplots and adding
+Simple batch plots can be created using box plots and adding
 horizontal lines for the basis values as follows. Note that
-the heavy line in the box of the boxplot is the *median*, not
+the heavy line in the box of the box plot is the *median*, not
 the mean. The two hinges correspond with the first and third
 quantiles and the whiskers extend to the most extreme data point,
 or 1.5 times the inner quantile range.
@@ -120,7 +120,7 @@ An empirical survival function, and the corresponding normal survival
 function can be plotted using two `ggplot` "stat" functions provided
 by `cmstatr`. In the example below, the empirical survival function
 is plotted for each condition, and the survival function for a normal
-distribution with the mean and varaince from the data is also plotted
+distribution with the mean and variance from the data is also plotted
 (the survival function is 1 minus the cumulative distribution function).
 This type of plot can be used to identify how closely the data follows
 a normal distribution, and also to compare the distributions of the
@@ -138,7 +138,7 @@ dat %>%
 
 # Normal Score Plots
 The normal scores plot calculates the normal score and plots it against
-the normal score. Normal plots are usful to investigate distributions of
+the normal score. Normal plots are useful to investigate distributions of
 the data.
 
 ```{r}
@@ -172,19 +172,19 @@ dat %>%
 # Property Plots
 
 Property plots allow for a variety of properties for a group to be 
-compared to other preoperties within the same group, as well as to 
+compared to other properties within the same group, as well as to 
 other group properties. The properties included in this plot are A-Basis, 
-B-Basis, Pooled A- and B-Basis, Pooled modified cv A and B-Basis, Mean,
+B-Basis, Pooled A- and B-Basis, Pooled modified CV A and B-Basis, Mean,
 and Min for each group.
 
 The property plots will take a bit of work to construct.
 
 First, the distribution of each group must be determined. Once the
-distirbution has been determined, the proper basis calculation based 
+distribution has been determined, the proper basis calculation based 
 on that distribution should be filled in below. We also have a
 column in the tables below for extra arguments to pass to the `basis`
 function, such as overrides required or the method for the `basis_hk_ext`
-fucntion to use.
+function to use.
 
 ```{r}
 b_basis_fcn <- tribble(
