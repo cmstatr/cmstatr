@@ -1,6 +1,6 @@
 ---
 title: "Plotting Composite Material Data"
-author: "Vignette Author"
+author: "Ally Fraser"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
