@@ -49,7 +49,7 @@ Where \eqn{mi} is median of the \eqn{ith} group. An F-Test is then
 performed on the transformed data.
 }
 \references{
-“Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
 }

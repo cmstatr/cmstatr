@@ -1,7 +1,7 @@
 Package: cmstatr
 Type: Package
 Title: Statistical Methods for Composite Material Data
-Version: 0.3.0.9000
+Version: 0.4.0.9000
 Depends: R (>= 3.3)
 Authors@R: c(
     person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",
@@ -17,6 +17,7 @@ LazyData: true
 Imports:
     dplyr,
     generics,
+    ggplot2,
     kSamples,
     MASS,
     rlang,
@@ -30,7 +31,8 @@ Suggests:
     spelling,
     testthat,
     tidyr,
-    tidyverse
+    tidyverse,
+    vdiffr
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Language: en-US

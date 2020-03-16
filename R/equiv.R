@@ -2,7 +2,7 @@
 #' Equivalency based on mean and extremum
 #'
 #' @description
-#' Determine equivalency or equivalency thresholds based on both minimum
+#' Determines equivalency or equivalency thresholds based on both minimum
 #' individual and mean.
 #'
 #' @param df_qual (optional) a data.frame containing the qualification data.
@@ -249,7 +249,7 @@ equiv_mean_extremum <- function(df_qual = NULL, data_qual = NULL,
 #' ##   alpha n_sample modcv threshold_min_indiv threshold_mean
 #' ##   <dbl>    <int> <lgl>               <dbl>          <dbl>
 #' ## 1  0.01        5 FALSE                86.2           94.9
-#' ## # … with 4 more variables: result_min_indiv <chr>, result_mean <chr>,
+#' ## # ... with 4 more variables: result_min_indiv <chr>, result_mean <chr>,
 #' ## #   min_sample <dbl>, mean_sample <dbl>
 #'
 #' @method glance equiv_mean_extremum
@@ -696,8 +696,8 @@ verify_equiv_change_mean_var <- function(n_sample, mean_sample, sd_sample,
 #' Glance at a \code{equiv_change_mean} object
 #'
 #' @description
-#' Glance accepts an object of type basis and returns a
-#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' Glance accepts an object of type \code{equiv_change_mean}
+#'  and returns a \code{\link[tibble:tibble]{tibble::tibble}} with
 #' one row of summaries.
 #'
 #' Glance does not do any calculations: it just gathers the results in a
@@ -766,7 +766,7 @@ verify_equiv_change_mean_var <- function(n_sample, mean_sample, sd_sample,
 #' ##   alpha n_sample mean_sample sd_sample n_qual mean_qual sd_qual modcv
 #' ##   <dbl>    <int>       <dbl>     <dbl>  <int>     <dbl>   <dbl> <lgl>
 #' ## 1  0.01        5        85.8      9.93     30      100.    3.90 FALSE
-#' ## # … with 6 more variables: sp <dbl>, t0 <dbl>, t_req <dbl>,
+#' ## # ... with 6 more variables: sp <dbl>, t0 <dbl>, t_req <dbl>,
 #' ## #   threshold_min <dbl>, threshold_max <dbl>, result <chr>
 #'
 #' @method glance equiv_change_mean

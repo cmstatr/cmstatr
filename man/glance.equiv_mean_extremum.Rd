@@ -59,7 +59,7 @@ glance(eq)
 ##   alpha n_sample modcv threshold_min_indiv threshold_mean
 ##   <dbl>    <int> <lgl>               <dbl>          <dbl>
 ## 1  0.01        5 FALSE                86.2           94.9
-## # â€¦ with 4 more variables: result_min_indiv <chr>, result_mean <chr>,
+## # ... with 4 more variables: result_min_indiv <chr>, result_mean <chr>,
 ## #   min_sample <dbl>, mean_sample <dbl>
 
 }

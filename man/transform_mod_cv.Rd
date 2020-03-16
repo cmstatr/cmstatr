@@ -55,7 +55,7 @@ containing the batches. This function first calculates the modified
 CV value from the data from each condition (independently). Then,
 within each condition, the transformation
 \code{transform_mod_cv(x, batches)}
-is applied to produce the transformed data \deqn{x'}{\prime{x}}.
+is applied to produce the transformed data \eqn{x'}.
 This transformed data is further transformed using the following
 equation.
 
