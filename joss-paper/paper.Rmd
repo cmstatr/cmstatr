@@ -13,7 +13,7 @@ authors:
 affiliations:
  - name: Comtek Advanced Structures, Ltd.
    index: 1
-date: "3/4/2020"
+date: "3/22/2020"
 bibliography: paper.bib
 output:
   md_document:
@@ -205,8 +205,10 @@ will be directly converted into the statistical analysis report. If this is
 done, the reader of the statistical report will be able to verify all of the
 detailed steps used in the statistical analysis.
 
-#Acknowledgement
+# Acknowledgement
 The author would like to thank Mr. Billy Cheng for his contributions to 
-`cmstatr` and this paper.
+`cmstatr` and this paper. The author would also like to thank Comtek
+Advanced Structures Ltd. for its support in developing and releasing
+the `cmstatr` package.
 
 # References

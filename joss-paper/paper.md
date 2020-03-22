@@ -7,7 +7,7 @@ authors:
   name: Stefan Kloppenborg
   orcid: '0000-0002-1908-5214'
 bibliography: 'paper.bib'
-date: '3/4/2020'
+date: '3/22/2020'
 output:
   md_document:
     pandoc_args: '--atx-headers'
@@ -245,7 +245,11 @@ report. If this is done, the reader of the statistical report will be
 able to verify all of the detailed steps used in the statistical
 analysis.
 
-\#Acknowledgement The author would like to thank Mr. Billy Cheng for his
-contributions to `cmstatr` and this paper.
+# Acknowledgement
+
+The author would like to thank Mr. Billy Cheng for his contributions to
+`cmstatr` and this paper. The author would also like to thank Comtek
+Advanced Structures Ltd. for its support in developing and releasing the
+`cmstatr` package.
 
 # References {#references .unnumbered}
