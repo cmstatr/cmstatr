@@ -46,6 +46,10 @@
 #' a factor of \eqn{(k - 1)}, with a corresponding change in the critical
 #' value.
 #'
+#' For more information about the difference between this function and
+#' the formulation in CMH-17-1G, see the vignette on the subject, which
+#' can be accessed by running \code{vignette("adktest")}
+#'
 #' @references
 #' F. W. Scholz and M. Stephens, “K-Sample Anderson-Darling Tests,” Journal
 #' of the American Statistical Association, vol. 82, no. 399. pp. 918–924,
