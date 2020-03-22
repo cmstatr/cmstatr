@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 This vignette demonstrates how to create some of the graphs commonly used
 when analyzing composite material data. Here, we rely on the
-[ggplot2](https://ggplot2.tidyverse.org/) package for graphing. This package
+[`ggplot2`](https://ggplot2.tidyverse.org/) package for graphing. This package
 can be loaded either on its own, or through the `tidyverse` meta-package, which
 also includes packages such as `dplyr` that we will also use.
 
@@ -63,7 +63,7 @@ b_basis_pooled
 ```
 
 The object returned from `basis_pooled_cv` contains a number of values.
-One value is a `data.frame` containing the groups (ie. conditions)
+One value is a `data.frame` containing the groups (i.e. conditions)
 and the corresponding basis values. This looks like the following. We'll
 use this in the visualizations.
 
