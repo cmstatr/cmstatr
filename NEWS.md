@@ -1,3 +1,12 @@
+# Version x.x.x
+- Added `stat` extensions to `ggplot2`:
+  - `stat_normal_surv_func` to plot a normal survival function based on
+    the data given
+  - `stat_esf` to plot an empirical survival function
+- Updated cmstatr_Tutorial vignette
+- Created cmstatr_Graphing vignette
+- Various documentation improvements
+
 # Version 0.4.0
 - Added automated diagnostic tests to basis_... methods
 - Updated argument names for functions:
