@@ -5,7 +5,11 @@
 \alias{carbon.fabric}
 \alias{carbon.fabric.2}
 \title{Sample data for a generic carbon fabric}
-\format{An object of class \code{data.frame} with 216 rows and 5 columns.}
+\format{
+An object of class \code{data.frame} with 216 rows and 5 columns.
+
+An object of class \code{data.frame} with 177 rows and 8 columns.
+}
 \usage{
 carbon.fabric
 
