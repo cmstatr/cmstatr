@@ -160,7 +160,7 @@ example above, the output shows that the Anderson-Darling test for
 normality [@Lawless_1982] rejects the hypothesis that the data is drawn
 from a normal distribution.
 
-Two non-parametric basis calculations, based on [@Guenther_1969] and
+Two non-parametric basis calculations, based on [@Guenther_1970] and
 [@Vangel_1994] are also implemented in `cmstatr`. These functions
 perform the same diagnostic tests, but omits the Anderson-Darling test
 for a particular distribution.
