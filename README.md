@@ -13,8 +13,8 @@ are those described in CMH-17-1G.
 
 # Installation
 
-This package is not yet on CRAN. For now, install from `github` using
-`devtools`:
+This package is not yet on CRAN (but it will be soon). For now, install
+from `github` using `devtools`:
 
 ``` r
 install.packages("devtools")
@@ -45,11 +45,19 @@ carbon.fabric.2 %>%
     ## B-Basis:   ( p =  0.9 , conf =  0.95 )
     ## 76.88082
 
-For more examples of usage of the `cmstatr` package, see the vignettes,
-which can be loaded as follows, once the package is installed:
+For more examples of usage of the `cmstatr` package, see the tutorial
+vignette, which can be loaded as follows, once the package is installed:
 
 ``` r
-RShowDoc("cmstatr_Tutorial", package = "cmstatr")
+vignette("cmstatr_Tutorial")
+```
+
+There is also a vignette showing some examples of the types of graphs
+that are typically produced when analyzing composite materials. You can
+load this vignette with:
+
+``` r
+vignette("cmstatr_Graphing")
 ```
 
 # Philosophical Notes
