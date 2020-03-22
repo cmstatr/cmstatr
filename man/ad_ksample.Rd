@@ -53,6 +53,10 @@ by software that uses the CMH-17-1G formulation (such as ASAP, CMH17-STATS,
 etc.), the test statistic reported by this function will be greater by
 a factor of \eqn{(k - 1)}, with a corresponding change in the critical
 value.
+
+For more information about the difference between this function and
+the formulation in CMH-17-1G, see the vignette on the subject, which
+can be accessed by running \code{vignette("adktest")}
 }
 \references{
 F. W. Scholz and M. Stephens, “K-Sample Anderson-Darling Tests,” Journal
