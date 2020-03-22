@@ -117,8 +117,10 @@ carbon.fabric.2 %>%
     ## 9    WT       CTD     B     0.113     14  127.074   9.058          LGM
     ## 10   WT       CTD     B     0.114     14  126.879   9.306          LGM
 
-One common task is to calculate B-Basis values. The single-point basis
-functions perform the following tests:
+One common task is to calculate B-Basis values. There are several
+statistical methods for doing so, depending on the distribution of the
+data. The single-point basis functions automatically perform the
+following diagnostic tests:
 
 -   the maximum normed residual test for outliers within a batch
     [@CMH171G],
@@ -228,13 +230,12 @@ accuracy.
 `STAT-17` [@STAT-17], `ASAP` [@Raju_Tomblin_2008] and `CMH17-STATS`
 [@CMH17-STATS] using several example data sets. Agreement between
 `cmstatr` and the other software is generally good, but some results
-differ slightly, likely due to approximations used in the software.
-Comparison between `cmstatr` and the other software is performed within
-various unit tests to guard against future regressions.
+differ slightly, likely due to various approximations used in the
+software. Comparison between `cmstatr` and the other software is
+performed within various unit tests to guard against future regressions.
 
 The tests are automatically run each time a change is made to the code
-of `cmstatr` using a continuous integration service. Additionally,
-`CRAN` runs `R CMD check` on each package routinely.
+of `cmstatr` using a continuous integration service.
 
 # Reproducibility
 

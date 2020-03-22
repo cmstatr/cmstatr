@@ -111,8 +111,11 @@ carbon.fabric.2 %>%
   head(10)
 ```
 
-One common task is to calculate B-Basis values. The
-single-point basis functions perform the following tests:
+One common task is to calculate B-Basis values. There are several
+statistical methods for doing so, depending on the distribution of
+the data.
+The single-point basis functions automatically perform the following
+diagnostic tests:
 
 - the maximum normed residual test for outliers within a batch [@CMH171G],
 - the Anderson-Darling k-Sample test to check if batches are drawn from
@@ -188,14 +191,13 @@ examples in the original articles is within the expected numeric accuracy.
 `STAT-17` [@STAT-17], `ASAP` [@Raju_Tomblin_2008] and
 `CMH17-STATS` [@CMH17-STATS] using several example data sets.
 Agreement between `cmstatr` and the other software is generally good,
-but some results differ slightly, likely due to approximations used
+but some results differ slightly, likely due to various approximations used
 in the software.
 Comparison between `cmstatr` and the other software is performed
 within various unit tests to guard against future regressions.
 
 The tests are automatically run each time a change is made to the code
-of `cmstatr` using a continuous integration service. Additionally,
-`CRAN` runs `R CMD check` on each package routinely.
+of `cmstatr` using a continuous integration service.
 
 
 # Reproducibility
