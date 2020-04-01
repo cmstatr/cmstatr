@@ -207,7 +207,7 @@ augment.mnr <- function(x, data = x$data, ...) {  # nolint
   }
 
   res <- df
-  res[[".outlier"]] = FALSE
+  res[[".outlier"]] <- FALSE
   res$.outlier[x$outliers$index] <- TRUE
   res
 }
