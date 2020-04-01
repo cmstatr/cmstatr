@@ -1,7 +1,6 @@
 context("basis")
 
 suppressMessages(library(dplyr))
-suppressMessages(library(glue))
 
 test_that("kB factors are correct for normal distribution", {
   cmh17_factors <- matrix(
@@ -48,9 +47,9 @@ test_that("kB factors are correct for normal distribution", {
     rowwise() %>%
     mutate(calc_kb = k_factor_normal(n, p = 0.90, conf = 0.95)) %>%
     mutate(check = expect_lte(abs(calc_kb - kb), expected = 0.002,
-                              label = glue("Validation failure for {n}.",
-                                           "CMH-17 gives kB={kb},",
-                                           "library gives kB={calc_kb}")))
+                              label = paste0("Validation failure for ", n, ".",
+                                             "CMH-17 gives kB=", kb, ",",
+                                             "library gives kB=", calc_kb)))
 })
 
 test_that("kA factors are correct for normal distribution", {
@@ -98,9 +97,9 @@ test_that("kA factors are correct for normal distribution", {
     rowwise() %>%
     mutate(calc_ka = k_factor_normal(n, p = 0.99, conf = 0.95)) %>%
     mutate(check = expect_lte(abs(calc_ka - ka), expected = 0.002,
-                              label = glue("Validation failure for {n}.",
-                                           "CMH-17 gives kA={ka},",
-                                           "library gives kA={calc_ka}")))
+                              label = paste0("Validation failure for ", n, ".",
+                                             "CMH-17 gives kA=", ka, ",",
+                                             "library gives kA=", calc_ka)))
 })
 
 test_that("(normal) basis value equals mean when sd = 0", {
@@ -1096,9 +1095,11 @@ test_that("Extended Hanson-Koopman matches median results from Vangel 1994", {
       z_calc = hk_ext_z(n, 1, ceiling(n / 2), p, conf)
     ) %>%
     mutate(expect_equal(z, z_calc, tolerance = 0.00005,
-                        label = glue("Mismatch in `z` for n={n}, p={p}, ",
-                                     "conf={conf}.\n",
-                                     "z_vangel={z}, z_calc={z_calc}\n")))
+                        label = paste0("Mismatch in `z` for n=", n,
+                                       ", p=", p,
+                                       " conf=", conf, ".\n",
+                                       "z_vangel=", z,
+                                       ", z_calc=", z_calc, "\n")))
 })
 
 
@@ -1149,11 +1150,13 @@ test_that("Extended Hanson-Koopman matches CMH-17-1G Table 8.5.14", {
       n != 10 & n != 13 & n != 16 & n != 17 & n != 19 & n != 22 & n != 27
       ) %>%
     mutate(expect_equal(j, r,
-                        label = glue("Mismatch in `j`/`r` for n={n}, ",
-                                     "r_B_cmh={r}, j={j}\n"))) %>%
+                        label = paste0("Mismatch in `j`/`r` for n=", n, ", ",
+                                       "r_B_cmh=", r,
+                                       ", j=", j, "\n"))) %>%
     mutate(expect_equal(z, k, tolerance = 0.005,
-                        label = glue("Mismatch in `k`/`z` for n={n}, ",
-                                     "k_B_cmh={k}, z_calc={z}\n")))
+                        label = paste0("Mismatch in `k`/`z` for n=", n, ", ",
+                                       "k_B_cmh=", k,
+                                       ", z_calc=", z, "\n")))
 })
 
 test_that("Hanson-Koopman results match STAT17 for several values of n", {
@@ -1380,8 +1383,9 @@ test_that("Extended Hanson-Koopman matches CMH-17-1G Table 8.5.15", {
     rowwise() %>%
     mutate(z = hk_ext_z(n, 1, n, 0.99, 0.95)) %>%
     mutate(expect_equal(z, k, tolerance = 0.00005,
-                        label = glue("Mismatch in `k`/`z` for n={n}, ",
-                                     "k_A_cmh={k}, z_calc={z}\n")))
+                        label = paste0("Mismatch in `k`/`z` for n=", n, ", ",
+                                       "k_A_cmh=", k,
+                                       ", z_calc=", z, "\n")))
 })
 
 cmh_17_1g_8_5_13 <- tribble(
@@ -1496,23 +1500,27 @@ test_that("Non-parametric ranks for A-Basis match CMH-17-1G Table 8.5.13", {
     rowwise() %>%
     mutate(r_calc = nonpara_binomial_rank(n, 0.99, 0.95)) %>%
     mutate(expect_equal(ra, r_calc,
-                        label = glue(
-                          "Mismatch in r for n={n}. rA={ra}, r_calc={r_calc}"
+                        label = paste0(
+                          "Mismatch in r for n=", n,
+                          ". rA=", ra,
+                          ", r_calc=", r_calc
                           ))) %>%
     filter(n > 299 & n < 6500) %>%
     # the rank for one sample larger should be the same
     mutate(r_calc_plus = nonpara_binomial_rank(n + 1, 0.99, 0.95)) %>%
     mutate(expect_equal(ra, r_calc_plus,
-                        label = glue(
-                          "Mismatch in r for n={n + 1}. rA={ra}, ",
-                          "r_calc={r_calc_plus}"
+                        label = paste0(
+                          "Mismatch in r for n=", n + 1,
+                          ". rA=", ra, ", ",
+                          "r_calc=", r_calc_plus
                         ))) %>%
     # the rank for one sample smaller should be the previous one
     mutate(r_calc_minus = nonpara_binomial_rank(n - 1, 0.99, 0.95)) %>%
     mutate(expect_equal(ra_lag, r_calc_minus,
-                        label = glue(
-                          "Mismatch in r for n={n - 1}. rA={ra_lag}, ",
-                          "r_calc={r_calc_minus}"
+                        label = paste0(
+                          "Mismatch in r for n=", n - 1,
+                          ". rA=", ra_lag, ", ",
+                          "r_calc=", r_calc_minus
                         )))
 })
 
@@ -1634,15 +1642,18 @@ test_that("Non-parametric ranks for BA-Basis match CMH-17-1G Table 8.5.12", {
     rowwise() %>%
     mutate(r_calc = nonpara_binomial_rank(n, 0.9, 0.95)) %>%
     mutate(expect_equal(rb, r_calc,
-                        label = glue(
-                          "Mismatch in r for n={n}. rB={rb}, r_calc={r_calc}"
+                        label = paste0(
+                          "Mismatch in r for n=", n,
+                          ". rB=", rb,
+                          ", r_calc=", r_calc
                         ))) %>%
     # the rank for one sample larger should be the same
     mutate(r_calc_plus = nonpara_binomial_rank(n + 1, 0.9, 0.95)) %>%
     mutate(expect_equal(rb, r_calc_plus,
-                        label = glue(
-                          "Mismatch in r for n={n + 1}. rB={rb}, ",
-                          "r_calc={r_calc_plus}"
+                        label = paste0(
+                          "Mismatch in r for n=", n + 1,
+                          ". rB=", rb, ", ",
+                          "r_calc=", r_calc_plus
                         ))) %>%
     filter(n > 29 & n <= 275) %>%
     # the rank for one sample smaller should be the previous one
@@ -1650,9 +1661,10 @@ test_that("Non-parametric ranks for BA-Basis match CMH-17-1G Table 8.5.12", {
     # use the lag trick below to check sample sizes of n-1
     mutate(r_calc_minus = nonpara_binomial_rank(n - 1, 0.9, 0.95)) %>%
     mutate(expect_equal(rb_lag, r_calc_minus,
-                        label = glue(
-                          "Mismatch in r for n={n - 1}. rB={rb_lag}, ",
-                          "r_calc={r_calc_minus}"
+                        label = paste0(
+                          "Mismatch in r for n=", n - 1,
+                          ". rB=", rb_lag, ", ",
+                          "r_calc=", r_calc_minus
                         )))
 })
 

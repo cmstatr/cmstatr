@@ -24,7 +24,6 @@ Imports:
     tibble
 Suggests:
     dplyr,
-    glue,
     knitr,
     lintr,
     purrr,
