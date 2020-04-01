@@ -197,7 +197,6 @@ glance.mnr <- function(x, ...) {  # nolint
 #'
 #' @method augment mnr
 #' @importFrom tibble tibble
-#' @importFrom dplyr mutate
 #'
 #' @export
 augment.mnr <- function(x, data = x$data, ...) {  # nolint
@@ -207,7 +206,8 @@ augment.mnr <- function(x, data = x$data, ...) {  # nolint
     df <- tibble::tibble(values = data)
   }
 
-  res <- mutate(df, .outlier = FALSE)
+  res <- df
+  res[[".outlier"]] = FALSE
   res$.outlier[x$outliers$index] <- TRUE
   res
 }

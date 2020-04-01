@@ -15,7 +15,6 @@ License: AGPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
-    dplyr,
     generics,
     ggplot2,
     kSamples,
@@ -24,6 +23,7 @@ Imports:
     stats,
     tibble
 Suggests:
+    dplyr,
     glue,
     knitr,
     lintr,
