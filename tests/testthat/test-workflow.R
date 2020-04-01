@@ -1,6 +1,8 @@
 context("Workflow")
 
-library(tidyverse)
+suppressMessages(library(dplyr))
+suppressMessages(library(tidyr))
+suppressMessages(library(purrr))
 
 # In this test case, the "steps" refer to the flowchart in CMH-17-1G
 # Figure 8.3.1.1(a)

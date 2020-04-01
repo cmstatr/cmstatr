@@ -1,6 +1,7 @@
 context("Plotting")
 
 suppressMessages(library(dplyr))
+suppressMessages(library(ggplot2))
 suppressMessages(library(vdiffr))
 
 expect_doppelganger("stat_esf", {

@@ -1,6 +1,6 @@
 context("mnr")
 
-suppressMessages(library(tidyverse))
+suppressMessages(library(dplyr))
 
 cmh_17_cv <- tribble(
   ~n, ~c,

@@ -1,6 +1,6 @@
 context("basis")
 
-suppressMessages(library(tidyverse))
+suppressMessages(library(dplyr))
 suppressMessages(library(glue))
 
 test_that("kB factors are correct for normal distribution", {

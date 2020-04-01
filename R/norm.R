@@ -196,7 +196,7 @@ calc_cv_star <- function(cv) {
 #' # Transform data according to the modified CV transformation
 #' # and report the original and modified CV for each condition
 #'
-#' library(tidyverse)
+#' library(dplyr)
 #' carbon.fabric %>%
 #'   filter(test == "FT") %>%
 #'   mutate(trans_strength = transform_mod_cv(strength, condition)) %>%

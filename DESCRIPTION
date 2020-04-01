@@ -27,11 +27,11 @@ Suggests:
     glue,
     knitr,
     lintr,
+    purrr,
     rmarkdown,
     spelling,
     testthat,
     tidyr,
-    tidyverse,
     vdiffr
 RoxygenNote: 7.1.0
 VignetteBuilder: knitr

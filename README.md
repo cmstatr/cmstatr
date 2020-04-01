@@ -28,7 +28,7 @@ To compute a B-Basis value from an example data set packaged with
 `cmstatr` you can do the following:
 
 ``` r
-library(tidyverse)
+library(dplyr)
 library(cmstatr)
 
 carbon.fabric.2 %>%
