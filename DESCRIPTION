@@ -7,6 +7,8 @@ Authors@R: c(
     person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",
       role = c("aut", "cre")),
     person("Billy", "Cheng", email = "bcheng@comtekadvanced.com",
+      role = c("ctb")),
+    person("Ally", "Fraser", email = "ally.fraser25@gmail.com",
       role = c("ctb"))
   )
 Description: An implementation of the statistical methods commonly
