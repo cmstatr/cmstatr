@@ -24,13 +24,15 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - { os: windows-latest, r: '3.6', runbranch: [ "refs/heads/master", "refs/heads/release**" ] }
-        - { os: macOS-latest, r: '3.6', runbranch: [ "refs/heads/master", "refs/heads/release**" ] }
-        - { os: macOS-latest, r: 'devel', runbranch: [ "refs/heads/master", "refs/heads/release**" ] }
-        - { os: ubuntu-16.04, r: '3.3', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest", runbranch: [ "refs/heads/master", "refs/heads/release**" ] }
-        - { os: ubuntu-16.04, r: '3.4', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest", runbranch: [ "refs/heads/master", "refs/heads/release**" ] }
-        - { os: ubuntu-16.04, r: '3.5', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest", runbranch: [ "refs/heads/master", "refs/heads/release**" ] }
-        - { os: ubuntu-16.04, r: '3.6', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest", runbranch: [ "refs/heads/master", "refs/heads/develop", "refs/heads/release**" ] }
+        - { os: windows-latest, r: '3.6' }
+        - { os: windows-latest, r: 'devel' }
+        - { os: macOS-latest, r: '3.6' }
+        - { os: macOS-latest, r: 'devel' }
+        - { os: ubuntu-16.04, r: '3.3', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest" }
+        - { os: ubuntu-16.04, r: '3.4', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest" }
+        - { os: ubuntu-16.04, r: '3.5', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest" }
+        - { os: ubuntu-16.04, r: '3.6', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest" }
+        - { os: ubuntu-16.04, r: 'devel', cran: "https://demo.rstudiopm.com/all/__linux__/xenial/latest" }
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -41,22 +43,28 @@ jobs:
       - uses: actions/checkout@v1
 
       - uses: r-lib/actions/setup-r@master
-        if: contains(matrix.config.runbranch, github.ref)
         with:
           r-version: ${{ matrix.config.r }}
 
       - uses: r-lib/actions/setup-pandoc@master
-        if: contains(matrix.config.runbranch, github.ref)
+
+      # To install vdiffr, these three libraries/tools are needed:
+      # - freetype (already installed, needed by systemfonts)
+      # - cairo (not installed, needed by gdtools)
+      # - pkg-config (not installed, needed to set proper build settings)
+      - name: Install pkg-config and cairo on devel macOS
+        if: runner.os == 'macOS' && matrix.config.r == 'devel'
+        run: brew install pkg-config cairo
 
       - name: Cache R packages
-        if: runner.os != 'Windows' && contains(matrix.config.runbranch, github.ref)
+        if: runner.os != 'Windows'
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-r-${{ matrix.config.r }}-${{ hashFiles('DESCRIPTION') }}
 
       - name: Install system dependencies
-        if: runner.os == 'Linux' && contains(matrix.config.runbranch, github.ref)
+        if: runner.os == 'Linux'
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
@@ -65,15 +73,13 @@ jobs:
           sudo -s eval "$sysreqs"
 
       - name: Install dependencies
-        if: contains(matrix.config.runbranch, github.ref)
         run: Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)" -e "remotes::install_cran('rcmdcheck')"
 
       - name: Check
-        if: contains(matrix.config.runbranch, github.ref)
         run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning', check_dir = 'check')"
 
       - name: Upload check results
-        if: failure() && contains(matrix.config.runbranch, github.ref)
+        if: failure()
         uses: actions/upload-artifact@master
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
