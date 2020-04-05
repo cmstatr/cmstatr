@@ -25,7 +25,7 @@ jobs:
       matrix:
         config:
         - { os: windows-latest, r: '3.6', vdiffr: true }
-        - { os: windows-latest, r: 'devel', vdiffr: false, rtools-version: '40' }
+        - { os: windows-latest, r: 'devel', vdiffr: false, rtoolsversion: '40' }
         - { os: macOS-latest, r: '3.6', vdiffr: true }
         - { os: macOS-latest, r: 'devel', vdiffr: false }
         # Rcpp currently fails to install for R 3.3 (2020-04-02)
@@ -50,7 +50,7 @@ jobs:
       - uses: r-lib/actions/setup-r@master
         with:
           r-version: ${{ matrix.config.r }}
-          rtools-version: $$ {{ matrix.config.rtools-version }}
+          rtools-version: ${{ matrix.config.rtoolsversion }}
 
       - uses: r-lib/actions/setup-pandoc@master
 
