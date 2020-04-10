@@ -43,7 +43,7 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
   cur_data <- eval_tidy(enquo(x), data)
   res$data <- cur_data
 
-  indicies_cur <- 1:length(res$data)
+  indicies_cur <- seq_along(res$data)
 
   cur_mnr <- max(abs(res$data - mean(res$data)) / sd(res$data))
   res$mnr <- cur_mnr
