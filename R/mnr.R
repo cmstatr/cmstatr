@@ -43,6 +43,8 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
   cur_data <- eval_tidy(enquo(x), data)
   res$data <- cur_data
 
+  indicies_cur <- 1:length(res$data)
+
   cur_mnr <- max(abs(res$data - mean(res$data)) / sd(res$data))
   res$mnr <- cur_mnr
   cur_crit <- maximum_normed_residual_crit(length(res$data), alpha)
@@ -58,13 +60,17 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
 
   for (i in 1:(length(res$data) - 1)) {
     if (cur_mnr >= cur_crit) {
-      worst_index <- which.max(abs(cur_data - mean(cur_data)))
+      worst_index_cur <- which.max(abs(cur_data - mean(cur_data)))
       res$outliers <- rbind(
         res$outliers,
-        data.frame(index = worst_index, value = cur_data[worst_index])
+        data.frame(
+          index = indicies_cur[worst_index_cur],
+          value = cur_data[worst_index_cur]
+        )
       )
       res$n_outliers <- res$n_outliers + 1
-      cur_data <- cur_data[-worst_index]
+      cur_data <- cur_data[-worst_index_cur]
+      indicies_cur <- indicies_cur[-worst_index_cur]
       cur_mnr <- max(abs(cur_data - mean(cur_data)) / sd(cur_data))
       cur_crit <- maximum_normed_residual_crit(length(cur_data), alpha)
     }
@@ -221,6 +227,16 @@ print.mnr <- function(x, ...) {
     cat("No outliers detected\n\n")
   } else {
     cat("Outliers:\n")
-    print(x$outliers)
+
+    col_width <- max(nchar(as.character(x$outliers[["index"]])), 5) + 2
+    cat(format("Index", width = col_width, justify = "right"))
+    cat("  ")
+    cat("Value\n")
+    for (j in seq(along.with = x$outliers$index)) {
+      cat(format(x$outliers[["index"]][j], width = col_width))
+      cat("  ")
+      cat(x$outliers[["value"]][j], "\n")
+    }
+
   }
 }
