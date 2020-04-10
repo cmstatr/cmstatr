@@ -227,6 +227,16 @@ print.mnr <- function(x, ...) {
     cat("No outliers detected\n\n")
   } else {
     cat("Outliers:\n")
-    print(x$outliers)
+
+    col_width <- max(nchar(as.character(x$outliers[["index"]])), 5) + 2
+    cat(format("Index", width = col_width, justify = "right"))
+    cat("  ")
+    cat("Value\n")
+    for (j in seq(along.with = x$outliers$index)) {
+      cat(format(x$outliers[["index"]][j], width = col_width))
+      cat("  ")
+      cat(x$outliers[["value"]][j], "\n")
+    }
+
   }
 }
