@@ -180,7 +180,9 @@ test_that("carbon.fabric.2 equality of variances - modCV (step 28)", {
   # Test for equality of variances among condition groups
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
+    group_by(condition) %>%
+    mutate(trans_strength = transform_mod_cv(strength)) %>%
+    ungroup() %>%
     levene_test(trans_strength, condition)
 
   expect_equal(res$f, 2.862, tolerance = 0.075)
@@ -196,7 +198,9 @@ test_that("carbon.fabric.2 equality of variances - modCV (step 28)", {
 test_that("carbon.fabric.2 pooled sd basis values - modCV (step 30)", {
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
+    group_by(condition) %>%
+    mutate(trans_strength = transform_mod_cv(strength)) %>%
+    ungroup() %>%
     basis_pooled_sd(trans_strength, condition,
                     override = c("pooled_variance_equal"))
 
@@ -229,7 +233,9 @@ test_that("carbon.fabric.2 equality of norm variance - modCV (step 31)", {
   # Test for equality of normalized variacnes among condition groups
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
+    group_by(condition) %>%
+    mutate(trans_strength = transform_mod_cv(strength)) %>%
+    ungroup() %>%
     mutate(norm_strength = normalize_group_mean(trans_strength, condition)) %>%
     levene_test(norm_strength, condition)
 
@@ -247,7 +253,9 @@ test_that("carbon.fabric.2 equality of norm variance - modCV (step 31)", {
 test_that("carbon.fabric.2 pooled CV basis values - modCV (step 39-41)", {
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
+    group_by(condition) %>%
+    mutate(trans_strength = transform_mod_cv(strength)) %>%
+    ungroup() %>%
     basis_pooled_cv(trans_strength, condition)
 
   res$basis %>%

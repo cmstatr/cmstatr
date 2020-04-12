@@ -7,7 +7,7 @@
 \usage{
 transform_mod_cv_2(x, condition, batch)
 
-transform_mod_cv(x, group = NULL)
+transform_mod_cv(x)
 }
 \arguments{
 \item{x}{a vector of data to transform}
@@ -17,10 +17,6 @@ observation belongs}
 
 \item{batch}{a vector indicating the batch to which each observation
 belongs}
-
-\item{group}{a vector indicating the group to which each observation in
-\code{x} belongs. If this is NULL, the data will be treated as
-unstructured (without grouping)}
 }
 \value{
 A vector of transformed data
@@ -85,8 +81,8 @@ Where:
 library(dplyr)
 carbon.fabric \%>\%
   filter(test == "FT") \%>\%
-  mutate(trans_strength = transform_mod_cv(strength, condition)) \%>\%
   group_by(condition) \%>\%
+  mutate(trans_strength = transform_mod_cv(strength)) \%>\%
   summarize(cv = sd(strength) / mean(strength),
             mod_cv = sd(trans_strength) / mean(trans_strength))
 

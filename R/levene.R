@@ -72,7 +72,9 @@ levene_test <- function(data = NULL, x, groups, alpha = 0.05, modcv = FALSE) {
 
   if (modcv == TRUE) {
     res$modcv <- TRUE
-    res$modcv_transformed_data <- transform_mod_cv(data_vector, group_vector)
+    res$modcv_transformed_data <- transform_mod_cv_grouped(
+      data_vector, group_vector
+    )
     data_vector <- res$modcv_transformed_data
   } else {
     res$modcv <- FALSE

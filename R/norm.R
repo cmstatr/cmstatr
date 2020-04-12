@@ -181,9 +181,6 @@ calc_cv_star <- function(cv) {
 #'
 #'
 #' @param x a vector of data to transform
-#' @param group a vector indicating the group to which each observation in
-#'        \code{x} belongs. If this is NULL, the data will be treated as
-#'        unstructured (without grouping)
 #' @param condition a vector indicating the condition to which each
 #'        observation belongs
 #' @param batch a vector indicating the batch to which each observation
@@ -199,8 +196,8 @@ calc_cv_star <- function(cv) {
 #' library(dplyr)
 #' carbon.fabric %>%
 #'   filter(test == "FT") %>%
-#'   mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
 #'   group_by(condition) %>%
+#'   mutate(trans_strength = transform_mod_cv(strength)) %>%
 #'   summarize(cv = sd(strength) / mean(strength),
 #'             mod_cv = sd(trans_strength) / mean(trans_strength))
 #'
@@ -223,7 +220,7 @@ transform_mod_cv_2_within_condition <- function(x, batch, cv_star) {  # nolint
     stop("x and batches must be the same length")
   }
 
-  x_prime <- transform_mod_cv(x, batch)
+  x_prime <- transform_mod_cv_grouped(x, batch)
   n <- length(x)
   x_bar <- mean(x)
 
@@ -282,13 +279,7 @@ transform_mod_cv_2 <- function(x, condition, batch) {
   res
 }
 
-#' @rdname transform_mod_cv
-#' @export
-transform_mod_cv <- function(x, group = NULL) {
-  if (is.null(group)) {
-    group <- rep("A", length(x))
-  }
-
+transform_mod_cv_grouped <- function(x, group) {
   if (length(x) != length(group)) {
     stop("x and groups must be the same length")
   }
@@ -306,4 +297,11 @@ transform_mod_cv <- function(x, group = NULL) {
   })
 
   res
+}
+
+#' @rdname transform_mod_cv
+#' @export
+transform_mod_cv <- function(x) {
+  group <- rep("A", length(x))
+  transform_mod_cv_grouped(x, group)
 }

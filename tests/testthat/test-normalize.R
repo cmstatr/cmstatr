@@ -119,8 +119,8 @@ poolable_data <- tribble(
 
 test_that("Modified CV transform produces values that match CMH17-STATS", {
   res <- poolable_data %>%
-    mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
     group_by(condition) %>%
+    mutate(trans_strength = transform_mod_cv(strength)) %>%
     summarise(cv = sd(strength) / mean(strength),
               mod_cv = sd(trans_strength) / mean(trans_strength))
 
