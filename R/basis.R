@@ -650,9 +650,9 @@ pooled_rules <- list(
            paste0("Maximum normed residual test detected ",
                   "outliers within one or more batch and group"))
   },
-  between_group_variability = function(x, groups, batch, ...) {
+  between_group_variability = function(x_ad, groups, batch, ...) {
     group_adk <- sapply(unique(groups), function(g) {
-      x_group <- x[groups == g]
+      x_group <- x_ad[groups == g]
       batch_group <- batch[groups == g]
       adk <- ad_ksample(x = x_group, groups = batch_group)
       !adk$reject_same_dist
@@ -671,8 +671,8 @@ pooled_rules <- list(
            paste0("Maximum normed residual test detected ",
                   "outliers within one or more group"))
   },
-  pooled_data_normal = function(x, groups, ...) {
-    norm_x <- normalize_group_mean(x = x, group = groups)
+  pooled_data_normal = function(x_ad, groups, ...) {
+    norm_x <- normalize_group_mean(x = x_ad, group = groups)
     ad <- anderson_darling_normal(x = norm_x)
     ifelse(!ad$reject_distribution, "",
            paste0("Anderson-Darling test rejects hypothesis that pooled ",
@@ -725,19 +725,22 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  check_result <- perform_checks(pooled_rules_cv, x = res$data,
-                                 groups = res$groups,
-                                 batch = res$batch, override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
-
   if (modcv == TRUE) {
     res$modcv <- TRUE
-    res$modcv_transformed_data <- transform_mod_cv(res$data, res$groups)
+    res$modcv_transformed_data <- transform_mod_cv_grouped(res$data, res$groups)
     data_to_use <- res$modcv_transformed_data
+    x_ad <- transform_mod_cv_2(res$data, res$groups, res$batch)
   } else {
     res$modcv <- FALSE
     data_to_use <- res$data
+    x_ad <- data_to_use
   }
+
+  check_result <- perform_checks(pooled_rules_cv, x = data_to_use,
+                                 x_ad = x_ad,
+                                 groups = res$groups,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   norm_data <- normalize_group_mean(data_to_use, res$groups)
 
@@ -803,19 +806,22 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  check_result <- perform_checks(pooled_rules_sd, x = res$data,
-                                 groups = res$groups,
-                                 batch = res$batch, override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
-
   if (modcv == TRUE) {
     res$modcv <- TRUE
-    res$modcv_transformed_data <- transform_mod_cv(res$data, res$groups)
+    res$modcv_transformed_data <- transform_mod_cv_grouped(res$data, res$groups)
     data_to_use <- res$modcv_transformed_data
+    x_ad <- transform_mod_cv_2(res$data, res$groups, res$batch)
   } else {
     res$modcv <- FALSE
     data_to_use <- res$data
+    x_ad <- data_to_use
   }
+
+  check_result <- perform_checks(pooled_rules_sd, x = data_to_use,
+                                 x_ad = x_ad,
+                                 groups = res$groups,
+                                 batch = res$batch, override = override)
+  res$diagnostic_failures <- names(check_result[!check_result])
 
   pooled_sd <- sqrt(
     sum(
