@@ -55,24 +55,17 @@ is applied to produce the transformed data \eqn{x'}.
 This transformed data is further transformed using the following
 equation.
 
-\deqn{x'' = C (x'_i - x_bar_i) + x_bar_i}{
-  x\prime\prime = C \left(x_i\prime - \bar{x_i}\right) + \bar{x_i}
-}
+\deqn{x'' = C (x'_i - \bar{x_i}) + \bar{x_i}}{
+  x'' = C (x'_i - x_bar_i) + x_bar_i}
 
 Where:
 
-\deqn{C = sqrt(SSE* / SSE')}{
-  C = \sqrt\left(\frac{SSE^{*}}{SSE^{\prime}}\right)
-}
+\deqn{C = \sqrt{\frac{SSE^*}{SSE'}}}{C = sqrt(SSE* / SSE')}
 
-\deqn{SSE\* = (n-1) (CV\* x_bar)^2 - sum(n_i(x_bar_i-x_bar)^2)}{
-  SSE^{\*} = \left(n-1\right)\left(CV^{\*} \bar{x}\right)^2 -
-  \sum\left[n_i \left(\bar{x_i}-\bar{x}\right)^2\right]
-}
+\deqn{SSE^* = (n-1) (CV^* \bar{x})^2 - \sum(n_i(\bar{x_i}-\bar{x})^2)}{
+  SSE* = (n-1) (CV* x_bar)^2 - sum(n_i(x_bar_i-x_bar)^2)}
 
-\deqn{SSE' = sum(x'_i - x_bar_i)^2}{
-  SSE\prime = \sum\left(x_i\prime - \bar{x_i}\right)^2
-}
+\deqn{SSE' = \sum(x'_i - \bar{x_i})^2}{SSE' = sum(x'_i - x_bar_i)^2}
 }
 \examples{
 # Transform data according to the modified CV transformation
