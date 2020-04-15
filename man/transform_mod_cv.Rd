@@ -2,10 +2,10 @@
 % Please edit documentation in R/norm.R
 \name{transform_mod_cv}
 \alias{transform_mod_cv}
-\alias{transform_mod_cv_2}
+\alias{transform_mod_cv_ad}
 \title{Transforms data according to the modified CV rule}
 \usage{
-transform_mod_cv_2(x, condition, batch)
+transform_mod_cv_ad(x, condition, batch)
 
 transform_mod_cv(x)
 }
@@ -27,8 +27,10 @@ Two versions of this transformation are implemented. The first version,
 no other structure) according to the modified CV rules.
 
 The second
-version, \code{transform_mod_cv_2()}, transforms data that is structured
-according to both condition and batch.
+version, \code{transform_mod_cv_ad()}, transforms data that is structured
+according to both condition and batch, as is commonly done for
+the Anderson-Darling k-Sample and Anderson-Darling tests when pooling
+across environments.
 }
 \details{
 \code{transform_mod_cv()} takes a vector
@@ -45,7 +47,7 @@ Where Si* is the modified standard deviation (mod CV times mean) for
 the group; Si is the standard deviation for the group, x_bar_i is
 the group mean and xi is the observation.
 
-\code{transform_mod_cv_2()} takes a vector containing the observations
+\code{transform_mod_cv_ad()} takes a vector containing the observations
 plus a vector containing the corresponding conditions and a vector
 containing the batches. This function first calculates the modified
 CV value from the data from each condition (independently). Then,

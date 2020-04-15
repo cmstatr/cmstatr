@@ -729,7 +729,7 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
     res$modcv <- TRUE
     res$modcv_transformed_data <- transform_mod_cv_grouped(res$data, res$groups)
     data_to_use <- res$modcv_transformed_data
-    x_ad <- transform_mod_cv_2(res$data, res$groups, res$batch)
+    x_ad <- transform_mod_cv_ad(res$data, res$groups, res$batch)
   } else {
     res$modcv <- FALSE
     data_to_use <- res$data
@@ -810,7 +810,7 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
     res$modcv <- TRUE
     res$modcv_transformed_data <- transform_mod_cv_grouped(res$data, res$groups)
     data_to_use <- res$modcv_transformed_data
-    x_ad <- transform_mod_cv_2(res$data, res$groups, res$batch)
+    x_ad <- transform_mod_cv_ad(res$data, res$groups, res$batch)
   } else {
     res$modcv <- FALSE
     data_to_use <- res$data

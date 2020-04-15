@@ -139,7 +139,7 @@ test_that("carbon.fabric.2 ADK matches CMH17-STATS - modCV (step 10)", {
   # Test for between-batch variability within each condition (modified CV)
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    mutate(trans_strength = transform_mod_cv_2(strength, condition, batch)) %>%
+    mutate(trans_strength = transform_mod_cv_ad(strength, condition, batch)) %>%
     group_by(condition) %>%
     nest() %>%
     mutate(adk = map(data, ~ad_ksample(.x, trans_strength, batch)),
@@ -169,7 +169,7 @@ test_that("carbon.fabric.2 Normality of pooled norm data - modCV (step 23)", {
   # test (modified CV)
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
-    mutate(trans_strength = transform_mod_cv_2(strength, condition, batch)) %>%
+    mutate(trans_strength = transform_mod_cv_ad(strength, condition, batch)) %>%
     mutate(norm_strength = normalize_group_mean(trans_strength, condition)) %>%
     anderson_darling_normal(norm_strength)
 
@@ -475,7 +475,7 @@ test_that("ADK for between-batch var. within each cond matches CMH17-STATS", {
     mutate(expect_equal(ad / (k - 1), expected, tolerance = 7e-3))
 
   test_dat %>%
-    mutate(strength = transform_mod_cv_2(strength, cond, batch)) %>%
+    mutate(strength = transform_mod_cv_ad(strength, cond, batch)) %>%
     group_by(cond) %>%
     nest() %>%
     mutate(adk = map(data, ~ad_ksample(.x, strength, batch)),
@@ -546,7 +546,7 @@ test_that("OSL of data from each batch CMH17-STATS", {
     mutate(expect_equal(osl, expected, tolerance = 1e-3))
 
   test_dat %>%
-    mutate(strength = transform_mod_cv_2(strength, cond, batch)) %>%
+    mutate(strength = transform_mod_cv_ad(strength, cond, batch)) %>%
     group_by(cond) %>%
     nest() %>%
     mutate(osl = map(data, ~anderson_darling_normal(.x, strength)),
@@ -598,7 +598,7 @@ test_that("OSL of pooled data after norm to group mean matches CMH17-STATS", {
   expect_equal(res$osl, 0.0798, tolerance = 1e-3)
 
   res <- test_dat %>%
-    mutate(strength = transform_mod_cv_2(strength, cond, batch)) %>%
+    mutate(strength = transform_mod_cv_ad(strength, cond, batch)) %>%
     mutate(normalized_strength = normalize_group_mean(strength, cond)) %>%
     anderson_darling_normal(normalized_strength)
   expect_equal(res$osl, 0.7045, tolerance = 1e-4)

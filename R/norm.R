@@ -132,8 +132,10 @@ calc_cv_star <- function(cv) {
 #' no other structure) according to the modified CV rules.
 #'
 #' The second
-#' version, \code{transform_mod_cv_2()}, transforms data that is structured
-#' according to both condition and batch.
+#' version, \code{transform_mod_cv_ad()}, transforms data that is structured
+#' according to both condition and batch, as is commonly done for
+#' the Anderson-Darling k-Sample and Anderson-Darling tests when pooling
+#' across environments.
 #'
 #' @details
 #' \code{transform_mod_cv()} takes a vector
@@ -150,7 +152,7 @@ calc_cv_star <- function(cv) {
 #' the group; Si is the standard deviation for the group, x_bar_i is
 #' the group mean and xi is the observation.
 #'
-#' \code{transform_mod_cv_2()} takes a vector containing the observations
+#' \code{transform_mod_cv_ad()} takes a vector containing the observations
 #' plus a vector containing the corresponding conditions and a vector
 #' containing the batches. This function first calculates the modified
 #' CV value from the data from each condition (independently). Then,
@@ -242,7 +244,7 @@ transform_mod_cv_2_within_condition <- function(x, batch, cv_star) {  # nolint
 
 #' @rdname transform_mod_cv
 #' @export
-transform_mod_cv_2 <- function(x, condition, batch) {
+transform_mod_cv_ad <- function(x, condition, batch) {
   if (is.null(batch)) {
     batch <- rep("A", length(x))
   }
