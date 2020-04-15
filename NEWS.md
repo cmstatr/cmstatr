@@ -1,4 +1,4 @@
-# Version x.x.x
+# Version 0.5.0
 - Renamed `transform_mod_cv_2` to `transform_mod_cv_ad` to better describe
   the purpose of this function.
 - Removed the optional argument from `transform_mod_cv`. Now if several
