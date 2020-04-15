@@ -1,6 +1,6 @@
 context("Levene's Test")
 
-suppressMessages(library(tidyverse))
+suppressMessages(library(dplyr))
 
 # From CMH-17-1G Section 8.3.11.1.1
 df <- tribble(

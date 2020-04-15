@@ -48,8 +48,8 @@ normalize_ply_thickness <- function(strength, measured_thk, nom_thk) {
 #' Normalize values to group means
 #'
 #' @description
-#' This function computes the mean of each group, then divides each value by
-#' the group mean for the group to which it belongs. This is commonly done
+#' This function computes the mean of each group, then divides each group by
+#' their corresponding group mean. This is commonly done
 #' when pooling data across environments.
 #'
 #' @param x the variable containing the data to normalized
@@ -63,7 +63,7 @@ normalize_ply_thickness <- function(strength, measured_thk, nom_thk) {
 #' the corresponding group.
 #'
 #' @references
-#' “Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
@@ -92,7 +92,7 @@ normalize_group_mean <- function(x, group) {
 #' Calculate the modified CV from the CV
 #'
 #' @description
-#' This function calculates the Modified CV based on an (unmodified) CV.
+#' This function calculates the Modified CV based on a (unmodified) CV.
 #' The modified CV is calculated based on the rules in CMH-17-1G. Those
 #' rules are:
 #'
@@ -108,7 +108,7 @@ normalize_group_mean <- function(x, group) {
 #' The value of the modified CV
 #'
 #' @references
-#' "Composites Materials Handbook, Volume 1. Polymer Matrix Composites
+#' "Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,"
 #' SAE International, CMH-17-1G, Mar. 2012.
 #'
@@ -132,8 +132,10 @@ calc_cv_star <- function(cv) {
 #' no other structure) according to the modified CV rules.
 #'
 #' The second
-#' version, \code{transform_mod_cv_2()}, transforms data that is structured
-#' according to both condition and batch.
+#' version, \code{transform_mod_cv_ad()}, transforms data that is structured
+#' according to both condition and batch, as is commonly done for
+#' the Anderson-Darling k-Sample and Anderson-Darling tests when pooling
+#' across environments.
 #'
 #' @details
 #' \code{transform_mod_cv()} takes a vector
@@ -150,40 +152,30 @@ calc_cv_star <- function(cv) {
 #' the group; Si is the standard deviation for the group, x_bar_i is
 #' the group mean and xi is the observation.
 #'
-#' \code{transform_mod_cv_2()} takes a vector containing the observations
+#' \code{transform_mod_cv_ad()} takes a vector containing the observations
 #' plus a vector containing the corresponding conditions and a vector
 #' containing the batches. This function first calculates the modified
 #' CV value from the data from each condition (independently). Then,
 #' within each condition, the transformation
 #' \code{transform_mod_cv(x, batches)}
-#' is applied to produce the transformed data \deqn{x'}{\prime{x}}.
+#' is applied to produce the transformed data \eqn{x'}.
 #' This transformed data is further transformed using the following
 #' equation.
 #'
-#' \deqn{x'' = C (x'_i - x_bar_i) + x_bar_i}{
-#'   x\prime\prime = C \left(x_i\prime - \bar{x_i}\right) + \bar{x_i}
-#' }
+#' \deqn{x'' = C (x'_i - \bar{x_i}) + \bar{x_i}}{
+#'   x'' = C (x'_i - x_bar_i) + x_bar_i}
 #'
 #' Where:
 #'
-#' \deqn{C = sqrt(SSE* / SSE')}{
-#'   C = \sqrt\left(\frac{SSE^{*}}{SSE^{\prime}}\right)
-#' }
+#' \deqn{C = \sqrt{\frac{SSE^*}{SSE'}}}{C = sqrt(SSE* / SSE')}
 #'
-#' \deqn{SSE\* = (n-1) (CV\* x_bar)^2 - sum(n_i(x_bar_i-x_bar)^2)}{
-#'   SSE^{\*} = \left(n-1\right)\left(CV^{\*} \bar{x}\right)^2 -
-#'   \sum\left[n_i \left(\bar{x_i}-\bar{x}\right)^2\right]
-#' }
+#' \deqn{SSE^* = (n-1) (CV^* \bar{x})^2 - \sum(n_i(\bar{x_i}-\bar{x})^2)}{
+#'   SSE* = (n-1) (CV* x_bar)^2 - sum(n_i(x_bar_i-x_bar)^2)}
 #'
-#' \deqn{SSE' = sum(x'_i - x_bar_i)^2}{
-#'   SSE\prime = \sum\left(x_i\prime - \bar{x_i}\right)^2
-#' }
+#' \deqn{SSE' = \sum(x'_i - \bar{x_i})^2}{SSE' = sum(x'_i - x_bar_i)^2}
 #'
 #'
 #' @param x a vector of data to transform
-#' @param group a vector indicating the group to which each observation in
-#'        \code{x} belongs. If this is NULL, the data will be treated as
-#'        unstructured (without grouping)
 #' @param condition a vector indicating the condition to which each
 #'        observation belongs
 #' @param batch a vector indicating the batch to which each observation
@@ -196,11 +188,11 @@ calc_cv_star <- function(cv) {
 #' # Transform data according to the modified CV transformation
 #' # and report the original and modified CV for each condition
 #'
-#' library(tidyverse)
+#' library(dplyr)
 #' carbon.fabric %>%
 #'   filter(test == "FT") %>%
-#'   mutate(trans_strength = transform_mod_cv(strength, condition)) %>%
 #'   group_by(condition) %>%
+#'   mutate(trans_strength = transform_mod_cv(strength)) %>%
 #'   summarize(cv = sd(strength) / mean(strength),
 #'             mod_cv = sd(trans_strength) / mean(trans_strength))
 #'
@@ -223,7 +215,7 @@ transform_mod_cv_2_within_condition <- function(x, batch, cv_star) {  # nolint
     stop("x and batches must be the same length")
   }
 
-  x_prime <- transform_mod_cv(x, batch)
+  x_prime <- transform_mod_cv_grouped(x, batch)
   n <- length(x)
   x_bar <- mean(x)
 
@@ -252,7 +244,7 @@ transform_mod_cv_2_within_condition <- function(x, batch, cv_star) {  # nolint
 
 #' @rdname transform_mod_cv
 #' @export
-transform_mod_cv_2 <- function(x, condition, batch) {
+transform_mod_cv_ad <- function(x, condition, batch) {
   if (is.null(batch)) {
     batch <- rep("A", length(x))
   }
@@ -282,13 +274,7 @@ transform_mod_cv_2 <- function(x, condition, batch) {
   res
 }
 
-#' @rdname transform_mod_cv
-#' @export
-transform_mod_cv <- function(x, group = NULL) {
-  if (is.null(group)) {
-    group <- rep("A", length(x))
-  }
-
+transform_mod_cv_grouped <- function(x, group) {
   if (length(x) != length(group)) {
     stop("x and groups must be the same length")
   }
@@ -306,4 +292,11 @@ transform_mod_cv <- function(x, group = NULL) {
   })
 
   res
+}
+
+#' @rdname transform_mod_cv
+#' @export
+transform_mod_cv <- function(x) {
+  group <- rep("A", length(x))
+  transform_mod_cv_grouped(x, group)
 }

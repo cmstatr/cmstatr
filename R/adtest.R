@@ -2,8 +2,8 @@
 #' Anderson-Darling test for goodness of fit
 #'
 #' @description
-#' Calculates the Anderson-Darling test statistic for a sample, given
-#' a particular distribution and computes the significance level.
+#' Calculates the Anderson-Darling test statistic for a sample given
+#' a particular distribution, and computes the significance level.
 #'
 #' @param data a data.frame-like object (optional)
 #' @param x a numeric vector or a variable in the data.frame
@@ -30,7 +30,7 @@
 #'
 #' @details
 #' The Anderson-Darling test statistic is calculated for the distribution
-#' given.
+#' given by the user.
 #'
 #' The significance level is calculated assuming that the parameters
 #' of the distribution are unknown; these parameters are estimate from the
@@ -59,7 +59,7 @@
 #' J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
 #' New York: Wiley, 1982.
 #'
-#' "Composites Materials Handbook, Volume 1. Polymer Matrix
+#' "Composite Materials Handbook, Volume 1. Polymer Matrix
 #' Composites Guideline for Characterization of Structural
 #' Materials," SAE International, CMH-17-1G, Mar. 2012.
 #'
@@ -102,8 +102,8 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
 #' Glance at an \code{anderson_darling} object
 #'
 #' @description
-#' Glance accepts an object of type basis and returns a
-#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' Glance accepts an object of type \code{anderson_darling} and
+#' returns a \code{\link[tibble:tibble]{tibble::tibble}} with
 #' one row of summaries.
 #'
 #' Glance does not do any calculations: it just gathers the results in a

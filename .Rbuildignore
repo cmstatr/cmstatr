@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 GenerateFakeData.R
 ^\.github
+^paper
+^LICENSE
+^README.Rmd

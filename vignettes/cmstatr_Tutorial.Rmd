@@ -23,11 +23,16 @@ reproducible statistical analysis of composite materials. In this tutorial,
 we'll explore the basic functionality of `cmstatr`.
 
 Before we can actually use the package, we'll need to load it. We'll also load
-the `tidyverse` package, which we'll talk about shortly.
+the `dplyr` package, which we'll talk about shortly. There are also a few other
+packages that we'll load. These could all be loaded by loading the
+`tidyverse` package instead.
 
 ```{r message=FALSE}
 library(cmstatr)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(purrr)
 ```
 
 # Input Data
@@ -191,34 +196,12 @@ whether to continue.
 
 
 ```{r}
-StatNcdf <- ggproto(
-  "stat_ncdf",
-  Stat,
-  compute_group = function(data, scales, n) {
-    x <- data$x
-    x <- seq(from = min(x), to = max(x), length.out = n)
-    y = pnorm(x, mean(x), sd(x), lower.tail = TRUE)
-    data.frame(x = x, y = y)
-  },
-  required_aes = c("x")
-  )
-
-stat_ncdf <- function(mapping = NULL, data = NULL, geom = "smooth",
-                      position = "identity", show.legend = NA,
-                      inherit.aes = TRUE, n = 100, ...) {
-    layer(
-      stat = StatNcdf, data = data, geom = geom, position = position,
-      mapping = mapping, show.legend = show.legend,
-      inherit.aes = inherit.aes, params = list(n = n, ...)
-    )
-}
-
 norm_data %>%
   filter(test == "WT" & condition == "RTD") %>%
   group_by(batch) %>%
   ggplot(aes(x = strength.norm, color = batch)) +
-  stat_ecdf(geom = "point", pad = TRUE) +
-  stat_ncdf() +
+  stat_normal_surv_func() +
+  stat_esf() +
   ggtitle("Distribution of Data For Each Batch")
 ```
 

@@ -5,7 +5,11 @@
 \alias{carbon.fabric}
 \alias{carbon.fabric.2}
 \title{Sample data for a generic carbon fabric}
-\format{An object of class \code{data.frame} with 216 rows and 5 columns.}
+\format{
+An object of class \code{data.frame} with 216 rows and 5 columns.
+
+An object of class \code{data.frame} with 177 rows and 8 columns.
+}
 \usage{
 carbon.fabric
 
@@ -13,8 +17,8 @@ carbon.fabric.2
 }
 \description{
 Datasets containing sample data that is typical of a generic carbon
-prepreg fabric. This data is used in several examples within the
+fabric prepreg. This data is used in several examples within the
 \code{cmstatr} package. This data is fictional and should
-not be used for anything besides learning how to use this package.
+only be used for learning how to use this package.
 }
 \keyword{datasets}

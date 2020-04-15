@@ -2,12 +2,12 @@
 % Please edit documentation in R/norm.R
 \name{transform_mod_cv}
 \alias{transform_mod_cv}
-\alias{transform_mod_cv_2}
+\alias{transform_mod_cv_ad}
 \title{Transforms data according to the modified CV rule}
 \usage{
-transform_mod_cv_2(x, condition, batch)
+transform_mod_cv_ad(x, condition, batch)
 
-transform_mod_cv(x, group = NULL)
+transform_mod_cv(x)
 }
 \arguments{
 \item{x}{a vector of data to transform}
@@ -17,10 +17,6 @@ observation belongs}
 
 \item{batch}{a vector indicating the batch to which each observation
 belongs}
-
-\item{group}{a vector indicating the group to which each observation in
-\code{x} belongs. If this is NULL, the data will be treated as
-unstructured (without grouping)}
 }
 \value{
 A vector of transformed data
@@ -31,8 +27,10 @@ Two versions of this transformation are implemented. The first version,
 no other structure) according to the modified CV rules.
 
 The second
-version, \code{transform_mod_cv_2()}, transforms data that is structured
-according to both condition and batch.
+version, \code{transform_mod_cv_ad()}, transforms data that is structured
+according to both condition and batch, as is commonly done for
+the Anderson-Darling k-Sample and Anderson-Darling tests when pooling
+across environments.
 }
 \details{
 \code{transform_mod_cv()} takes a vector
@@ -49,44 +47,37 @@ Where Si* is the modified standard deviation (mod CV times mean) for
 the group; Si is the standard deviation for the group, x_bar_i is
 the group mean and xi is the observation.
 
-\code{transform_mod_cv_2()} takes a vector containing the observations
+\code{transform_mod_cv_ad()} takes a vector containing the observations
 plus a vector containing the corresponding conditions and a vector
 containing the batches. This function first calculates the modified
 CV value from the data from each condition (independently). Then,
 within each condition, the transformation
 \code{transform_mod_cv(x, batches)}
-is applied to produce the transformed data \deqn{x'}{\prime{x}}.
+is applied to produce the transformed data \eqn{x'}.
 This transformed data is further transformed using the following
 equation.
 
-\deqn{x'' = C (x'_i - x_bar_i) + x_bar_i}{
-  x\prime\prime = C \left(x_i\prime - \bar{x_i}\right) + \bar{x_i}
-}
+\deqn{x'' = C (x'_i - \bar{x_i}) + \bar{x_i}}{
+  x'' = C (x'_i - x_bar_i) + x_bar_i}
 
 Where:
 
-\deqn{C = sqrt(SSE* / SSE')}{
-  C = \sqrt\left(\frac{SSE^{*}}{SSE^{\prime}}\right)
-}
+\deqn{C = \sqrt{\frac{SSE^*}{SSE'}}}{C = sqrt(SSE* / SSE')}
 
-\deqn{SSE\* = (n-1) (CV\* x_bar)^2 - sum(n_i(x_bar_i-x_bar)^2)}{
-  SSE^{\*} = \left(n-1\right)\left(CV^{\*} \bar{x}\right)^2 -
-  \sum\left[n_i \left(\bar{x_i}-\bar{x}\right)^2\right]
-}
+\deqn{SSE^* = (n-1) (CV^* \bar{x})^2 - \sum(n_i(\bar{x_i}-\bar{x})^2)}{
+  SSE* = (n-1) (CV* x_bar)^2 - sum(n_i(x_bar_i-x_bar)^2)}
 
-\deqn{SSE' = sum(x'_i - x_bar_i)^2}{
-  SSE\prime = \sum\left(x_i\prime - \bar{x_i}\right)^2
-}
+\deqn{SSE' = \sum(x'_i - \bar{x_i})^2}{SSE' = sum(x'_i - x_bar_i)^2}
 }
 \examples{
 # Transform data according to the modified CV transformation
 # and report the original and modified CV for each condition
 
-library(tidyverse)
+library(dplyr)
 carbon.fabric \%>\%
   filter(test == "FT") \%>\%
-  mutate(trans_strength = transform_mod_cv(strength, condition)) \%>\%
   group_by(condition) \%>\%
+  mutate(trans_strength = transform_mod_cv(strength)) \%>\%
   summarize(cv = sd(strength) / mean(strength),
             mod_cv = sd(trans_strength) / mean(trans_strength))
 

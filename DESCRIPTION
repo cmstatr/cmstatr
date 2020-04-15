@@ -1,7 +1,7 @@
 Package: cmstatr
 Type: Package
 Title: Statistical Methods for Composite Material Data
-Version: 0.4.0
+Version: 0.5.0
 Depends: R (>= 3.3)
 Authors@R: c(
     person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",
@@ -17,22 +17,23 @@ License: AGPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
-    dplyr,
     generics,
+    ggplot2,
     kSamples,
     MASS,
     rlang,
     stats,
     tibble
 Suggests:
-    glue,
+    dplyr,
     knitr,
     lintr,
+    purrr,
     rmarkdown,
     spelling,
     testthat,
     tidyr,
-    tidyverse
-RoxygenNote: 7.0.2
+    vdiffr
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr
 Language: en-US

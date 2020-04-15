@@ -57,8 +57,8 @@ columns:
   indicating the result of the test for change in mean}
 }
 \description{
-Glance accepts an object of type basis and returns a
-\code{\link[tibble:tibble]{tibble::tibble}} with
+Glance accepts an object of type \code{equiv_change_mean}
+ and returns a \code{\link[tibble:tibble]{tibble::tibble}} with
 one row of summaries.
 
 Glance does not do any calculations: it just gathers the results in a
@@ -74,7 +74,7 @@ glance(eq)
 ##   alpha n_sample mean_sample sd_sample n_qual mean_qual sd_qual modcv
 ##   <dbl>    <int>       <dbl>     <dbl>  <int>     <dbl>   <dbl> <lgl>
 ## 1  0.01        5        85.8      9.93     30      100.    3.90 FALSE
-## # â€¦ with 6 more variables: sp <dbl>, t0 <dbl>, t_req <dbl>,
+## # ... with 6 more variables: sp <dbl>, t0 <dbl>, t_req <dbl>,
 ## #   threshold_min <dbl>, threshold_max <dbl>, result <chr>
 
 }

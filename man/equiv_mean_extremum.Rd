@@ -81,7 +81,7 @@ with the following named elements:
   have a value of \code{NULL}}
 }
 \description{
-Determine equivalency or equivalency thresholds based on both minimum
+Determines equivalency or equivalency thresholds based on both minimum
 individual and mean.
 }
 \details{

@@ -1,6 +1,6 @@
 context("mnr")
 
-suppressMessages(library(tidyverse))
+suppressMessages(library(dplyr))
 
 cmh_17_cv <- tribble(
   ~n, ~c,
@@ -313,6 +313,38 @@ test_that("Both vectors and data.frames can be passed to the MNR function", {
   expect_lte(abs(res2$crit - 2.02), 0.001)
   expect_equal(nrow(res2$outliers), 1)  # one outlier for this batch
   expect_equal(res2$n_outliers, 1)
+})
+
+test_that("Glance returns correct indicies for multiple outliers", {
+  x <- c(129.18348, 131.07326, 122.68332, 123.06133, 126.82286,
+         133.25628, 123.55778, 125.46771, 134.88326, 137.98354,
+         128.62570, 125.07538, 130.88193, 128.33410, 130.94715,
+         135.19539, 136.42983, 135.83982, 130.80670, 126.02690,
+         138.88892, 124.68059, 131.11826, 120.19239, 125.54239,
+         124.95325, 139.76737, 136.47803, 134.99572, 84.27198,
+         86.77162, 86.48636
+  )
+
+  res <- maximum_normed_residual(x = x)
+
+  expect_equal(res$n_outliers, 3)
+  expect_equal(res$outliers$index, c(30, 32, 31))
+})
+
+test_that("Glance works with repeated values", {
+  x <- c(129.18348, 131.07326, 122.68332, 123.06133, 126.82286,
+         133.25628, 123.55778, 125.46771, 134.88326, 137.98354,
+         128.62570, 125.07538, 130.88193, 128.33410, 130.94715,
+         135.19539, 136.42983, 135.83982, 130.80670, 126.02690,
+         138.88892, 124.68059, 131.11826, 120.19239, 125.54239,
+         124.95325, 139.76737, 136.47803, 134.99572, 64.27198,
+         64.27198, 64.27198
+  )
+
+  res <- maximum_normed_residual(x = x)
+
+  expect_equal(res$n_outliers, 3)
+  expect_equal(res$outliers$index, c(30, 31, 32))
 })
 
 test_that("glance method returns expected results", {
