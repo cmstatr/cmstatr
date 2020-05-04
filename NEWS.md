@@ -1,4 +1,5 @@
-# Version x.x.x
+# Version 0.5.1
+- Fixed the title of the graphing vignette
 
 # Version 0.5.0
 - Renamed `transform_mod_cv_2` to `transform_mod_cv_ad` to better describe
@@ -8,7 +9,7 @@
   using `dplyr::group_by` or a similar strategy.
 - Fixed bug related to the automated diagnostic tests of pooled basis methods
   when `modcv = TRUE`. Previously, the diagnostic tests were performed with
-  the unmodified data. After this bug fix, the the data after teh modified
+  the unmodified data. After this bug fix, the the data after the modified
   CV transform is used for the diagnostic tests.
 - Added `stat` extensions to `ggplot2`:
   - `stat_normal_surv_func` to plot a normal survival function based on
