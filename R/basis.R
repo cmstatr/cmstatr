@@ -412,11 +412,11 @@ print.basis <- function(x, ...) {
 
 single_point_rules <- list(
   outliers_within_batch = function(x, batch, ...) {
-    group_mnr <- sapply(unique(batch), function(b) {
+    group_mnr <- vapply(unique(batch), function(b) {
       x_group <- x[batch == b]
       mnr <- maximum_normed_residual(x = x_group)
       mnr$n_outliers == 0
-    })
+    }, FUN.VALUE = logical(1L))
     ifelse(all(group_mnr), "",
            paste0("Maximum normed residual test detected ",
                   "outliers within one or more batch"))
@@ -635,38 +635,38 @@ basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
 
 pooled_rules <- list(
   outliers_within_batch = function(x, groups, batch, ...) {
-    group_batch_mnr <- sapply(unique(groups), function(g) {
-      batch_mnr <- sapply(unique(batch), function(b) {
+    group_batch_mnr <- vapply(unique(groups), function(g) {
+      batch_mnr <- vapply(unique(batch), function(b) {
         x_group <- x[batch == b & groups == g]
         if (length(x_group) == 0) {
           return(TRUE)
         }
         mnr <- maximum_normed_residual(x = x_group)
         return(mnr$n_outliers == 0)
-      })
+      }, FUN.VALUE = logical(1L))
       all(batch_mnr)
-    })
+    }, FUN.VALUE = logical(1L))
     ifelse(all(group_batch_mnr), "",
            paste0("Maximum normed residual test detected ",
                   "outliers within one or more batch and group"))
   },
   between_group_variability = function(x_ad, groups, batch, ...) {
-    group_adk <- sapply(unique(groups), function(g) {
+    group_adk <- vapply(unique(groups), function(g) {
       x_group <- x_ad[groups == g]
       batch_group <- batch[groups == g]
       adk <- ad_ksample(x = x_group, groups = batch_group)
       !adk$reject_same_dist
-    })
+    }, FUN.VALUE = logical(1L))
     ifelse(all(group_adk), "",
            paste0("Anderson-Darling k-Sample test indicates that ",
                   "batches are drawn from different distributions"))
   },
   outliers_within_group = function(x, groups, ...) {
-    group_mnr <- sapply(unique(groups), function(g) {
+    group_mnr <- vapply(unique(groups), function(g) {
       x_group <- x[groups == g]
       mnr <- maximum_normed_residual(x = x_group)
       return(mnr$n_outliers == 0)
-    })
+    }, FUN.VALUE = logical(1L))
     ifelse(all(group_mnr), "",
            paste0("Maximum normed residual test detected ",
                   "outliers within one or more group"))
@@ -746,7 +746,7 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
 
   pooled_sd <- sqrt(sum((norm_data - 1) ^ 2) / (res$n - res$r))
 
-  basis <- sapply(levels(as.factor(res$groups)), function(g) {
+  basis <- vapply(levels(as.factor(res$groups)), function(g) {
     nj <- length(data_to_use[res$groups == g])
     z <- qnorm(p)
     suppressWarnings(
@@ -754,7 +754,7 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
     )
     xj_bar <- mean(data_to_use[res$groups == g])
     xj_bar * (1 - kj * pooled_sd)
-  })
+  }, FUN.VALUE = numeric(1L))
 
   res$basis <- data.frame(group = names(basis), value = basis)
 
@@ -825,13 +825,13 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
 
   pooled_sd <- sqrt(
     sum(
-      sapply(levels(as.factor(res$groups)), function(g) {
+      vapply(levels(as.factor(res$groups)), function(g) {
         xj_bar <- mean(data_to_use[res$groups == g])
         sum((data_to_use[res$groups == g] - xj_bar) ^ 2)
-      })
+      }, FUN.VALUE = numeric(1L))
     ) / (res$n - res$r))
 
-  basis <- sapply(levels(as.factor(res$groups)), function(g) {
+  basis <- vapply(levels(as.factor(res$groups)), function(g) {
     nj <- length(data_to_use[res$groups == g])
     z <- qnorm(p)
     suppressWarnings(
@@ -839,7 +839,7 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
     )
     xj_bar <- mean(data_to_use[res$groups == g])
     xj_bar - kj * pooled_sd
-  })
+  }, FUN.VALUE = numeric(1L))
 
   res$basis <- data.frame(group = names(basis), value = basis)
 
@@ -949,17 +949,17 @@ hk_ext_z_j_opt <- function(n, p, conf) {
   # that is closest to the population quantile for a standard
   # normal distribution
   j <- (i + 1):n
-  z_vals <- sapply(j, function(ji) {
+  z_vals <- vapply(j, function(ji) {
     hk_ext_z(n, i, ji, p, conf)
-  })
+  }, FUN.VALUE = numeric(1L))
 
-  err_vals <- sapply(seq(along.with = j), function(index) {
+  err_vals <- vapply(seq(along.with = j), function(index) {
     ji <- j[index]
     zi <- z_vals[index]
     e1 <- expected_order_statistic(i, n)
     e2 <- expected_order_statistic(ji, n)
     abs(zi * e1 + (1 - zi) * e2 - qnorm(p))
-  })
+  }, FUN.VALUE = numeric(1L))
 
   list(
     z = z_vals[err_vals == min(err_vals)],
@@ -1120,9 +1120,9 @@ nonpara_binomial_rank <- function(n, p, conf) {
   p <- 1 - p
 
   e_fcn <- function(r) {
-    sum(sapply(r:n, function(w) {
+    sum(vapply(r:n, function(w) {
       exp(lchoose(n, w) + w * log(p) + (n - w) * log(1 - p))
-    }))
+    }, FUN.VALUE = numeric(1L)))
   }
 
   r1 <- 1
@@ -1230,11 +1230,11 @@ basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
 
 anova_rules <- list(
   outliers_within_group = function(x, groups, ...) {
-    group_mnr <- sapply(unique(groups), function(b) {
+    group_mnr <- vapply(unique(groups), function(b) {
       x_group <- x[groups == b]
       mnr <- maximum_normed_residual(x = x_group)
       mnr$n_outliers == 0
-    })
+    }, FUN.VALUE = logical(1L))
     ifelse(all(group_mnr), "",
            paste0("Maximum normed residual test detected ",
                   "outliers within one or more batch"))
@@ -1291,19 +1291,21 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
 
   grand_mean <- mean(res$data)
 
-  ssb <- sum(sapply(
+  ssb <- sum(vapply(
     levels(as.factor(res$groups)),
     function(g) {
       group_data <- res$data[res$groups == g]
       length(group_data) * mean(group_data) ^ 2
-    }
+    },
+    FUN.VALUE = numeric(1L)
   )) - res$n * grand_mean ^ 2
 
-  sst <- sum(sapply(
+  sst <- sum(vapply(
     res$data,
     function(xi) {
       xi ^ 2
-    }
+    },
+    FUN.VALUE = numeric(1L)
   )) - res$n * grand_mean ^ 2
 
   sse <- sst - ssb
@@ -1311,12 +1313,13 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
   msb <- ssb / (res$r - 1)
   mse <- sse / (res$n - res$r)
 
-  n_star <- sum(sapply(
+  n_star <- sum(vapply(
     levels(as.factor(res$groups)),
     function(g) {
       group_data <- res$data[res$group == g]
       length(group_data) ^ 2 / res$n
-    }
+    },
+    FUN.VALUE = numeric(1L)
   ))
 
   effective_batch <- (res$n - n_star) / (res$r - 1)
