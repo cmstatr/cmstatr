@@ -1,9 +1,10 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# cmstatr <img src="man/figures/logo-240x278.png" align="right" alt="" width="120" />
+
 [![R build
 status](https://github.com/ComtekAdvancedStructures/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/ComtekAdvancedStructures/cmstatr/actions?workflow=R-CMD-check)
-
-# cmstatr
-
-Statistical tools for composite materials.
 
 # What It Does
 
@@ -35,15 +36,14 @@ carbon.fabric.2 %>%
   filter(test == "FC") %>%
   filter(condition == "RTD") %>%
   basis_normal(strength, batch)
+#> 
+#> Call:
+#> basis_normal(data = ., x = strength, batch = batch)
+#> 
+#> Distribution:  Normal    ( n =  18 )
+#> B-Basis:   ( p =  0.9 , conf =  0.95 )
+#> 76.88082
 ```
-
-    ## 
-    ## Call:
-    ## basis_normal(data = ., x = strength, batch = batch)
-    ## 
-    ## Distribution:  Normal    ( n =  18 )
-    ## B-Basis:   ( p =  0.9 , conf =  0.95 )
-    ## 76.88082
 
 For more examples of usage of the `cmstatr` package, see the tutorial
 vignette, which can be loaded as follows, once the package is installed:

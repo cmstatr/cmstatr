@@ -1,14 +1,21 @@
 ---
-output:
-  md_document:
-    preserve_yaml: false
-    variant: gfm
+output: github_document
 ---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/"
+)
+```
+
+# cmstatr <img src="man/figures/logo-240x278.png" align="right" alt="" width="120" />
 
 [![R build status](https://github.com/ComtekAdvancedStructures/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/ComtekAdvancedStructures/cmstatr/actions?workflow=R-CMD-check)
 
-# cmstatr
-Statistical tools for composite materials.
 
 # What It Does
 The `cmstatr` package provides functions for performing statistical analysis
