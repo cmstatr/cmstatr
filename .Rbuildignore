@@ -8,3 +8,4 @@ GenerateFakeData.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^logo
