@@ -5,3 +5,6 @@ GenerateFakeData.R
 ^paper
 ^LICENSE
 ^README.Rmd
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
