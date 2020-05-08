@@ -208,3 +208,9 @@ test_that("glance.adk produces expected output", {
   expect_equal(glance_res[["reject_same_dist"]], FALSE)
 
 })
+
+test_that("ad_ksample checks that input vectors are equal length", {
+  expect_error({
+    ad_ksample(x = c(1, 2, 3), groups = c("A", "B"))
+  })
+})

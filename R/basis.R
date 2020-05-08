@@ -404,7 +404,7 @@ print.basis <- function(x, ...) {
       cat(x$basis[["value"]][j], "\n")
     }
   } else {
-    stop("`basis` is an unexpected data type")
+    stop("`basis` is an unexpected data type")  # nocov
   }
 
   cat("\n")
@@ -849,7 +849,8 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
 #' @importFrom stats pbeta dbeta
 hk_ext_h <- function(z, n, i, j, p) {
   if (!(1 <= i && i < j && j <= n)) {
-    stop("Error: The condition 1 <= i < j <= n must be true.")
+    # This function is called internally, so i, j and n should always be valid
+    stop("Error: The condition 1 <= i < j <= n must be true.")  # nocov
   }
 
   # for z >= 1
@@ -859,7 +860,7 @@ hk_ext_h <- function(z, n, i, j, p) {
     },
     lower = 1 - p, upper = 1)
   if (int$message != "OK") {
-    warning(int$message)
+    warning(int$message)  # nocov
   }
   qb + int$value
 }
@@ -1053,7 +1054,7 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
     j <- res$n
     z <- hk_ext_z(res$n, 1, j, p, conf)
   } else {
-    stop("Invalid value for method.")
+    stop("Invalid value for method.")  # nocov
   }
 
   x_ordered <- sort(res$data)

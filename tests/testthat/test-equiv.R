@@ -254,3 +254,192 @@ test_that("glance.equiv_change_mean produces expected results", {
   expect_equal(res$modcv[1], FALSE)
   expect_equal(res$result[1], "FAIL")
 })
+
+test_that("equiv_mean_extremum produces expected errors and warnings", {
+  expect_error(
+    equiv_mean_extremum(
+      alpha = -0.05, n_sample = 9,
+      mean_qual = 9.24,
+      sd_qual = 0.162),
+    "alpha"
+  )
+
+  expect_error(
+    equiv_mean_extremum(
+      alpha = 1.05, n_sample = 9,
+      mean_qual = 9.24,
+      sd_qual = 0.162),
+    "alpha"
+  )
+
+  expect_warning(
+    equiv_mean_extremum(
+      alpha = 0.05,
+      data_sample = runif(9),
+      n_sample = 9,
+      mean_qual = 9.24,
+      sd_qual = 0.162),
+    "n_sample"
+  )
+
+  expect_warning(
+    equiv_mean_extremum(
+      alpha = 0.05,
+      n_sample = 9,
+      data_qual = runif(28),
+      mean_qual = 9.24,
+      sd_qual = 0.162),
+    "mean_qual"
+  )
+
+  expect_warning(
+    equiv_mean_extremum(
+      alpha = 0.05,
+      n_sample = 9,
+      data_qual = runif(28),
+      mean_qual = 9.24,
+      sd_qual = 0.162),
+    "sd_qual"
+  )
+
+  expect_error(
+    equiv_mean_extremum(
+      alpha = 0.05,
+      mean_sample = 9.02,
+      sd_sample = 0.15785,
+      n_qual = 28, mean_qual = 9.24,
+      sd_qual = 0.162),
+    "sample"
+  )
+
+  expect_error(
+    equiv_mean_extremum(
+      alpha = 0.05,
+      n_sample = 9,
+      sd_qual = 0.162),
+    "mean_qual"
+  )
+
+  expect_error(
+    equiv_mean_extremum(
+      alpha = 0.05,
+      n_sample = 9,
+      mean_qual = 9.24),
+    "sd_qual"
+  )
+
+  expect_error(
+    equiv_mean_extremum(
+      alpha = 0.05,
+      mean_qual = 9.24,
+      sd_qual = 0.162),
+    "n_sample"
+  )
+})
+
+test_that("equiv_change_mean produces expected errors and warnings", {
+  expect_error(
+    equiv_change_mean(
+      alpha = -0.05, n_sample = 9, mean_sample = 9.02,
+      sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+      sd_qual = 0.162),
+    "alpha"
+  )
+
+  expect_error(
+    equiv_change_mean(
+      alpha = 1.05, n_sample = 9, mean_sample = 9.02,
+      sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+      sd_qual = 0.162),
+    "alpha"
+  )
+
+  expect_warning(
+    equiv_change_mean(
+      alpha = 0.05,
+      data_sample = runif(9),
+      n_sample = 9, mean_sample = 9.02,
+      sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+      sd_qual = 0.162),
+    "n_sample"
+  )
+
+  expect_error(
+    equiv_change_mean(
+      alpha = 0.05,
+      n_sample = 9,
+      sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+      sd_qual = 0.162),
+    "mean_sample"
+  )
+
+  expect_error(
+    equiv_change_mean(
+      alpha = 0.05,
+      n_sample = 9, mean_sample = 9.02,
+      n_qual = 28, mean_qual = 9.24,
+      sd_qual = 0.162),
+    "sd_sample"
+  )
+
+  expect_error(
+    equiv_change_mean(
+      alpha = 0.05,
+      n_sample = 9, mean_sample = 9.02,
+      sd_sample = 0.15785,
+      mean_qual = 9.24,
+      sd_qual = 0.162),
+    "n_qual"
+  )
+
+  expect_warning(
+    equiv_change_mean(
+      alpha = 0.05,
+      n_sample = 9, mean_sample = 9.02,
+      sd_sample = 0.15785,
+      data_qual = runif(28),
+      n_qual = 28, mean_qual = 9.24,
+      sd_qual = 0.162),
+    "mean_qual"
+  )
+
+  expect_warning(
+    equiv_change_mean(
+      alpha = 0.05,
+      n_sample = 9, mean_sample = 9.02,
+      sd_sample = 0.15785,
+      data_qual = runif(28),
+      n_qual = 28, mean_qual = 9.24,
+      sd_qual = 0.162),
+    "sd_qual"
+  )
+
+  expect_error(
+    equiv_change_mean(
+      alpha = 0.05,
+      mean_sample = 9.02,
+      sd_sample = 0.15785,
+      n_qual = 28, mean_qual = 9.24,
+      sd_qual = 0.162),
+    "sample"
+  )
+
+  expect_error(
+    equiv_change_mean(
+      alpha = 0.05,
+      n_sample = 9, mean_sample = 9.02,
+      sd_sample = 0.15785,
+      n_qual = 28,
+      sd_qual = 0.162),
+    "mean_qual"
+  )
+
+  expect_error(
+    equiv_change_mean(
+      alpha = 0.05,
+      n_sample = 9, mean_sample = 9.02,
+      sd_sample = 0.15785,
+      n_qual = 28, mean_qual = 9.24),
+    "sd_qual"
+  )
+})

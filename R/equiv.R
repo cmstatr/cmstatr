@@ -453,9 +453,13 @@ k_equiv <- function(alpha, n) {
     n = n,
     alpha = alpha
   )
+  # nocov start
   if (res$convergence != 0) {
-    warning("k-factor search did not converge. The results may be unreliable.")
+    warning(
+      "k-factor search did not converge. The results are unreliable."
+      )
   }
+  # nocov end
 
   return(res$par)
 }
