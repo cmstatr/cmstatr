@@ -5,3 +5,7 @@ template:
     image:
       src: "man/figures/logo-240x278.png"
       alt: "Statistical methods for composite material data: cmstatr"
+
+authors:
+  Stefan Kloppenborg:
+    href: https://www.kloppenborg.ca
