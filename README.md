@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# cmstatr <img src="man/figures/logo-240x278.png" align="right" alt="" width="120" />
+# cmstatr <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 [![R build
 status](https://github.com/ComtekAdvancedStructures/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/ComtekAdvancedStructures/cmstatr/actions?workflow=R-CMD-check)

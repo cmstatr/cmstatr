@@ -8,4 +8,6 @@ GenerateFakeData.R
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^logo
+^logo-graph.R$
+^logo-notes.md$
+^logo.svg$
