@@ -12,7 +12,7 @@ To learn more about \code{cmstatr}, start with the vignettes:
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://comtekadvancedstructures.github.io/cmstatr/}
+  \item \url{https://www.cmstatr.net/}
   \item \url{https://github.com/ComtekAdvancedStructures/cmstatr}
   \item Report bugs at \url{https://github.com/ComtekAdvancedStructures/cmstatr/issues}
 }
