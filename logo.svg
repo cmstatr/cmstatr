@@ -16,9 +16,9 @@
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="logo.svg"
-   inkscape:export-filename="/home/stefan/Comtek/R-Code/cmstatr/man/figures/logo-240x278.png"
-   inkscape:export-xdpi="138.98276"
-   inkscape:export-ydpi="138.98276">
+   inkscape:export-filename="/home/stefan/Comtek/R-Code/cmstatr/man/figures/logo-wbg-1280x640.png"
+   inkscape:export-xdpi="269.56"
+   inkscape:export-ydpi="269.56">
   <defs
      id="defs2">
     <style
@@ -115,11 +115,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.70000001"
-     inkscape:cx="-76.075588"
-     inkscape:cy="116.55517"
+     inkscape:zoom="0.98994951"
+     inkscape:cx="486.59089"
+     inkscape:cy="114.57285"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer3"
      showgrid="false"
      inkscape:window-width="1853"
      inkscape:window-height="1052"
@@ -134,7 +134,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -142,7 +142,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="White Background"
-     transform="translate(0,-1.1169434e-6)"
+     transform="translate(0,-2.2338868e-6)"
      style="display:inline">
     <rect
        style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -153,10 +153,24 @@
        y="1.343494e-06" />
   </g>
   <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="OpenGraphBorder"
+     transform="translate(0,-1.1169434e-6)"
+     style="display:none">
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.99999994;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1040"
+       width="120.61201"
+       height="60.276913"
+       x="-4.5"
+       y="-4.9706082" />
+  </g>
+  <g
      inkscape:label="Hex Background"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-37.979444,-33.702811)"
+     transform="translate(-37.979444,-33.702812)"
      style="display:inline">
     <path
        sodipodi:type="star"
@@ -179,7 +193,7 @@
      inkscape:groupmode="layer"
      id="layer8"
      inkscape:label="Density Plot"
-     transform="translate(-37.979444,-33.702811)"
+     transform="translate(-37.979444,-33.702812)"
      style="display:inline">
     <g
        id="g6463"
@@ -282,7 +296,7 @@
      inkscape:label="Instron Trace #2 filled"
      id="g5506"
      inkscape:groupmode="layer"
-     transform="translate(-37.979444,-33.702811)">
+     transform="translate(-37.979444,-33.702812)">
     <path
        inkscape:connector-curvature="0"
        id="path5458"
@@ -534,7 +548,7 @@
      inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="Coupon"
-     transform="translate(-37.979444,-33.702811)"
+     transform="translate(-37.979444,-33.702812)"
      style="display:inline">
     <path
        style="fill:#646464;fill-opacity:1;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-opacity:1"
@@ -547,7 +561,7 @@
      inkscape:groupmode="layer"
      id="layer9"
      inkscape:label="cmstatr"
-     transform="translate(-37.979444,-33.702811)"
+     transform="translate(-37.979444,-33.702812)"
      style="display:inline">
     <text
        xml:space="preserve"
@@ -563,7 +577,7 @@
          style="fill:#ffffff;fill-opacity:1;stroke-width:0.20245218">cmstatr</tspan></text>
   </g>
   <g
-     transform="translate(-37.979444,-33.702811)"
+     transform="translate(-37.979444,-33.702812)"
      id="g5021"
      inkscape:groupmode="layer"
      inkscape:label="Hex Border">

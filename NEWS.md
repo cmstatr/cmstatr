@@ -1,3 +1,7 @@
+# Version x.x.x
+- Internally use vapply instaed of sapply to improve code safety
+- Increased coverage of unit tests
+
 # Version 0.5.1
 - Fixed the title of the graphing vignette
 
