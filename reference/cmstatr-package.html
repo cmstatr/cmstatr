@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Anderson-Darling test for goodness of fit — anderson_darling • cmstatr</title>
+<title>cmstatr: Statistical Methods for Composite Material Data — cmstatr-package • cmstatr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Anderson-Darling test for goodness of fit — anderson_darling" />
-<meta property="og:description" content="Calculates the Anderson-Darling test statistic for a sample given
-a particular distribution, and computes the significance level." />
+<meta property="og:title" content="cmstatr: Statistical Methods for Composite Material Data — cmstatr-package" />
+<meta property="og:description" content="To learn more about cmstatr, start with the vignettes:
+browseVignettes(package = &quot;cmstatr&quot;)" />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
 
@@ -139,86 +139,27 @@ a particular distribution, and computes the significance level." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Anderson-Darling test for goodness of fit</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/adtest.R'><code>R/adtest.R</code></a></small>
-    <div class="hidden name"><code>anderson_darling.Rd</code></div>
+    <h1>cmstatr: Statistical Methods for Composite Material Data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/cmstatr.R'><code>R/cmstatr.R</code></a></small>
+    <div class="hidden name"><code>cmstatr-package.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculates the Anderson-Darling test statistic for a sample given
-a particular distribution, and computes the significance level.</p>
+    <p>To learn more about <code>cmstatr</code>, start with the vignettes:
+<code><a href='https://rdrr.io/r/utils/browseVignettes.html'>browseVignettes(package = "cmstatr")</a></code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>anderson_darling_normal</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)
 
-<span class='fu'>anderson_darling_lognormal</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)
 
-<span class='fu'>anderson_darling_weibull</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)</pre>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>data</th>
-      <td><p>a data.frame-like object (optional)</p></td>
-    </tr>
-    <tr>
-      <th>x</th>
-      <td><p>a numeric vector or a variable in the data.frame</p></td>
-    </tr>
-    <tr>
-      <th>alpha</th>
-      <td><p>the required significance to conclude that the data follows
-the specified distribution. Defaults to 0.05.</p></td>
-    </tr>
-    </table>
+    <div class='dont-index'><p>Useful links:</p><ul>
+<li><p><a href='https://www.cmstatr.net/'>https://www.cmstatr.net/</a></p></li>
+<li><p><a href='https://github.com/ComtekAdvancedStructures/cmstatr'>https://github.com/ComtekAdvancedStructures/cmstatr</a></p></li>
+<li><p>Report bugs at <a href='https://github.com/ComtekAdvancedStructures/cmstatr/issues'>https://github.com/ComtekAdvancedStructures/cmstatr/issues</a></p></li>
+</ul>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>an object of class <code>anderson_darling</code>. This object has the following
-fields.</p>
-<dt><code>call</code></dt><dd><p>the expression used to call this function</p></dd>
-<dt><code>dist</code></dt><dd><p>the distribution used</p></dd>
-<dt><code>data</code></dt><dd><p>a copy of the data analyzed</p></dd>
-<dt><code>n</code></dt><dd><p>the number of observations in the sample</p></dd>
-<dt><code>A</code></dt><dd><p>the Anderson-Darling test statistic</p></dd>
-<dt><code>osl</code></dt><dd><p>the significance level, assuming the
-  parameters of the distribution are estimated from the data</p></dd>
-<dt><code>alpha</code></dt><dd><p>the required significance level for the test to
- conclude that the data is drawn from the specified distribution.
- This value is given by the user.</p></dd>
-<dt><code>reject_distribution</code></dt><dd><p>a logical value indicating whether
- the hypothesis that the data is drawn from the specified distribution
- should be rejected</p></dd>
-
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The Anderson-Darling test statistic is calculated for the distribution
-given by the user.</p>
-<p>The significance level is calculated assuming that the parameters
-of the distribution are unknown; these parameters are estimate from the
-data.</p>
-<p>The function <code>anderson_darling_normal</code> computes the Anderson-Darling
-test statistic given a normal distribution with mean and standard deviation
-equal to the sample mean and standard deviation.</p>
-<p>The function <code>anderson_darling_lognormal</code> is the same as
-<code>anderson_darling_normal</code> except that the data is log transformed
-first.</p>
-<p>The function <code>anderson_darling_weibull</code> computes the Anderson-Darling
-test statistic given a Weibull distribution with shape and scale parameters
-estimate from the data using a maximum likelihood estimate.</p>
-<p>This function uses the formula for observed significance
-level published in CMH-17-1G. These formulae depend on the particular
-distribution used.</p>
-<p>The results of this function have been validated against
-published values in Lawless (1982).</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>J. F. Lawless, <em>Statistical models and methods for lifetime data</em>.
-New York: Wiley, 1982.</p>
-<p>"Composite Materials Handbook, Volume 1. Polymer Matrix
-Composites Guideline for Characterization of Structural
-Materials," SAE International, CMH-17-1G, Mar. 2012.</p>
+</div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
