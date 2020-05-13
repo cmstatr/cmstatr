@@ -2,10 +2,11 @@ on:
   push:
     branches:
       - master
-      - feature/covr
+      - develop
   pull_request:
     branches:
       - master
+      - develop
 
 name: test-coverage
 
