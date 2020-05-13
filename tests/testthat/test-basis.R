@@ -121,6 +121,30 @@ test_that("(normal) basis value approx equals percentile for large samples", {
   expect_lt(abs(basis - q), 0.1)
 })
 
+test_that("printing of basis objects works as expected", {
+  set.seed(100)
+  x <- c(runif(25))
+
+  expect_output(
+    print(basis_normal(x = x, p = 0.9, conf = 0.95)),
+    "B-Basis"
+  )
+
+  expect_output(
+    print(basis_normal(x = x, p = 0.99, conf = 0.95)),
+    "A-Basis"
+  )
+
+  expect_output(
+    print(basis_normal(x = x, p = 0.9, conf = 0.9)),
+    "[^AB-]Basis"
+  )
+
+  expect_error(
+    print.basis(x)  # give it the wrong type
+  )
+})
+
 test_that("normal basis value matches STAT17/ASAP result", {
   data <- c(
     137.4438,
@@ -474,6 +498,8 @@ test_that("Non-parametric (small sample) basis value matches STAT17 result", {
   expect_output(print(res), "nonparametric", ignore.case = TRUE)
   expect_match(res$distribution,
                "nonparametric.*Woodward-Frawley", ignore.case = TRUE)
+
+  expect_error(basis_hk_ext(x = data, method = "something invalid"))
 })
 
 test_that("non-para (small) basis values produce expected diag failures", {
@@ -949,6 +975,8 @@ test_that("Pooled data matches CMH17-STATS with mod CV, SD pooling", {
   expect_equal(res_b$basis$value[res_b$basis$group == "ETW"],
                52.97, tolerance = 0.01)
 
+  expect_output(print(res_b), "Modified CV")
+
   res_a <- basis_pooled_sd(data, strength, condition,
                            p = 0.99, conf = 0.95, modcv = TRUE,
                            override = c("pooled_variance_equal"))
@@ -975,6 +1003,8 @@ test_that("Pooled data matches CMH17-STATS with mod CV, CV pooling", {
                84.83, tolerance = 0.01)
   expect_equal(res_b$basis$value[res_b$basis$group == "ETW"],
                56.43, tolerance = 0.01)
+
+  expect_output(print(res_b), "Modified CV")
 
   res_a <- basis_pooled_cv(data, strength, condition,
                            p = 0.99, conf = 0.95, modcv = TRUE)
@@ -1522,6 +1552,14 @@ test_that("Non-parametric ranks for A-Basis match CMH-17-1G Table 8.5.13", {
                           ". rA=", ra_lag, ", ",
                           "r_calc=", r_calc_minus
                         )))
+})
+
+test_that("nonpara_binomial_rank raises and error when sample too small", {
+  expect_error(nonpara_binomial_rank(298, 0.99, 0.95))
+})
+
+test_that("nonpara_binomial_rank raises an error when it can't converge", {
+  expect_error(nonpara_binomial_rank(4000, 0.00001, 0.01))
 })
 
 cmh_17_1g_8_5_12 <- tribble(
