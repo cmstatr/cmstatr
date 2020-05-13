@@ -3,8 +3,13 @@
 
 # cmstatr <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
+<!-- badges: start -->
+
 [![R build
 status](https://github.com/ComtekAdvancedStructures/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/ComtekAdvancedStructures/cmstatr/actions?workflow=R-CMD-check)
+[![Codecov test
+coverage](https://codecov.io/gh/comtekadvancedstructures/cmstatr/branch/master/graph/badge.svg)](https://codecov.io/gh/comtekadvancedstructures/cmstatr?branch=master)
+<!-- badges: end -->
 
 # What It Does
 
