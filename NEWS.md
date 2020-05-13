@@ -1,4 +1,4 @@
-# Version x.x.x
+# Version 0.5.2
 - Internally use vapply instaed of sapply to improve code safety
 - Increased coverage of unit tests
 
