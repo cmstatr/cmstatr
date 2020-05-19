@@ -79,12 +79,13 @@ normalize_group_mean <- function(x, group) {
     return(numeric(0))
   }
 
-  group_means <- sapply(group, function(g) {
+  group_means <- vapply(group, function(g) {
     cur_group <- x[group == g]
     group_mean <- mean(cur_group)
     return(group_mean)
   },
-  USE.NAMES = FALSE)
+  USE.NAMES = FALSE,
+  FUN.VALUE = numeric(1L))
 
   return(x / group_means)
 }
@@ -219,25 +220,25 @@ transform_mod_cv_2_within_condition <- function(x, batch, cv_star) {  # nolint
   n <- length(x)
   x_bar <- mean(x)
 
-  sse_prime <- sum(sapply(seq(along.with = x), function(i) {
+  sse_prime <- sum(vapply(seq(along.with = x), function(i) {
     x_prime_i <- x_prime[i]
     x_bar_i <- mean(x[batch == batch[i]])
     (x_prime_i - x_bar_i) ^ 2
-  }))
+  }, FUN.VALUE = numeric(1L)))
 
   sse_star <- (n - 1) * (cv_star * x_bar) ^ 2 -
-    sum(sapply(unique(batch), function(gi) {
+    sum(vapply(unique(batch), function(gi) {
       n_i <- sum(batch == gi)
       x_bar_i <- mean(x[batch == gi])
       n_i * (x_bar_i - x_bar) ^ 2
-    }))
+    }, FUN.VALUE = numeric(1L)))
 
   c_prime <- sqrt(sse_star / sse_prime)
 
-  res <- sapply(seq(along.with = x), function(i) {
+  res <- vapply(seq(along.with = x), function(i) {
     x_bar_i <- mean(x[batch == batch[i]])
     c_prime * (x_prime[i] - x_bar_i) + x_bar_i
-  })
+  }, FUN.VALUE = numeric(1L))
 
   res
 }
@@ -279,7 +280,7 @@ transform_mod_cv_grouped <- function(x, group) {
     stop("x and groups must be the same length")
   }
 
-  res <- sapply(seq(along.with = x), function(i) {
+  res <- vapply(seq(along.with = x), function(i) {
     xi <- x[i]
     cur_group <- x[group == group[i]]
     s <- sd(cur_group)
@@ -289,7 +290,7 @@ transform_mod_cv_grouped <- function(x, group) {
     s_star <- cv_star * x_bar
 
     s_star / s * (xi - x_bar) + x_bar
-  })
+  }, FUN.VALUE = numeric(1L))
 
   res
 }

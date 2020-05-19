@@ -25,13 +25,14 @@
 perform_checks <- function(rules, override = c(), ...) {
   args <- list2(...)
 
-  sapply(names(rules), function(cur_rule_name) {
+  vapply(names(rules), function(cur_rule_name) {
     if (!(cur_rule_name %in% override)) {
       cur_rule <- rules[[cur_rule_name]]
       all_formal_names <- fn_fmls_names(cur_rule)
-      missing_formals <- sapply(all_formal_names, function(cur_formal_name) {
+      missing_formals <- vapply(all_formal_names, function(cur_formal_name) {
         is.null(args[[cur_formal_name]]) & cur_formal_name != "..."
-      })
+      },
+      FUN.VALUE = logical(1L))
       if (!any(missing_formals)) {
         if ((message <- do.call(cur_rule, args)) != "") {
           warn(paste0("`", cur_rule_name, "` failed: ", message))
@@ -52,5 +53,6 @@ perform_checks <- function(rules, override = c(), ...) {
       # in override list
       return(TRUE)
     }
-  })
+  },
+  FUN.VALUE = logical(1L))
 }

@@ -156,3 +156,58 @@ test_that("glance produces expected results", {
   expect_false(glance_res$reject_equal_variance[1])
 
 })
+
+test_that("printing works correctly for equal variance", {
+  res <- carbon.fabric.2 %>%
+    filter(test == "FC") %>%
+    group_by(condition) %>%
+    mutate(trans_strength = transform_mod_cv(strength)) %>%
+    ungroup() %>%
+    levene_test(trans_strength, condition, alpha = 0.02)
+
+  expect_equal(res$f, 2.862, tolerance = 0.075)
+  expect_equal(res$p, 0.03, tolerance = 0.01)
+
+  expect_output(
+    print(res),
+    "2\\.[78]"
+  )
+
+  expect_output(
+    print(res),
+    "equal variance"
+  )
+})
+
+test_that("printing works correctly for unequal variance", {
+  res <- carbon.fabric.2 %>%
+    filter(test == "FC") %>%
+    group_by(condition) %>%
+    mutate(trans_strength = transform_mod_cv(strength)) %>%
+    ungroup() %>%
+    levene_test(trans_strength, condition, alpha = 0.05)
+
+  expect_equal(res$f, 2.862, tolerance = 0.075)
+  expect_equal(res$p, 0.03, tolerance = 0.01)
+
+  expect_output(
+    print(res),
+    "2\\.[78]"
+  )
+
+  expect_output(
+    print(res),
+    "unequal variance"
+  )
+})
+
+test_that("printing works correctly for modCV", {
+  res <- carbon.fabric.2 %>%
+    filter(test == "FC") %>%
+    levene_test(strength, condition, modcv = TRUE)
+
+  expect_output(
+    print(res),
+    "Modified CV"
+  )
+})

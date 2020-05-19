@@ -5,3 +5,9 @@ GenerateFakeData.R
 ^paper
 ^LICENSE
 ^README.Rmd
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^logo-graph.R$
+^logo-notes.md$
+^logo.svg$

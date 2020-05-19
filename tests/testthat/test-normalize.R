@@ -17,6 +17,12 @@ test_that("normalization to ply thickness produces expected numeric results", {
   )
 })
 
+test_that("normalize_group_mean correctly handles errors and edge cases", {
+  expect_error(normalize_group_mean(x = 1:10, group = 1:8), "length")
+  expect_equal(normalize_group_mean(x = numeric(0L), group = numeric(0L)),
+               numeric(0L))
+})
+
 test_that("normalize to group mean produces means of one for all groups", {
   # since each group is normalized to its own mean, the mean of the normalized
   # values within each group should be equal to one.
@@ -132,4 +138,19 @@ test_that("Modified CV transform produces values that match CMH17-STATS", {
   expect_equal(res$mod_cv[res$condition == "ETW"], 0.0761, tolerance = 1e-4)
   expect_equal(res$cv[res$condition == "ETW2"], 0.0836, tolerance = 1e-4)
   expect_equal(res$mod_cv[res$condition == "ETW2"], 0.0836, tolerance = 1e-4)
+})
+
+test_that("mod CV transforms handles errors and edge cases correctly", {
+  expect_error(transform_mod_cv_2_within_condition(x = 1:9, batch = 1:4, 0.5),
+               "length")
+
+  expect_error(transform_mod_cv_ad(1:10, 1:9, 1:10), "length")
+  expect_error(transform_mod_cv_ad(1:10, 1:10, 1:9), "length")
+
+  expect_equal(
+    transform_mod_cv_ad(1:10, rep("A", 10), rep("A", 10)),
+    transform_mod_cv_ad(1:10, NULL, NULL)
+  )
+
+  expect_error(transform_mod_cv_grouped(1:10, 1:9), "length")
 })

@@ -1,7 +1,7 @@
 Package: cmstatr
 Type: Package
 Title: Statistical Methods for Composite Material Data
-Version: 0.5.1
+Version: 0.5.2
 Depends: R (>= 3.3)
 Authors@R: c(
     person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",
@@ -13,6 +13,8 @@ Authors@R: c(
   )
 Description: An implementation of the statistical methods commonly
              used for advanced composite materials in the R language.
+URL: https://www.cmstatr.net/, https://github.com/ComtekAdvancedStructures/cmstatr
+BugReports: https://github.com/ComtekAdvancedStructures/cmstatr/issues
 License: AGPL-3
 Encoding: UTF-8
 LazyData: true
