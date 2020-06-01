@@ -170,7 +170,7 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span>() +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span>(<span class="kw">width</span> <span class="kw">=</span> <span class="fl">0.25</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="no">value</span>),
-             <span class="kw">data</span> <span class="kw">=</span> <span class="no">b_basis_pooled</span>$<span class="no">basis</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>),
+             <span class="kw">data</span> <span class="kw">=</span> <span class="no">b_basis_pooled</span>$<span class="no">basis</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>),
              <span class="kw">color</span> <span class="kw">=</span> <span class="st">"blue"</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(<span class="no">.</span> ~ <span class="no">condition</span>) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() +
@@ -268,6 +268,7 @@
             <span class="kw">minimum</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">strength</span>),
             <span class="kw">mean</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">strength</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
+<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
 
 <span class="no">single_point_results</span>
 <span class="co">#&gt; # A tibble: 4 x 5</span>
@@ -308,7 +309,7 @@
 <span class="co">#&gt; ETW2  ETW2 113.7601</span></pre></body></html></div>
 <p>We can take this <code>data.frame</code> and change the column names to suit our needs.</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">a_basis_pooled</span>$<span class="no">basis</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>,
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>,
          <span class="kw">b_basis_pooled</span> <span class="kw">=</span> <span class="no">value</span>)
 <span class="co">#&gt;      condition b_basis_pooled</span>
 <span class="co">#&gt; CTD        CTD       118.3205</span>
@@ -317,7 +318,7 @@
 <span class="co">#&gt; ETW2      ETW2       113.7601</span></pre></body></html></div>
 <p>We can combine all these steps into one statement. We’ll also ensure that the conditions are listed in the order we want.</p>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">a_basis_pooled_results</span> <span class="kw">&lt;-</span> <span class="no">a_basis_pooled</span>$<span class="no">basis</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>,
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>,
          <span class="kw">a_basis_pooled</span> <span class="kw">=</span> <span class="no">value</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
 
@@ -329,7 +330,7 @@
 <span class="co">#&gt; 4      ETW2       113.7601</span></pre></body></html></div>
 <p>And the same thing for B-Basis:</p>
 <div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">b_basis_pooled_results</span> <span class="kw">&lt;-</span> <span class="no">b_basis_pooled</span>$<span class="no">basis</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>,
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>,
          <span class="kw">b_basis_pooled</span> <span class="kw">=</span> <span class="no">value</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
 
@@ -341,8 +342,8 @@
 <span class="co">#&gt; 4      ETW2       120.3191</span></pre></body></html></div>
 <p>We can use the function <code>inner_join</code> from the <code>dplyr</code> package to combine the three sets of computational results. Each row for each condition will be concatenated.</p>
 <div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">single_point_results</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(<span class="no">b_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(<span class="no">a_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>)
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">b_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">a_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>)
 <span class="co">#&gt; # A tibble: 4 x 7</span>
 <span class="co">#&gt;   condition single_point_b_… single_point_a_… minimum  mean b_basis_pooled</span>
 <span class="co">#&gt;   &lt;ord&gt;                &lt;dbl&gt;            &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;          &lt;dbl&gt;</span>
@@ -353,8 +354,8 @@
 <span class="co">#&gt; # … with 1 more variable: a_basis_pooled &lt;dbl&gt;</span></pre></body></html></div>
 <p>To use this table in the plot we’re trying to construct, we want to “lengthen” the table as follows.</p>
 <div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">single_point_results</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(<span class="no">b_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(<span class="no">a_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">b_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">a_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(<span class="kw">cols</span> <span class="kw">=</span> <span class="no">single_point_b_basis</span>:<span class="no">a_basis_pooled</span>)
 <span class="co">#&gt; # A tibble: 24 x 3</span>
 <span class="co">#&gt;    condition name                 value</span>
@@ -372,8 +373,8 @@
 <span class="co">#&gt; # … with 14 more rows</span></pre></body></html></div>
 <p>We can now make a plot based on this:</p>
 <div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">single_point_results</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(<span class="no">b_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(<span class="no">a_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">b_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">a_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(<span class="kw">cols</span> <span class="kw">=</span> <span class="no">single_point_b_basis</span>:<span class="no">a_basis_pooled</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>)) +
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">strength</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">dat</span>) +
