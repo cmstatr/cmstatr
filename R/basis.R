@@ -1108,7 +1108,8 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #'
 #' @references
 #' W. Guenther, “Determination of Sample Size for Distribution-Free
-#' Tolerance Limits,” Jan. 1969
+#' Tolerance Limits,” Jan. 1969.
+#' Available online: https://www.duo.uio.no/handle/10852/48686
 #'
 #' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
