@@ -30,19 +30,25 @@ Strength data for composite materials used in aerospace applications,
 such as carbon fiber and fiberglass reinforced composites, are normally
 analyzed using statistical methods because of the inherent variability
 in the constituent materials and in the processing. The design standards
-for civil aviation require that the probability of structural failure
-due to this variability to be minimized, and to do so, the designer must
-use what are called "Design Values" for each material in stress analyses
-and ensure they exceed the actual stresses experienced by those
-materials in service. Design Values are determined such that, with
-$95\%$ confidence, they are either the $99\%$ or $90\%$ one-sided lower
-confidence bound of the material strength, depending on the type of
-structure. These one-sided tolerance bounds are referred to as A-Basis
-and B-Basis values, respectively. The statistical methods for
-calculating these basis values are outlined in Composite Materials
-Handbook, Volume 1, Revision G, or CMH-17-1G in short [@CMH171G]. The
-use of these methods is widely accepted by industry and civil aviation
-regulators.
+for civil aviation requires that the probability of structural failure
+due to this variability must be minimized, and to do so, the designer
+must use what are called "Design Values" for each material in stress
+analyses and ensure they exceed the actual stresses experienced by those
+materials in service. Design Values are set based on the one-sided lower
+confidence bound of the material strength. For some types of structure,
+the content of this lower confidence bound is $99\%$ with a confidence
+level of $95\%$; in this case, the confidence bound is referred to as
+A-Basis. For some other types of structure, the content of the lower
+confidence bound is instead $90\%$ with a confidence level of $95\%$; in
+this case, the confidence bound is referred to as B-Basis. The
+statistical methods for calculating these basis values are outlined in
+Composite Materials Handbook, Volume 1, Revision G, or CMH-17-1G in
+short [@CMH171G]. The use of these methods is widely accepted by
+industry and civil aviation regulators.
+
+Design Values are often adjusted to account for anticipated in-service
+damage and other factors, however those adjustments are outside the
+scope of the present software package.
 
 Currently, many users use MS Excel spreadsheets to perform these
 analyses. The MS Excel spreadsheets typically used, such as `STAT-17`
