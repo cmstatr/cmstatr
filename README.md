@@ -52,7 +52,9 @@ carbon.fabric.2 %>%
 ```
 
 For more examples of usage of the `cmstatr` package, see the tutorial
-vignette, which can be loaded as follows, once the package is installed:
+vignette, which can be [viewed
+online](https://www.cmstatr.net/articles/cmstatr_Tutorial.html), or can
+be loaded as follows, once the package is installed:
 
 ``` r
 vignette("cmstatr_Tutorial")
@@ -60,7 +62,9 @@ vignette("cmstatr_Tutorial")
 
 There is also a vignette showing some examples of the types of graphs
 that are typically produced when analyzing composite materials. You can
-load this vignette with:
+view this [vignette
+online](https://www.cmstatr.net/articles/cmstatr_Graphing.html), or you
+can load this vignette with:
 
 ``` r
 vignette("cmstatr_Graphing")
