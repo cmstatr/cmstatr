@@ -20,10 +20,11 @@ are those described in CMH-17-1G.
 # Installation
 
 This package is not yet on CRAN (but it will be soon). For now, install
-from `github` using `devtools`:
+from `github` using `devtools`. This will also install the dependencies
+required to build the vignettes.
 
 ``` r
-install.packages("devtools")
+install.packages(c("devtools", "rmarkdown", "dplyr", "tidyr"))
 devtools::install_github("ComtekAdvancedStructures/cmstatr", build_vignettes = TRUE,
                          build_opts = c("--no-resave-data", "--no-manual"))
 ```
