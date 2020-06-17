@@ -53,7 +53,7 @@ effect on computed tolerance limits.
 \references{
 W. Guenther, “Determination of Sample Size for Distribution-Free
 Tolerance Limits,” Jan. 1969.
-Available online: https://www.duo.uio.no/handle/10852/48686
+Available online: \url{https://www.duo.uio.no/handle/10852/48686}
 
 “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,

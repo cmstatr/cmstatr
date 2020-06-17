@@ -150,7 +150,9 @@ value of \code{x} is expected to be a variable within \code{data}. If
 
 \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 the standard deviation from the mean. \eqn{k} is given by
-the function \code{\link{k_factor_normal}}. \code{basis_normal} also
+the function \code{\link{k_factor_normal}}. The equations in
+Krishnamoorthy and Mathew (2008) are used.
+\code{basis_normal} also
 performs a diagnostic test for outliers (using
 \code{\link{maximum_normed_residual}})
 and a diagnostic test for normality (using
@@ -297,6 +299,9 @@ CMH-17-1G, Mar. 2012.
 M. Vangel, “One-Sided Nonparametric Tolerance Limits,”
 Communications in Statistics - Simulation and Computation,
 vol. 23, no. 4. pp. 1137–1154, 1994.
+
+K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
+Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
 }
 \seealso{
 \code{\link{hk_ext_z_j_opt}}

@@ -27,6 +27,9 @@ B-Basis values for normally distributed data. To get \eqn{kB}, set
 \code{p = 0.90} and \code{conf = 0.95}. To get \eqn{kA}, set
 \code{p = 0.99} and \code{conf = 0.95}.
 
+The k-factor is calculated using equation 2.2.3 of
+Krishnamoorthy and Mathew (2008).
+
 This function has been validated against the \eqn{kB} tables in
 CMH-17-1G for each value of \eqn{n} from \eqn{n = 2} to \eqn{n = 95}.
 It has been validated against the \eqn{kA} tables in CMH-17-1G for each
@@ -36,4 +39,8 @@ emits warnings that "full precision may not have been achieved." When
 validating the results of this function against the tables in CMH-17-1G,
 the maximum allowable difference between the two is 0.002. The tables in
 CMH-17-1G give values to three decimal places.
+}
+\references{
+K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
+Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
 }

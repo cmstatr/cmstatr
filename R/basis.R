@@ -11,6 +11,9 @@
 #' \code{p = 0.90} and \code{conf = 0.95}. To get \eqn{kA}, set
 #' \code{p = 0.99} and \code{conf = 0.95}.
 #'
+#' The k-factor is calculated using equation 2.2.3 of
+#' Krishnamoorthy and Mathew (2008).
+#'
 #' This function has been validated against the \eqn{kB} tables in
 #' CMH-17-1G for each value of \eqn{n} from \eqn{n = 2} to \eqn{n = 95}.
 #' It has been validated against the \eqn{kA} tables in CMH-17-1G for each
@@ -22,6 +25,10 @@
 #' CMH-17-1G give values to three decimal places.
 #'
 #' @return the calculated factor
+#'
+#' @references
+#' K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
+#' Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
 #'
 #' @importFrom stats qnorm qt
 #'
@@ -65,7 +72,9 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 #' the standard deviation from the mean. \eqn{k} is given by
-#' the function \code{\link{k_factor_normal}}. \code{basis_normal} also
+#' the function \code{\link{k_factor_normal}}. The equations in
+#' Krishnamoorthy and Mathew (2008) are used.
+#' \code{basis_normal} also
 #' performs a diagnostic test for outliers (using
 #' \code{\link{maximum_normed_residual}})
 #' and a diagnostic test for normality (using
@@ -249,6 +258,9 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' M. Vangel, “One-Sided Nonparametric Tolerance Limits,”
 #' Communications in Statistics - Simulation and Computation,
 #' vol. 23, no. 4. pp. 1137–1154, 1994.
+#'
+#' K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
+#' Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
 #'
 #' @name basis
 NULL
@@ -1109,7 +1121,7 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #' @references
 #' W. Guenther, “Determination of Sample Size for Distribution-Free
 #' Tolerance Limits,” Jan. 1969.
-#' Available online: https://www.duo.uio.no/handle/10852/48686
+#' Available online: \url{https://www.duo.uio.no/handle/10852/48686}
 #'
 #' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
