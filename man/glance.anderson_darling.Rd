@@ -18,7 +18,7 @@ columns:
 
 \item{\code{dist}}{the distribution used}
 \item{\code{n}}{the number of observations in the sample}
-\item{\code{A}}{the Anderson-Darling test statistic}
+\item{\code{A}}{the Anderson--Darling test statistic}
 \item{\code{osl}}{the significance level, assuming the
     parameters of the distribution are estimated from the data}
  \item{\code{alpha}}{the required significance level for the test to

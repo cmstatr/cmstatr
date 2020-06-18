@@ -5,7 +5,7 @@
 \alias{anderson_darling_normal}
 \alias{anderson_darling_lognormal}
 \alias{anderson_darling_weibull}
-\title{Anderson-Darling test for goodness of fit}
+\title{Anderson--Darling test for goodness of fit}
 \usage{
 anderson_darling_normal(data = NULL, x, alpha = 0.05)
 
@@ -29,7 +29,7 @@ fields.
 \item{\code{dist}}{the distribution used}
 \item{\code{data}}{a copy of the data analyzed}
 \item{\code{n}}{the number of observations in the sample}
-\item{\code{A}}{the Anderson-Darling test statistic}
+\item{\code{A}}{the Anderson--Darling test statistic}
 \item{\code{osl}}{the significance level, assuming the
   parameters of the distribution are estimated from the data}
 \item{\code{alpha}}{the required significance level for the test to
@@ -40,18 +40,18 @@ fields.
  should be rejected}
 }
 \description{
-Calculates the Anderson-Darling test statistic for a sample given
+Calculates the Anderson--Darling test statistic for a sample given
 a particular distribution, and computes the significance level.
 }
 \details{
-The Anderson-Darling test statistic is calculated for the distribution
+The Anderson--Darling test statistic is calculated for the distribution
 given by the user.
 
 The significance level is calculated assuming that the parameters
 of the distribution are unknown; these parameters are estimate from the
 data.
 
-The function \code{anderson_darling_normal} computes the Anderson-Darling
+The function \code{anderson_darling_normal} computes the Anderson--Darling
 test statistic given a normal distribution with mean and standard deviation
 equal to the sample mean and standard deviation.
 
@@ -59,7 +59,7 @@ The function \code{anderson_darling_lognormal} is the same as
 \code{anderson_darling_normal} except that the data is log transformed
 first.
 
-The function \code{anderson_darling_weibull} computes the Anderson-Darling
+The function \code{anderson_darling_weibull} computes the Anderson--Darling
 test statistic given a Weibull distribution with shape and scale parameters
 estimate from the data using a maximum likelihood estimate.
 

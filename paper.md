@@ -130,10 +130,10 @@ following diagnostic tests:
 
 -   the maximum normed residual test for outliers within a batch
     [@CMH171G],
--   the Anderson-Darling k-Sample test to check if batches are drawn
+-   the Anderson--Darling k-Sample test to check if batches are drawn
     from the same (unspecified) distribution [@Scholz_Stephens_1987],
 -   the maximum normed residual test for outliers within the data, and
--   the Anderson-Darling test for a particular probability distribution
+-   the Anderson--Darling test for a particular probability distribution
     [@Lawless_1982].
 
 Assuming that the data from the warp tension (WT) tested at
@@ -164,13 +164,13 @@ All of the various basis functions perform diagnostic tests for each of
 the statistical tests mentioned above. If any of the diagnostic tests
 failed, a warning is shown and the test failure is also recorded in the
 returned object (and shown in that object's `print` method). In the
-example above, the output shows that the Anderson-Darling test for
+example above, the output shows that the Anderson--Darling test for
 normality [@Lawless_1982] rejects the hypothesis that the data is drawn
 from a normal distribution.
 
 Two non-parametric basis calculations, based on [@Guenther_1970] and
 [@Vangel_1994] are also implemented in `cmstatr`. These functions
-perform the same diagnostic tests, but omits the Anderson-Darling test
+perform the same diagnostic tests, but omits the Anderson--Darling test
 for a particular distribution.
 
 The diagnostic test can be run directly using `cmstatr` as well. For

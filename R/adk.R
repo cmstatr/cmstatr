@@ -1,14 +1,14 @@
 
-#' Anderson-Darling K-Sample Test
+#' Anderson--Darling K-Sample Test
 #'
 #' @description
-#' This function performs an Anderson-Darling k-sample test. This is used to
+#' This function performs an Anderson--Darling k-sample test. This is used to
 #' determine if several samples (groups) share a common (unspecified)
 #' distribution.
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame on which to perform the
-#'          Anderson-Darling k-Sample test (usually strength)
+#'          Anderson--Darling k-Sample test (usually strength)
 #' @param groups a variable in the data.frame that defines the groups
 #' @param alpha the significance level (default 0.025)
 #'
@@ -21,7 +21,7 @@
 #' \item{\code{n}}{the total number of observations}
 #' \item{\code{k}}{the number of groups}
 #' \item{\code{sigma}}{the computed standard deviation of the test statistic}
-#' \item{\code{ad}}{the value of the Anderson-Darling k-Sample test
+#' \item{\code{ad}}{the value of the Anderson--Darling k-Sample test
 #'   statistic}
 #' \item{\code{p}}{the computed p-value}
 #' \item{\code{reject_same_dist}}{a boolean value indicating whether the null
@@ -35,7 +35,7 @@
 #' the package \code{kSamples}. The method "exact" is specified in the call to
 #' \code{ad.test}. Refer to that package's documentation for details.
 #'
-#' There is a minor difference in the formulation of the Anderson-Darling
+#' There is a minor difference in the formulation of the Anderson--Darling
 #' k-Sample test in CMH-17-1G, compared with that in the Scholz and
 #' Stephens (1987). This difference affects the test statistic and the
 #' critical value in the same proportion, and therefore the conclusion of
@@ -51,7 +51,7 @@
 #' can be accessed by running \code{vignette("adktest")}
 #'
 #' @references
-#' F. W. Scholz and M. Stephens, “K-Sample Anderson-Darling Tests,” Journal
+#' F. W. Scholz and M. Stephens, “K-Sample Anderson--Darling Tests,” Journal
 #' of the American Statistical Association, vol. 82, no. 399. pp. 918–924,
 #' Sep-1987.
 #'
@@ -111,7 +111,7 @@ ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
   return(res)
 }
 
-#' Glance at a \code{adk} (Anderson-Darling k-Sample) object
+#' Glance at a \code{adk} (Anderson--Darling k-Sample) object
 #'
 #' @description
 #' Glance accepts an object of type \code{adk} and returns a

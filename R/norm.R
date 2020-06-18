@@ -135,7 +135,7 @@ calc_cv_star <- function(cv) {
 #' The second
 #' version, \code{transform_mod_cv_ad()}, transforms data that is structured
 #' according to both condition and batch, as is commonly done for
-#' the Anderson-Darling k-Sample and Anderson-Darling tests when pooling
+#' the Anderson--Darling k-Sample and Anderson-Darling tests when pooling
 #' across environments.
 #'
 #' @details

@@ -1,8 +1,8 @@
 
-#' Anderson-Darling test for goodness of fit
+#' Anderson--Darling test for goodness of fit
 #'
 #' @description
-#' Calculates the Anderson-Darling test statistic for a sample given
+#' Calculates the Anderson--Darling test statistic for a sample given
 #' a particular distribution, and computes the significance level.
 #'
 #' @param data a data.frame-like object (optional)
@@ -18,7 +18,7 @@
 #' \item{\code{dist}}{the distribution used}
 #' \item{\code{data}}{a copy of the data analyzed}
 #' \item{\code{n}}{the number of observations in the sample}
-#' \item{\code{A}}{the Anderson-Darling test statistic}
+#' \item{\code{A}}{the Anderson--Darling test statistic}
 #' \item{\code{osl}}{the significance level, assuming the
 #'   parameters of the distribution are estimated from the data}
 #' \item{\code{alpha}}{the required significance level for the test to
@@ -29,14 +29,14 @@
 #'  should be rejected}
 #'
 #' @details
-#' The Anderson-Darling test statistic is calculated for the distribution
+#' The Anderson--Darling test statistic is calculated for the distribution
 #' given by the user.
 #'
 #' The significance level is calculated assuming that the parameters
 #' of the distribution are unknown; these parameters are estimate from the
 #' data.
 #'
-#' The function \code{anderson_darling_normal} computes the Anderson-Darling
+#' The function \code{anderson_darling_normal} computes the Anderson--Darling
 #' test statistic given a normal distribution with mean and standard deviation
 #' equal to the sample mean and standard deviation.
 #'
@@ -44,7 +44,7 @@
 #' \code{anderson_darling_normal} except that the data is log transformed
 #' first.
 #'
-#' The function \code{anderson_darling_weibull} computes the Anderson-Darling
+#' The function \code{anderson_darling_weibull} computes the Anderson--Darling
 #' test statistic given a Weibull distribution with shape and scale parameters
 #' estimate from the data using a maximum likelihood estimate.
 #'
@@ -68,7 +68,7 @@
 #' @name anderson_darling
 NULL
 
-# A non-exported function for an Anderson-Darling goodness of fit test
+# A non-exported function for an Anderson--Darling goodness of fit test
 # The function \code{dist} should be
 # the cumulative distribution function. Additional parameters, such as
 # the parameters for the distribution, can be passed through the argument
@@ -120,7 +120,7 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
 #'
 #' \item{\code{dist}}{the distribution used}
 #' \item{\code{n}}{the number of observations in the sample}
-#' \item{\code{A}}{the Anderson-Darling test statistic}
+#' \item{\code{A}}{the Anderson--Darling test statistic}
 #' \item{\code{osl}}{the significance level, assuming the
 #'     parameters of the distribution are estimated from the data}
 #'  \item{\code{alpha}}{the required significance level for the test to
