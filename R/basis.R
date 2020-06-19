@@ -45,7 +45,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' Calculate the basis value for a given data set. There are various functions
 #' to calculate the basis values for different distributions. For B-Basis,
 #' set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.99} and
-#' \eqn{conf=0.95}. These functions also preform some automated diagnostic
+#' \eqn{conf=0.95}. These functions also perform some automated diagnostic
 #' tests of the data prior to calculating the basis values. These diagnostic
 #' tests can be overridden if needed.
 #'
