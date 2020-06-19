@@ -4,7 +4,7 @@
 \alias{hk_ext}
 \alias{hk_ext_z}
 \alias{hk_ext_z_j_opt}
-\title{Calculate values related to the Extended Hanson-Koopmans method}
+\title{Calculate values related to the Extended Hanson---Koopmans method}
 \usage{
 hk_ext_z(n, i, j, p, conf)
 
@@ -30,7 +30,7 @@ For \code{hk_ext_z_j_opt}, the return value is named list containing
 Vangel (1994), and the latter is the corresponding order statistic.
 }
 \description{
-Calculates values related to the Extended Hanson-Koopmans method
+Calculates values related to the Extended Hanson--Koopmans method
 as described by Vangel (1994).
 }
 \details{
@@ -38,7 +38,7 @@ Hanson (1964) presents a nonparametric method for determining
 tolerance limits based on consecutive order statistics.
 Vangel (1994) extends this method using non-consecutive order statistics.
 
-The extended Hanson-Koopmans method calculates a tolerance limit
+The extended Hanson--Koopmans method calculates a tolerance limit
 (basis value) based on two order statistics and a weighting value
 \code{z}. The value of \code{z} is based on the sample size, which
 order statistics are selected, the desired quantile and the desired

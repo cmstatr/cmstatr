@@ -101,7 +101,7 @@ if desired.}
 \item{modcv}{a logical value indicating whether the modified CV approach
 should be used. Only applicable to pooling methods.}
 
-\item{method}{the method for Hanson-Koopmans nonparametric basis values.
+\item{method}{the method for Hanson--Koopmans nonparametric basis values.
 should be "optimum-order" for B-Basis and "woodward-frawley"
 for A-Basis.}
 }
@@ -200,7 +200,7 @@ and a diagnostic test for between batch variability (using
 for these diagnostic tests.
 
 \code{basis_hk_ext} calculates the basis value using the Extended
-Hanson-Koopmans method, as described in CMH-17-1G and Vangel (1994).
+Hanson--Koopmans method, as described in CMH-17-1G and Vangel (1994).
 For nonparametric distributions, this function should be used for samples
 up to n=28 for B-Basis and up to \eqn{n=299} for A-Basis.
 This method uses a pair of order statistics to determine the basis value.
