@@ -1,9 +1,23 @@
 
-#' Equivalency based on mean and extremum
+#' Test for decrease in mean or minimum individual
 #'
 #' @description
-#' Determines equivalency or equivalency thresholds based on both minimum
-#' individual and mean.
+#' This test is used when determining if a new process or
+#' manufacturing location produces material properties that are
+#' "equivalent" to from an existing dataset, and hence the existing
+#' basis values are applicable to the new dataset. This test is also
+#' sometimes used for determining if a new batch of material is acceptable.
+#' This function determines thresholds based on both minimum
+#' individual and mean, and optionally evaluates a sample against those
+#' thresholds. The joint distribution between the sample mean
+#' and sample minimum is used to generate these thresholds.
+#' When there is no true difference between the existing ("qualification")
+#' and the new population from which the sample is obtained, there is a
+#' probability of \eqn{\alpha} of falsely concluding that there is a
+#' difference in mean or variance. It is assumed that both the original
+#' and new populations are normally distributed.
+#' According to Vangel (2002), this test provides improved power compared
+#' with a test of mean and standard deviation.
 #'
 #' @param df_qual (optional) a data.frame containing the qualification data.
 #' Defaults to NULL.
@@ -73,7 +87,13 @@
 #' function will issue a warning or error if you violate any of these rules.
 #'
 #' If \code{modcv} is TRUE, the standard deviation used to calculate the
-#' thresholds will be replaced with a standard deviation calculated by
+#' thresholds will be replaced with a standard deviation calculated
+#' using the Modified Coefficient of Variation (CV) approach.
+#' The Modified CV approach is a way of adding extra variance to the
+#' qualification data in the case that the qualification data has less
+#' variance than expected, which sometimes occurs when qualification testing
+#' is performed in a short period of time.
+#' Using the Modified CV approach, the standard deviation is calculated by
 #' multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
 #' value supplied or the value calculated by \code{mean(data_qual)} and
 #' \eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
@@ -96,6 +116,14 @@
 #'
 #' @seealso
 #' \code{\link{k_equiv}}
+#'
+#' @references
+#' M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
+#' and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
+#'
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,” SAE International,
+#' CMH-17-1G, Mar. 2012.
 #'
 #' @importFrom rlang enquo eval_tidy
 #'
@@ -307,15 +335,27 @@ print.equiv_mean_extremum <- function(x, ...) {
 }
 
 
-#' k-factors for equivalency testing
+#' k-factors for determining acceptance based on sample mean and an extremum
 #'
 #' @param alpha the acceptable probability of a type I error
-#' @param n the number of observations in the sample to test for equivalency
+#' @param n the number of observations in the sample to test
 #' @return a vector with elements c(k1, k2). k1 is for testing the sample
 #'   extremum. k2 is for testing the sample mean
 #' @details
-#'   The k-factors returned by this function are used for equivalency testing,
-#'   considering both the sample mean and sample extremum (normally minimum).
+#'   The k-factors returned by this function are used for determining
+#'   whether to accept a new dataset.
+#'
+#'   This function is used as part of the procedure for
+#'   determining acceptance limits for a sample mean and sample minimum.
+#'   These acceptance limits are often used to set acceptance limits for
+#'   material strength for each lot of material, or each new manufacturing
+#'   site. When a sample meets the criteria that its mean and its minimum are
+#'   both greater than these limits, then one may accept the lot of material
+#'   or the new manufacturing site.
+#'
+#'   According to Vangel (2002), the use of mean and extremum for this purpose
+#'   is more powerful than the use of mean and standard deviation.
+#'
 #'   The results of this function match those published by Vangel within
 #'   0.05\% for \eqn{n > 2} and \eqn{\alpha \le 0.25}. Those results published
 #'   by Vangel are identical to those published in CMH-17-1G.
@@ -333,9 +373,14 @@ print.equiv_mean_extremum <- function(x, ...) {
 #'   when setting lot acceptance limits. Though, in principle, this parameter
 #'   can be set to any number between 0 and 1. This function, however, has only
 #'   been validated in the range of \eqn{1e-5 \le alpha \le 0.5}.
+#'
 #' @references
 #'   M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
-#'   and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249.
+#'   and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
+#'
+#' @seealso
+#' \code{\link{equiv_mean_extremum}}
+#'
 #' @examples
 #' qual_mean <- 100
 #' qual_sd <- 3.5
@@ -556,7 +601,7 @@ k_equiv <- function(alpha, n) {
 #' if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
 #'
 #' Note that the modified CV option should only be used if that data passes the
-#' Anderson-Darling test.
+#' Anderson--Darling test.
 #'
 #' @examples
 #' equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,

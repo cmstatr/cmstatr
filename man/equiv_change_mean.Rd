@@ -118,7 +118,7 @@ When \code{modcv = TRUE}, CV* is calculated as follows:
 if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
 
 Note that the modified CV option should only be used if that data passes the
-Anderson-Darling test.
+Anderson--Darling test.
 }
 \examples{
 equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
