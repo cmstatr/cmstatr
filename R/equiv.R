@@ -622,7 +622,7 @@ k_equiv <- function(alpha, n) {
 #' ##
 #' ## For alpha = 0.05
 #' ## Modified CV used
-#' ##                   Qualificaiton        Sample
+#' ##                   Qualification        Sample
 #' ##           Number        28               9
 #' ##             Mean       9.24             9.02
 #' ##               SD      0.162           0.15785
@@ -885,7 +885,7 @@ print.equiv_change_mean <- function(x, ...) {
     cat("Modified CV used\n")
   }
 
-  printrow("", "Qualificaiton", "Sample")
+  printrow("", "Qualification", "Sample")
   printrow("Number", format(x$n_qual, ...), format(x$n_sample, ...))
   printrow("Mean", format(x$mean_qual, ...), format(x$mean_sample, ...))
   printrow("SD", format(x$sd_qual, ...), format(x$sd_sample, ...))

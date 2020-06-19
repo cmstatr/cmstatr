@@ -138,7 +138,7 @@ equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
 ##
 ## For alpha = 0.05
 ## Modified CV used
-##                   Qualificaiton        Sample
+##                   Qualification        Sample
 ##           Number        28               9
 ##             Mean       9.24             9.02
 ##               SD      0.162           0.15785
