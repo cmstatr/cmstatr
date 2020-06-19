@@ -148,6 +148,12 @@ be a
 value of \code{x} is expected to be a variable within \code{data}. If
 \code{data} is not specified, \code{x} must be a vector.
 
+When \code{modcv=TRUE} is set, which is only applicable to the pooling methods,
+the data is first modified according to the modified coefficient of variation (CV)
+rules. This modified data is then used when both calculating the basis values and
+also when performing the diagnostic tests. The modified CV approach is a way of
+adding extra variance to datasets with unexpectedly low variance.
+
 \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 the standard deviation from the mean. \eqn{k} is given by
 the function \code{\link{k_factor_normal}}. The equations in

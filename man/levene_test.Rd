@@ -47,9 +47,17 @@ data is transformed as follows:
 
 Where \eqn{mi} is median of the \eqn{ith} group. An F-Test is then
 performed on the transformed data.
+
+When \code{modcv=TRUE}, the data from each group is first transformed
+according to the modified coefficient of variation (CV) rules before
+performing Levene's test.
 }
 \references{
 “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
+}
+\seealso{
+\code{\link{calc_cv_star}}
+\code{\link{transform_mod_cv}}
 }

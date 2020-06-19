@@ -93,7 +93,8 @@ normalize_group_mean <- function(x, group) {
 #' Calculate the modified CV from the CV
 #'
 #' @description
-#' This function calculates the Modified CV based on a (unmodified) CV.
+#' This function calculates the Modified coefficient of variation (CV)
+#' based on a (unmodified) CV.
 #' The modified CV is calculated based on the rules in CMH-17-1G. Those
 #' rules are:
 #'
@@ -107,6 +108,9 @@ normalize_group_mean <- function(x, group) {
 #'
 #' @return
 #' The value of the modified CV
+#'
+#' @seealso
+#' \code{\link{cv}}
 #'
 #' @references
 #' "Composite Materials Handbook, Volume 1. Polymer Matrix Composites
@@ -128,6 +132,11 @@ calc_cv_star <- function(cv) {
 #' Transforms data according to the modified CV rule
 #'
 #' @description
+#' Transforms data according to the modified coefficient of variation (CV)
+#' rule. This is used to add additional variance to datasets with
+#' unexpectedly low variance, which is sometimes encountered during
+#' testing of new materials over short periods of time.
+#'
 #' Two versions of this transformation are implemented. The first version,
 #' \code{transform_mod_cv()}, transforms the data in a single group (with
 #' no other structure) according to the modified CV rules.
@@ -206,6 +215,7 @@ calc_cv_star <- function(cv) {
 #'
 #' @seealso
 #' \code{\link{calc_cv_star}}
+#' \code{\link{cv}}
 #'
 #' @name transform_mod_cv
 NULL

@@ -328,7 +328,7 @@ We find no outliers, so we can continue.
 ## Pooling Across Environments
 Often it is desirable to pool data across several environments. There
 are two methods for doing so: "pooled standard deviation" and
-"pooled CV."
+"pooled CV" (CV is an abbreviation for Coefficient of Variation)
 
 First, we will check for
 equality of variance among the conditions. We will do so using Levene's test.

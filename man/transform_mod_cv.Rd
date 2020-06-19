@@ -22,6 +22,11 @@ belongs}
 A vector of transformed data
 }
 \description{
+Transforms data according to the modified coefficient of variation (CV)
+rule. This is used to add additional variance to datasets with
+unexpectedly low variance, which is sometimes encountered during
+testing of new materials over short periods of time.
+
 Two versions of this transformation are implemented. The first version,
 \code{transform_mod_cv()}, transforms the data in a single group (with
 no other structure) according to the modified CV rules.
@@ -91,4 +96,5 @@ carbon.fabric \%>\%
 }
 \seealso{
 \code{\link{calc_cv_star}}
+\code{\link{cv}}
 }
