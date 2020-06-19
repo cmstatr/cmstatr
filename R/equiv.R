@@ -116,6 +116,7 @@
 #'
 #' @seealso
 #' \code{\link{k_equiv}}
+#' \code{\link{calc_cv_star}}
 #'
 #' @references
 #' M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
@@ -515,6 +516,7 @@ k_equiv <- function(alpha, n) {
 #' @description
 #' Checks for change in the mean value between a qualification data set and
 #' a sample. This is normally used to check for properties such as modulus.
+#' This function is a wrapper for a two-sided t--test.
 #'
 #' @param df_qual (optional) a data.frame containing the qualification data.
 #' Defaults to NULL.
@@ -592,11 +594,16 @@ k_equiv <- function(alpha, n) {
 #' in the mean value of the qualification data and the sample. A pooled
 #' standard deviation is used in the t-test. The procedure is per CMH-17-1G.
 #'
-#' If the option \code{modcv = TRUE} is set, standard deviation of the
-#' qualification data is replaced with CV* times \code{mean_qual} (which may
-#' be passed as an argument or internally calculated from \code{data_qual}.
-#'
-#' When \code{modcv = TRUE}, CV* is calculated as follows:
+#' If \code{modcv} is TRUE, the standard deviation used to calculate the
+#' thresholds will be replaced with a standard deviation calculated
+#' using the Modified Coefficient of Variation (CV) approach.
+#' The Modified CV approach is a way of adding extra variance to the
+#' qualification data in the case that the qualification data has less
+#' variance than expected, which sometimes occurs when qualification testing
+#' is performed in a short period of time.
+#' Using the Modified CV approach, the standard deviation is calculated by
+#' multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
+#' value supplied or the value calculated by \code{mean(data_qual)} and
 #' \eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
 #' if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
 #'
@@ -621,6 +628,15 @@ k_equiv <- function(alpha, n) {
 #' ##               SD      0.162           0.15785
 #' ##           Result               PASS
 #' ##    Passing Range       8.856695 to 9.623305
+#'
+#' @references
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,” SAE International,
+#' CMH-17-1G, Mar. 2012.
+#'
+#' @seealso
+#' \code{\link{calc_cv_star}}
+#' \code{\link[stats]{t.test}}
 #'
 #' @export
 #'

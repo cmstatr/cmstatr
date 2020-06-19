@@ -147,4 +147,5 @@ CMH-17-1G, Mar. 2012.
 }
 \seealso{
 \code{\link{k_equiv}}
+\code{\link{calc_cv_star}}
 }
