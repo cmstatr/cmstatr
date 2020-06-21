@@ -1,6 +1,15 @@
 #' Calculate k factor for basis values (\eqn{kB}, \eqn{kA}) with normal
 #' distribution
 #'
+#' @description
+#' The factors returned by this function are used when calculating basis
+#' values (one-sided confidence bounds) when the data are normally
+#' distributed. The basis value will
+#' be equal to \eqn{x_bar - k s}, where \eqn{x_bar} is the sample mean,
+#' s is the sample standard deviation and k is the result of this function.
+#' This function is internally used by \code{\link{basis_normal}} when
+#' computing basis values.
+#'
 #' @param n the number of observations (i.e. coupons)
 #' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
 #' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
@@ -8,8 +17,11 @@
 #' @details
 #' This function calculates the k factors used when determining A- and
 #' B-Basis values for normally distributed data. To get \eqn{kB}, set
-#' \code{p = 0.90} and \code{conf = 0.95}. To get \eqn{kA}, set
-#' \code{p = 0.99} and \code{conf = 0.95}.
+#' the content of the tolerance bound to \code{p = 0.90} and
+#' the confidence level to \code{conf = 0.95}. To get \eqn{kA}, set
+#' \code{p = 0.99} and \code{conf = 0.95}. While other tolerance bound
+#' contents and confidence levels may be computed, they are infrequently
+#' needed in practice.
 #'
 #' The k-factor is calculated using equation 2.2.3 of
 #' Krishnamoorthy and Mathew (2008).
@@ -24,11 +36,21 @@
 #' the maximum allowable difference between the two is 0.002. The tables in
 #' CMH-17-1G give values to three decimal places.
 #'
+#' For more information about tolerance bounds in general, see
+#' Meeker, et. al. (2017).
+#'
 #' @return the calculated factor
 #'
 #' @references
 #' K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
 #' Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
+#'
+#' W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
+#' for Practitioners and Researchers, Second Edition.
+#' Hoboken: John Wiley & Sons, 2017.
+#'
+#' @seealso
+#' \code{\link{basis_normal}}
 #'
 #' @importFrom stats qnorm qt
 #'
@@ -43,9 +65,17 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' @description
 #' Calculate the basis value for a given data set. There are various functions
-#' to calculate the basis values for different distributions. For B-Basis,
-#' set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.99} and
-#' \eqn{conf=0.95}. These functions also perform some automated diagnostic
+#' to calculate the basis values for different distributions.
+#' The basis value is the lower one-sided tolerance bound of a certain
+#' proportion of the population. For more information on tolerance bounds,
+#' see Meeker, et. al. (2017).
+#' For B-Basis, set the content of tolerance bound to \eqn{p=0.90} and
+#' the confidence level to \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.99} and
+#' \eqn{conf=0.95}. While other tolerance bound
+#' contents and confidence levels may be computed, they are infrequently
+#' needed in practice.
+#'
+#' These functions also perform some automated diagnostic
 #' tests of the data prior to calculating the basis values. These diagnostic
 #' tests can be overridden if needed.
 #'
@@ -267,6 +297,10 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
 #' Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
+#'
+#' W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
+#' for Practitioners and Researchers, Second Edition.
+#' Hoboken: John Wiley & Sons, 2017.
 #'
 #' @name basis
 NULL

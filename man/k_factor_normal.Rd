@@ -18,14 +18,22 @@ k_factor_normal(n, p = 0.9, conf = 0.95)
 the calculated factor
 }
 \description{
-Calculate k factor for basis values (\eqn{kB}, \eqn{kA}) with normal
-distribution
+The factors returned by this function are used when calculating basis
+values (one-sided confidence bounds) when the data are normally
+distributed. The basis value will
+be equal to \eqn{x_bar - k s}, where \eqn{x_bar} is the sample mean,
+s is the sample standard deviation and k is the result of this function.
+This function is internally used by \code{\link{basis_normal}} when
+computing basis values.
 }
 \details{
 This function calculates the k factors used when determining A- and
 B-Basis values for normally distributed data. To get \eqn{kB}, set
-\code{p = 0.90} and \code{conf = 0.95}. To get \eqn{kA}, set
-\code{p = 0.99} and \code{conf = 0.95}.
+the content of the tolerance bound to \code{p = 0.90} and
+the confidence level to \code{conf = 0.95}. To get \eqn{kA}, set
+\code{p = 0.99} and \code{conf = 0.95}. While other tolerance bound
+contents and confidence levels may be computed, they are infrequently
+needed in practice.
 
 The k-factor is calculated using equation 2.2.3 of
 Krishnamoorthy and Mathew (2008).
@@ -39,8 +47,18 @@ emits warnings that "full precision may not have been achieved." When
 validating the results of this function against the tables in CMH-17-1G,
 the maximum allowable difference between the two is 0.002. The tables in
 CMH-17-1G give values to three decimal places.
+
+For more information about tolerance bounds in general, see
+Meeker, et. al. (2017).
 }
 \references{
 K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
 Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
+
+W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
+for Practitioners and Researchers, Second Edition.
+Hoboken: John Wiley & Sons, 2017.
+}
+\seealso{
+\code{\link{basis_normal}}
 }

@@ -135,9 +135,17 @@ This object has the following fields:
 }
 \description{
 Calculate the basis value for a given data set. There are various functions
-to calculate the basis values for different distributions. For B-Basis,
-set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.99} and
-\eqn{conf=0.95}. These functions also perform some automated diagnostic
+to calculate the basis values for different distributions.
+The basis value is the lower one-sided tolerance bound of a certain
+proportion of the population. For more information on tolerance bounds,
+see Meeker, et. al. (2017).
+For B-Basis, set the content of tolerance bound to \eqn{p=0.90} and
+the confidence level to \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.99} and
+\eqn{conf=0.95}. While other tolerance bound
+contents and confidence levels may be computed, they are infrequently
+needed in practice.
+
+These functions also perform some automated diagnostic
 tests of the data prior to calculating the basis values. These diagnostic
 tests can be overridden if needed.
 }
@@ -308,6 +316,10 @@ vol. 23, no. 4. pp. 1137–1154, 1994.
 
 K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
 Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
+
+W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
+for Practitioners and Researchers, Second Edition.
+Hoboken: John Wiley & Sons, 2017.
 }
 \seealso{
 \code{\link{hk_ext_z_j_opt}}
