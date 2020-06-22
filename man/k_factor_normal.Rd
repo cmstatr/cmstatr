@@ -21,8 +21,10 @@ the calculated factor
 The factors returned by this function are used when calculating basis
 values (one-sided confidence bounds) when the data are normally
 distributed. The basis value will
-be equal to \eqn{x_bar - k s}, where \eqn{x_bar} is the sample mean,
-s is the sample standard deviation and k is the result of this function.
+be equal to \eqn{\bar{x} - k s}{x_bar - k s},
+where \eqn{\bar{x}}{x_bar} is the sample mean,
+\eqn{s} is the sample standard deviation and \eqn{k} is the result
+of this function.
 This function is internally used by \code{\link{basis_normal}} when
 computing basis values.
 }
