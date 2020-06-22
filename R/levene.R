@@ -46,6 +46,20 @@
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
+#' @examples
+#' library(dplyr)
+#'
+#' carbon.fabric.2 %>%
+#'   filter(test == "FC") %>%
+#'   levene_test(strength, condition)
+#' ##
+#' ## Call:
+#' ## levene_test(data = ., x = strength, groups = condition)
+#' ##
+#' ## n = 91          k = 5
+#' ## F = 3.883818    p-value = 0.00600518
+#' ## Conclusion: Samples have unequal variance ( alpha = 0.05 )
+#'
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats var.test median pf
 #'
@@ -193,18 +207,24 @@ glance.levene <- function(x, ...) {  # nolint
 print.levene <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
-  cat("n = ", x$n, "\tk = ", x$k, "\n")
+
+  justify <- c("left", "left")
+  width <- c(16L, 16L)
+
+  print_row_equal(list("n", x$n, "k", x$k),
+            justify, width, ...)
 
   if (x$modcv == TRUE) {
     cat("Modified CV Approach Used", "\n")
   }
 
-  cat("F = ", x$f, "\tp-value = ", x$p, "\n")
+  print_row_equal(list("F", x$f, "p-value", x$p),
+            justify, width, ...)
   if (x$reject_equal_variance) {
-    cat("Conclusion: Samples have unequal variance ( alpha=",
+    cat("Conclusion: Samples have unequal variance ( alpha =",
         x$alpha, ")\n\n")
   } else {
-    cat("Conclusion: Samples have equal variances ( alpha=",
+    cat("Conclusion: Samples have equal variances ( alpha =",
         x$alpha, ")\n\n")
   }
 }

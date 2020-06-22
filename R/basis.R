@@ -100,10 +100,14 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' value of \code{x} is expected to be a variable within \code{data}. If
 #' \code{data} is not specified, \code{x} must be a vector.
 #'
-#' When \code{modcv=TRUE} is set, which is only applicable to the pooling methods,
-#' the data is first modified according to the modified coefficient of variation (CV)
-#' rules. This modified data is then used when both calculating the basis values and
-#' also when performing the diagnostic tests. The modified CV approach is a way of
+#' When \code{modcv=TRUE} is set, which is only applicable to the
+#' pooling methods,
+#' the data is first modified according to the modified coefficient
+#' of variation (CV)
+#' rules. This modified data is then used when both calculating the
+#' basis values and
+#' also when performing the diagnostic tests. The modified CV approach
+#' is a way of
 #' adding extra variance to datasets with unexpectedly low variance.
 #'
 #' \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
@@ -422,9 +426,9 @@ print.basis <- function(x, ...) {
 
   cat("Distribution: ", x$distribution, "\t")
 
-  cat("( n = ", x$n)
+  cat("( n =", x$n)
   if (!is.null(x$r) & !all(is.na(x$r))) {
-    cat(", r = ", x$r)
+    cat(", r =", x$r)
   }
   cat(" )\n")
 
@@ -438,13 +442,13 @@ print.basis <- function(x, ...) {
                           x$override)
 
   if (x$conf == 0.95 & x$p == 0.9) {
-    cat("B-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
+    cat("B-Basis: ", " ( p =", x$p, ", conf =", x$conf, ")\n")
   }
   else if (x$conf == 0.95 & x$p == 0.99) {
-    cat("A-Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
+    cat("A-Basis: ", " ( p =", x$p, ", conf =", x$conf, ")\n")
   }
   else {
-    cat("Basis: ", " ( p = ", x$p, ", conf = ", x$conf, ")\n")
+    cat("Basis: ", " ( p =", x$p, ", conf =", x$conf, ")\n")
   }
 
   if (is.numeric(x$basis)) {

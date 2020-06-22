@@ -127,14 +127,14 @@ equiv_mean_extremum(alpha = 0.01, n_sample = 6,
 ##
 ## Call:
 ## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
-##                     alpha = 0.01, modcv = TRUE)
+##     alpha = 0.01, modcv = TRUE)
 ##
 ## Modified CV used: CV* = 0.0675 ( CV = 0.055 )
 ##
 ## For alpha = 0.01 and n = 6
 ## ( k1 = 3.128346 and k2 = 1.044342 )
-##               Min Individual      Sample Mean
-## Thresholds:         78.88367         92.95069
+##                   Min Individual   Sample Mean
+##      Thresholds:    78.88367        92.95069
 
 }
 \references{

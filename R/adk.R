@@ -59,6 +59,21 @@
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
+#' @examples
+#' library(dplyr)
+#'
+#' carbon.fabric %>%
+#'   filter(test == "WT") %>%
+#'   filter(condition == "RTD") %>%
+#'   ad_ksample(strength, batch)
+#' ##
+#' ## Call:
+#' ## ad_ksample(data = ., x = strength, groups = batch)
+#' ##
+#' ## N = 18          k = 3
+#' ## ADK = 0.912     p-value = 0.95989
+#' ## Conclusion: Samples come from the same distribution ( alpha = 0.025 )
+#'
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom kSamples ad.test
 #' @export
@@ -177,8 +192,14 @@ glance.adk <- function(x, ...) {  # nolint
 print.adk <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
-  cat("N = ", x$n, "\tk = ", x$k, "\n")
-  cat("ADK = ", x$ad, "\tp-value = ", x$p, "\n")
+
+  justify <- c("left", "left")
+  width <- c(16L, 16L)
+
+  print_row_equal(list("N", x$n, "k", x$k),
+                  justify, width, ...)
+  print_row_equal(list("ADK", x$ad, "p-value", x$p),
+                  justify, width, ...)
   if (x$reject_same_dist) {
     cat("Conclusion: Samples do not come from the same distribution (alpha =",
         x$alpha, ")\n\n")

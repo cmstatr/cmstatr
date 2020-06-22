@@ -70,6 +70,22 @@ distribution used.
 The results of this function have been validated against
 published values in Lawless (1982).
 }
+\examples{
+library(dplyr)
+
+carbon.fabric \%>\%
+  filter(test == "FC") \%>\%
+  filter(condition == "RTD") \%>\%
+  anderson_darling_normal(strength)
+## Call:
+## anderson_darling_normal(data = ., x = strength)
+##
+## Distribution:  Normal ( n = 18 )
+## Test statistic:  A = 0.9224776
+## Significance:  0.01212193  (assuming unknown parameters)
+## Conclusion: Sample is not drawn from a Normal distribution (alpha = 0.05 )
+
+}
 \references{
 J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
 New York: Wiley, 1982.

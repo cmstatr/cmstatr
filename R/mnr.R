@@ -273,20 +273,20 @@ augment.mnr <- function(x, data = x$data, ...) {  # nolint
 print.mnr <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
-  cat("MNR = ", x$mnr, " ( critical value = ", x$crit, ")\n\n")
+  cat("MNR =", x$mnr, " ( critical value =", x$crit, ")\n\n")
   if (nrow(x$outliers) == 0) {
     cat("No outliers detected\n\n")
   } else {
     cat("Outliers:\n")
 
-    col_width <- max(nchar(as.character(x$outliers[["index"]])), 5) + 2
-    cat(format("Index", width = col_width, justify = "right"))
-    cat("  ")
-    cat("Value\n")
+    justify <- c("right", "left", "left")
+    width <- c(8L, 2L, 16L)
+
+    print_row(list("Index", " ", "Value"), justify, width, ...)
+
     for (j in seq(along.with = x$outliers$index)) {
-      cat(format(x$outliers[["index"]][j], width = col_width))
-      cat("  ")
-      cat(x$outliers[["value"]][j], "\n")
+      print_row(list(x$outliers[["index"]][j], " ", x$outliers[["value"]][j]),
+                justify, width, ...)
     }
 
   }

@@ -52,6 +52,21 @@ When \code{modcv=TRUE}, the data from each group is first transformed
 according to the modified coefficient of variation (CV) rules before
 performing Levene's test.
 }
+\examples{
+library(dplyr)
+
+carbon.fabric.2 \%>\%
+  filter(test == "FC") \%>\%
+  levene_test(strength, condition)
+##
+## Call:
+## levene_test(data = ., x = strength, groups = condition)
+##
+## n = 91          k = 5
+## F = 3.883818    p-value = 0.00600518
+## Conclusion: Samples have unequal variance ( alpha = 0.05 )
+
+}
 \references{
 “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,

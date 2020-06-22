@@ -63,6 +63,21 @@
 #' Composites Guideline for Characterization of Structural
 #' Materials," SAE International, CMH-17-1G, Mar. 2012.
 #'
+#' @examples
+#' library(dplyr)
+#'
+#' carbon.fabric %>%
+#'   filter(test == "FC") %>%
+#'   filter(condition == "RTD") %>%
+#'   anderson_darling_normal(strength)
+#' ## Call:
+#' ## anderson_darling_normal(data = ., x = strength)
+#' ##
+#' ## Distribution:  Normal ( n = 18 )
+#' ## Test statistic:  A = 0.9224776
+#' ## Significance:  0.01212193  (assuming unknown parameters)
+#' ## Conclusion: Sample is not drawn from a Normal distribution (alpha = 0.05 )
+#'
 #' @importFrom rlang enquo eval_tidy
 #'
 #' @name anderson_darling
@@ -167,9 +182,9 @@ print.anderson_darling <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  cat("Distribution: ", x$dist, "( n = ", x$n, ")", "\n")
+  cat("Distribution: ", x$dist, "( n =", x$n, ")", "\n")
 
-  cat("Test statistic: A = ", x$A, "\n")
+  cat("Test statistic:  A =", x$A, "\n")
   cat(
     "Significance: ",
     x$osl,
@@ -178,11 +193,11 @@ print.anderson_darling <- function(x, ...) {
   if (x$reject_distribution) {
     cat("Conclusion: Sample is not drawn from a",
         x$dist,
-        "distribution (alpha = ", x$alpha, ")")
+        "distribution (alpha =", x$alpha, ")")
   } else {
     cat("Conclusion: Sample is drawn from a",
         x$dist,
-        "distribution (alpha = ", x$alpha, ")")
+        "distribution (alpha =", x$alpha, ")")
   }
 }
 

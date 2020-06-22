@@ -105,14 +105,14 @@
 #' ##
 #' ## Call:
 #' ## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
-#' ##                     alpha = 0.01, modcv = TRUE)
+#' ##     alpha = 0.01, modcv = TRUE)
 #' ##
 #' ## Modified CV used: CV* = 0.0675 ( CV = 0.055 )
 #' ##
 #' ## For alpha = 0.01 and n = 6
 #' ## ( k1 = 3.128346 and k2 = 1.044342 )
-#' ##               Min Individual      Sample Mean
-#' ## Thresholds:         78.88367         92.95069
+#' ##                   Min Individual   Sample Mean
+#' ##      Thresholds:    78.88367        92.95069
 #'
 #' @seealso
 #' \code{\link{k_equiv}}
@@ -308,12 +308,8 @@ print.equiv_mean_extremum <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  printrow <- function(c1, c2, c3) {
-    cat(format(c1, justify = "right", width = 16L, ...),
-        format(c2, justify = "right", width = 16L, ...),
-        format(c3, justify = "right", width = 16L, ...),
-        "\n")
-  }
+  justify <- c("right", "centre", "centre")
+  col_width <- c(16L, 16L, 16L)
 
   if (x$modcv) {
     cat("Modified CV used: CV* =", format(x$cv_star, ...),
@@ -325,13 +321,19 @@ print.equiv_mean_extremum <- function(x, ...) {
        "and n =", format(x$n_sample, ...),
       "\n( k1 =", format(x$k1, ...),
       "and k2 =", format(x$k2, ...), ")\n")
-  printrow("", "Min Individual", "Sample Mean")
+
+  print_row(list("", "Min Individual", "Sample Mean"),
+            justify, col_width, ...)
+
   if (!is.null(x$min_sample)) {
-    printrow("Sample:", x$min_sample, x$mean_sample)
+    print_row(list("Sample:", x$min_sample, x$mean_sample),
+              justify, col_width, ...)
   }
-  printrow("Thresholds:", x$threshold_min_indiv, x$threshold_mean)
+  print_row(list("Thresholds:", x$threshold_min_indiv, x$threshold_mean),
+            justify, col_width, ...)
   if (!is.null(x$result_min_indiv)) {
-    printrow("Equivalency:", x$result_min_indiv, x$result_mean)
+    print_row(list("Equivalency:", x$result_min_indiv, x$result_mean),
+              justify, col_width, ...)
   }
 }
 
@@ -866,32 +868,30 @@ print.equiv_change_mean <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  printrow <- function(c1, c2, c3) {
-    cat(format(c1, justify = "right", width = 16L, ...),
-        format(c2, justify = "centre", width = 16L, ...),
-        format(c3, justify = "centre", width = 16L, ...),
-        "\n")
-  }
-
-  printrow2 <- function(c1, c2) {
-    cat(format(c1, justify = "right", width = 16L, ...),
-        format(c2, justify = "centre", width = 32L, ...),
-        "\n")
-  }
-
   cat("For alpha =", format(x$alpha, ...), "\n")
 
   if (x$modcv) {
     cat("Modified CV used\n")
   }
 
-  printrow("", "Qualification", "Sample")
-  printrow("Number", format(x$n_qual, ...), format(x$n_sample, ...))
-  printrow("Mean", format(x$mean_qual, ...), format(x$mean_sample, ...))
-  printrow("SD", format(x$sd_qual, ...), format(x$sd_sample, ...))
-  printrow2("Result", x$result)
-  printrow2("Passing Range", paste0(format(x$threshold[1], ...),
-                                    " to ",
-                                    format(x$threshold[2], ...))
-  )
+  justify3 <- c("right", "centre", "centre")
+  width3 <- c(16L, 16L, 16L)
+
+  justify2 <- c("right", "centre")
+  width2 <- c(16L, 32L)
+
+  print_row(list("", "Qualification", "Sample"),
+            justify3, width3, ...)
+  print_row(list("Number", x$n_qual, x$n_sample),
+            justify3, width3, ...)
+  print_row(list("Mean", x$mean_qual, x$mean_sample),
+            justify3, width3, ...)
+  print_row(list("SD", x$sd_qual, x$sd_sample),
+            justify3, width3, ...)
+  print_row(list("Result", x$result),
+            justify2, width2, ...)
+  print_row(list("Passing Range", paste0(format(x$threshold[1], ...),
+                                      " to ",
+                                      format(x$threshold[2], ...))),
+            justify2, width2, ...)
 }

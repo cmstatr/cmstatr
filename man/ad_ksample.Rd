@@ -58,6 +58,22 @@ For more information about the difference between this function and
 the formulation in CMH-17-1G, see the vignette on the subject, which
 can be accessed by running \code{vignette("adktest")}
 }
+\examples{
+library(dplyr)
+
+carbon.fabric \%>\%
+  filter(test == "WT") \%>\%
+  filter(condition == "RTD") \%>\%
+  ad_ksample(strength, batch)
+##
+## Call:
+## ad_ksample(data = ., x = strength, groups = batch)
+##
+## N = 18          k = 3
+## ADK = 0.912     p-value = 0.95989
+## Conclusion: Samples come from the same distribution ( alpha = 0.025 )
+
+}
 \references{
 F. W. Scholz and M. Stephens, “K-Sample Anderson--Darling Tests,” Journal
 of the American Statistical Association, vol. 82, no. 399. pp. 918–924,
