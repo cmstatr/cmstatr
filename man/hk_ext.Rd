@@ -4,7 +4,7 @@
 \alias{hk_ext}
 \alias{hk_ext_z}
 \alias{hk_ext_z_j_opt}
-\title{Calculate values related to the Extended Hanson---Koopmans method}
+\title{Calculate values related to the Extended Hanson--Koopmans method}
 \usage{
 hk_ext_z(n, i, j, p, conf)
 
@@ -45,7 +45,13 @@ order statistics are selected, the desired quantile and the desired
 confidence interval.
 
 The function \code{hk_ext_z} calculates the weighting variable \code{z}
-based on selected order statistics \code{i} and \code{j}.
+based on selected order statistics \code{i} and \code{j}. Based on this
+value \code{z}, the tolerance bound can be calculated as:
+
+\deqn{S = z X_{(i)} + (1 - z) X_{(j)}}{S = z X(i) + (1 - z) X(j)}
+
+Where \eqn{X_{(i)}}{X(i)} and \eqn{X_{(j)}}{X(j)} are the \code{i-th}
+and \code{j-th} ordered observation.
 
 The function \code{hk_ext_z_j_opt} determines the value of \code{j} and
 the corresponding value of \code{z}, assuming \code{i=1}. The value
@@ -53,6 +59,30 @@ of \code{j} is selected such that the computed tolerance limit is
 nearest to the desired population quantile for a standard normal
 distribution when the order statistics are equal to the expected
 value of the order statistics for the standard normal distribution.
+}
+\examples{
+# The factors from Table 1 of Vangel (1994) can be recreated
+# using the hk_ext_z function. For the sample size n=21,
+# the median is the 11th ordered observation. The factor
+# required for calculating the tolerance bound with a content
+# of 0.9 and a confidence level of 0.95 based on the median
+# and first ordered observation can be calculated as follows.
+hk_ext_z(n = 21, i = 1, j = 11, p = 0.9, conf = 0.95)
+
+## [1] 1.204806
+
+# The hk_ext_z_j_opt function can be used to refine this value
+# of z by finding an optimum value of j, rather than simply
+# using the median. Here, we find that the optimal observation
+# to use is the 10th, not the 11th (which is the median).
+hk_ext_z_j_opt(n = 21, p = 0.9, conf = 0.95)
+
+## $z
+## [1] 1.217717
+##
+## $j
+## [1] 10
+
 }
 \references{
 M. Vangel, “One-Sided Nonparametric Tolerance Limits,”

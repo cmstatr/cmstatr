@@ -50,6 +50,19 @@ testing, and the difference between subsequent order statistics will be
 very small for samples this large, this difference will have no practical
 effect on computed tolerance limits.
 }
+\examples{
+nonpara_binomial_rank(n = 1693, p = 0.99, conf = 0.95)
+## [1] 11
+
+# The above example indicates that for a sample of 1693 observations,
+# the A-Basis is best approximated as the 11th ordered observation.
+# In the example below, the same ordered observation would also be used
+# for a sample of size 1702.
+
+nonpara_binomial_rank(n = 1702, p = 0.99, conf = 0.95)
+## [1] 11
+
+}
 \references{
 W. Guenther, “Determination of Sample Size for Distribution-Free
 Tolerance Limits,” Jan. 1969.

@@ -54,6 +54,25 @@
 #' @seealso
 #' \code{\link{basis_normal}}
 #'
+#' @examples
+#' kb <- k_factor_normal(n = 10, p = 0.9, conf = 0.95)
+#' print(kb)
+#'
+#' ## [1] 2.35464
+#'
+#' # This can be used to caclulate the B-Basis if
+#' # the sample mean and sample standard deviation
+#' # is known, and data is assumed to be normally
+#' # distributed
+#'
+#' sample_mean <- 90
+#' sample_sd <- 5.2
+#' print("B-Basis:")
+#' print(sample_mean - sample_sd * kb)
+#'
+#' ## [1] B-Basis:
+#' ## [1] 77.75587
+#'
 #' @importFrom stats qnorm qt
 #'
 #' @export
@@ -307,6 +326,54 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
 #' for Practitioners and Researchers, Second Edition.
 #' Hoboken: John Wiley & Sons, 2017.
+#'
+#' @examples
+#' library(dplyr)
+#'
+#' # A single-point basis value can be calculated as follows
+#' # in this example, three failed diagnostic tests are
+#' # overriden.
+#'
+#' carbon.fabric %>%
+#'   filter(test == "FC") %>%
+#'   filter(condition == "RTD") %>%
+#'   basis_normal(strength, batch,
+#'                override = c("outliers",
+#'                             "outliers_within_batch",
+#'                             "anderson_darling_normal"))
+#'
+#' ## Call:
+#' ## basis_normal(data = ., x = strength, batch = batch,
+#' ##     override = c("outliers", "outliers_within_batch",
+#' ##    "anderson_darling_normal"))
+#' ##
+#' ## Distribution:  Normal 	( n = 18 )
+#' ## The following diagnostic tests were overridden:
+#' ##     `outliers`,
+#' ##     `outliers_within_batch`,
+#' ##     `anderson_darling_normal`
+#' ## B-Basis:   ( p = 0.9 , conf = 0.95 )
+#' ## 76.94656
+#'
+#' # A set of pooled basis values can also be calculated
+#' # using the pooled standard deviation method, as follows.
+#' # In this example, one failed diagnostic test is overriden.
+#' carbon.fabric %>%
+#'   filter(test == "WT") %>%
+#'   basis_pooled_sd(strength, condition, batch,
+#'                   override = c("outliers_within_batch"))
+#'
+#' ## Call:
+#' ## basis_pooled_sd(data = ., x = strength, groups = condition,
+#' ##                 batch = batch, override = c("outliers_within_batch"))
+#' ##
+#' ## Distribution:  Normal - Pooled Standard Deviation 	( n = 54, r = 3 )
+#' ## The following diagnostic tests were overridden:
+#' ##     `outliers_within_batch`
+#' ## B-Basis:   ( p = 0.9 , conf = 0.95 )
+#' ## CTD  127.6914
+#' ## ETW  125.0698
+#' ## RTD  132.1457
 #'
 #' @name basis
 NULL
@@ -923,7 +990,7 @@ hk_ext_h <- function(z, n, i, j, p) {
   qb + int$value
 }
 
-#' Calculate values related to the Extended Hanson---Koopmans method
+#' Calculate values related to the Extended Hanson--Koopmans method
 #'
 #' @description
 #' Calculates values related to the Extended Hanson--Koopmans method
@@ -955,7 +1022,13 @@ hk_ext_h <- function(z, n, i, j, p) {
 #' confidence interval.
 #'
 #' The function \code{hk_ext_z} calculates the weighting variable \code{z}
-#' based on selected order statistics \code{i} and \code{j}.
+#' based on selected order statistics \code{i} and \code{j}. Based on this
+#' value \code{z}, the tolerance bound can be calculated as:
+#'
+#' \deqn{S = z X_{(i)} + (1 - z) X_{(j)}}{S = z X(i) + (1 - z) X(j)}
+#'
+#' Where \eqn{X_{(i)}}{X(i)} and \eqn{X_{(j)}}{X(j)} are the \code{i-th}
+#' and \code{j-th} ordered observation.
 #'
 #' The function \code{hk_ext_z_j_opt} determines the value of \code{j} and
 #' the corresponding value of \code{z}, assuming \code{i=1}. The value
@@ -974,8 +1047,31 @@ hk_ext_h <- function(z, n, i, j, p) {
 #' Hazard Rates,” The Annals of Mathematical Statistics,
 #' vol. 35, no. 4. pp. 1561–1570, 1964.
 #'
+#' @examples
+#' # The factors from Table 1 of Vangel (1994) can be recreated
+#' # using the hk_ext_z function. For the sample size n=21,
+#' # the median is the 11th ordered observation. The factor
+#' # required for calculating the tolerance bound with a content
+#' # of 0.9 and a confidence level of 0.95 based on the median
+#' # and first ordered observation can be calculated as follows.
+#' hk_ext_z(n = 21, i = 1, j = 11, p = 0.9, conf = 0.95)
+#'
+#' ## [1] 1.204806
+#'
+#' # The hk_ext_z_j_opt function can be used to refine this value
+#' # of z by finding an optimum value of j, rather than simply
+#' # using the median. Here, we find that the optimal observation
+#' # to use is the 10th, not the 11th (which is the median).
+#' hk_ext_z_j_opt(n = 21, p = 0.9, conf = 0.95)
+#'
+#' ## $z
+#' ## [1] 1.217717
+#' ##
+#' ## $j
+#' ## [1] 10
+#'
 #' @name hk_ext
-
+#'
 #' @rdname hk_ext
 #' @export
 hk_ext_z <- function(n, i, j, p, conf) {
@@ -1174,6 +1270,18 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #' CMH-17-1G, Mar. 2012.
 #'
 #' @seealso \code{\link{basis_nonpara_large_sample}}
+#'
+#' @examples
+#' nonpara_binomial_rank(n = 1693, p = 0.99, conf = 0.95)
+#' ## [1] 11
+#'
+#' # The above example indicates that for a sample of 1693 observations,
+#' # the A-Basis is best approximated as the 11th ordered observation.
+#' # In the example below, the same ordered observation would also be used
+#' # for a sample of size 1702.
+#'
+#' nonpara_binomial_rank(n = 1702, p = 0.99, conf = 0.95)
+#' ## [1] 11
 #'
 #' @export
 nonpara_binomial_rank <- function(n, p, conf) {

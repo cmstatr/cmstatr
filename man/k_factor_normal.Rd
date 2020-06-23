@@ -53,6 +53,26 @@ CMH-17-1G give values to three decimal places.
 For more information about tolerance bounds in general, see
 Meeker, et. al. (2017).
 }
+\examples{
+kb <- k_factor_normal(n = 10, p = 0.9, conf = 0.95)
+print(kb)
+
+## [1] 2.35464
+
+# This can be used to caclulate the B-Basis if
+# the sample mean and sample standard deviation
+# is known, and data is assumed to be normally
+# distributed
+
+sample_mean <- 90
+sample_sd <- 5.2
+print("B-Basis:")
+print(sample_mean - sample_sd * kb)
+
+## [1] B-Basis:
+## [1] 77.75587
+
+}
 \references{
 K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
 Applications, and Computation. Hoboken: John Wiley & Sons, 2008.

@@ -306,6 +306,55 @@ checks for equality of variances of all data after transforming it
 using \code{\link{normalize_group_mean}}
 using \code{\link{levene_test}}.
 }
+\examples{
+library(dplyr)
+
+# A single-point basis value can be calculated as follows
+# in this example, three failed diagnostic tests are
+# overriden.
+
+carbon.fabric \%>\%
+  filter(test == "FC") \%>\%
+  filter(condition == "RTD") \%>\%
+  basis_normal(strength, batch,
+               override = c("outliers",
+                            "outliers_within_batch",
+                            "anderson_darling_normal"))
+
+## Call:
+## basis_normal(data = ., x = strength, batch = batch,
+##     override = c("outliers", "outliers_within_batch",
+##    "anderson_darling_normal"))
+##
+## Distribution:  Normal 	( n = 18 )
+## The following diagnostic tests were overridden:
+##     `outliers`,
+##     `outliers_within_batch`,
+##     `anderson_darling_normal`
+## B-Basis:   ( p = 0.9 , conf = 0.95 )
+## 76.94656
+
+# A set of pooled basis values can also be calculated
+# using the pooled standard deviation method, as follows.
+# In this example, one failed diagnostic test is overriden.
+carbon.fabric \%>\%
+  filter(test == "WT") \%>\%
+  basis_pooled_sd(strength, condition, batch,
+                  override = c("outliers_within_batch"))
+
+## Call:
+## basis_pooled_sd(data = ., x = strength, groups = condition,
+##                 batch = batch, override = c("outliers_within_batch"))
+##
+## Distribution:  Normal - Pooled Standard Deviation 	( n = 54, r = 3 )
+## The following diagnostic tests were overridden:
+##     `outliers_within_batch`
+## B-Basis:   ( p = 0.9 , conf = 0.95 )
+## CTD  127.6914
+## ETW  125.0698
+## RTD  132.1457
+
+}
 \references{
 J. F. Lawless, Statistical Models and Methods for Lifetime Data.
 New York: John Wiley & Sons, 1982.

@@ -388,8 +388,15 @@ print.equiv_mean_extremum <- function(x, ...) {
 #' qual_mean <- 100
 #' qual_sd <- 3.5
 #' k <- k_equiv(0.01, 5)
-#' acceptance_limit_min <- qual_mean - qual_sd * k[1]
-#' acceptance_limit_mean <- qual_mean - qual_sd * k[2]
+#' print("Minimum Individual Acceptance Limit:")
+#' print(qual_mean - qual_sd * k[1])
+#' print("Minimum Average Acceptance Limit:")
+#' print(qual_mean - qual_sd * k[2])
+#'
+#' ## [1] "Minimum Individual Acceptance Limit:"
+#' ## [1] 89.24981
+#' ## [1] "Minimum Average Acceptance Limit:"
+#' ## [1] 96.00123
 #'
 #' @export
 k_equiv <- function(alpha, n) {

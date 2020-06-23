@@ -29,13 +29,42 @@ See CMH-17, or other references, for information about the cases where
 normalization is appropriate.
 
 Either cured ply thickness or laminate thickness may be used for
-\code{measured_thk} and \code{nom_thk}, as long as CPT or laminate
-thickness is used for both.
+\code{measured_thk} and \code{nom_thk}, as long as the same decision
+made for both values.
 
 The formula applied is:
-\deqn{normalized value = test value * t_measured / t_nominal}
+\deqn{normalized\,value = test\,value \frac{t_{measured}}{t_{nominal}}}{
+normalized value = test value * t_measured / t_nominal}
 
 If you need to normalize based on fiber volume fraction (or another method),
 you will first need to calculate the nominal cured ply thickness (or laminate
 thickness). Those calculations are outside the scope of this documentation.
+}
+\examples{
+library(dplyr)
+
+carbon.fabric.2 \%>\%
+select(thickness, strength) \%>\%
+  mutate(normalized_strength = normalize_ply_thickness(strength,
+                                                       thickness,
+                                                       0.105)) \%>\%
+  head(10)
+
+##    thickness strength normalized_strength
+## 1      0.112  142.817            152.3381
+## 2      0.113  135.901            146.2554
+## 3      0.113  132.511            142.6071
+## 4      0.112  135.586            144.6251
+## 5      0.113  125.145            134.6799
+## 6      0.113  135.203            145.5042
+## 7      0.113  128.547            138.3411
+## 8      0.113  127.709            137.4392
+## 9      0.113  127.074            136.7558
+## 10     0.114  126.879            137.7543
+
+}
+\references{
+“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.
 }

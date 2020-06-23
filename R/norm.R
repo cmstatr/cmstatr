@@ -22,15 +22,43 @@
 #' normalization is appropriate.
 #'
 #' Either cured ply thickness or laminate thickness may be used for
-#' \code{measured_thk} and \code{nom_thk}, as long as CPT or laminate
-#' thickness is used for both.
+#' \code{measured_thk} and \code{nom_thk}, as long as the same decision
+#' made for both values.
 #'
 #' The formula applied is:
-#' \deqn{normalized value = test value * t_measured / t_nominal}
+#' \deqn{normalized\,value = test\,value \frac{t_{measured}}{t_{nominal}}}{
+#' normalized value = test value * t_measured / t_nominal}
 #'
 #' If you need to normalize based on fiber volume fraction (or another method),
 #' you will first need to calculate the nominal cured ply thickness (or laminate
 #' thickness). Those calculations are outside the scope of this documentation.
+#'
+#' @references
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,” SAE International,
+#' CMH-17-1G, Mar. 2012.
+#'
+#' @examples
+#' library(dplyr)
+#'
+#' carbon.fabric.2 %>%
+#' select(thickness, strength) %>%
+#'   mutate(normalized_strength = normalize_ply_thickness(strength,
+#'                                                        thickness,
+#'                                                        0.105)) %>%
+#'   head(10)
+#'
+#' ##    thickness strength normalized_strength
+#' ## 1      0.112  142.817            152.3381
+#' ## 2      0.113  135.901            146.2554
+#' ## 3      0.113  132.511            142.6071
+#' ## 4      0.112  135.586            144.6251
+#' ## 5      0.113  125.145            134.6799
+#' ## 6      0.113  135.203            145.5042
+#' ## 7      0.113  128.547            138.3411
+#' ## 8      0.113  127.709            137.4392
+#' ## 9      0.113  127.074            136.7558
+#' ## 10     0.114  126.879            137.7543
 #'
 #' @export
 normalize_ply_thickness <- function(strength, measured_thk, nom_thk) {
@@ -67,6 +95,26 @@ normalize_ply_thickness <- function(strength, measured_thk, nom_thk) {
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
+#' @examples
+#' library(dplyr)
+#' carbon.fabric.2 %>%
+#' filter(test == "WT") %>%
+#'   select(condition, strength) %>%
+#'   mutate(condition_norm = normalize_group_mean(strength, condition)) %>%
+#'   head(10)
+#'
+#' ##    condition strength condition_norm
+#' ## 1        CTD  142.817      1.0542187
+#' ## 2        CTD  135.901      1.0031675
+#' ## 3        CTD  132.511      0.9781438
+#' ## 4        CTD  135.586      1.0008423
+#' ## 5        CTD  125.145      0.9237709
+#' ## 6        CTD  135.203      0.9980151
+#' ## 7        CTD  128.547      0.9488832
+#' ## 8        CTD  127.709      0.9426974
+#' ## 9        CTD  127.074      0.9380101
+#' ## 10       CTD  126.879      0.9365706
+#'
 #' @importFrom rlang enquo eval_tidy
 #'
 #' @export
@@ -93,7 +141,7 @@ normalize_group_mean <- function(x, group) {
 #' Calculate the modified CV from the CV
 #'
 #' @description
-#' This function calculates the Modified coefficient of variation (CV)
+#' This function calculates the modified coefficient of variation (CV)
 #' based on a (unmodified) CV.
 #' The modified CV is calculated based on the rules in CMH-17-1G. Those
 #' rules are:
@@ -116,6 +164,15 @@ normalize_group_mean <- function(x, group) {
 #' "Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,"
 #' SAE International, CMH-17-1G, Mar. 2012.
+#'
+#' @examples
+#' # The modified CV for values of CV smaller than 4% is 6%
+#' calc_cv_star(0.01)
+#' ## [1] 0.06
+#'
+#' # The modified CV for values of CV larger than 8% is unchanged
+#' calc_cv_star(0.09)
+#' ## [1] 0.09
 #'
 #' @export
 calc_cv_star <- function(cv) {
