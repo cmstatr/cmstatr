@@ -42,7 +42,7 @@ The extended Hanson--Koopmans method calculates a tolerance limit
 (basis value) based on two order statistics and a weighting value
 \code{z}. The value of \code{z} is based on the sample size, which
 order statistics are selected, the desired quantile and the desired
-confidence interval.
+confidence level
 
 The function \code{hk_ext_z} calculates the weighting variable \code{z}
 based on selected order statistics \code{i} and \code{j}. Based on this

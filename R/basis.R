@@ -14,7 +14,7 @@
 #'
 #' @param n the number of observations (i.e. coupons)
 #' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
-#' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
+#' @param conf confidence level Should be 0.95 for both A- and B-Basis
 #'
 #' @details
 #' This function calculates the k factors used when determining A- and
@@ -105,7 +105,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @param batch the variable in the data.frame that contains the batches.
 #' @param groups the variable in the data.frame representing the groups
 #' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
-#' @param conf confidence interval. Should be 0.95 for both A- and B-Basis
+#' @param conf confidence level Should be 0.95 for both A- and B-Basis
 #' @param override a list of names of diagnostic tests to override,
 #'                 if desired.
 #' @param modcv a logical value indicating whether the modified CV approach
@@ -164,7 +164,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' for these diagnostic tests.
 #'
 #' \code{basis_weibull} calculates the basis value for data distributed
-#' according to a Weibull distribution. The confidence interval for the
+#' according to a Weibull distribution. The confidence level for the
 #' quantile requested is calculated using the conditional method, as
 #' described in Lawless (1982) Section 4.1.2b. This has good agreement
 #' with tables published in CMH-17-1G. Results differ between this function
@@ -1019,7 +1019,7 @@ hk_ext_h <- function(z, n, i, j, p) {
 #' (basis value) based on two order statistics and a weighting value
 #' \code{z}. The value of \code{z} is based on the sample size, which
 #' order statistics are selected, the desired quantile and the desired
-#' confidence interval.
+#' confidence level
 #'
 #' The function \code{hk_ext_z} calculates the weighting variable \code{z}
 #' based on selected order statistics \code{i} and \code{j}. Based on this

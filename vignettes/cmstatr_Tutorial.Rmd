@@ -118,7 +118,8 @@ if (0.05 >= (norm_data %>%
 ```
 
 Now that we know that this data follows a normal distribution (since the
-significance of the Anderson--Darling test is greater than $0.05$), we can
+observed significance level (OSL) of the Anderson--Darling test is
+greater than $0.05$), we can
 proceed to calculate a basis value based based on the assumption of normally
 distributed data. The `cmstatr` package provides the function `basis_normal`
 as well as related functions for other distributions. By default, the B-Basis
