@@ -38,32 +38,34 @@ the Anderson--Darling k-Sample and Anderson-Darling tests when pooling
 across environments.
 }
 \details{
-\code{transform_mod_cv()} takes a vector
-containing the observations and a vector containing the groups that
-each observation belongs to and transforms the data. The modified CV
-is computed independently within each group and each observation is
-transformed according to:
+The modified CV transformation takes the general form:
 
-\deqn{\frac{S_i^*}{S_i} (x_i - \bar{x_i}) + \bar{x_i}}{
-  Si*/Si (xi-x_bar_i) + x_bar_i
+\deqn{\frac{S_i^*}{S_i} (x_{ij} - \bar{x_i}) + \bar{x_i}}{
+  Si*/Si (xij-x_bar_i) + x_bar_i
 }
 
-Where Si* is the modified standard deviation (mod CV times mean) for
-the group; Si is the standard deviation for the group, x_bar_i is
-the group mean and xi is the observation.
+Where \eqn{S_i^*}{Si*} is the modified standard deviation
+(mod CV times mean) for
+the \eqn{ith} group; \eqn{S_i}{Si} is the standard deviation
+for the \eqn{ith} group, \eqn{\bar{x_i}}{x_bar_i} is
+the group mean and \eqn{x_{ij}}{xij} is the observation.
+
+\code{transform_mod_cv()} takes a vector
+containing the observations and transforms the data.
+The equation above is used, and all observations
+are considered to be from the same group.
 
 \code{transform_mod_cv_ad()} takes a vector containing the observations
 plus a vector containing the corresponding conditions and a vector
 containing the batches. This function first calculates the modified
 CV value from the data from each condition (independently). Then,
 within each condition, the transformation
-\code{transform_mod_cv(x, batches)}
-is applied to produce the transformed data \eqn{x'}.
+above is applied to produce the transformed data \eqn{x'}.
 This transformed data is further transformed using the following
 equation.
 
-\deqn{x'' = C (x'_i - \bar{x_i}) + \bar{x_i}}{
-  x'' = C (x'_i - x_bar_i) + x_bar_i}
+\deqn{x_{ij}'' = C (x'_{ij} - \bar{x_i}) + \bar{x_i}}{
+  x_ij'' = C (x'_ij - x_bar_i) + x_bar_i}
 
 Where:
 
@@ -72,13 +74,37 @@ Where:
 \deqn{SSE^* = (n-1) (CV^* \bar{x})^2 - \sum(n_i(\bar{x_i}-\bar{x})^2)}{
   SSE* = (n-1) (CV* x_bar)^2 - sum(n_i(x_bar_i-x_bar)^2)}
 
-\deqn{SSE' = \sum(x'_i - \bar{x_i})^2}{SSE' = sum(x'_i - x_bar_i)^2}
+\deqn{SSE' = \sum(x'_{ij} - \bar{x_i})^2}{SSE' = sum(x'_ij - x_bar_i)^2}
 }
 \examples{
 # Transform data according to the modified CV transformation
 # and report the original and modified CV for each condition
 
 library(dplyr)
+carbon.fabric \%>\%
+filter(test == "FT") \%>\%
+  group_by(condition) \%>\%
+  mutate(trans_strength = transform_mod_cv(strength)) \%>\%
+  head(10)
+
+## # A tibble: 10 x 6
+## # Groups:   condition [1]
+##    id         test  condition batch strength trans_strength
+##    <chr>      <chr> <chr>     <int>    <dbl>          <dbl>
+##  1 FT-RTD-1-1 FT    RTD           1     126.           126.
+##  2 FT-RTD-1-2 FT    RTD           1     139.           141.
+##  3 FT-RTD-1-3 FT    RTD           1     116.           115.
+##  4 FT-RTD-1-4 FT    RTD           1     132.           133.
+##  5 FT-RTD-1-5 FT    RTD           1     129.           129.
+##  6 FT-RTD-1-6 FT    RTD           1     130.           130.
+##  7 FT-RTD-2-1 FT    RTD           2     131.           131.
+##  8 FT-RTD-2-2 FT    RTD           2     124.           124.
+##  9 FT-RTD-2-3 FT    RTD           2     125.           125.
+## 10 FT-RTD-2-4 FT    RTD           2     120.           119.
+
+# The CV of this transformed data can be computed to verify
+# that the resulting CV follows the rules for modified CV
+
 carbon.fabric \%>\%
   filter(test == "FT") \%>\%
   group_by(condition) \%>\%
@@ -96,5 +122,6 @@ carbon.fabric \%>\%
 }
 \seealso{
 \code{\link{calc_cv_star}}
+
 \code{\link{cv}}
 }

@@ -4,7 +4,7 @@
 \alias{hk_ext}
 \alias{hk_ext_z}
 \alias{hk_ext_z_j_opt}
-\title{Calculate values related to the Extended Hanson--Koopmans method}
+\title{Calculate values related to Extended Hanson--Koopmans tolerance bounds}
 \usage{
 hk_ext_z(n, i, j, p, conf)
 
@@ -17,9 +17,9 @@ hk_ext_z_j_opt(n, p, conf)
 
 \item{j}{the second order statistic (i < j <= n)}
 
-\item{p}{the population quantile of interest (normally 0.90 or 0.99)}
+\item{p}{the content of the tolerance bound (normally 0.90 or 0.99)}
 
-\item{conf}{the confidence bound (normally 0.95)}
+\item{conf}{the confidence level (normally 0.95)}
 }
 \value{
 For \code{hk_ext_z}, the return value is a numeric value representing
@@ -30,19 +30,19 @@ For \code{hk_ext_z_j_opt}, the return value is named list containing
 Vangel (1994), and the latter is the corresponding order statistic.
 }
 \description{
-Calculates values related to the Extended Hanson--Koopmans method
+Calculates values related to Extended Hanson--Koopmans tolerance bounds
 as described by Vangel (1994).
 }
 \details{
 Hanson (1964) presents a nonparametric method for determining
-tolerance limits based on consecutive order statistics.
+tolerance bounds based on consecutive order statistics.
 Vangel (1994) extends this method using non-consecutive order statistics.
 
-The extended Hanson--Koopmans method calculates a tolerance limit
+The extended Hanson--Koopmans method calculates a tolerance bound
 (basis value) based on two order statistics and a weighting value
 \code{z}. The value of \code{z} is based on the sample size, which
-order statistics are selected, the desired quantile and the desired
-confidence level
+order statistics are selected, the desired content of the tolerance
+bond and the desired confidence level.
 
 The function \code{hk_ext_z} calculates the weighting variable \code{z}
 based on selected order statistics \code{i} and \code{j}. Based on this
@@ -93,4 +93,7 @@ D. L. Hanson and L. H. Koopmans,
 “Tolerance Limits for the Class of Distributions with Increasing
 Hazard Rates,” The Annals of Mathematical Statistics,
 vol. 35, no. 4. pp. 1561–1570, 1964.
+}
+\seealso{
+\code{\link{basis_hk_ext}}
 }

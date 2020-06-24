@@ -48,10 +48,12 @@
 #'   passed to this function or the length of the vector \code{data_sample}.}
 #' \item{\code{k1}}{the factor used to calculate the minimum individual
 #'   threshold. The minimum individual threshold is calculated as
-#'   \eqn{Wmin = qual_mean - k1 * qual_sd}}
+#'   \eqn{W_{min} = qual\,mean - k_1 \cdot qual\,sd}{
+#'   Wmin = qual_mean - k1 * qual_sd}}
 #' \item{\code{k2}}{the factor used to calculate the threshold for mean. The
 #'   threshold for mean is calculated as
-#'   \eqn{Wmean = qual_mean - k2 * qual_sd}}
+#'   \eqn{W_{mean} = qual\,mean - k_2 \cdot qual\,sd}{
+#'   Wmean = qual_mean - k2 * qual_sd}}
 #' \item{\code{modcv}}{logical value indicating whether the acceptance
 #'   thresholds are calculated using the modified CV approach}
 #' \item{\code{cv}}{the coefficient of variation of the qualification data.
@@ -96,8 +98,7 @@
 #' Using the Modified CV approach, the standard deviation is calculated by
 #' multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
 #' value supplied or the value calculated by \code{mean(data_qual)} and
-#' \eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
-#' if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
+#' \eqn{CV*} is the value computed by \code{\link{calc_cv_star}}.
 #'
 #' @examples
 #' equiv_mean_extremum(alpha = 0.01, n_sample = 6,
@@ -114,9 +115,8 @@
 #' ##                   Min Individual   Sample Mean
 #' ##      Thresholds:    78.88367        92.95069
 #'
-#' @seealso
-#' \code{\link{k_equiv}}
-#' \code{\link{calc_cv_star}}
+#' @seealso \code{\link{k_equiv}}
+#' @seealso \code{\link{calc_cv_star}}
 #'
 #' @references
 #' M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
@@ -525,7 +525,7 @@ k_equiv <- function(alpha, n) {
 #' @description
 #' Checks for change in the mean value between a qualification data set and
 #' a sample. This is normally used to check for properties such as modulus.
-#' This function is a wrapper for a two-sided t--test.
+#' This function is a wrapper for a two-sample t--test.
 #'
 #' @param df_qual (optional) a data.frame containing the qualification data.
 #' Defaults to NULL.
@@ -599,7 +599,7 @@ k_equiv <- function(alpha, n) {
 #' be supplied. If these requirements are violated, warning(s) or error(s) will
 #' be issued.
 #'
-#' This function uses a two-sided t-test to determine if there is a difference
+#' This function uses a two-sample t-test to determine if there is a difference
 #' in the mean value of the qualification data and the sample. A pooled
 #' standard deviation is used in the t-test. The procedure is per CMH-17-1G.
 #'
@@ -613,8 +613,7 @@ k_equiv <- function(alpha, n) {
 #' Using the Modified CV approach, the standard deviation is calculated by
 #' multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
 #' value supplied or the value calculated by \code{mean(data_qual)} and
-#' \eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
-#' if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
+#' \eqn{CV*} is determined using \code{\link{calc_cv_star}}.
 #'
 #' Note that the modified CV option should only be used if that data passes the
 #' Anderson--Darling test.
@@ -643,12 +642,10 @@ k_equiv <- function(alpha, n) {
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
-#' @seealso
-#' \code{\link{calc_cv_star}}
-#' \code{\link[stats]{t.test}}
+#' @seealso \code{\link{calc_cv_star}}
+#' @seealso \code{\link[stats]{t.test}}
 #'
 #' @export
-#'
 equiv_change_mean <- function(df_qual = NULL, data_qual = NULL,
                               n_qual = NULL, mean_qual = NULL,
                               sd_qual = NULL, data_sample = NULL,

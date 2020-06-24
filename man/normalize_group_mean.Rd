@@ -15,8 +15,8 @@ normalize_group_mean(x, group)
 Returns a vector of normalized values
 }
 \description{
-This function computes the mean of each group, then divides each group by
-their corresponding group mean. This is commonly done
+This function computes the mean of each group, then divides each
+observation by its corresponding group mean. This is commonly done
 when pooling data across environments.
 }
 \details{

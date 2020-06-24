@@ -52,10 +52,12 @@ with the following named elements:
   passed to this function or the length of the vector \code{data_sample}.}
 \item{\code{k1}}{the factor used to calculate the minimum individual
   threshold. The minimum individual threshold is calculated as
-  \eqn{Wmin = qual_mean - k1 * qual_sd}}
+  \eqn{W_{min} = qual\,mean - k_1 \cdot qual\,sd}{
+  Wmin = qual_mean - k1 * qual_sd}}
 \item{\code{k2}}{the factor used to calculate the threshold for mean. The
   threshold for mean is calculated as
-  \eqn{Wmean = qual_mean - k2 * qual_sd}}
+  \eqn{W_{mean} = qual\,mean - k_2 \cdot qual\,sd}{
+  Wmean = qual_mean - k2 * qual_sd}}
 \item{\code{modcv}}{logical value indicating whether the acceptance
   thresholds are calculated using the modified CV approach}
 \item{\code{cv}}{the coefficient of variation of the qualification data.
@@ -118,8 +120,7 @@ is performed in a short period of time.
 Using the Modified CV approach, the standard deviation is calculated by
 multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
 value supplied or the value calculated by \code{mean(data_qual)} and
-\eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
-if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
+\eqn{CV*} is the value computed by \code{\link{calc_cv_star}}.
 }
 \examples{
 equiv_mean_extremum(alpha = 0.01, n_sample = 6,
@@ -147,5 +148,6 @@ CMH-17-1G, Mar. 2012.
 }
 \seealso{
 \code{\link{k_equiv}}
+
 \code{\link{calc_cv_star}}
 }

@@ -94,7 +94,7 @@ should be used. Defaults to \code{FALSE}}
 \description{
 Checks for change in the mean value between a qualification data set and
 a sample. This is normally used to check for properties such as modulus.
-This function is a wrapper for a two-sided t--test.
+This function is a wrapper for a two-sample t--test.
 }
 \details{
 There are several optional arguments to this function. Either (but not both)
@@ -106,7 +106,7 @@ vector) or all of \code{n_qual}, \code{mean_qual} and \code{sd_qual} must
 be supplied. If these requirements are violated, warning(s) or error(s) will
 be issued.
 
-This function uses a two-sided t-test to determine if there is a difference
+This function uses a two-sample t-test to determine if there is a difference
 in the mean value of the qualification data and the sample. A pooled
 standard deviation is used in the t-test. The procedure is per CMH-17-1G.
 
@@ -120,8 +120,7 @@ is performed in a short period of time.
 Using the Modified CV approach, the standard deviation is calculated by
 multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
 value supplied or the value calculated by \code{mean(data_qual)} and
-\eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
-if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
+\eqn{CV*} is determined using \code{\link{calc_cv_star}}.
 
 Note that the modified CV option should only be used if that data passes the
 Anderson--Darling test.
@@ -153,5 +152,6 @@ CMH-17-1G, Mar. 2012.
 }
 \seealso{
 \code{\link{calc_cv_star}}
+
 \code{\link[stats]{t.test}}
 }

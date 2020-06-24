@@ -7,7 +7,7 @@ authors:
   name: Stefan Kloppenborg
   orcid: '0000-0002-1908-5214'
 bibliography: 'paper.bib'
-date: '3/22/2020'
+date: '6/24/2020'
 output:
   md_document:
     pandoc_args: '--atx-headers'
@@ -49,6 +49,10 @@ industry and civil aviation regulators.
 Design Values are often adjusted to account for anticipated in-service
 damage and other factors, however those adjustments are outside the
 scope of the present software package.
+
+For a detailed discussion of the theory and applications of tolerance
+bounds, the reader is referred to [@Meeker_Hahn_Escobar_2017] or
+[@Krishnamoorthy_Mathew_2008].
 
 Currently, many users use MS Excel spreadsheets to perform these
 analyses. The MS Excel spreadsheets typically used, such as `STAT-17`
@@ -138,7 +142,10 @@ following diagnostic tests:
 
 Assuming that the data from the warp tension (WT) tested at
 elevated-temperature/wet condition (ETW) follows a normal distribution,
-then this can be done using the function:
+then this can be done using the function. Note that all of the functions
+in `cmstatr` that compute basis values default to computing tolerance
+bounds with a content of $p=0.9$ and a confidence of $conf=0.95$, or
+B-Basis.
 
 ``` {.r}
 carbon.fabric.2 %>%
@@ -154,10 +161,10 @@ carbon.fabric.2 %>%
     ## Call:
     ## basis_normal(data = ., x = strength, batch = batch)
     ## 
-    ## Distribution:  Normal    ( n =  18 )
+    ## Distribution:  Normal    ( n = 18 )
     ## The following diagnostic tests failed: 
     ##     `anderson_darling_normal`
-    ## B-Basis:   ( p =  0.9 , conf =  0.95 )
+    ## B-Basis:   ( p = 0.9 , conf = 0.95 )
     ## 122.9315
 
 All of the various basis functions perform diagnostic tests for each of
@@ -187,10 +194,10 @@ carbon.fabric.2 %>%
     ## Call:
     ## anderson_darling_normal(data = ., x = strength)
     ## 
-    ## Distribution:  Normal ( n =  18 ) 
-    ## Test statistic: A =  0.9381665 
-    ## Significance:  0.01103075  (assuming unknown parameters)
-    ## Conclusion: Sample is not drawn from a Normal distribution (alpha =  0.05 )
+    ## Distribution:  Normal ( n = 18 ) 
+    ## Test statistic:  A = 0.9381665 
+    ## OSL (p-value):  0.01103075  (assuming unknown parameters)
+    ## Conclusion: Sample is not drawn from a Normal distribution (alpha = 0.05 )
 
 If the failure of a diagnostic test is decided to be acceptable, the
 test result can be overridden to hide the warning in the basis function
@@ -207,10 +214,10 @@ carbon.fabric.2 %>%
     ## Call:
     ## basis_normal(data = ., x = strength, batch = batch, override = c("anderson_darling_normal"))
     ## 
-    ## Distribution:  Normal    ( n =  18 )
+    ## Distribution:  Normal    ( n = 18 )
     ## The following diagnostic tests were overridden: 
     ##     `anderson_darling_normal`
-    ## B-Basis:   ( p =  0.9 , conf =  0.95 )
+    ## B-Basis:   ( p = 0.9 , conf = 0.95 )
     ## 122.9315
 
 `cmstatr` also provides functions for calculating basis values from data

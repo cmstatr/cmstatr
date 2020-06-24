@@ -13,7 +13,8 @@
 #' computing basis values.
 #'
 #' @param n the number of observations (i.e. coupons)
-#' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
+#' @param p the desired content of the tolerance bound.
+#'          Should be 0.90 for B-Basis and 0.99 for A-Basis
 #' @param conf confidence level Should be 0.95 for both A- and B-Basis
 #'
 #' @details
@@ -50,6 +51,10 @@
 #' W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
 #' for Practitioners and Researchers, Second Edition.
 #' Hoboken: John Wiley & Sons, 2017.
+#'
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,” SAE International,
+#' CMH-17-1G, Mar. 2012.
 #'
 #' @seealso
 #' \code{\link{basis_normal}}
@@ -104,7 +109,8 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' @param x the variable in the data.frame for which to find the basis value
 #' @param batch the variable in the data.frame that contains the batches.
 #' @param groups the variable in the data.frame representing the groups
-#' @param p should be 0.90 for B-Basis and 0.99 for A-Basis
+#' @param p the content of the tolerance bound. Should be 0.90 for B-Basis
+#'          and 0.99 for A-Basis
 #' @param conf confidence level Should be 0.95 for both A- and B-Basis
 #' @param override a list of names of diagnostic tests to override,
 #'                 if desired.
@@ -165,7 +171,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' \code{basis_weibull} calculates the basis value for data distributed
 #' according to a Weibull distribution. The confidence level for the
-#' quantile requested is calculated using the conditional method, as
+#' content requested is calculated using the conditional method, as
 #' described in Lawless (1982) Section 4.1.2b. This has good agreement
 #' with tables published in CMH-17-1G. Results differ between this function
 #' and STAT17 by approximately 0.5\%.
@@ -259,8 +265,8 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' \code{basis_pooled_sd} and \code{basis_pooled_cv} both automatically
 #' perform a number of diagnostic tests. Using
 #' \code{\link{maximum_normed_residual}}, they check that there are no
-#' outliers within each group and batch (provided that \code{batch}) is
-#' specified. They check the between batch variability using
+#' outliers within each group and batch (provided that \code{batch} is
+#' specified). They check the between batch variability using
 #' \code{\link{ad_ksample}}. They check that there are no outliers within
 #' each group (pooling all batches) using
 #' \code{\link{maximum_normed_residual}}. They check for the normality
@@ -433,15 +439,15 @@ new_basis <- function(
 #' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
 #' columns:
 #'
-#' \item{\code{p}}{the the proportion of the population that the basis value
-#'        should be below. Normally 0.90 or 0.99}
-#' \item{\code{conf}}{The confidence level. Normally 0.95}
-#' \item{\code{distribution}}{A string representing the distribution assumed
+#' \item{\code{p}}{the the content of the tolerance bound.
+#'                 Normally 0.90 or 0.99}
+#' \item{\code{conf}}{the confidence level. Normally 0.95}
+#' \item{\code{distribution}}{a string representing the distribution assumed
 #'        when calculating the basis value}
 #' \item{\code{modcv}}{a logical value indicating whether the modified
 #'                     CV approach was used. Only applicable to pooling
 #'                     methods.}
-#' \item{\code{r}}{the sample size}
+#' \item{\code{n}}{the sample size}
 #' \item{\code{r}}{the number of groups used in the calculation. This will
 #'        be \code{NA} for single-point basis values}
 #' \item{\code{basis}}{the basis value}
@@ -990,17 +996,17 @@ hk_ext_h <- function(z, n, i, j, p) {
   qb + int$value
 }
 
-#' Calculate values related to the Extended Hanson--Koopmans method
+#' Calculate values related to Extended Hanson--Koopmans tolerance bounds
 #'
 #' @description
-#' Calculates values related to the Extended Hanson--Koopmans method
+#' Calculates values related to Extended Hanson--Koopmans tolerance bounds
 #' as described by Vangel (1994).
 #'
 #' @param n the sample size
 #' @param i the first order statistic (1 <= i < j)
 #' @param j the second order statistic (i < j <= n)
-#' @param p the population quantile of interest (normally 0.90 or 0.99)
-#' @param conf the confidence bound (normally 0.95)
+#' @param p the content of the tolerance bound (normally 0.90 or 0.99)
+#' @param conf the confidence level (normally 0.95)
 #'
 #' @return
 #' For \code{hk_ext_z}, the return value is a numeric value representing
@@ -1012,14 +1018,14 @@ hk_ext_h <- function(z, n, i, j, p) {
 #'
 #' @details
 #' Hanson (1964) presents a nonparametric method for determining
-#' tolerance limits based on consecutive order statistics.
+#' tolerance bounds based on consecutive order statistics.
 #' Vangel (1994) extends this method using non-consecutive order statistics.
 #'
-#' The extended Hanson--Koopmans method calculates a tolerance limit
+#' The extended Hanson--Koopmans method calculates a tolerance bound
 #' (basis value) based on two order statistics and a weighting value
 #' \code{z}. The value of \code{z} is based on the sample size, which
-#' order statistics are selected, the desired quantile and the desired
-#' confidence level
+#' order statistics are selected, the desired content of the tolerance
+#' bond and the desired confidence level.
 #'
 #' The function \code{hk_ext_z} calculates the weighting variable \code{z}
 #' based on selected order statistics \code{i} and \code{j}. Based on this
@@ -1069,6 +1075,8 @@ hk_ext_h <- function(z, n, i, j, p) {
 #' ##
 #' ## $j
 #' ## [1] 10
+#'
+#' @seealso \code{\link{basis_hk_ext}}
 #'
 #' @name hk_ext
 #'
@@ -1217,21 +1225,21 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
   return(res)
 }
 
-#' Rank for distribution-free tolerance limits
+#' Rank for distribution-free tolerance bound
 #'
 #' @description
 #' Calculates the rank order for finding distribution-free tolerance
-#' limits for large samples. This function should only be used for
+#' bounds for large samples. This function should only be used for
 #' computing B-Basis for samples larger than 28 or A-Basis for samples
 #' larger than 298. This function is used by
 #' \code{\link{basis_nonpara_large_sample}}.
 #'
 #' @param n the sample size
-#' @param p the desired quantile for the tolerance limit
-#' @param conf the confidence limit for the desired tolerance limit
+#' @param p the desired content for the tolerance bound
+#' @param conf the confidence level for the desired tolerance bound
 #'
 #' @return
-#' The rank corresponding with the desired tolerance limit
+#' The rank corresponding with the desired tolerance bound
 #'
 #' @details
 #' This function uses the sum of binomial terms to determine the rank
@@ -1258,7 +1266,7 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #' uncommon for composite materials
 #' testing, and the difference between subsequent order statistics will be
 #' very small for samples this large, this difference will have no practical
-#' effect on computed tolerance limits.
+#' effect on computed tolerance bounds.
 #'
 #' @references
 #' W. Guenther, “Determination of Sample Size for Distribution-Free

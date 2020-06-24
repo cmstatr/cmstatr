@@ -10,7 +10,8 @@ k_factor_normal(n, p = 0.9, conf = 0.95)
 \arguments{
 \item{n}{the number of observations (i.e. coupons)}
 
-\item{p}{should be 0.90 for B-Basis and 0.99 for A-Basis}
+\item{p}{the desired content of the tolerance bound.
+Should be 0.90 for B-Basis and 0.99 for A-Basis}
 
 \item{conf}{confidence level Should be 0.95 for both A- and B-Basis}
 }
@@ -80,6 +81,10 @@ Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
 W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
 for Practitioners and Researchers, Second Edition.
 Hoboken: John Wiley & Sons, 2017.
+
+“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.
 }
 \seealso{
 \code{\link{basis_normal}}

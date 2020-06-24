@@ -15,17 +15,17 @@ length as strength}
 \item{nom_thk}{the nominal thickness. Must be a single numeric value.}
 }
 \value{
-A value (or vector) with the normalized strength values
+The normalized strength values
 }
 \description{
-This function takes a strength value (or a vector of strength values) and a
-value (or vector of the same length as strength) of the measured thicknesses
+This function takes a vector of strength values and a
+vector of measured thicknesses, and a nominal thickness
 and returns the normalized strength.
 }
 \details{
 It is often necessary to normalize strength values so that variation in
 specimen thickness does not unnecessarily increase variation in strength.
-See CMH-17, or other references, for information about the cases where
+See CMH-17-1G, or other references, for information about the cases where
 normalization is appropriate.
 
 Either cured ply thickness or laminate thickness may be used for

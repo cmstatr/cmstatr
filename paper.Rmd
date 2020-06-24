@@ -13,7 +13,7 @@ authors:
 affiliations:
  - name: Comtek Advanced Structures, Ltd.
    index: 1
-date: "3/22/2020"
+date: "6/24/2020"
 bibliography: paper.bib
 output:
   md_document:
@@ -54,6 +54,10 @@ aviation regulators.
 Design Values are often adjusted to account for anticipated in-service
 damage and other factors, however those adjustments are outside the scope
 of the present software package.
+
+For a detailed discussion of the theory and applications of tolerance bounds,
+the reader is referred to [@Meeker_Hahn_Escobar_2017] or
+[@Krishnamoorthy_Mathew_2008].
 
 Currently, many users use MS Excel spreadsheets to perform these
 analyses. The MS Excel spreadsheets typically used, such as 
@@ -133,7 +137,11 @@ diagnostic tests:
 
 Assuming that the data from the warp tension (WT) tested at 
 elevated-temperature/wet condition (ETW) follows
-a normal distribution, then this can be done using the function:
+a normal distribution, then this can be done using the function.
+Note that all of the functions in `cmstatr` that compute
+basis values default to computing tolerance bounds with a
+content of $p=0.9$ and a confidence of $conf=0.95$, or
+B-Basis.
 
 ```{r}
 carbon.fabric.2 %>%

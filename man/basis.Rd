@@ -89,7 +89,8 @@ basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95, override = c())
 
 \item{batch}{the variable in the data.frame that contains the batches.}
 
-\item{p}{should be 0.90 for B-Basis and 0.99 for A-Basis}
+\item{p}{the content of the tolerance bound. Should be 0.90 for B-Basis
+and 0.99 for A-Basis}
 
 \item{conf}{confidence level Should be 0.95 for both A- and B-Basis}
 
@@ -200,7 +201,7 @@ for these diagnostic tests.
 
 \code{basis_weibull} calculates the basis value for data distributed
 according to a Weibull distribution. The confidence level for the
-quantile requested is calculated using the conditional method, as
+content requested is calculated using the conditional method, as
 described in Lawless (1982) Section 4.1.2b. This has good agreement
 with tables published in CMH-17-1G. Results differ between this function
 and STAT17 by approximately 0.5\%.
@@ -294,8 +295,8 @@ This method is described in CMH-17-1G.
 \code{basis_pooled_sd} and \code{basis_pooled_cv} both automatically
 perform a number of diagnostic tests. Using
 \code{\link{maximum_normed_residual}}, they check that there are no
-outliers within each group and batch (provided that \code{batch}) is
-specified. They check the between batch variability using
+outliers within each group and batch (provided that \code{batch} is
+specified). They check the between batch variability using
 \code{\link{ad_ksample}}. They check that there are no outliers within
 each group (pooling all batches) using
 \code{\link{maximum_normed_residual}}. They check for the normality
