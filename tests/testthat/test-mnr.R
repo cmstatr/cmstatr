@@ -255,6 +255,7 @@ test_that(
     expect_output(print(res), "no outliers", ignore.case = TRUE)
     expect_output(print(res), "MNR.*2.008", ignore.case = TRUE)
     expect_output(print(res), ".*crit.*2\\.12", ignore.case = TRUE)
+    expect_output(print(res), ".*alpha.*0\\.05", ignore.case = TRUE)
 
     # check for typographical errors in the data above
     df %>%
@@ -276,6 +277,7 @@ test_that(
     expect_output(print(res), "outliers", ignore.case = TRUE)
     expect_output(print(res), "MNR.*2.119", ignore.case = TRUE)
     expect_output(print(res), ".*crit.*2\\.01", ignore.case = TRUE)
+    expect_output(print(res), ".*alpha.*0\\.05", ignore.case = TRUE)
     # check that the outlier was shown in the print statement
     expect_output(print(res), "4.*80\\.23348", ignore.case = TRUE)
 
@@ -365,6 +367,7 @@ test_that("glance method returns expected results", {
 
   expect_equal(glance_res$mnr, 2.119, tolerance = 0.001)
   expect_equal(glance_res$crit, 2.02, tolerance = 0.001)
+  expect_equal(glance_res$alpha, 0.05, tolerance = 0.00001)
   expect_equal(glance_res$n_outliers, 1)
 })
 

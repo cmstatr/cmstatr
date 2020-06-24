@@ -19,6 +19,7 @@ an object of class \code{mnr}
 This object has the following fields:
  \item{\code{call}}{the expression used to call this function}
  \item{\code{data}}{the original data used to compute the MNR}
+ \item{\code{alpha}}{the value of alpha given by the user}
  \item{\code{mnr}}{the computed MNR test statistic}
  \item{\code{crit}}{the critical value given the sample size and the
                     significance level}
@@ -65,9 +66,9 @@ carbon.fabric.2 \%>\%
 ## Call:
 ## maximum_normed_residual(data = ., x = strength)
 ##
-## MNR =  1.958797  ( critical value =  1.887145 )
+## MNR =  1.958797  ( critical value = 1.887145 )
 ##
-## Outliers:
+## Outliers ( alpha = 0.05 ):
 ##   Index  Value
 ##       6  44.26
 
@@ -78,9 +79,9 @@ carbon.fabric.2 \%>\%
 ## Call:
 ## maximum_normed_residual(data = ., x = strength)
 ##
-## MNR =  1.469517  ( critical value =  1.887145 )
+## MNR =  1.469517  ( critical value = 1.887145 )
 ##
-## No outliers detected
+## No outliers detected ( alpha = 0.05 )
 
 }
 \references{

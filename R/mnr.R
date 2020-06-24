@@ -38,6 +38,7 @@
 #' This object has the following fields:
 #'  \item{\code{call}}{the expression used to call this function}
 #'  \item{\code{data}}{the original data used to compute the MNR}
+#'  \item{\code{alpha}}{the value of alpha given by the user}
 #'  \item{\code{mnr}}{the computed MNR test statistic}
 #'  \item{\code{crit}}{the critical value given the sample size and the
 #'                     significance level}
@@ -55,9 +56,9 @@
 #' ## Call:
 #' ## maximum_normed_residual(data = ., x = strength)
 #' ##
-#' ## MNR =  1.958797  ( critical value =  1.887145 )
+#' ## MNR =  1.958797  ( critical value = 1.887145 )
 #' ##
-#' ## Outliers:
+#' ## Outliers ( alpha = 0.05 ):
 #' ##   Index  Value
 #' ##       6  44.26
 #'
@@ -68,9 +69,9 @@
 #' ## Call:
 #' ## maximum_normed_residual(data = ., x = strength)
 #' ##
-#' ## MNR =  1.469517  ( critical value =  1.887145 )
+#' ## MNR =  1.469517  ( critical value = 1.887145 )
 #' ##
-#' ## No outliers detected
+#' ## No outliers detected ( alpha = 0.05 )
 #'
 #' @references
 #' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
@@ -93,6 +94,8 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
     arg_name = "x")
   cur_data <- eval_tidy(enquo(x), data)
   res$data <- cur_data
+
+  res$alpha <- alpha
 
   indicies_cur <- seq_along(res$data)
 
@@ -155,6 +158,7 @@ maximum_normed_residual_crit <- function(n, alpha) {
 #' columns:
 #'
 #' \item{\code{mnr}}{the computed MNR test statistic}
+#' \item{\code{alpha}}{the value of alpha used for the test}
 #' \item{\code{crit}}{the critical value given the sample size and the
 #'                    significance level}
 #' \item{\code{n_outliers}}{the number of outliers found}
@@ -168,10 +172,10 @@ maximum_normed_residual_crit <- function(n, alpha) {
 #' m <- maximum_normed_residual(x = x)
 #' glance(m)
 #'
-#' ## # A tibble: 1 x 3
-#' ##     mnr  crit n_outliers
-#' ##   <dbl> <dbl>      <dbl>
-#' ## 1  4.25  2.73          1
+#' ## # A tibble: 1 x 4
+#' ##     mnr alpha  crit n_outliers
+#' ##   <dbl> <dbl> <dbl>      <dbl>
+#' ## 1  4.23  0.05  2.73          1
 #'
 #' @method glance mnr
 #' @importFrom tibble tibble
@@ -182,6 +186,7 @@ glance.mnr <- function(x, ...) {  # nolint
     x,
     tibble::tibble(
       mnr = mnr,
+      alpha = alpha,
       crit = crit,
       n_outliers = n_outliers
     )
@@ -275,9 +280,9 @@ print.mnr <- function(x, ...) {
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
   cat("MNR =", x$mnr, " ( critical value =", x$crit, ")\n\n")
   if (nrow(x$outliers) == 0) {
-    cat("No outliers detected\n\n")
+    cat("No outliers detected ( alpha =", x$alpha, ")\n\n")
   } else {
-    cat("Outliers:\n")
+    cat("Outliers ( alpha =", x$alpha, "):\n")
 
     justify <- c("right", "left", "left")
     width <- c(8L, 2L, 16L)
