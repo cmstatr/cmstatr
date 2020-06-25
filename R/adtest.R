@@ -219,7 +219,7 @@ print.anderson_darling <- function(x, ...) {
   if (x$reject_distribution) {
     cat("Conclusion: Sample is not drawn from a",
         x$dist,
-        "distribution (alpha =", x$alpha, ")")
+        "distribution ( alpha =", x$alpha, ")")
   } else {
     cat("Conclusion: Sample is drawn from a",
         x$dist,

@@ -46,8 +46,8 @@ carbon.fabric.2 %>%
 #> Call:
 #> basis_normal(data = ., x = strength, batch = batch)
 #> 
-#> Distribution:  Normal    ( n =  18 )
-#> B-Basis:   ( p =  0.9 , conf =  0.95 )
+#> Distribution:  Normal    ( n = 18 )
+#> B-Basis:   ( p = 0.9 , conf = 0.95 )
 #> 76.88082
 ```
 

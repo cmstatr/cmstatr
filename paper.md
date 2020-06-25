@@ -197,7 +197,7 @@ carbon.fabric.2 %>%
     ## Distribution:  Normal ( n = 18 ) 
     ## Test statistic:  A = 0.9381665 
     ## OSL (p-value):  0.01103075  (assuming unknown parameters)
-    ## Conclusion: Sample is not drawn from a Normal distribution (alpha = 0.05 )
+    ## Conclusion: Sample is not drawn from a Normal distribution ( alpha = 0.05 )
 
 If the failure of a diagnostic test is decided to be acceptable, the
 test result can be overridden to hide the warning in the basis function
