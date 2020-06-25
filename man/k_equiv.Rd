@@ -30,6 +30,12 @@ The k-factors returned by this function are used for determining
   both greater than these limits, then one may accept the lot of material
   or the new manufacturing site.
 
+  This procedure is used to ensure that the strength of material processed
+  at a second site, or made with a new batch of material are not degraded
+  relative to the data originally used to determine basis values for the
+  material. For more information about the use of this procedure, see
+  CMH-17-1G or PS-ACE 100-2002-006.
+
   According to Vangel (2002), the use of mean and extremum for this purpose
   is more powerful than the use of mean and standard deviation.
 
@@ -69,6 +75,14 @@ print(qual_mean - qual_sd * k[2])
 \references{
 M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
   and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
+
+  “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+  Guideline for Characterization of Structural Materials,” SAE International,
+  CMH-17-1G, Mar. 2012.
+
+  Federal Aviation Administration, “Material Qualification and Equivalency
+  for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
+  Sep. 2003.
 }
 \seealso{
 \code{\link{equiv_mean_extremum}}

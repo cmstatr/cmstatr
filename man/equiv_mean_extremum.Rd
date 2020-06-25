@@ -85,7 +85,7 @@ with the following named elements:
 \description{
 This test is used when determining if a new process or
 manufacturing location produces material properties that are
-"equivalent" to from an existing dataset, and hence the existing
+"equivalent" to an existing dataset, and hence the existing
 basis values are applicable to the new dataset. This test is also
 sometimes used for determining if a new batch of material is acceptable.
 This function determines thresholds based on both minimum
@@ -101,6 +101,20 @@ According to Vangel (2002), this test provides improved power compared
 with a test of mean and standard deviation.
 }
 \details{
+This function is used to
+determine acceptance limits for a sample mean and sample minimum.
+These acceptance limits are often used to set acceptance limits for
+material strength for each lot of material, or each new manufacturing
+site. When a sample meets the criteria that its mean and its minimum are
+both greater than these limits, then one may accept the lot of material
+or the new manufacturing site.
+
+This procedure is used to ensure that the strength of material processed
+at a second site, or made with a new batch of material are not degraded
+relative to the data originally used to determine basis values for the
+material. For more information about the use of this procedure, see
+CMH-17-1G or PS-ACE 100-2002-006.
+
 There are several optional arguments to this function. However, you can't
 omit all of the optional arguments. You must supply either
 \code{data_sample} or \code{n_sample}, but not both. You must also supply
@@ -145,6 +159,10 @@ and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
 “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
+
+Federal Aviation Administration, “Material Qualification and Equivalency
+for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
+Sep. 2003.
 }
 \seealso{
 \code{\link{k_equiv}}

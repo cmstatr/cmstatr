@@ -13,7 +13,7 @@ k_factor_normal(n, p = 0.9, conf = 0.95)
 \item{p}{the desired content of the tolerance bound.
 Should be 0.90 for B-Basis and 0.99 for A-Basis}
 
-\item{conf}{confidence level Should be 0.95 for both A- and B-Basis}
+\item{conf}{confidence level. Should be 0.95 for both A- and B-Basis}
 }
 \value{
 the calculated factor

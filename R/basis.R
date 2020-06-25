@@ -15,7 +15,7 @@
 #' @param n the number of observations (i.e. coupons)
 #' @param p the desired content of the tolerance bound.
 #'          Should be 0.90 for B-Basis and 0.99 for A-Basis
-#' @param conf confidence level Should be 0.95 for both A- and B-Basis
+#' @param conf confidence level. Should be 0.95 for both A- and B-Basis
 #'
 #' @details
 #' This function calculates the k factors used when determining A- and

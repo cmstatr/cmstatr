@@ -24,7 +24,7 @@
 #'
 #' The maximum normed residual test statistic is defined as:
 #'
-#' \deqn{MNR = max \frac{\left| xi - \bar{x} \right|}{s} }{
+#' \deqn{MNR = max \frac{\left| x_i - \bar{x} \right|}{s} }{
 #'   MNR = max | x_i- x_bar | / s }
 #'
 #' When the value of the MNR test statistic exceeds the critical value

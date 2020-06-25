@@ -48,7 +48,7 @@
 #'
 #' The function \code{anderson_darling_weibull} computes the Anderson--Darling
 #' test statistic given a Weibull distribution with shape and scale parameters
-#' estimate from the data using a maximum likelihood estimate.
+#' estimated from the data using a maximum likelihood estimate.
 #'
 #' The test statistic, \code{A}, is modified to account for
 #' the fact that the parameters of the population are not known,
@@ -64,10 +64,9 @@
 #' by implementations of the Anderson--Darling test that use
 #' different modifiers. Only the unmodified
 #' test statistic is reported in the result of this function, but
-#' the modified test statistic is used to compute the OSL (p-value)
-#' and when rejecting or failing to reject the null hypothesis.
+#' the modified test statistic is used to compute the OSL (p-value).
 #'
-#' This function uses the formula for observed significance
+#' This function uses the formulae for observed significance
 #' level (OSL) published in CMH-17-1G. These formulae depend on the particular
 #' distribution used.
 #'
