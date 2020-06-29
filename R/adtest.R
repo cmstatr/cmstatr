@@ -82,7 +82,8 @@
 #' Composites Guideline for Characterization of Structural
 #' Materials," SAE International, CMH-17-1G, Mar. 2012.
 #'
-#' M. A. Stephens, “EDF Statistics for Goodness of Fit and Some Comparisons,”
+#' M. A. Stephens, “EDF Statistics for Goodness of Fit and Some
+#' Comparisons,”
 #' Journal of the American Statistical Association, vol. 69, no. 347.
 #' pp. 730–737, 1974.
 #'
