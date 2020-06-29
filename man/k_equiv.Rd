@@ -74,15 +74,15 @@ print(qual_mean - qual_sd * k[2])
 }
 \references{
 M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
-  and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
+and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
 
-  “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
-  Guideline for Characterization of Structural Materials,” SAE International,
-  CMH-17-1G, Mar. 2012.
+“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.
 
-  Federal Aviation Administration, “Material Qualification and Equivalency
-  for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
-  Sep. 2003.
+Federal Aviation Administration, “Material Qualification and Equivalency
+for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
+Sep. 2003.
 }
 \seealso{
 \code{\link{equiv_mean_extremum}}
