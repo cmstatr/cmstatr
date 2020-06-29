@@ -212,7 +212,7 @@ test_that("print.anderson_darling contains expected values", {
   # should include the distribution
   expect_output(print(res_vec), "distribution.*normal", ignore.case = TRUE)
   # should include the signficance for known parameters
-  expect_output(print(res_vec), "sig.*0.464.*unknown", ignore.case = TRUE)
+  expect_output(print(res_vec), "OSL.*0.464.*unknown", ignore.case = TRUE)
   # conclusion should be printed
   expect_output(print(res_vec), "conclusion.*is drawn.*alpha.*0.05",
                 ignore.case = TRUE)

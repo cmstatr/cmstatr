@@ -2,7 +2,7 @@
 % Please edit documentation in R/adk.R
 \name{ad_ksample}
 \alias{ad_ksample}
-\title{Anderson-Darling K-Sample Test}
+\title{Anderson--Darling K-Sample Test}
 \usage{
 ad_ksample(data = NULL, x, groups, alpha = 0.025)
 }
@@ -10,7 +10,7 @@ ad_ksample(data = NULL, x, groups, alpha = 0.025)
 \item{data}{a data.frame}
 
 \item{x}{the variable in the data.frame on which to perform the
-Anderson-Darling k-Sample test (usually strength)}
+Anderson--Darling k-Sample test (usually strength)}
 
 \item{groups}{a variable in the data.frame that defines the groups}
 
@@ -25,7 +25,7 @@ Returns an object of class \code{adk}. This object has the following fields:
 \item{\code{n}}{the total number of observations}
 \item{\code{k}}{the number of groups}
 \item{\code{sigma}}{the computed standard deviation of the test statistic}
-\item{\code{ad}}{the value of the Anderson-Darling k-Sample test
+\item{\code{ad}}{the value of the Anderson--Darling k-Sample test
   statistic}
 \item{\code{p}}{the computed p-value}
 \item{\code{reject_same_dist}}{a boolean value indicating whether the null
@@ -34,7 +34,7 @@ Returns an object of class \code{adk}. This object has the following fields:
   \link[kSamples]{ad.test}}
 }
 \description{
-This function performs an Anderson-Darling k-sample test. This is used to
+This function performs an Anderson--Darling k-sample test. This is used to
 determine if several samples (groups) share a common (unspecified)
 distribution.
 }
@@ -43,7 +43,7 @@ This function is a wrapper for the \link[kSamples]{ad.test} function from
 the package \code{kSamples}. The method "exact" is specified in the call to
 \code{ad.test}. Refer to that package's documentation for details.
 
-There is a minor difference in the formulation of the Anderson-Darling
+There is a minor difference in the formulation of the Anderson--Darling
 k-Sample test in CMH-17-1G, compared with that in the Scholz and
 Stephens (1987). This difference affects the test statistic and the
 critical value in the same proportion, and therefore the conclusion of
@@ -58,8 +58,24 @@ For more information about the difference between this function and
 the formulation in CMH-17-1G, see the vignette on the subject, which
 can be accessed by running \code{vignette("adktest")}
 }
+\examples{
+library(dplyr)
+
+carbon.fabric \%>\%
+  filter(test == "WT") \%>\%
+  filter(condition == "RTD") \%>\%
+  ad_ksample(strength, batch)
+##
+## Call:
+## ad_ksample(data = ., x = strength, groups = batch)
+##
+## N = 18          k = 3
+## ADK = 0.912     p-value = 0.95989
+## Conclusion: Samples come from the same distribution ( alpha = 0.025 )
+
+}
 \references{
-F. W. Scholz and M. Stephens, “K-Sample Anderson-Darling Tests,” Journal
+F. W. Scholz and M. Stephens, “K-Sample Anderson--Darling Tests,” Journal
 of the American Statistical Association, vol. 82, no. 399. pp. 918–924,
 Sep-1987.
 

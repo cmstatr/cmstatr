@@ -5,7 +5,7 @@
 \alias{anderson_darling_normal}
 \alias{anderson_darling_lognormal}
 \alias{anderson_darling_weibull}
-\title{Anderson-Darling test for goodness of fit}
+\title{Anderson--Darling test for goodness of fit}
 \usage{
 anderson_darling_normal(data = NULL, x, alpha = 0.05)
 
@@ -18,8 +18,8 @@ anderson_darling_weibull(data = NULL, x, alpha = 0.05)
 
 \item{x}{a numeric vector or a variable in the data.frame}
 
-\item{alpha}{the required significance to conclude that the data follows
-the specified distribution. Defaults to 0.05.}
+\item{alpha}{the required significance level of the test.
+Defaults to 0.05.}
 }
 \value{
 an object of class \code{anderson_darling}. This object has the following
@@ -29,29 +29,31 @@ fields.
 \item{\code{dist}}{the distribution used}
 \item{\code{data}}{a copy of the data analyzed}
 \item{\code{n}}{the number of observations in the sample}
-\item{\code{A}}{the Anderson-Darling test statistic}
-\item{\code{osl}}{the significance level, assuming the
+\item{\code{A}}{the Anderson--Darling test statistic}
+\item{\code{osl}}{the observed significance level (p-value),
+  assuming the
   parameters of the distribution are estimated from the data}
-\item{\code{alpha}}{the required significance level for the test to
- conclude that the data is drawn from the specified distribution.
+\item{\code{alpha}}{the required significance level for the test.
  This value is given by the user.}
 \item{\code{reject_distribution}}{a logical value indicating whether
  the hypothesis that the data is drawn from the specified distribution
  should be rejected}
 }
 \description{
-Calculates the Anderson-Darling test statistic for a sample given
-a particular distribution, and computes the significance level.
+Calculates the Anderson--Darling test statistic for a sample given
+a particular distribution, and determines whether to reject the
+hypothesis that a sample is drawn from that distribution.
 }
 \details{
-The Anderson-Darling test statistic is calculated for the distribution
+The Anderson--Darling test statistic is calculated for the distribution
 given by the user.
 
-The significance level is calculated assuming that the parameters
+The observed significance level (OSL), or p-value, is calculated assuming
+that the parameters
 of the distribution are unknown; these parameters are estimate from the
 data.
 
-The function \code{anderson_darling_normal} computes the Anderson-Darling
+The function \code{anderson_darling_normal} computes the Anderson--Darling
 test statistic given a normal distribution with mean and standard deviation
 equal to the sample mean and standard deviation.
 
@@ -59,16 +61,48 @@ The function \code{anderson_darling_lognormal} is the same as
 \code{anderson_darling_normal} except that the data is log transformed
 first.
 
-The function \code{anderson_darling_weibull} computes the Anderson-Darling
+The function \code{anderson_darling_weibull} computes the Anderson--Darling
 test statistic given a Weibull distribution with shape and scale parameters
-estimate from the data using a maximum likelihood estimate.
+estimated from the data using a maximum likelihood estimate.
 
-This function uses the formula for observed significance
-level published in CMH-17-1G. These formulae depend on the particular
+The test statistic, \code{A}, is modified to account for
+the fact that the parameters of the population are not known,
+but are instead estimated from the sample. This modification is
+a function of the sample size only, and is different for each
+distribution (normal/lognormal or Weibull). Several such modifications
+have been proposed. This function uses the modification published in
+Stephens (1974), Lawless (1982) and CMH-17-1G. Some other implementations
+of the Anderson-Darling test, such as the implementation in the
+\code{nortest} package, use other modifications, such as the one
+published in D'Agostino and Stephens (1986). As such, the p-value
+reported by this function may differ from the p-value reported
+by implementations of the Anderson--Darling test that use
+different modifiers. Only the unmodified
+test statistic is reported in the result of this function, but
+the modified test statistic is used to compute the OSL (p-value).
+
+This function uses the formulae for observed significance
+level (OSL) published in CMH-17-1G. These formulae depend on the particular
 distribution used.
 
 The results of this function have been validated against
 published values in Lawless (1982).
+}
+\examples{
+library(dplyr)
+
+carbon.fabric \%>\%
+  filter(test == "FC") \%>\%
+  filter(condition == "RTD") \%>\%
+  anderson_darling_normal(strength)
+## Call:
+## anderson_darling_normal(data = ., x = strength)
+##
+## Distribution:  Normal ( n = 18 )
+## Test statistic:  A = 0.9224776
+## OSL (p-value):  0.01212193  (assuming unknown parameters)
+## Conclusion: Sample is not drawn from a Normal distribution (alpha = 0.05)
+
 }
 \references{
 J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
@@ -77,4 +111,12 @@ New York: Wiley, 1982.
 "Composite Materials Handbook, Volume 1. Polymer Matrix
 Composites Guideline for Characterization of Structural
 Materials," SAE International, CMH-17-1G, Mar. 2012.
+
+M. A. Stephens, “EDF Statistics for Goodness of Fit and Some
+Comparisons,”
+Journal of the American Statistical Association, vol. 69, no. 347.
+pp. 730–737, 1974.
+
+R. D’Agostino and M. Stephens, Goodness-of-Fit Techniques.
+New York: Marcel Dekker, 1986.
 }

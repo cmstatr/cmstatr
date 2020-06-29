@@ -1,3 +1,16 @@
+# Version 0.6.0
+- Improved the documentation for several functions
+- Made minor formatting changes to the `print` methods for:
+  - `ad_ksample`
+  - `anderson_darling`
+  - `basis`
+  - `equiv_mean_extremum`
+  - `equiv_chage_mean`
+  - `levene_test`
+  - `maximum_normed_residual`
+- Added `alpha` into the `mnr` object, and updated `print` and `glance`
+  methods to show the value of `alpha` specified by the user
+
 # Version 0.5.2
 - Internally use `vapply` instead of `sapply` to improve code safety
 - Increased coverage of unit tests

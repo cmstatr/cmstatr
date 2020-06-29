@@ -2,7 +2,7 @@
 % Please edit documentation in R/equiv.R
 \name{equiv_mean_extremum}
 \alias{equiv_mean_extremum}
-\title{Equivalency based on mean and extremum}
+\title{Test for decrease in mean or minimum individual}
 \usage{
 equiv_mean_extremum(
   df_qual = NULL,
@@ -52,10 +52,12 @@ with the following named elements:
   passed to this function or the length of the vector \code{data_sample}.}
 \item{\code{k1}}{the factor used to calculate the minimum individual
   threshold. The minimum individual threshold is calculated as
-  \eqn{Wmin = qual_mean - k1 * qual_sd}}
+  \eqn{W_{min} = qual\,mean - k_1 \cdot qual\,sd}{
+  Wmin = qual_mean - k1 * qual_sd}}
 \item{\code{k2}}{the factor used to calculate the threshold for mean. The
   threshold for mean is calculated as
-  \eqn{Wmean = qual_mean - k2 * qual_sd}}
+  \eqn{W_{mean} = qual\,mean - k_2 \cdot qual\,sd}{
+  Wmean = qual_mean - k2 * qual_sd}}
 \item{\code{modcv}}{logical value indicating whether the acceptance
   thresholds are calculated using the modified CV approach}
 \item{\code{cv}}{the coefficient of variation of the qualification data.
@@ -81,10 +83,38 @@ with the following named elements:
   have a value of \code{NULL}}
 }
 \description{
-Determines equivalency or equivalency thresholds based on both minimum
-individual and mean.
+This test is used when determining if a new process or
+manufacturing location produces material properties that are
+"equivalent" to an existing dataset, and hence the existing
+basis values are applicable to the new dataset. This test is also
+sometimes used for determining if a new batch of material is acceptable.
+This function determines thresholds based on both minimum
+individual and mean, and optionally evaluates a sample against those
+thresholds. The joint distribution between the sample mean
+and sample minimum is used to generate these thresholds.
+When there is no true difference between the existing ("qualification")
+and the new population from which the sample is obtained, there is a
+probability of \eqn{\alpha} of falsely concluding that there is a
+difference in mean or variance. It is assumed that both the original
+and new populations are normally distributed.
+According to Vangel (2002), this test provides improved power compared
+with a test of mean and standard deviation.
 }
 \details{
+This function is used to
+determine acceptance limits for a sample mean and sample minimum.
+These acceptance limits are often used to set acceptance limits for
+material strength for each lot of material, or each new manufacturing
+site. When a sample meets the criteria that its mean and its minimum are
+both greater than these limits, then one may accept the lot of material
+or the new manufacturing site.
+
+This procedure is used to ensure that the strength of material processed
+at a second site, or made with a new batch of material are not degraded
+relative to the data originally used to determine basis values for the
+material. For more information about the use of this procedure, see
+CMH-17-1G or PS-ACE 100-2002-006.
+
 There are several optional arguments to this function. However, you can't
 omit all of the optional arguments. You must supply either
 \code{data_sample} or \code{n_sample}, but not both. You must also supply
@@ -95,11 +125,16 @@ not supply either \code{mean_qual} or \code{sd_qual} (and visa-versa). This
 function will issue a warning or error if you violate any of these rules.
 
 If \code{modcv} is TRUE, the standard deviation used to calculate the
-thresholds will be replaced with a standard deviation calculated by
+thresholds will be replaced with a standard deviation calculated
+using the Modified Coefficient of Variation (CV) approach.
+The Modified CV approach is a way of adding extra variance to the
+qualification data in the case that the qualification data has less
+variance than expected, which sometimes occurs when qualification testing
+is performed in a short period of time.
+Using the Modified CV approach, the standard deviation is calculated by
 multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
 value supplied or the value calculated by \code{mean(data_qual)} and
-\eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
-if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
+\eqn{CV*} is the value computed by \code{\link{calc_cv_star}}.
 }
 \examples{
 equiv_mean_extremum(alpha = 0.01, n_sample = 6,
@@ -107,16 +142,30 @@ equiv_mean_extremum(alpha = 0.01, n_sample = 6,
 ##
 ## Call:
 ## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
-##                     alpha = 0.01, modcv = TRUE)
+##     alpha = 0.01, modcv = TRUE)
 ##
 ## Modified CV used: CV* = 0.0675 ( CV = 0.055 )
 ##
 ## For alpha = 0.01 and n = 6
 ## ( k1 = 3.128346 and k2 = 1.044342 )
-##               Min Individual      Sample Mean
-## Thresholds:         78.88367         92.95069
+##                   Min Individual   Sample Mean
+##      Thresholds:    78.88367        92.95069
 
+}
+\references{
+M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
+and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
+
+“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.
+
+Federal Aviation Administration, “Material Qualification and Equivalency
+for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
+Sep. 2003.
 }
 \seealso{
 \code{\link{k_equiv}}
+
+\code{\link{calc_cv_star}}
 }

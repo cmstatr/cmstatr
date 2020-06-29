@@ -15,7 +15,7 @@
 #' @return
 #' Returns an object of class \code{adk}. This object has the following fields:
 #' \item{\code{call}}{the expression used to call this function}
-#' \item{\code{data}}{the original data used to compute the ADK}
+#' \item{\code{data}}{the original data supplied by the user}
 #' \item{\code{groups}}{a vector of the groups used in the computation}
 #' \item{\code{alpha}}{the value of alpha specified}
 #' \item{\code{modcv}}{a logical value indicating whether the modified
@@ -32,18 +32,39 @@
 #' This function performs the Levene's test for equality of variance. The
 #' data is transformed as follows:
 #'
-#' \deqn{wij = | xij - mi |}
+#' \deqn{w_{ij} = \left| x_{ij} - m_i \right|}{wij = | xij - mi |}
 #'
-#' Where \eqn{mi} is median of the \eqn{ith} group. An F-Test is then
+#' Where \eqn{m_i}{mi} is median of the \eqn{ith} group. An F-Test is then
 #' performed on the transformed data.
+#'
+#' When \code{modcv=TRUE}, the data from each group is first transformed
+#' according to the modified coefficient of variation (CV) rules before
+#' performing Levene's test.
 #'
 #' @references
 #' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
+#' @examples
+#' library(dplyr)
+#'
+#' carbon.fabric.2 %>%
+#'   filter(test == "FC") %>%
+#'   levene_test(strength, condition)
+#' ##
+#' ## Call:
+#' ## levene_test(data = ., x = strength, groups = condition)
+#' ##
+#' ## n = 91          k = 5
+#' ## F = 3.883818    p-value = 0.00600518
+#' ## Conclusion: Samples have unequal variance ( alpha = 0.05 )
+#'
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats var.test median pf
+#'
+#' @seealso \code{\link{calc_cv_star}}
+#' @seealso \code{\link{transform_mod_cv}}
 #'
 #' @export
 levene_test <- function(data = NULL, x, groups, alpha = 0.05, modcv = FALSE) {
@@ -185,18 +206,24 @@ glance.levene <- function(x, ...) {  # nolint
 print.levene <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
-  cat("n = ", x$n, "\tk = ", x$k, "\n")
+
+  justify <- c("left", "left")
+  width <- c(16L, 16L)
+
+  print_row_equal(list("n", x$n, "k", x$k),
+            justify, width, ...)
 
   if (x$modcv == TRUE) {
     cat("Modified CV Approach Used", "\n")
   }
 
-  cat("F = ", x$f, "\tp-value = ", x$p, "\n")
+  print_row_equal(list("F", x$f, "p-value", x$p),
+            justify, width, ...)
   if (x$reject_equal_variance) {
-    cat("Conclusion: Samples have unequal variance ( alpha=",
+    cat("Conclusion: Samples have unequal variance ( alpha =",
         x$alpha, ")\n\n")
   } else {
-    cat("Conclusion: Samples have equal variances ( alpha=",
+    cat("Conclusion: Samples have equal variances ( alpha =",
         x$alpha, ")\n\n")
   }
 }

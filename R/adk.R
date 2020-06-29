@@ -1,14 +1,14 @@
 
-#' Anderson-Darling K-Sample Test
+#' Anderson--Darling K-Sample Test
 #'
 #' @description
-#' This function performs an Anderson-Darling k-sample test. This is used to
+#' This function performs an Anderson--Darling k-sample test. This is used to
 #' determine if several samples (groups) share a common (unspecified)
 #' distribution.
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame on which to perform the
-#'          Anderson-Darling k-Sample test (usually strength)
+#'          Anderson--Darling k-Sample test (usually strength)
 #' @param groups a variable in the data.frame that defines the groups
 #' @param alpha the significance level (default 0.025)
 #'
@@ -21,7 +21,7 @@
 #' \item{\code{n}}{the total number of observations}
 #' \item{\code{k}}{the number of groups}
 #' \item{\code{sigma}}{the computed standard deviation of the test statistic}
-#' \item{\code{ad}}{the value of the Anderson-Darling k-Sample test
+#' \item{\code{ad}}{the value of the Anderson--Darling k-Sample test
 #'   statistic}
 #' \item{\code{p}}{the computed p-value}
 #' \item{\code{reject_same_dist}}{a boolean value indicating whether the null
@@ -35,7 +35,7 @@
 #' the package \code{kSamples}. The method "exact" is specified in the call to
 #' \code{ad.test}. Refer to that package's documentation for details.
 #'
-#' There is a minor difference in the formulation of the Anderson-Darling
+#' There is a minor difference in the formulation of the Anderson--Darling
 #' k-Sample test in CMH-17-1G, compared with that in the Scholz and
 #' Stephens (1987). This difference affects the test statistic and the
 #' critical value in the same proportion, and therefore the conclusion of
@@ -51,13 +51,28 @@
 #' can be accessed by running \code{vignette("adktest")}
 #'
 #' @references
-#' F. W. Scholz and M. Stephens, “K-Sample Anderson-Darling Tests,” Journal
+#' F. W. Scholz and M. Stephens, “K-Sample Anderson--Darling Tests,” Journal
 #' of the American Statistical Association, vol. 82, no. 399. pp. 918–924,
 #' Sep-1987.
 #'
 #' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
+#'
+#' @examples
+#' library(dplyr)
+#'
+#' carbon.fabric %>%
+#'   filter(test == "WT") %>%
+#'   filter(condition == "RTD") %>%
+#'   ad_ksample(strength, batch)
+#' ##
+#' ## Call:
+#' ## ad_ksample(data = ., x = strength, groups = batch)
+#' ##
+#' ## N = 18          k = 3
+#' ## ADK = 0.912     p-value = 0.95989
+#' ## Conclusion: Samples come from the same distribution ( alpha = 0.025 )
 #'
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom kSamples ad.test
@@ -111,7 +126,7 @@ ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
   return(res)
 }
 
-#' Glance at a \code{adk} (Anderson-Darling k-Sample) object
+#' Glance at a \code{adk} (Anderson--Darling k-Sample) object
 #'
 #' @description
 #' Glance accepts an object of type \code{adk} and returns a
@@ -177,8 +192,14 @@ glance.adk <- function(x, ...) {  # nolint
 print.adk <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
-  cat("N = ", x$n, "\tk = ", x$k, "\n")
-  cat("ADK = ", x$ad, "\tp-value = ", x$p, "\n")
+
+  justify <- c("left", "left")
+  width <- c(16L, 16L)
+
+  print_row_equal(list("N", x$n, "k", x$k),
+                  justify, width, ...)
+  print_row_equal(list("ADK", x$ad, "p-value", x$p),
+                  justify, width, ...)
   if (x$reject_same_dist) {
     cat("Conclusion: Samples do not come from the same distribution (alpha =",
         x$alpha, ")\n\n")

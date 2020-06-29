@@ -22,7 +22,7 @@ should be used.}
 \value{
 Returns an object of class \code{adk}. This object has the following fields:
 \item{\code{call}}{the expression used to call this function}
-\item{\code{data}}{the original data used to compute the ADK}
+\item{\code{data}}{the original data supplied by the user}
 \item{\code{groups}}{a vector of the groups used in the computation}
 \item{\code{alpha}}{the value of alpha specified}
 \item{\code{modcv}}{a logical value indicating whether the modified
@@ -43,13 +43,37 @@ This function performs the Levene's test for equality of variance.
 This function performs the Levene's test for equality of variance. The
 data is transformed as follows:
 
-\deqn{wij = | xij - mi |}
+\deqn{w_{ij} = \left| x_{ij} - m_i \right|}{wij = | xij - mi |}
 
-Where \eqn{mi} is median of the \eqn{ith} group. An F-Test is then
+Where \eqn{m_i}{mi} is median of the \eqn{ith} group. An F-Test is then
 performed on the transformed data.
+
+When \code{modcv=TRUE}, the data from each group is first transformed
+according to the modified coefficient of variation (CV) rules before
+performing Levene's test.
+}
+\examples{
+library(dplyr)
+
+carbon.fabric.2 \%>\%
+  filter(test == "FC") \%>\%
+  levene_test(strength, condition)
+##
+## Call:
+## levene_test(data = ., x = strength, groups = condition)
+##
+## n = 91          k = 5
+## F = 3.883818    p-value = 0.00600518
+## Conclusion: Samples have unequal variance ( alpha = 0.05 )
+
 }
 \references{
 “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
+}
+\seealso{
+\code{\link{calc_cv_star}}
+
+\code{\link{transform_mod_cv}}
 }

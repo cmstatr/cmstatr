@@ -95,10 +95,10 @@ calculating a B-Basis value. We'll talk about those later, but for now, let's
 just get right to checking how the data are distributed and calculating the
 B-Basis.
 
-We'll use an Anderson-Darling test to check if the data are normally
+We'll use an Anderson--Darling test to check if the data are normally
 distributed. The `cmstatr` package provides the function
 `anderson_darling_normal` and related functions for other distributions.
-We can run an Anderson-Darling test for normality on the warp tension RTD
+We can run an Anderson--Darling test for normality on the warp tension RTD
 data as follows. We'll perform this test on the normalized strength.
 
 ```{r}
@@ -118,7 +118,8 @@ if (0.05 >= (norm_data %>%
 ```
 
 Now that we know that this data follows a normal distribution (since the
-significance of the Anderson-Darling test is greater than $0.05$), we can
+observed significance level (OSL) of the Anderson--Darling test is
+greater than $0.05$), we can
 proceed to calculate a basis value based based on the assumption of normally
 distributed data. The `cmstatr` package provides the function `basis_normal`
 as well as related functions for other distributions. By default, the B-Basis
@@ -177,7 +178,7 @@ norm_data %>%
 ```
 
 Now that batch is specified, we see that one of the diagnostic tests
-actually fails: the Anderson-Darling k-Sample test shows that the batches
+actually fails: the Anderson--Darling k-Sample test shows that the batches
 are not drawn from the same (unspecified) distribution. We can run this
 diagnostic test directly to investigate further:
 
@@ -187,7 +188,7 @@ norm_data %>%
   ad_ksample(strength.norm, batch)
 ```
 
-For the Anderson-Darling k-Sample test, $\alpha=0.025$ is normally used.
+For the Anderson--Darling k-Sample test, $\alpha=0.025$ is normally used.
 In this case the p-value is $p=0.0026$, so it is no where near $\alpha$
 (note the number of decimal places).
 
@@ -260,7 +261,7 @@ if ((norm_data %>%
 None of the groups have outliers, so we can continue.
 
 # Batch-to-Batch Distribution
-Next, we will use the Anderson-Darling k-Sample test to check that each batch
+Next, we will use the Anderson--Darling k-Sample test to check that each batch
 comes from the same distribution within each condition. We can use the
 `ad_ksample` function from `cmstatr` to do so. Once again, we'll use
 `nest`/`unnest` and `glance` to do so.
@@ -289,7 +290,7 @@ if (!all(!(norm_data %>%
   }
 ```
 
-For all conditions, the Anderson-Darling k-Sample test fails to reject the
+For all conditions, the Anderson--Darling k-Sample test fails to reject the
 hypothesis that each batch comes from the same (unspecified) distribution.
 We can thus proceed to pooling the data.
 
@@ -328,7 +329,7 @@ We find no outliers, so we can continue.
 ## Pooling Across Environments
 Often it is desirable to pool data across several environments. There
 are two methods for doing so: "pooled standard deviation" and
-"pooled CV."
+"pooled CV" (CV is an abbreviation for Coefficient of Variation)
 
 First, we will check for
 equality of variance among the conditions. We will do so using Levene's test.
@@ -376,7 +377,7 @@ if ((norm_data %>%
 ```
 
 The Levene's test thus shows the variances of the pooled data are equal.
-We can move on to performing an Anderson-Darling test for normality on
+We can move on to performing an Anderson--Darling test for normality on
 the pooled data.
 
 ```{r}
@@ -397,7 +398,7 @@ if ((norm_data %>%
   }
 ```
 
-The Anderson-Darling test indicates that the pooled data is drawn from
+The Anderson--Darling test indicates that the pooled data is drawn from
 a normal distribution, so we can continue with calculating basis values
 using the "pooled CV" method.
 

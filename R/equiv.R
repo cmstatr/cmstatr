@@ -1,9 +1,23 @@
 
-#' Equivalency based on mean and extremum
+#' Test for decrease in mean or minimum individual
 #'
 #' @description
-#' Determines equivalency or equivalency thresholds based on both minimum
-#' individual and mean.
+#' This test is used when determining if a new process or
+#' manufacturing location produces material properties that are
+#' "equivalent" to an existing dataset, and hence the existing
+#' basis values are applicable to the new dataset. This test is also
+#' sometimes used for determining if a new batch of material is acceptable.
+#' This function determines thresholds based on both minimum
+#' individual and mean, and optionally evaluates a sample against those
+#' thresholds. The joint distribution between the sample mean
+#' and sample minimum is used to generate these thresholds.
+#' When there is no true difference between the existing ("qualification")
+#' and the new population from which the sample is obtained, there is a
+#' probability of \eqn{\alpha} of falsely concluding that there is a
+#' difference in mean or variance. It is assumed that both the original
+#' and new populations are normally distributed.
+#' According to Vangel (2002), this test provides improved power compared
+#' with a test of mean and standard deviation.
 #'
 #' @param df_qual (optional) a data.frame containing the qualification data.
 #' Defaults to NULL.
@@ -34,10 +48,12 @@
 #'   passed to this function or the length of the vector \code{data_sample}.}
 #' \item{\code{k1}}{the factor used to calculate the minimum individual
 #'   threshold. The minimum individual threshold is calculated as
-#'   \eqn{Wmin = qual_mean - k1 * qual_sd}}
+#'   \eqn{W_{min} = qual\,mean - k_1 \cdot qual\,sd}{
+#'   Wmin = qual_mean - k1 * qual_sd}}
 #' \item{\code{k2}}{the factor used to calculate the threshold for mean. The
 #'   threshold for mean is calculated as
-#'   \eqn{Wmean = qual_mean - k2 * qual_sd}}
+#'   \eqn{W_{mean} = qual\,mean - k_2 \cdot qual\,sd}{
+#'   Wmean = qual_mean - k2 * qual_sd}}
 #' \item{\code{modcv}}{logical value indicating whether the acceptance
 #'   thresholds are calculated using the modified CV approach}
 #' \item{\code{cv}}{the coefficient of variation of the qualification data.
@@ -63,6 +79,20 @@
 #'   have a value of \code{NULL}}
 #'
 #' @details
+#' This function is used to
+#' determine acceptance limits for a sample mean and sample minimum.
+#' These acceptance limits are often used to set acceptance limits for
+#' material strength for each lot of material, or each new manufacturing
+#' site. When a sample meets the criteria that its mean and its minimum are
+#' both greater than these limits, then one may accept the lot of material
+#' or the new manufacturing site.
+#'
+#' This procedure is used to ensure that the strength of material processed
+#' at a second site, or made with a new batch of material are not degraded
+#' relative to the data originally used to determine basis values for the
+#' material. For more information about the use of this procedure, see
+#' CMH-17-1G or PS-ACE 100-2002-006.
+#'
 #' There are several optional arguments to this function. However, you can't
 #' omit all of the optional arguments. You must supply either
 #' \code{data_sample} or \code{n_sample}, but not both. You must also supply
@@ -73,11 +103,16 @@
 #' function will issue a warning or error if you violate any of these rules.
 #'
 #' If \code{modcv} is TRUE, the standard deviation used to calculate the
-#' thresholds will be replaced with a standard deviation calculated by
+#' thresholds will be replaced with a standard deviation calculated
+#' using the Modified Coefficient of Variation (CV) approach.
+#' The Modified CV approach is a way of adding extra variance to the
+#' qualification data in the case that the qualification data has less
+#' variance than expected, which sometimes occurs when qualification testing
+#' is performed in a short period of time.
+#' Using the Modified CV approach, the standard deviation is calculated by
 #' multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
 #' value supplied or the value calculated by \code{mean(data_qual)} and
-#' \eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
-#' if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
+#' \eqn{CV*} is the value computed by \code{\link{calc_cv_star}}.
 #'
 #' @examples
 #' equiv_mean_extremum(alpha = 0.01, n_sample = 6,
@@ -85,17 +120,29 @@
 #' ##
 #' ## Call:
 #' ## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
-#' ##                     alpha = 0.01, modcv = TRUE)
+#' ##     alpha = 0.01, modcv = TRUE)
 #' ##
 #' ## Modified CV used: CV* = 0.0675 ( CV = 0.055 )
 #' ##
 #' ## For alpha = 0.01 and n = 6
 #' ## ( k1 = 3.128346 and k2 = 1.044342 )
-#' ##               Min Individual      Sample Mean
-#' ## Thresholds:         78.88367         92.95069
+#' ##                   Min Individual   Sample Mean
+#' ##      Thresholds:    78.88367        92.95069
 #'
-#' @seealso
-#' \code{\link{k_equiv}}
+#' @seealso \code{\link{k_equiv}}
+#' @seealso \code{\link{calc_cv_star}}
+#'
+#' @references
+#' M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
+#' and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
+#'
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,” SAE International,
+#' CMH-17-1G, Mar. 2012.
+#'
+#' Federal Aviation Administration, “Material Qualification and Equivalency
+#' for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
+#' Sep. 2003.
 #'
 #' @importFrom rlang enquo eval_tidy
 #'
@@ -279,12 +326,8 @@ print.equiv_mean_extremum <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  printrow <- function(c1, c2, c3) {
-    cat(format(c1, justify = "right", width = 16L, ...),
-        format(c2, justify = "right", width = 16L, ...),
-        format(c3, justify = "right", width = 16L, ...),
-        "\n")
-  }
+  justify <- c("right", "centre", "centre")
+  col_width <- c(16L, 16L, 16L)
 
   if (x$modcv) {
     cat("Modified CV used: CV* =", format(x$cv_star, ...),
@@ -296,26 +339,50 @@ print.equiv_mean_extremum <- function(x, ...) {
        "and n =", format(x$n_sample, ...),
       "\n( k1 =", format(x$k1, ...),
       "and k2 =", format(x$k2, ...), ")\n")
-  printrow("", "Min Individual", "Sample Mean")
+
+  print_row(list("", "Min Individual", "Sample Mean"),
+            justify, col_width, ...)
+
   if (!is.null(x$min_sample)) {
-    printrow("Sample:", x$min_sample, x$mean_sample)
+    print_row(list("Sample:", x$min_sample, x$mean_sample),
+              justify, col_width, ...)
   }
-  printrow("Thresholds:", x$threshold_min_indiv, x$threshold_mean)
+  print_row(list("Thresholds:", x$threshold_min_indiv, x$threshold_mean),
+            justify, col_width, ...)
   if (!is.null(x$result_min_indiv)) {
-    printrow("Equivalency:", x$result_min_indiv, x$result_mean)
+    print_row(list("Equivalency:", x$result_min_indiv, x$result_mean),
+              justify, col_width, ...)
   }
 }
 
 
-#' k-factors for equivalency testing
+#' k-factors for determining acceptance based on sample mean and an extremum
 #'
 #' @param alpha the acceptable probability of a type I error
-#' @param n the number of observations in the sample to test for equivalency
+#' @param n the number of observations in the sample to test
 #' @return a vector with elements c(k1, k2). k1 is for testing the sample
 #'   extremum. k2 is for testing the sample mean
 #' @details
-#'   The k-factors returned by this function are used for equivalency testing,
-#'   considering both the sample mean and sample extremum (normally minimum).
+#'   The k-factors returned by this function are used for determining
+#'   whether to accept a new dataset.
+#'
+#'   This function is used as part of the procedure for
+#'   determining acceptance limits for a sample mean and sample minimum.
+#'   These acceptance limits are often used to set acceptance limits for
+#'   material strength for each lot of material, or each new manufacturing
+#'   site. When a sample meets the criteria that its mean and its minimum are
+#'   both greater than these limits, then one may accept the lot of material
+#'   or the new manufacturing site.
+#'
+#'   This procedure is used to ensure that the strength of material processed
+#'   at a second site, or made with a new batch of material are not degraded
+#'   relative to the data originally used to determine basis values for the
+#'   material. For more information about the use of this procedure, see
+#'   CMH-17-1G or PS-ACE 100-2002-006.
+#'
+#'   According to Vangel (2002), the use of mean and extremum for this purpose
+#'   is more powerful than the use of mean and standard deviation.
+#'
 #'   The results of this function match those published by Vangel within
 #'   0.05\% for \eqn{n > 2} and \eqn{\alpha \le 0.25}. Those results published
 #'   by Vangel are identical to those published in CMH-17-1G.
@@ -333,15 +400,35 @@ print.equiv_mean_extremum <- function(x, ...) {
 #'   when setting lot acceptance limits. Though, in principle, this parameter
 #'   can be set to any number between 0 and 1. This function, however, has only
 #'   been validated in the range of \eqn{1e-5 \le alpha \le 0.5}.
+#'
 #' @references
-#'   M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
-#'   and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249.
+#' M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
+#' and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
+#'
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,” SAE International,
+#' CMH-17-1G, Mar. 2012.
+#'
+#' Federal Aviation Administration, “Material Qualification and Equivalency
+#' for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
+#' Sep. 2003.
+#'
+#' @seealso
+#' \code{\link{equiv_mean_extremum}}
+#'
 #' @examples
 #' qual_mean <- 100
 #' qual_sd <- 3.5
 #' k <- k_equiv(0.01, 5)
-#' acceptance_limit_min <- qual_mean - qual_sd * k[1]
-#' acceptance_limit_mean <- qual_mean - qual_sd * k[2]
+#' print("Minimum Individual Acceptance Limit:")
+#' print(qual_mean - qual_sd * k[1])
+#' print("Minimum Average Acceptance Limit:")
+#' print(qual_mean - qual_sd * k[2])
+#'
+#' ## [1] "Minimum Individual Acceptance Limit:"
+#' ## [1] 89.24981
+#' ## [1] "Minimum Average Acceptance Limit:"
+#' ## [1] 96.00123
 #'
 #' @export
 k_equiv <- function(alpha, n) {
@@ -470,6 +557,7 @@ k_equiv <- function(alpha, n) {
 #' @description
 #' Checks for change in the mean value between a qualification data set and
 #' a sample. This is normally used to check for properties such as modulus.
+#' This function is a wrapper for a two-sample t--test.
 #'
 #' @param df_qual (optional) a data.frame containing the qualification data.
 #' Defaults to NULL.
@@ -543,20 +631,24 @@ k_equiv <- function(alpha, n) {
 #' be supplied. If these requirements are violated, warning(s) or error(s) will
 #' be issued.
 #'
-#' This function uses a two-sided t-test to determine if there is a difference
+#' This function uses a two-sample t-test to determine if there is a difference
 #' in the mean value of the qualification data and the sample. A pooled
 #' standard deviation is used in the t-test. The procedure is per CMH-17-1G.
 #'
-#' If the option \code{modcv = TRUE} is set, standard deviation of the
-#' qualification data is replaced with CV* times \code{mean_qual} (which may
-#' be passed as an argument or internally calculated from \code{data_qual}.
-#'
-#' When \code{modcv = TRUE}, CV* is calculated as follows:
-#' \eqn{CV* = 0.06} if \eqn{CV < 0.04}, \eqn{CV* = cv / 2 + 0.04}
-#' if \eqn{0.04 <= cv <= 0.08} and \eqn{CV* = CV} otherwise.
+#' If \code{modcv} is TRUE, the standard deviation used to calculate the
+#' thresholds will be replaced with a standard deviation calculated
+#' using the Modified Coefficient of Variation (CV) approach.
+#' The Modified CV approach is a way of adding extra variance to the
+#' qualification data in the case that the qualification data has less
+#' variance than expected, which sometimes occurs when qualification testing
+#' is performed in a short period of time.
+#' Using the Modified CV approach, the standard deviation is calculated by
+#' multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
+#' value supplied or the value calculated by \code{mean(data_qual)} and
+#' \eqn{CV*} is determined using \code{\link{calc_cv_star}}.
 #'
 #' Note that the modified CV option should only be used if that data passes the
-#' Anderson-Darling test.
+#' Anderson--Darling test.
 #'
 #' @examples
 #' equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
@@ -570,15 +662,22 @@ k_equiv <- function(alpha, n) {
 #' ##
 #' ## For alpha = 0.05
 #' ## Modified CV used
-#' ##                   Qualificaiton        Sample
+#' ##                   Qualification        Sample
 #' ##           Number        28               9
 #' ##             Mean       9.24             9.02
 #' ##               SD      0.162           0.15785
 #' ##           Result               PASS
 #' ##    Passing Range       8.856695 to 9.623305
 #'
-#' @export
+#' @references
+#' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+#' Guideline for Characterization of Structural Materials,” SAE International,
+#' CMH-17-1G, Mar. 2012.
 #'
+#' @seealso \code{\link{calc_cv_star}}
+#' @seealso \code{\link[stats]{t.test}}
+#'
+#' @export
 equiv_change_mean <- function(df_qual = NULL, data_qual = NULL,
                               n_qual = NULL, mean_qual = NULL,
                               sd_qual = NULL, data_sample = NULL,
@@ -805,32 +904,30 @@ print.equiv_change_mean <- function(x, ...) {
   cat("\nCall:\n",
       paste(deparse(x$call), sep = "\n", collapse = "\n"), "\n\n", sep = "")
 
-  printrow <- function(c1, c2, c3) {
-    cat(format(c1, justify = "right", width = 16L, ...),
-        format(c2, justify = "centre", width = 16L, ...),
-        format(c3, justify = "centre", width = 16L, ...),
-        "\n")
-  }
-
-  printrow2 <- function(c1, c2) {
-    cat(format(c1, justify = "right", width = 16L, ...),
-        format(c2, justify = "centre", width = 32L, ...),
-        "\n")
-  }
-
   cat("For alpha =", format(x$alpha, ...), "\n")
 
   if (x$modcv) {
     cat("Modified CV used\n")
   }
 
-  printrow("", "Qualificaiton", "Sample")
-  printrow("Number", format(x$n_qual, ...), format(x$n_sample, ...))
-  printrow("Mean", format(x$mean_qual, ...), format(x$mean_sample, ...))
-  printrow("SD", format(x$sd_qual, ...), format(x$sd_sample, ...))
-  printrow2("Result", x$result)
-  printrow2("Passing Range", paste0(format(x$threshold[1], ...),
-                                    " to ",
-                                    format(x$threshold[2], ...))
-  )
+  justify3 <- c("right", "centre", "centre")
+  width3 <- c(16L, 16L, 16L)
+
+  justify2 <- c("right", "centre")
+  width2 <- c(16L, 32L)
+
+  print_row(list("", "Qualification", "Sample"),
+            justify3, width3, ...)
+  print_row(list("Number", x$n_qual, x$n_sample),
+            justify3, width3, ...)
+  print_row(list("Mean", x$mean_qual, x$mean_sample),
+            justify3, width3, ...)
+  print_row(list("SD", x$sd_qual, x$sd_sample),
+            justify3, width3, ...)
+  print_row(list("Result", x$result),
+            justify2, width2, ...)
+  print_row(list("Passing Range", paste0(format(x$threshold[1], ...),
+                                      " to ",
+                                      format(x$threshold[2], ...))),
+            justify2, width2, ...)
 }

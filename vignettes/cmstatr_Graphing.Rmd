@@ -176,8 +176,8 @@ dat %>%
 Property plots allow for a variety of properties for a group to be 
 compared to other properties within the same group, as well as to 
 other group properties. The properties included in this plot are A-Basis, 
-B-Basis, Pooled A- and B-Basis, Pooled modified CV A and B-Basis, Mean,
-and Min for each group.
+B-Basis, Pooled A- and B-Basis, Pooled Modified CV (Coefficient of Variation)
+A- and B-Basis, Mean, and Min for each group.
 
 The property plots will take a bit of work to construct.
 
