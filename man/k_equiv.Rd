@@ -2,25 +2,43 @@
 % Please edit documentation in R/equiv.R
 \name{k_equiv}
 \alias{k_equiv}
-\title{k-factors for equivalency testing}
+\title{k-factors for determining acceptance based on sample mean and an extremum}
 \usage{
 k_equiv(alpha, n)
 }
 \arguments{
 \item{alpha}{the acceptable probability of a type I error}
 
-\item{n}{the number of observations in the sample to test for equivalency}
+\item{n}{the number of observations in the sample to test}
 }
 \value{
 a vector with elements c(k1, k2). k1 is for testing the sample
   extremum. k2 is for testing the sample mean
 }
 \description{
-k-factors for equivalency testing
+k-factors for determining acceptance based on sample mean and an extremum
 }
 \details{
-The k-factors returned by this function are used for equivalency testing,
-  considering both the sample mean and sample extremum (normally minimum).
+The k-factors returned by this function are used for determining
+  whether to accept a new dataset.
+
+  This function is used as part of the procedure for
+  determining acceptance limits for a sample mean and sample minimum.
+  These acceptance limits are often used to set acceptance limits for
+  material strength for each lot of material, or each new manufacturing
+  site. When a sample meets the criteria that its mean and its minimum are
+  both greater than these limits, then one may accept the lot of material
+  or the new manufacturing site.
+
+  This procedure is used to ensure that the strength of material processed
+  at a second site, or made with a new batch of material are not degraded
+  relative to the data originally used to determine basis values for the
+  material. For more information about the use of this procedure, see
+  CMH-17-1G or PS-ACE 100-2002-006.
+
+  According to Vangel (2002), the use of mean and extremum for this purpose
+  is more powerful than the use of mean and standard deviation.
+
   The results of this function match those published by Vangel within
   0.05\% for \eqn{n > 2} and \eqn{\alpha \le 0.25}. Those results published
   by Vangel are identical to those published in CMH-17-1G.
@@ -43,11 +61,29 @@ The k-factors returned by this function are used for equivalency testing,
 qual_mean <- 100
 qual_sd <- 3.5
 k <- k_equiv(0.01, 5)
-acceptance_limit_min <- qual_mean - qual_sd * k[1]
-acceptance_limit_mean <- qual_mean - qual_sd * k[2]
+print("Minimum Individual Acceptance Limit:")
+print(qual_mean - qual_sd * k[1])
+print("Minimum Average Acceptance Limit:")
+print(qual_mean - qual_sd * k[2])
+
+## [1] "Minimum Individual Acceptance Limit:"
+## [1] 89.24981
+## [1] "Minimum Average Acceptance Limit:"
+## [1] 96.00123
 
 }
 \references{
 M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
-  and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249.
+  and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.
+
+  “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+  Guideline for Characterization of Structural Materials,” SAE International,
+  CMH-17-1G, Mar. 2012.
+
+  Federal Aviation Administration, “Material Qualification and Equivalency
+  for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
+  Sep. 2003.
+}
+\seealso{
+\code{\link{equiv_mean_extremum}}
 }

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette explores the Anderson-Darling k-Sample test.
+This vignette explores the Anderson--Darling k-Sample test.
 CMH-17-1G [@CMH-17-1G] provides a formulation for this test that appears different than the formulation given by Scholz and Stephens in their 1987 paper [@Stephens1987].
 
 Both references use different nomenclature, which is summarized as follows:
@@ -73,7 +73,7 @@ The definition of $\sigma_n$ from the two sources differs by a factor of $\left(
 The value in parentheses in the CMH-17-1G critical value corresponds to the interpolation formula for $t_m\left(\alpha\right)$ given in Scholz and Stephen's paper.
 It should be noted that this is *not* the student's t-distribution, but rather a distribution referred to as the $T_m$ distribution.
 
-The `cmstatr` package use the package `kSamples` to perform the k-sample Anderson-Darling tests.
+The `cmstatr` package use the package `kSamples` to perform the k-sample Anderson--Darling tests.
 This package uses the original formulation from Scholz and Stephens, so the test statistic will differ from that given software based on the CMH-17-1G formulation by a factor of $\left(k-1\right)$.
 The conclusions about the null hypothesis drawn, however, will be the same.
 

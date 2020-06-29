@@ -10,22 +10,36 @@ k_factor_normal(n, p = 0.9, conf = 0.95)
 \arguments{
 \item{n}{the number of observations (i.e. coupons)}
 
-\item{p}{should be 0.90 for B-Basis and 0.99 for A-Basis}
+\item{p}{the desired content of the tolerance bound.
+Should be 0.90 for B-Basis and 0.99 for A-Basis}
 
-\item{conf}{confidence interval. Should be 0.95 for both A- and B-Basis}
+\item{conf}{confidence level. Should be 0.95 for both A- and B-Basis}
 }
 \value{
 the calculated factor
 }
 \description{
-Calculate k factor for basis values (\eqn{kB}, \eqn{kA}) with normal
-distribution
+The factors returned by this function are used when calculating basis
+values (one-sided confidence bounds) when the data are normally
+distributed. The basis value will
+be equal to \eqn{\bar{x} - k s}{x_bar - k s},
+where \eqn{\bar{x}}{x_bar} is the sample mean,
+\eqn{s} is the sample standard deviation and \eqn{k} is the result
+of this function.
+This function is internally used by \code{\link{basis_normal}} when
+computing basis values.
 }
 \details{
 This function calculates the k factors used when determining A- and
 B-Basis values for normally distributed data. To get \eqn{kB}, set
-\code{p = 0.90} and \code{conf = 0.95}. To get \eqn{kA}, set
-\code{p = 0.99} and \code{conf = 0.95}.
+the content of the tolerance bound to \code{p = 0.90} and
+the confidence level to \code{conf = 0.95}. To get \eqn{kA}, set
+\code{p = 0.99} and \code{conf = 0.95}. While other tolerance bound
+contents and confidence levels may be computed, they are infrequently
+needed in practice.
+
+The k-factor is calculated using equation 2.2.3 of
+Krishnamoorthy and Mathew (2008).
 
 This function has been validated against the \eqn{kB} tables in
 CMH-17-1G for each value of \eqn{n} from \eqn{n = 2} to \eqn{n = 95}.
@@ -36,4 +50,42 @@ emits warnings that "full precision may not have been achieved." When
 validating the results of this function against the tables in CMH-17-1G,
 the maximum allowable difference between the two is 0.002. The tables in
 CMH-17-1G give values to three decimal places.
+
+For more information about tolerance bounds in general, see
+Meeker, et. al. (2017).
+}
+\examples{
+kb <- k_factor_normal(n = 10, p = 0.9, conf = 0.95)
+print(kb)
+
+## [1] 2.35464
+
+# This can be used to caclulate the B-Basis if
+# the sample mean and sample standard deviation
+# is known, and data is assumed to be normally
+# distributed
+
+sample_mean <- 90
+sample_sd <- 5.2
+print("B-Basis:")
+print(sample_mean - sample_sd * kb)
+
+## [1] B-Basis:
+## [1] 77.75587
+
+}
+\references{
+K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
+Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
+
+W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
+for Practitioners and Researchers, Second Edition.
+Hoboken: John Wiley & Sons, 2017.
+
+“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.
+}
+\seealso{
+\code{\link{basis_normal}}
 }

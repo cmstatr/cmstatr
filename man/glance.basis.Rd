@@ -16,15 +16,15 @@ signature.}
 A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
 columns:
 
-\item{\code{p}}{the the proportion of the population that the basis value
-       should be below. Normally 0.90 or 0.99}
-\item{\code{conf}}{The confidence level. Normally 0.95}
-\item{\code{distribution}}{A string representing the distribution assumed
+\item{\code{p}}{the the content of the tolerance bound.
+                Normally 0.90 or 0.99}
+\item{\code{conf}}{the confidence level. Normally 0.95}
+\item{\code{distribution}}{a string representing the distribution assumed
        when calculating the basis value}
 \item{\code{modcv}}{a logical value indicating whether the modified
                     CV approach was used. Only applicable to pooling
                     methods.}
-\item{\code{r}}{the sample size}
+\item{\code{n}}{the sample size}
 \item{\code{r}}{the number of groups used in the calculation. This will
        be \code{NA} for single-point basis values}
 \item{\code{basis}}{the basis value}

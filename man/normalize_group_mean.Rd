@@ -15,13 +15,34 @@ normalize_group_mean(x, group)
 Returns a vector of normalized values
 }
 \description{
-This function computes the mean of each group, then divides each group by
-their corresponding group mean. This is commonly done
+This function computes the mean of each group, then divides each
+observation by its corresponding group mean. This is commonly done
 when pooling data across environments.
 }
 \details{
 Computes the mean for each group, then divides each value by the mean for
 the corresponding group.
+}
+\examples{
+library(dplyr)
+carbon.fabric.2 \%>\%
+filter(test == "WT") \%>\%
+  select(condition, strength) \%>\%
+  mutate(condition_norm = normalize_group_mean(strength, condition)) \%>\%
+  head(10)
+
+##    condition strength condition_norm
+## 1        CTD  142.817      1.0542187
+## 2        CTD  135.901      1.0031675
+## 3        CTD  132.511      0.9781438
+## 4        CTD  135.586      1.0008423
+## 5        CTD  125.145      0.9237709
+## 6        CTD  135.203      0.9980151
+## 7        CTD  128.547      0.9488832
+## 8        CTD  127.709      0.9426974
+## 9        CTD  127.074      0.9380101
+## 10       CTD  126.879      0.9365706
+
 }
 \references{
 “Composite Materials Handbook, Volume 1. Polymer Matrix Composites

@@ -89,9 +89,10 @@ basis_anova(data = NULL, x, groups, p = 0.9, conf = 0.95, override = c())
 
 \item{batch}{the variable in the data.frame that contains the batches.}
 
-\item{p}{should be 0.90 for B-Basis and 0.99 for A-Basis}
+\item{p}{the content of the tolerance bound. Should be 0.90 for B-Basis
+and 0.99 for A-Basis}
 
-\item{conf}{confidence interval. Should be 0.95 for both A- and B-Basis}
+\item{conf}{confidence level Should be 0.95 for both A- and B-Basis}
 
 \item{override}{a list of names of diagnostic tests to override,
 if desired.}
@@ -101,7 +102,7 @@ if desired.}
 \item{modcv}{a logical value indicating whether the modified CV approach
 should be used. Only applicable to pooling methods.}
 
-\item{method}{the method for Hanson-Koopmans nonparametric basis values.
+\item{method}{the method for Hanson--Koopmans nonparametric basis values.
 should be "optimum-order" for B-Basis and "woodward-frawley"
 for A-Basis.}
 }
@@ -135,9 +136,17 @@ This object has the following fields:
 }
 \description{
 Calculate the basis value for a given data set. There are various functions
-to calculate the basis values for different distributions. For B-Basis,
-set \eqn{p=0.90} and \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.99} and
-\eqn{conf=0.95}. These functions also preform some automated diagnostic
+to calculate the basis values for different distributions.
+The basis value is the lower one-sided tolerance bound of a certain
+proportion of the population. For more information on tolerance bounds,
+see Meeker, et. al. (2017).
+For B-Basis, set the content of tolerance bound to \eqn{p=0.90} and
+the confidence level to \eqn{conf=0.95}; for A-Basis, set \eqn{p=0.99} and
+\eqn{conf=0.95}. While other tolerance bound
+contents and confidence levels may be computed, they are infrequently
+needed in practice.
+
+These functions also perform some automated diagnostic
 tests of the data prior to calculating the basis values. These diagnostic
 tests can be overridden if needed.
 }
@@ -148,9 +157,21 @@ be a
 value of \code{x} is expected to be a variable within \code{data}. If
 \code{data} is not specified, \code{x} must be a vector.
 
+When \code{modcv=TRUE} is set, which is only applicable to the
+pooling methods,
+the data is first modified according to the modified coefficient
+of variation (CV)
+rules. This modified data is then used when both calculating the
+basis values and
+also when performing the diagnostic tests. The modified CV approach
+is a way of
+adding extra variance to datasets with unexpectedly low variance.
+
 \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 the standard deviation from the mean. \eqn{k} is given by
-the function \code{\link{k_factor_normal}}. \code{basis_normal} also
+the function \code{\link{k_factor_normal}}. The equations in
+Krishnamoorthy and Mathew (2008) are used.
+\code{basis_normal} also
 performs a diagnostic test for outliers (using
 \code{\link{maximum_normed_residual}})
 and a diagnostic test for normality (using
@@ -179,8 +200,8 @@ and a diagnostic test for between batch variability (using
 for these diagnostic tests.
 
 \code{basis_weibull} calculates the basis value for data distributed
-according to a Weibull distribution. The confidence interval for the
-quantile requested is calculated using the conditional method, as
+according to a Weibull distribution. The confidence level for the
+content requested is calculated using the conditional method, as
 described in Lawless (1982) Section 4.1.2b. This has good agreement
 with tables published in CMH-17-1G. Results differ between this function
 and STAT17 by approximately 0.5\%.
@@ -198,7 +219,7 @@ and a diagnostic test for between batch variability (using
 for these diagnostic tests.
 
 \code{basis_hk_ext} calculates the basis value using the Extended
-Hanson-Koopmans method, as described in CMH-17-1G and Vangel (1994).
+Hanson--Koopmans method, as described in CMH-17-1G and Vangel (1994).
 For nonparametric distributions, this function should be used for samples
 up to n=28 for B-Basis and up to \eqn{n=299} for A-Basis.
 This method uses a pair of order statistics to determine the basis value.
@@ -274,8 +295,8 @@ This method is described in CMH-17-1G.
 \code{basis_pooled_sd} and \code{basis_pooled_cv} both automatically
 perform a number of diagnostic tests. Using
 \code{\link{maximum_normed_residual}}, they check that there are no
-outliers within each group and batch (provided that \code{batch}) is
-specified. They check the between batch variability using
+outliers within each group and batch (provided that \code{batch} is
+specified). They check the between batch variability using
 \code{\link{ad_ksample}}. They check that there are no outliers within
 each group (pooling all batches) using
 \code{\link{maximum_normed_residual}}. They check for the normality
@@ -285,6 +306,55 @@ data using \code{\link{levene_test}} and \code{basis_pooled_cv}
 checks for equality of variances of all data after transforming it
 using \code{\link{normalize_group_mean}}
 using \code{\link{levene_test}}.
+}
+\examples{
+library(dplyr)
+
+# A single-point basis value can be calculated as follows
+# in this example, three failed diagnostic tests are
+# overriden.
+
+carbon.fabric \%>\%
+  filter(test == "FC") \%>\%
+  filter(condition == "RTD") \%>\%
+  basis_normal(strength, batch,
+               override = c("outliers",
+                            "outliers_within_batch",
+                            "anderson_darling_normal"))
+
+## Call:
+## basis_normal(data = ., x = strength, batch = batch,
+##     override = c("outliers", "outliers_within_batch",
+##    "anderson_darling_normal"))
+##
+## Distribution:  Normal 	( n = 18 )
+## The following diagnostic tests were overridden:
+##     `outliers`,
+##     `outliers_within_batch`,
+##     `anderson_darling_normal`
+## B-Basis:   ( p = 0.9 , conf = 0.95 )
+## 76.94656
+
+# A set of pooled basis values can also be calculated
+# using the pooled standard deviation method, as follows.
+# In this example, one failed diagnostic test is overriden.
+carbon.fabric \%>\%
+  filter(test == "WT") \%>\%
+  basis_pooled_sd(strength, condition, batch,
+                  override = c("outliers_within_batch"))
+
+## Call:
+## basis_pooled_sd(data = ., x = strength, groups = condition,
+##                 batch = batch, override = c("outliers_within_batch"))
+##
+## Distribution:  Normal - Pooled Standard Deviation 	( n = 54, r = 3 )
+## The following diagnostic tests were overridden:
+##     `outliers_within_batch`
+## B-Basis:   ( p = 0.9 , conf = 0.95 )
+## CTD  127.6914
+## ETW  125.0698
+## RTD  132.1457
+
 }
 \references{
 J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -297,6 +367,13 @@ CMH-17-1G, Mar. 2012.
 M. Vangel, “One-Sided Nonparametric Tolerance Limits,”
 Communications in Statistics - Simulation and Computation,
 vol. 23, no. 4. pp. 1137–1154, 1994.
+
+K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
+Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
+
+W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
+for Practitioners and Researchers, Second Edition.
+Hoboken: John Wiley & Sons, 2017.
 }
 \seealso{
 \code{\link{hk_ext_z_j_opt}}

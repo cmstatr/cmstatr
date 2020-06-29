@@ -17,6 +17,7 @@ A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
 columns:
 
 \item{\code{mnr}}{the computed MNR test statistic}
+\item{\code{alpha}}{the value of alpha used for the test}
 \item{\code{crit}}{the critical value given the sample size and the
                    significance level}
 \item{\code{n_outliers}}{the number of outliers found}
@@ -34,10 +35,10 @@ x <- c(rnorm(20, 100, 5), 10)
 m <- maximum_normed_residual(x = x)
 glance(m)
 
-## # A tibble: 1 x 3
-##     mnr  crit n_outliers
-##   <dbl> <dbl>      <dbl>
-## 1  4.25  2.73          1
+## # A tibble: 1 x 4
+##     mnr alpha  crit n_outliers
+##   <dbl> <dbl> <dbl>      <dbl>
+## 1  4.23  0.05  2.73          1
 
 }
 \seealso{

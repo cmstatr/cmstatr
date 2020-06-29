@@ -13,7 +13,8 @@ calc_cv_star(cv)
 The value of the modified CV
 }
 \description{
-This function calculates the Modified CV based on a (unmodified) CV.
+This function calculates the modified coefficient of variation (CV)
+based on a (unmodified) CV.
 The modified CV is calculated based on the rules in CMH-17-1G. Those
 rules are:
 
@@ -23,8 +24,21 @@ rules are:
   \item{}{For CV > 8\%, CV* = CV}
 }
 }
+\examples{
+# The modified CV for values of CV smaller than 4\% is 6\%
+calc_cv_star(0.01)
+## [1] 0.06
+
+# The modified CV for values of CV larger than 8\% is unchanged
+calc_cv_star(0.09)
+## [1] 0.09
+
+}
 \references{
 "Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,"
 SAE International, CMH-17-1G, Mar. 2012.
+}
+\seealso{
+\code{\link{cv}}
 }

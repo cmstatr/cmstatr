@@ -2,7 +2,7 @@
 % Please edit documentation in R/adk.R
 \name{glance.adk}
 \alias{glance.adk}
-\title{Glance at a \code{adk} (Anderson-Darling k-Sample) object}
+\title{Glance at a \code{adk} (Anderson--Darling k-Sample) object}
 \usage{
 \method{glance}{adk}(x, ...)
 }

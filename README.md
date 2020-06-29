@@ -20,10 +20,11 @@ are those described in CMH-17-1G.
 # Installation
 
 This package is not yet on CRAN (but it will be soon). For now, install
-from `github` using `devtools`:
+from `github` using `devtools`. This will also install the dependencies
+required to build the vignettes.
 
 ``` r
-install.packages("devtools")
+install.packages(c("devtools", "rmarkdown", "dplyr", "tidyr"))
 devtools::install_github("ComtekAdvancedStructures/cmstatr", build_vignettes = TRUE,
                          build_opts = c("--no-resave-data", "--no-manual"))
 ```
@@ -45,13 +46,15 @@ carbon.fabric.2 %>%
 #> Call:
 #> basis_normal(data = ., x = strength, batch = batch)
 #> 
-#> Distribution:  Normal    ( n =  18 )
-#> B-Basis:   ( p =  0.9 , conf =  0.95 )
+#> Distribution:  Normal    ( n = 18 )
+#> B-Basis:   ( p = 0.9 , conf = 0.95 )
 #> 76.88082
 ```
 
 For more examples of usage of the `cmstatr` package, see the tutorial
-vignette, which can be loaded as follows, once the package is installed:
+vignette, which can be [viewed
+online](https://www.cmstatr.net/articles/cmstatr_Tutorial.html), or can
+be loaded as follows, once the package is installed:
 
 ``` r
 vignette("cmstatr_Tutorial")
@@ -59,7 +62,9 @@ vignette("cmstatr_Tutorial")
 
 There is also a vignette showing some examples of the types of graphs
 that are typically produced when analyzing composite materials. You can
-load this vignette with:
+view this [vignette
+online](https://www.cmstatr.net/articles/cmstatr_Graphing.html), or you
+can load this vignette with:
 
 ``` r
 vignette("cmstatr_Graphing")

@@ -7,7 +7,7 @@ authors:
   name: Stefan Kloppenborg
   orcid: '0000-0002-1908-5214'
 bibliography: 'paper.bib'
-date: '3/22/2020'
+date: '6/24/2020'
 output:
   md_document:
     pandoc_args: '--atx-headers'
@@ -30,19 +30,29 @@ Strength data for composite materials used in aerospace applications,
 such as carbon fiber and fiberglass reinforced composites, are normally
 analyzed using statistical methods because of the inherent variability
 in the constituent materials and in the processing. The design standards
-for civil aviation require that the probability of structural failure
-due to this variability to be minimized, and to do so, the designer must
-use what are called "Design Values" for each material in stress analyses
-and ensure they exceed the actual stresses experienced by those
-materials in service. Design Values are determined such that, with
-$95\%$ confidence, they are either the $99\%$ or $90\%$ one-sided lower
-confidence bound of the material strength, depending on the type of
-structure. These one-sided tolerance bounds are referred to as A-Basis
-and B-Basis values, respectively. The statistical methods for
-calculating these basis values are outlined in Composite Materials
-Handbook, Volume 1, Revision G, or CMH-17-1G in short [@CMH171G]. The
-use of these methods is widely accepted by industry and civil aviation
-regulators.
+for civil aviation requires that the probability of structural failure
+due to this variability must be minimized, and to do so, the designer
+must use what are called "Design Values" for each material in stress
+analyses and ensure they exceed the actual stresses experienced by those
+materials in service. Design Values are set based on the one-sided lower
+confidence bound of the material strength. For some types of structure,
+the content of this lower confidence bound is $99\%$ with a confidence
+level of $95\%$; in this case, the confidence bound is referred to as
+A-Basis. For some other types of structure, the content of the lower
+confidence bound is instead $90\%$ with a confidence level of $95\%$; in
+this case, the confidence bound is referred to as B-Basis. The
+statistical methods for calculating these basis values are outlined in
+Composite Materials Handbook, Volume 1, Revision G, or CMH-17-1G in
+short [@CMH171G]. The use of these methods is widely accepted by
+industry and civil aviation regulators.
+
+Design Values are often adjusted to account for anticipated in-service
+damage and other factors, however those adjustments are outside the
+scope of the present software package.
+
+For a detailed discussion of the theory and applications of tolerance
+bounds, the reader is referred to [@Meeker_Hahn_Escobar_2017] or
+[@Krishnamoorthy_Mathew_2008].
 
 Currently, many users use MS Excel spreadsheets to perform these
 analyses. The MS Excel spreadsheets typically used, such as `STAT-17`
@@ -124,15 +134,18 @@ following diagnostic tests:
 
 -   the maximum normed residual test for outliers within a batch
     [@CMH171G],
--   the Anderson-Darling k-Sample test to check if batches are drawn
+-   the Anderson--Darling k-Sample test to check if batches are drawn
     from the same (unspecified) distribution [@Scholz_Stephens_1987],
 -   the maximum normed residual test for outliers within the data, and
--   the Anderson-Darling test for a particular probability distribution
+-   the Anderson--Darling test for a particular probability distribution
     [@Lawless_1982].
 
 Assuming that the data from the warp tension (WT) tested at
 elevated-temperature/wet condition (ETW) follows a normal distribution,
-then this can be done using the function:
+then this can be done using the function. Note that all of the functions
+in `cmstatr` that compute basis values default to computing tolerance
+bounds with a content of $p=0.9$ and a confidence of $conf=0.95$, or
+B-Basis.
 
 ``` {.r}
 carbon.fabric.2 %>%
@@ -148,23 +161,23 @@ carbon.fabric.2 %>%
     ## Call:
     ## basis_normal(data = ., x = strength, batch = batch)
     ## 
-    ## Distribution:  Normal    ( n =  18 )
+    ## Distribution:  Normal    ( n = 18 )
     ## The following diagnostic tests failed: 
     ##     `anderson_darling_normal`
-    ## B-Basis:   ( p =  0.9 , conf =  0.95 )
+    ## B-Basis:   ( p = 0.9 , conf = 0.95 )
     ## 122.9315
 
 All of the various basis functions perform diagnostic tests for each of
 the statistical tests mentioned above. If any of the diagnostic tests
 failed, a warning is shown and the test failure is also recorded in the
 returned object (and shown in that object's `print` method). In the
-example above, the output shows that the Anderson-Darling test for
+example above, the output shows that the Anderson--Darling test for
 normality [@Lawless_1982] rejects the hypothesis that the data is drawn
 from a normal distribution.
 
 Two non-parametric basis calculations, based on [@Guenther_1970] and
 [@Vangel_1994] are also implemented in `cmstatr`. These functions
-perform the same diagnostic tests, but omits the Anderson-Darling test
+perform the same diagnostic tests, but omits the Anderson--Darling test
 for a particular distribution.
 
 The diagnostic test can be run directly using `cmstatr` as well. For
@@ -181,10 +194,10 @@ carbon.fabric.2 %>%
     ## Call:
     ## anderson_darling_normal(data = ., x = strength)
     ## 
-    ## Distribution:  Normal ( n =  18 ) 
-    ## Test statistic: A =  0.9381665 
-    ## Significance:  0.01103075  (assuming unknown parameters)
-    ## Conclusion: Sample is not drawn from a Normal distribution (alpha =  0.05 )
+    ## Distribution:  Normal ( n = 18 ) 
+    ## Test statistic:  A = 0.9381665 
+    ## OSL (p-value):  0.01103075  (assuming unknown parameters)
+    ## Conclusion: Sample is not drawn from a Normal distribution ( alpha = 0.05 )
 
 If the failure of a diagnostic test is decided to be acceptable, the
 test result can be overridden to hide the warning in the basis function
@@ -201,10 +214,10 @@ carbon.fabric.2 %>%
     ## Call:
     ## basis_normal(data = ., x = strength, batch = batch, override = c("anderson_darling_normal"))
     ## 
-    ## Distribution:  Normal    ( n =  18 )
+    ## Distribution:  Normal    ( n = 18 )
     ## The following diagnostic tests were overridden: 
     ##     `anderson_darling_normal`
-    ## B-Basis:   ( p =  0.9 , conf =  0.95 )
+    ## B-Basis:   ( p = 0.9 , conf = 0.95 )
     ## 122.9315
 
 `cmstatr` also provides functions for calculating basis values from data

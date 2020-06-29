@@ -2,23 +2,23 @@
 % Please edit documentation in R/basis.R
 \name{nonpara_binomial_rank}
 \alias{nonpara_binomial_rank}
-\title{Rank for distribution-free tolerance limits}
+\title{Rank for distribution-free tolerance bound}
 \usage{
 nonpara_binomial_rank(n, p, conf)
 }
 \arguments{
 \item{n}{the sample size}
 
-\item{p}{the desired quantile for the tolerance limit}
+\item{p}{the desired content for the tolerance bound}
 
-\item{conf}{the confidence limit for the desired tolerance limit}
+\item{conf}{the confidence level for the desired tolerance bound}
 }
 \value{
-The rank corresponding with the desired tolerance limit
+The rank corresponding with the desired tolerance bound
 }
 \description{
 Calculates the rank order for finding distribution-free tolerance
-limits for large samples. This function should only be used for
+bounds for large samples. This function should only be used for
 computing B-Basis for samples larger than 28 or A-Basis for samples
 larger than 298. This function is used by
 \code{\link{basis_nonpara_large_sample}}.
@@ -48,11 +48,25 @@ discrepancies have been identified for B-Basis. Since these sample sizes are
 uncommon for composite materials
 testing, and the difference between subsequent order statistics will be
 very small for samples this large, this difference will have no practical
-effect on computed tolerance limits.
+effect on computed tolerance bounds.
+}
+\examples{
+nonpara_binomial_rank(n = 1693, p = 0.99, conf = 0.95)
+## [1] 11
+
+# The above example indicates that for a sample of 1693 observations,
+# the A-Basis is best approximated as the 11th ordered observation.
+# In the example below, the same ordered observation would also be used
+# for a sample of size 1702.
+
+nonpara_binomial_rank(n = 1702, p = 0.99, conf = 0.95)
+## [1] 11
+
 }
 \references{
 W. Guenther, “Determination of Sample Size for Distribution-Free
-Tolerance Limits,” Jan. 1969
+Tolerance Limits,” Jan. 1969.
+Available online: \url{https://www.duo.uio.no/handle/10852/48686}
 
 “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
