@@ -47,13 +47,17 @@
 
 
 <meta property="og:title" content="Transforms data according to the modified CV rule — transform_mod_cv" />
-<meta property="og:description" content="Two versions of this transformation are implemented. The first version,
+<meta property="og:description" content="Transforms data according to the modified coefficient of variation (CV)
+rule. This is used to add additional variance to datasets with
+unexpectedly low variance, which is sometimes encountered during
+testing of new materials over short periods of time.
+Two versions of this transformation are implemented. The first version,
 transform_mod_cv(), transforms the data in a single group (with
 no other structure) according to the modified CV rules.
 The second
 version, transform_mod_cv_ad(), transforms data that is structured
 according to both condition and batch, as is commonly done for
-the Anderson-Darling k-Sample and Anderson-Darling tests when pooling
+the Anderson--Darling k-Sample and Anderson-Darling tests when pooling
 across environments." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
@@ -88,7 +92,7 @@ across environments." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -151,19 +155,23 @@ across environments." />
     </div>
 
     <div class="ref-description">
-    <p>Two versions of this transformation are implemented. The first version,
-<code>transform_mod_cv()</code>, transforms the data in a single group (with
+    <p>Transforms data according to the modified coefficient of variation (CV)
+rule. This is used to add additional variance to datasets with
+unexpectedly low variance, which is sometimes encountered during
+testing of new materials over short periods of time.</p>
+<p>Two versions of this transformation are implemented. The first version,
+<code><a href='www.cmstatr.net/reference/transform_mod_cv.html'>transform_mod_cv()</a></code>, transforms the data in a single group (with
 no other structure) according to the modified CV rules.</p>
 <p>The second
-version, <code>transform_mod_cv_ad()</code>, transforms data that is structured
+version, <code><a href='www.cmstatr.net/reference/transform_mod_cv.html'>transform_mod_cv_ad()</a></code>, transforms data that is structured
 according to both condition and batch, as is commonly done for
-the Anderson-Darling k-Sample and Anderson-Darling tests when pooling
+the Anderson--Darling k-Sample and Anderson-Darling tests when pooling
 across environments.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>transform_mod_cv_ad</span>(<span class='no'>x</span>, <span class='no'>condition</span>, <span class='no'>batch</span>)
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/transform_mod_cv.html'>transform_mod_cv_ad</a></span>(<span class='kw'>x</span>, <span class='kw'>condition</span>, <span class='kw'>batch</span>)
 
-<span class='fu'>transform_mod_cv</span>(<span class='no'>x</span>)</pre>
+<span class='fu'><a href='www.cmstatr.net/reference/transform_mod_cv.html'>transform_mod_cv</a></span>(<span class='kw'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,48 +197,82 @@ belongs</p></td>
     <p>A vector of transformed data</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>transform_mod_cv()</code> takes a vector
-containing the observations and a vector containing the groups that
-each observation belongs to and transforms the data. The modified CV
-is computed independently within each group and each observation is
-transformed according to:</p>
-<p>$$\frac{S_i^*}{S_i} (x_i - \bar{x_i}) + \bar{x_i}$$</p>
-<p>Where Si* is the modified standard deviation (mod CV times mean) for
-the group; Si is the standard deviation for the group, x_bar_i is
-the group mean and xi is the observation.</p>
-<p><code>transform_mod_cv_ad()</code> takes a vector containing the observations
+    <p>The modified CV transformation takes the general form:</p>
+<p>$$\frac{S_i^*}{S_i} (x_{ij} - \bar{x_i}) + \bar{x_i}$$</p>
+<p>Where \(S_i^*\) is the modified standard deviation
+(mod CV times mean) for
+the \(ith\) group; \(S_i\) is the standard deviation
+for the \(ith\) group, \(\bar{x_i}\) is
+the group mean and \(x_{ij}\) is the observation.</p>
+<p><code><a href='www.cmstatr.net/reference/transform_mod_cv.html'>transform_mod_cv()</a></code> takes a vector
+containing the observations and transforms the data.
+The equation above is used, and all observations
+are considered to be from the same group.</p>
+<p><code><a href='www.cmstatr.net/reference/transform_mod_cv.html'>transform_mod_cv_ad()</a></code> takes a vector containing the observations
 plus a vector containing the corresponding conditions and a vector
 containing the batches. This function first calculates the modified
 CV value from the data from each condition (independently). Then,
 within each condition, the transformation
-<code>transform_mod_cv(x, batches)</code>
-is applied to produce the transformed data \(x'\).
+above is applied to produce the transformed data \(x'\).
 This transformed data is further transformed using the following
 equation.</p>
-<p>$$x'' = C (x'_i - \bar{x_i}) + \bar{x_i}$$</p>
+<p>$$x_{ij}'' = C (x'_{ij} - \bar{x_i}) + \bar{x_i}$$</p>
 <p>Where:</p>
 <p>$$C = \sqrt{\frac{SSE^*}{SSE'}}$$</p>
 <p>$$SSE^* = (n-1) (CV^* \bar{x})^2 - \sum(n_i(\bar{x_i}-\bar{x})^2)$$</p>
-<p>$$SSE' = \sum(x'_i - \bar{x_i})^2$$</p>
+<p>$$SSE' = \sum(x'_{ij} - \bar{x_i})^2$$</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='calc_cv_star.html'>calc_cv_star</a></code></p></div>
+    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></code></p>
+<p><code><a href='www.cmstatr.net/reference/cv.html'>cv</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Transform data according to the modified CV transformation</span>
 <span class='co'># and report the original and modified CV for each condition</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='no'>carbon.fabric</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>test</span> <span class='kw'>==</span> <span class='st'>"FT"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>condition</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>trans_strength</span> <span class='kw'>=</span> <span class='fu'>transform_mod_cv</span>(<span class='no'>strength</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span>(<span class='kw'>cv</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span>(<span class='no'>strength</span>) / <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='no'>strength</span>),
-            <span class='kw'>mod_cv</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span>(<span class='no'>trans_strength</span>) / <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='no'>trans_strength</span>))</div><div class='output co'>#&gt; <span class='message'>`summarise()` ungrouping output (override with `.groups` argument)</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 3</span><span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='kw'>carbon.fabric</span> <span class='op'>%&gt;%</span>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span> <span class='op'>==</span> <span class='st'>"FT"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='kw'>condition</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(trans_strength = <span class='fu'><a href='www.cmstatr.net/reference/transform_mod_cv.html'>transform_mod_cv</a></span>(<span class='kw'>strength</span>)) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fl'>10</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 10 x 6</span><span>
+#&gt; </span><span style='color: #555555;'># Groups:   condition [1]</span><span>
+#&gt;    id         test  condition batch strength trans_strength
+#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #555555;'> 1</span><span> FT-RTD-1-1 FT    RTD           1     126.           126.
+#&gt; </span><span style='color: #555555;'> 2</span><span> FT-RTD-1-2 FT    RTD           1     139.           141.
+#&gt; </span><span style='color: #555555;'> 3</span><span> FT-RTD-1-3 FT    RTD           1     116.           115.
+#&gt; </span><span style='color: #555555;'> 4</span><span> FT-RTD-1-4 FT    RTD           1     132.           133.
+#&gt; </span><span style='color: #555555;'> 5</span><span> FT-RTD-1-5 FT    RTD           1     129.           129.
+#&gt; </span><span style='color: #555555;'> 6</span><span> FT-RTD-1-6 FT    RTD           1     130.           130.
+#&gt; </span><span style='color: #555555;'> 7</span><span> FT-RTD-2-1 FT    RTD           2     131.           131.
+#&gt; </span><span style='color: #555555;'> 8</span><span> FT-RTD-2-2 FT    RTD           2     124.           124.
+#&gt; </span><span style='color: #555555;'> 9</span><span> FT-RTD-2-3 FT    RTD           2     125.           125.
+#&gt; </span><span style='color: #555555;'>10</span><span> FT-RTD-2-4 FT    RTD           2     120.           119.</div><div class='input'>
+<span class='co'>## # A tibble: 10 x 6</span>
+<span class='co'>## # Groups:   condition [1]</span>
+<span class='co'>##    id         test  condition batch strength trans_strength</span>
+<span class='co'>##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;    &lt;dbl&gt;          &lt;dbl&gt;</span>
+<span class='co'>##  1 FT-RTD-1-1 FT    RTD           1     126.           126.</span>
+<span class='co'>##  2 FT-RTD-1-2 FT    RTD           1     139.           141.</span>
+<span class='co'>##  3 FT-RTD-1-3 FT    RTD           1     116.           115.</span>
+<span class='co'>##  4 FT-RTD-1-4 FT    RTD           1     132.           133.</span>
+<span class='co'>##  5 FT-RTD-1-5 FT    RTD           1     129.           129.</span>
+<span class='co'>##  6 FT-RTD-1-6 FT    RTD           1     130.           130.</span>
+<span class='co'>##  7 FT-RTD-2-1 FT    RTD           2     131.           131.</span>
+<span class='co'>##  8 FT-RTD-2-2 FT    RTD           2     124.           124.</span>
+<span class='co'>##  9 FT-RTD-2-3 FT    RTD           2     125.           125.</span>
+<span class='co'>## 10 FT-RTD-2-4 FT    RTD           2     120.           119.</span>
+
+<span class='co'># The CV of this transformed data can be computed to verify</span>
+<span class='co'># that the resulting CV follows the rules for modified CV</span>
+
+<span class='kw'>carbon.fabric</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span> <span class='op'>==</span> <span class='st'>"FT"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='kw'>condition</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(trans_strength = <span class='fu'><a href='www.cmstatr.net/reference/transform_mod_cv.html'>transform_mod_cv</a></span>(<span class='kw'>strength</span>)) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span>(cv = <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span>(<span class='kw'>strength</span>) <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='kw'>strength</span>),
+            mod_cv = <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span>(<span class='kw'>trans_strength</span>) <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='kw'>trans_strength</span>))</div><div class='output co'>#&gt; <span class='message'>`summarise()` ungrouping output (override with `.groups` argument)</span></div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 3 x 3</span><span>
 #&gt;   condition     cv mod_cv
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>1</span><span> CTD       0.042</span><span style='text-decoration: underline;'>3</span><span> 0.061</span><span style='text-decoration: underline;'>2</span><span>
@@ -241,7 +283,8 @@ equation.</p>
 <span class='co'>##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;</span>
 <span class='co'>## 1 CTD       0.0423 0.0612</span>
 <span class='co'>## 2 ETW       0.0369 0.0600</span>
-<span class='co'>## 3 RTD       0.0621 0.0711</span></div></span></pre>
+<span class='co'>## 3 RTD       0.0621 0.0711</span>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

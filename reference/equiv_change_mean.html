@@ -48,7 +48,8 @@
 
 <meta property="og:title" content="Equivalency based on change in mean value — equiv_change_mean" />
 <meta property="og:description" content="Checks for change in the mean value between a qualification data set and
-a sample. This is normally used to check for properties such as modulus." />
+a sample. This is normally used to check for properties such as modulus.
+This function is a wrapper for a two-sample t--test." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
 
@@ -82,7 +83,7 @@ a sample. This is normally used to check for properties such as modulus." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -146,21 +147,22 @@ a sample. This is normally used to check for properties such as modulus." />
 
     <div class="ref-description">
     <p>Checks for change in the mean value between a qualification data set and
-a sample. This is normally used to check for properties such as modulus.</p>
+a sample. This is normally used to check for properties such as modulus.
+This function is a wrapper for a two-sample t--test.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>equiv_change_mean</span>(
-  <span class='kw'>df_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>n_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>mean_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sd_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>alpha</span>,
-  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/equiv_change_mean.html'>equiv_change_mean</a></span>(
+  df_qual = <span class='kw'>NULL</span>,
+  data_qual = <span class='kw'>NULL</span>,
+  n_qual = <span class='kw'>NULL</span>,
+  mean_qual = <span class='kw'>NULL</span>,
+  sd_qual = <span class='kw'>NULL</span>,
+  data_sample = <span class='kw'>NULL</span>,
+  n_sample = <span class='kw'>NULL</span>,
+  mean_sample = <span class='kw'>NULL</span>,
+  sd_sample = <span class='kw'>NULL</span>,
+  <span class='kw'>alpha</span>,
+  modcv = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -275,22 +277,36 @@ should be used. Defaults to <code>FALSE</code></p></td>
 vector) or all of <code>n_qual</code>, <code>mean_qual</code> and <code>sd_qual</code> must
 be supplied. If these requirements are violated, warning(s) or error(s) will
 be issued.</p>
-<p>This function uses a two-sided t-test to determine if there is a difference
+<p>This function uses a two-sample t-test to determine if there is a difference
 in the mean value of the qualification data and the sample. A pooled
 standard deviation is used in the t-test. The procedure is per CMH-17-1G.</p>
-<p>If the option <code>modcv = TRUE</code> is set, standard deviation of the
-qualification data is replaced with CV* times <code>mean_qual</code> (which may
-be passed as an argument or internally calculated from <code>data_qual</code>.</p>
-<p>When <code>modcv = TRUE</code>, CV* is calculated as follows:
-\(CV* = 0.06\) if \(CV &lt; 0.04\), \(CV* = cv / 2 + 0.04\)
-if \(0.04 &lt;= cv &lt;= 0.08\) and \(CV* = CV\) otherwise.</p>
+<p>If <code>modcv</code> is TRUE, the standard deviation used to calculate the
+thresholds will be replaced with a standard deviation calculated
+using the Modified Coefficient of Variation (CV) approach.
+The Modified CV approach is a way of adding extra variance to the
+qualification data in the case that the qualification data has less
+variance than expected, which sometimes occurs when qualification testing
+is performed in a short period of time.
+Using the Modified CV approach, the standard deviation is calculated by
+multiplying <code>CV_star * mean_qual</code> where <code>mean_qual</code> is either the
+value supplied or the value calculated by <code><a href='https://rdrr.io/r/base/mean.html'>mean(data_qual)</a></code> and
+\(CV*\) is determined using <code><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></code>.</p>
 <p>Note that the modified CV option should only be used if that data passes the
-Anderson-Darling test.</p>
+Anderson--Darling test.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></code></p>
+<p><code><a href='https://rdrr.io/r/stats/t.test.html'>t.test</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>equiv_change_mean</span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='fl'>9</span>, <span class='kw'>mean_sample</span> <span class='kw'>=</span> <span class='fl'>9.02</span>,
-                  <span class='kw'>sd_sample</span> <span class='kw'>=</span> <span class='fl'>0.15785</span>, <span class='kw'>n_qual</span> <span class='kw'>=</span> <span class='fl'>28</span>, <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='fl'>9.24</span>,
-                  <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='fl'>0.162</span>, <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
+    <pre class="examples"><div class='input'><span class='fu'><a href='www.cmstatr.net/reference/equiv_change_mean.html'>equiv_change_mean</a></span>(alpha = <span class='fl'>0.05</span>, n_sample = <span class='fl'>9</span>, mean_sample = <span class='fl'>9.02</span>,
+                  sd_sample = <span class='fl'>0.15785</span>, n_qual = <span class='fl'>28</span>, mean_qual = <span class='fl'>9.24</span>,
+                  sd_qual = <span class='fl'>0.162</span>, modcv = <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162, 
 #&gt;     n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785, alpha = 0.05, 
@@ -298,12 +314,12 @@ Anderson-Darling test.</p>
 #&gt; 
 #&gt; For alpha = 0.05 
 #&gt; Modified CV used
-#&gt;                   Qualificaiton        Sample      
-#&gt;           Number        28               9         
-#&gt;             Mean       9.24             9.02       
-#&gt;               SD      0.162           0.15785      
-#&gt;           Result               PASS               
-#&gt;    Passing Range       8.856695 to 9.623305       </div><div class='input'>
+#&gt;                  Qualification       Sample     
+#&gt;           Number       28              9        
+#&gt;             Mean      9.24            9.02      
+#&gt;               SD     0.162          0.15785     
+#&gt;           Result              PASS              
+#&gt;    Passing Range      8.856695 to 9.623305      </div><div class='input'>
 <span class='co'>## Call:</span>
 <span class='co'>## equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162,</span>
 <span class='co'>##                   n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785,</span>
@@ -311,12 +327,13 @@ Anderson-Darling test.</p>
 <span class='co'>##</span>
 <span class='co'>## For alpha = 0.05</span>
 <span class='co'>## Modified CV used</span>
-<span class='co'>##                   Qualificaiton        Sample</span>
+<span class='co'>##                   Qualification        Sample</span>
 <span class='co'>##           Number        28               9</span>
 <span class='co'>##             Mean       9.24             9.02</span>
 <span class='co'>##               SD      0.162           0.15785</span>
 <span class='co'>##           Result               PASS</span>
-<span class='co'>##    Passing Range       8.856695 to 9.623305</span></div></pre>
+<span class='co'>##    Passing Range       8.856695 to 9.623305</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

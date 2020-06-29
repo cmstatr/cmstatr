@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Anderson-Darling test for goodness of fit — anderson_darling • cmstatr</title>
+<title>Anderson--Darling test for goodness of fit — anderson_darling • cmstatr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,10 @@
 
 
 
-<meta property="og:title" content="Anderson-Darling test for goodness of fit — anderson_darling" />
-<meta property="og:description" content="Calculates the Anderson-Darling test statistic for a sample given
-a particular distribution, and computes the significance level." />
+<meta property="og:title" content="Anderson--Darling test for goodness of fit — anderson_darling" />
+<meta property="og:description" content="Calculates the Anderson--Darling test statistic for a sample given
+a particular distribution, and determines whether to reject the
+hypothesis that a sample is drawn from that distribution." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
 
@@ -82,7 +83,7 @@ a particular distribution, and computes the significance level." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -139,21 +140,22 @@ a particular distribution, and computes the significance level." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Anderson-Darling test for goodness of fit</h1>
+    <h1>Anderson--Darling test for goodness of fit</h1>
     <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/adtest.R'><code>R/adtest.R</code></a></small>
     <div class="hidden name"><code>anderson_darling.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculates the Anderson-Darling test statistic for a sample given
-a particular distribution, and computes the significance level.</p>
+    <p>Calculates the Anderson--Darling test statistic for a sample given
+a particular distribution, and determines whether to reject the
+hypothesis that a sample is drawn from that distribution.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>anderson_darling_normal</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_normal</a></span>(data = <span class='kw'>NULL</span>, <span class='kw'>x</span>, alpha = <span class='fl'>0.05</span>)
 
-<span class='fu'>anderson_darling_lognormal</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)
+<span class='fu'><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_lognormal</a></span>(data = <span class='kw'>NULL</span>, <span class='kw'>x</span>, alpha = <span class='fl'>0.05</span>)
 
-<span class='fu'>anderson_darling_weibull</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)</pre>
+<span class='fu'><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_weibull</a></span>(data = <span class='kw'>NULL</span>, <span class='kw'>x</span>, alpha = <span class='fl'>0.05</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,8 +170,8 @@ a particular distribution, and computes the significance level.</p>
     </tr>
     <tr>
       <th>alpha</th>
-      <td><p>the required significance to conclude that the data follows
-the specified distribution. Defaults to 0.05.</p></td>
+      <td><p>the required significance level of the test.
+Defaults to 0.05.</p></td>
     </tr>
     </table>
 
@@ -181,11 +183,11 @@ fields.</p>
 <dt><code>dist</code></dt><dd><p>the distribution used</p></dd>
 <dt><code>data</code></dt><dd><p>a copy of the data analyzed</p></dd>
 <dt><code>n</code></dt><dd><p>the number of observations in the sample</p></dd>
-<dt><code>A</code></dt><dd><p>the Anderson-Darling test statistic</p></dd>
-<dt><code>osl</code></dt><dd><p>the significance level, assuming the
+<dt><code>A</code></dt><dd><p>the Anderson--Darling test statistic</p></dd>
+<dt><code>osl</code></dt><dd><p>the observed significance level (p-value),
+  assuming the
   parameters of the distribution are estimated from the data</p></dd>
-<dt><code>alpha</code></dt><dd><p>the required significance level for the test to
- conclude that the data is drawn from the specified distribution.
+<dt><code>alpha</code></dt><dd><p>the required significance level for the test.
  This value is given by the user.</p></dd>
 <dt><code>reject_distribution</code></dt><dd><p>a logical value indicating whether
  the hypothesis that the data is drawn from the specified distribution
@@ -193,22 +195,38 @@ fields.</p>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The Anderson-Darling test statistic is calculated for the distribution
+    <p>The Anderson--Darling test statistic is calculated for the distribution
 given by the user.</p>
-<p>The significance level is calculated assuming that the parameters
+<p>The observed significance level (OSL), or p-value, is calculated assuming
+that the parameters
 of the distribution are unknown; these parameters are estimate from the
 data.</p>
-<p>The function <code>anderson_darling_normal</code> computes the Anderson-Darling
+<p>The function <code>anderson_darling_normal</code> computes the Anderson--Darling
 test statistic given a normal distribution with mean and standard deviation
 equal to the sample mean and standard deviation.</p>
 <p>The function <code>anderson_darling_lognormal</code> is the same as
 <code>anderson_darling_normal</code> except that the data is log transformed
 first.</p>
-<p>The function <code>anderson_darling_weibull</code> computes the Anderson-Darling
+<p>The function <code>anderson_darling_weibull</code> computes the Anderson--Darling
 test statistic given a Weibull distribution with shape and scale parameters
-estimate from the data using a maximum likelihood estimate.</p>
-<p>This function uses the formula for observed significance
-level published in CMH-17-1G. These formulae depend on the particular
+estimated from the data using a maximum likelihood estimate.</p>
+<p>The test statistic, <code>A</code>, is modified to account for
+the fact that the parameters of the population are not known,
+but are instead estimated from the sample. This modification is
+a function of the sample size only, and is different for each
+distribution (normal/lognormal or Weibull). Several such modifications
+have been proposed. This function uses the modification published in
+Stephens (1974), Lawless (1982) and CMH-17-1G. Some other implementations
+of the Anderson-Darling test, such as the implementation in the
+<code>nortest</code> package, use other modifications, such as the one
+published in D'Agostino and Stephens (1986). As such, the p-value
+reported by this function may differ from the p-value reported
+by implementations of the Anderson--Darling test that use
+different modifiers. Only the unmodified
+test statistic is reported in the result of this function, but
+the modified test statistic is used to compute the OSL (p-value).</p>
+<p>This function uses the formulae for observed significance
+level (OSL) published in CMH-17-1G. These formulae depend on the particular
 distribution used.</p>
 <p>The results of this function have been validated against
 published values in Lawless (1982).</p>
@@ -219,7 +237,34 @@ New York: Wiley, 1982.</p>
 <p>"Composite Materials Handbook, Volume 1. Polymer Matrix
 Composites Guideline for Characterization of Structural
 Materials," SAE International, CMH-17-1G, Mar. 2012.</p>
+<p>M. A. Stephens, “EDF Statistics for Goodness of Fit and Some
+Comparisons,”
+Journal of the American Statistical Association, vol. 69, no. 347.
+pp. 730–737, 1974.</p>
+<p>R. D’Agostino and M. Stephens, Goodness-of-Fit Techniques.
+New York: Marcel Dekker, 1986.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+
+<span class='kw'>carbon.fabric</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span> <span class='op'>==</span> <span class='st'>"FC"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>condition</span> <span class='op'>==</span> <span class='st'>"RTD"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_normal</a></span>(<span class='kw'>strength</span>)</div><div class='output co'>#&gt; 
+#&gt; Call:
+#&gt; anderson_darling_normal(data = ., x = strength)
+#&gt; 
+#&gt; Distribution:  Normal ( n = 18 ) 
+#&gt; Test statistic:  A = 0.9224776 
+#&gt; OSL (p-value):  0.01212193  (assuming unknown parameters)
+#&gt; Conclusion: Sample is not drawn from a Normal distribution ( alpha = 0.05 )</div><div class='input'><span class='co'>## Call:</span>
+<span class='co'>## anderson_darling_normal(data = ., x = strength)</span>
+<span class='co'>##</span>
+<span class='co'>## Distribution:  Normal ( n = 18 )</span>
+<span class='co'>## Test statistic:  A = 0.9224776</span>
+<span class='co'>## OSL (p-value):  0.01212193  (assuming unknown parameters)</span>
+<span class='co'>## Conclusion: Sample is not drawn from a Normal distribution (alpha = 0.05)</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

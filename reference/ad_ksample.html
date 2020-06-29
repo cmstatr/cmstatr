@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Anderson-Darling K-Sample Test — ad_ksample • cmstatr</title>
+<title>Anderson--Darling K-Sample Test — ad_ksample • cmstatr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Anderson-Darling K-Sample Test — ad_ksample" />
-<meta property="og:description" content="This function performs an Anderson-Darling k-sample test. This is used to
+<meta property="og:title" content="Anderson--Darling K-Sample Test — ad_ksample" />
+<meta property="og:description" content="This function performs an Anderson--Darling k-sample test. This is used to
 determine if several samples (groups) share a common (unspecified)
 distribution." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
@@ -83,7 +83,7 @@ distribution." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -140,18 +140,18 @@ distribution." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Anderson-Darling K-Sample Test</h1>
+    <h1>Anderson--Darling K-Sample Test</h1>
     <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/adk.R'><code>R/adk.R</code></a></small>
     <div class="hidden name"><code>ad_ksample.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function performs an Anderson-Darling k-sample test. This is used to
+    <p>This function performs an Anderson--Darling k-sample test. This is used to
 determine if several samples (groups) share a common (unspecified)
 distribution.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ad_ksample</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='no'>groups</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.025</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></span>(data = <span class='kw'>NULL</span>, <span class='kw'>x</span>, <span class='kw'>groups</span>, alpha = <span class='fl'>0.025</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,7 +163,7 @@ distribution.</p>
     <tr>
       <th>x</th>
       <td><p>the variable in the data.frame on which to perform the
-Anderson-Darling k-Sample test (usually strength)</p></td>
+Anderson--Darling k-Sample test (usually strength)</p></td>
     </tr>
     <tr>
       <th>groups</th>
@@ -185,7 +185,7 @@ Anderson-Darling k-Sample test (usually strength)</p></td>
 <dt><code>n</code></dt><dd><p>the total number of observations</p></dd>
 <dt><code>k</code></dt><dd><p>the number of groups</p></dd>
 <dt><code>sigma</code></dt><dd><p>the computed standard deviation of the test statistic</p></dd>
-<dt><code>ad</code></dt><dd><p>the value of the Anderson-Darling k-Sample test
+<dt><code>ad</code></dt><dd><p>the value of the Anderson--Darling k-Sample test
   statistic</p></dd>
 <dt><code>p</code></dt><dd><p>the computed p-value</p></dd>
 <dt><code>reject_same_dist</code></dt><dd><p>a boolean value indicating whether the null
@@ -198,7 +198,7 @@ Anderson-Darling k-Sample test (usually strength)</p></td>
     <p>This function is a wrapper for the <a href='https://rdrr.io/pkg/kSamples/man/ad.test.html'>ad.test</a> function from
 the package <code>kSamples</code>. The method "exact" is specified in the call to
 <code>ad.test</code>. Refer to that package's documentation for details.</p>
-<p>There is a minor difference in the formulation of the Anderson-Darling
+<p>There is a minor difference in the formulation of the Anderson--Darling
 k-Sample test in CMH-17-1G, compared with that in the Scholz and
 Stephens (1987). This difference affects the test statistic and the
 critical value in the same proportion, and therefore the conclusion of
@@ -210,16 +210,41 @@ a factor of \((k - 1)\), with a corresponding change in the critical
 value.</p>
 <p>For more information about the difference between this function and
 the formulation in CMH-17-1G, see the vignette on the subject, which
-can be accessed by running <code><a href='../articles/adktest.html'>vignette("adktest")</a></code></p>
+can be accessed by running <code>vignette("adktest")</code></p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>F. W. Scholz and M. Stephens, “K-Sample Anderson-Darling Tests,” Journal
+    <p>F. W. Scholz and M. Stephens, “K-Sample Anderson--Darling Tests,” Journal
 of the American Statistical Association, vol. 82, no. 399. pp. 918–924,
 Sep-1987.</p>
 <p>“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)</div><div class='output co'>#&gt; <span class='message'></span>
+#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
+#&gt; <span class='message'></span>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'>
+<span class='kw'>carbon.fabric</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span> <span class='op'>==</span> <span class='st'>"WT"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>condition</span> <span class='op'>==</span> <span class='st'>"RTD"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></span>(<span class='kw'>strength</span>, <span class='kw'>batch</span>)</div><div class='output co'>#&gt; 
+#&gt; Call:
+#&gt; ad_ksample(data = ., x = strength, groups = batch)
+#&gt; 
+#&gt; N = 18          k = 3           
+#&gt; ADK = 0.912     p-value = 0.95989
+#&gt; Conclusion: Samples come from the same distribution ( alpha = 0.025 )
+#&gt; </div><div class='input'><span class='co'>##</span>
+<span class='co'>## Call:</span>
+<span class='co'>## ad_ksample(data = ., x = strength, groups = batch)</span>
+<span class='co'>##</span>
+<span class='co'>## N = 18          k = 3</span>
+<span class='co'>## ADK = 0.912     p-value = 0.95989</span>
+<span class='co'>## Conclusion: Samples come from the same distribution ( alpha = 0.025 )</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

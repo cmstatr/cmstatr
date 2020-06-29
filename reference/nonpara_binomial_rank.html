@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Rank for distribution-free tolerance limits — nonpara_binomial_rank • cmstatr</title>
+<title>Rank for distribution-free tolerance bound — nonpara_binomial_rank • cmstatr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,9 @@
 
 
 
-<meta property="og:title" content="Rank for distribution-free tolerance limits — nonpara_binomial_rank" />
+<meta property="og:title" content="Rank for distribution-free tolerance bound — nonpara_binomial_rank" />
 <meta property="og:description" content="Calculates the rank order for finding distribution-free tolerance
-limits for large samples. This function should only be used for
+bounds for large samples. This function should only be used for
 computing B-Basis for samples larger than 28 or A-Basis for samples
 larger than 298. This function is used by
 basis_nonpara_large_sample." />
@@ -85,7 +85,7 @@ basis_nonpara_large_sample." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -142,20 +142,20 @@ basis_nonpara_large_sample." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Rank for distribution-free tolerance limits</h1>
+    <h1>Rank for distribution-free tolerance bound</h1>
     <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/basis.R'><code>R/basis.R</code></a></small>
     <div class="hidden name"><code>nonpara_binomial_rank.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Calculates the rank order for finding distribution-free tolerance
-limits for large samples. This function should only be used for
+bounds for large samples. This function should only be used for
 computing B-Basis for samples larger than 28 or A-Basis for samples
 larger than 298. This function is used by
-<code><a href='basis.html'>basis_nonpara_large_sample</a></code>.</p>
+<code><a href='www.cmstatr.net/reference/basis.html'>basis_nonpara_large_sample</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nonpara_binomial_rank</span>(<span class='no'>n</span>, <span class='no'>p</span>, <span class='no'>conf</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/nonpara_binomial_rank.html'>nonpara_binomial_rank</a></span>(<span class='kw'>n</span>, <span class='kw'>p</span>, <span class='kw'>conf</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,17 +166,17 @@ larger than 298. This function is used by
     </tr>
     <tr>
       <th>p</th>
-      <td><p>the desired quantile for the tolerance limit</p></td>
+      <td><p>the desired content for the tolerance bound</p></td>
     </tr>
     <tr>
       <th>conf</th>
-      <td><p>the confidence limit for the desired tolerance limit</p></td>
+      <td><p>the confidence level for the desired tolerance bound</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>The rank corresponding with the desired tolerance limit</p>
+    <p>The rank corresponding with the desired tolerance bound</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function uses the sum of binomial terms to determine the rank
@@ -201,18 +201,29 @@ discrepancies have been identified for B-Basis. Since these sample sizes are
 uncommon for composite materials
 testing, and the difference between subsequent order statistics will be
 very small for samples this large, this difference will have no practical
-effect on computed tolerance limits.</p>
+effect on computed tolerance bounds.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>W. Guenther, “Determination of Sample Size for Distribution-Free
-Tolerance Limits,” Jan. 1969</p>
+Tolerance Limits,” Jan. 1969.
+Available online: <a href='https://www.duo.uio.no/handle/10852/48686'>https://www.duo.uio.no/handle/10852/48686</a></p>
 <p>“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='basis.html'>basis_nonpara_large_sample</a></code></p></div>
+    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/basis.html'>basis_nonpara_large_sample</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='www.cmstatr.net/reference/nonpara_binomial_rank.html'>nonpara_binomial_rank</a></span>(n = <span class='fl'>1693</span>, p = <span class='fl'>0.99</span>, conf = <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 11</div><div class='input'><span class='co'>## [1] 11</span>
+
+<span class='co'># The above example indicates that for a sample of 1693 observations,</span>
+<span class='co'># the A-Basis is best approximated as the 11th ordered observation.</span>
+<span class='co'># In the example below, the same ordered observation would also be used</span>
+<span class='co'># for a sample of size 1702.</span>
+
+<span class='fu'><a href='www.cmstatr.net/reference/nonpara_binomial_rank.html'>nonpara_binomial_rank</a></span>(n = <span class='fl'>1702</span>, p = <span class='fl'>0.99</span>, conf = <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 11</div><div class='input'><span class='co'>## [1] 11</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

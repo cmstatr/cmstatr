@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>k-factors for equivalency testing — k_equiv • cmstatr</title>
+<title>k-factors for determining acceptance based on sample mean and an extremum — k_equiv • cmstatr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="k-factors for equivalency testing — k_equiv" />
-<meta property="og:description" content="k-factors for equivalency testing" />
+<meta property="og:title" content="k-factors for determining acceptance based on sample mean and an extremum — k_equiv" />
+<meta property="og:description" content="k-factors for determining acceptance based on sample mean and an extremum" />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
 
@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -138,16 +138,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>k-factors for equivalency testing</h1>
+    <h1>k-factors for determining acceptance based on sample mean and an extremum</h1>
     <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/equiv.R'><code>R/equiv.R</code></a></small>
     <div class="hidden name"><code>k_equiv.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>k-factors for equivalency testing</p>
+    <p>k-factors for determining acceptance based on sample mean and an extremum</p>
     </div>
 
-    <pre class="usage"><span class='fu'>k_equiv</span>(<span class='no'>alpha</span>, <span class='no'>n</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/k_equiv.html'>k_equiv</a></span>(<span class='kw'>alpha</span>, <span class='kw'>n</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,7 +158,7 @@
     </tr>
     <tr>
       <th>n</th>
-      <td><p>the number of observations in the sample to test for equivalency</p></td>
+      <td><p>the number of observations in the sample to test</p></td>
     </tr>
     </table>
 
@@ -168,9 +168,23 @@
   extremum. k2 is for testing the sample mean</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The k-factors returned by this function are used for equivalency testing,
-  considering both the sample mean and sample extremum (normally minimum).
-  The results of this function match those published by Vangel within
+    <p>The k-factors returned by this function are used for determining
+  whether to accept a new dataset.</p>
+<p>This function is used as part of the procedure for
+  determining acceptance limits for a sample mean and sample minimum.
+  These acceptance limits are often used to set acceptance limits for
+  material strength for each lot of material, or each new manufacturing
+  site. When a sample meets the criteria that its mean and its minimum are
+  both greater than these limits, then one may accept the lot of material
+  or the new manufacturing site.</p>
+<p>This procedure is used to ensure that the strength of material processed
+  at a second site, or made with a new batch of material are not degraded
+  relative to the data originally used to determine basis values for the
+  material. For more information about the use of this procedure, see
+  CMH-17-1G or PS-ACE 100-2002-006.</p>
+<p>According to Vangel (2002), the use of mean and extremum for this purpose
+  is more powerful than the use of mean and standard deviation.</p>
+<p>The results of this function match those published by Vangel within
   0.05% for \(n &gt; 2\) and \(\alpha \le 0.25\). Those results published
   by Vangel are identical to those published in CMH-17-1G.</p>
 <p>This function uses numerical integration and numerical optimization to
@@ -187,14 +201,27 @@
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
-  and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249.</p>
+and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.</p>
+<p>“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.</p>
+<p>Federal Aviation Administration, “Material Qualification and Equivalency
+for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
+Sep. 2003.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/equiv_mean_extremum.html'>equiv_mean_extremum</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>qual_mean</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>
-<span class='no'>qual_sd</span> <span class='kw'>&lt;-</span> <span class='fl'>3.5</span>
-<span class='no'>k</span> <span class='kw'>&lt;-</span> <span class='fu'>k_equiv</span>(<span class='fl'>0.01</span>, <span class='fl'>5</span>)
-<span class='no'>acceptance_limit_min</span> <span class='kw'>&lt;-</span> <span class='no'>qual_mean</span> - <span class='no'>qual_sd</span> * <span class='no'>k</span>[<span class='fl'>1</span>]
-<span class='no'>acceptance_limit_mean</span> <span class='kw'>&lt;-</span> <span class='no'>qual_mean</span> - <span class='no'>qual_sd</span> * <span class='no'>k</span>[<span class='fl'>2</span>]</div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>qual_mean</span> <span class='op'>&lt;-</span> <span class='fl'>100</span>
+<span class='kw'>qual_sd</span> <span class='op'>&lt;-</span> <span class='fl'>3.5</span>
+<span class='kw'>k</span> <span class='op'>&lt;-</span> <span class='fu'><a href='www.cmstatr.net/reference/k_equiv.html'>k_equiv</a></span>(<span class='fl'>0.01</span>, <span class='fl'>5</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='st'>"Minimum Individual Acceptance Limit:"</span>)</div><div class='output co'>#&gt; [1] "Minimum Individual Acceptance Limit:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>qual_mean</span> <span class='op'>-</span> <span class='kw'>qual_sd</span> <span class='op'>*</span> <span class='kw'>k</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt; [1] 89.24981</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='st'>"Minimum Average Acceptance Limit:"</span>)</div><div class='output co'>#&gt; [1] "Minimum Average Acceptance Limit:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>qual_mean</span> <span class='op'>-</span> <span class='kw'>qual_sd</span> <span class='op'>*</span> <span class='kw'>k</span>[<span class='fl'>2</span>])</div><div class='output co'>#&gt; [1] 96.00123</div><div class='input'>
+<span class='co'>## [1] "Minimum Individual Acceptance Limit:"</span>
+<span class='co'>## [1] 89.24981</span>
+<span class='co'>## [1] "Minimum Average Acceptance Limit:"</span>
+<span class='co'>## [1] 96.00123</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

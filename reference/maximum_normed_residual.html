@@ -47,7 +47,11 @@
 
 
 <meta property="og:title" content="Detect outliers using the maximum normed residual method — maximum_normed_residual" />
-<meta property="og:description" content="Detect outliers using the maximum normed residual method" />
+<meta property="og:description" content="This function detects outliers using the maximum normed residual
+method described in CMH-17-1G. This method identifies a value
+as an outlier if the absolute difference between the value and
+the sample mean divided by the sample standard deviation
+exceeds a critical value." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
 
@@ -81,7 +85,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -144,10 +148,14 @@
     </div>
 
     <div class="ref-description">
-    <p>Detect outliers using the maximum normed residual method</p>
+    <p>This function detects outliers using the maximum normed residual
+method described in CMH-17-1G. This method identifies a value
+as an outlier if the absolute difference between the value and
+the sample mean divided by the sample standard deviation
+exceeds a critical value.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>maximum_normed_residual</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></span>(data = <span class='kw'>NULL</span>, <span class='kw'>x</span>, alpha = <span class='fl'>0.05</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,6 +181,7 @@ or a vector if <code>data=NULL</code></p></td>
 This object has the following fields:</p>
 <dt><code>call</code></dt><dd><p>the expression used to call this function</p></dd>
  <dt><code>data</code></dt><dd><p>the original data used to compute the MNR</p></dd>
+ <dt><code>alpha</code></dt><dd><p>the value of alpha given by the user</p></dd>
  <dt><code>mnr</code></dt><dd><p>the computed MNR test statistic</p></dd>
  <dt><code>crit</code></dt><dd><p>the critical value given the sample size and the
                     significance level</p></dd>
@@ -189,7 +198,60 @@ value of <code>x</code> is expected to be a variable within <code>data</code>. I
 <code>data</code> is not specified, <code>x</code> must be a vector.</p>
 <p>The maximum normed residual test is a test for outliers. The test statistic
 is given in CMH-17-1G. Outliers are identified in the returned object.</p>
+<p>The maximum normed residual test statistic is defined as:</p>
+<p>$$MNR = max \frac{\left| x_i - \bar{x} \right|}{s} $$</p>
+<p>When the value of the MNR test statistic exceeds the critical value
+defined in Section 8.3.3.1 of CMH-17-1G, the corresponding value
+is identified as an outlier. It is then removed from the sample, and
+the test statistic is computed again and compared with the critical
+value corresponding with the new sample. This process is repeated until
+no values are identified as outliers.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
+    <p>“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+
+<span class='kw'>carbon.fabric.2</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span><span class='op'>==</span><span class='st'>"FC"</span> <span class='op'>&amp;</span> <span class='kw'>condition</span><span class='op'>==</span><span class='st'>"ETW2"</span> <span class='op'>&amp;</span> <span class='kw'>batch</span><span class='op'>==</span><span class='st'>"A"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></span>(<span class='kw'>strength</span>)</div><div class='output co'>#&gt; 
+#&gt; Call:
+#&gt; maximum_normed_residual(data = ., x = strength)
+#&gt; 
+#&gt; MNR = 1.958797  ( critical value = 1.887145 )
+#&gt; 
+#&gt; Outliers ( alpha = 0.05 ):
+#&gt;    Index  Value           
+#&gt;        6  44.26           </div><div class='input'>
+<span class='co'>## Call:</span>
+<span class='co'>## maximum_normed_residual(data = ., x = strength)</span>
+<span class='co'>##</span>
+<span class='co'>## MNR =  1.958797  ( critical value = 1.887145 )</span>
+<span class='co'>##</span>
+<span class='co'>## Outliers ( alpha = 0.05 ):</span>
+<span class='co'>##   Index  Value</span>
+<span class='co'>##       6  44.26</span>
+
+<span class='kw'>carbon.fabric.2</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span><span class='op'>==</span><span class='st'>"FC"</span> <span class='op'>&amp;</span> <span class='kw'>condition</span><span class='op'>==</span><span class='st'>"ETW2"</span> <span class='op'>&amp;</span> <span class='kw'>batch</span><span class='op'>==</span><span class='st'>"B"</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></span>(<span class='kw'>strength</span>)</div><div class='output co'>#&gt; 
+#&gt; Call:
+#&gt; maximum_normed_residual(data = ., x = strength)
+#&gt; 
+#&gt; MNR = 1.469517  ( critical value = 1.887145 )
+#&gt; 
+#&gt; No outliers detected ( alpha = 0.05 )
+#&gt; </div><div class='input'>
+<span class='co'>## Call:</span>
+<span class='co'>## maximum_normed_residual(data = ., x = strength)</span>
+<span class='co'>##</span>
+<span class='co'>## MNR =  1.469517  ( critical value = 1.887145 )</span>
+<span class='co'>##</span>
+<span class='co'>## No outliers detected ( alpha = 0.05 )</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

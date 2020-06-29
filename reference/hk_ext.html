@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate values related to the Extended Hanson-Koopmans method — hk_ext • cmstatr</title>
+<title>Calculate values related to Extended Hanson--Koopmans tolerance bounds — hk_ext • cmstatr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Calculate values related to the Extended Hanson-Koopmans method — hk_ext" />
-<meta property="og:description" content="Calculates values related to the Extended Hanson-Koopmans method
+<meta property="og:title" content="Calculate values related to Extended Hanson--Koopmans tolerance bounds — hk_ext" />
+<meta property="og:description" content="Calculates values related to Extended Hanson--Koopmans tolerance bounds
 as described by Vangel (1994)." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
@@ -82,7 +82,7 @@ as described by Vangel (1994)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -139,19 +139,19 @@ as described by Vangel (1994)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate values related to the Extended Hanson-Koopmans method</h1>
+    <h1>Calculate values related to Extended Hanson--Koopmans tolerance bounds</h1>
     <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/basis.R'><code>R/basis.R</code></a></small>
     <div class="hidden name"><code>hk_ext.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculates values related to the Extended Hanson-Koopmans method
+    <p>Calculates values related to Extended Hanson--Koopmans tolerance bounds
 as described by Vangel (1994).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hk_ext_z</span>(<span class='no'>n</span>, <span class='no'>i</span>, <span class='no'>j</span>, <span class='no'>p</span>, <span class='no'>conf</span>)
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/hk_ext.html'>hk_ext_z</a></span>(<span class='kw'>n</span>, <span class='kw'>i</span>, <span class='kw'>j</span>, <span class='kw'>p</span>, <span class='kw'>conf</span>)
 
-<span class='fu'>hk_ext_z_j_opt</span>(<span class='no'>n</span>, <span class='no'>p</span>, <span class='no'>conf</span>)</pre>
+<span class='fu'><a href='www.cmstatr.net/reference/hk_ext.html'>hk_ext_z_j_opt</a></span>(<span class='kw'>n</span>, <span class='kw'>p</span>, <span class='kw'>conf</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,11 +170,11 @@ as described by Vangel (1994).</p>
     </tr>
     <tr>
       <th>p</th>
-      <td><p>the population quantile of interest (normally 0.90 or 0.99)</p></td>
+      <td><p>the content of the tolerance bound (normally 0.90 or 0.99)</p></td>
     </tr>
     <tr>
       <th>conf</th>
-      <td><p>the confidence bound (normally 0.95)</p></td>
+      <td><p>the confidence level (normally 0.95)</p></td>
     </tr>
     </table>
 
@@ -188,15 +188,19 @@ Vangel (1994), and the latter is the corresponding order statistic.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Hanson (1964) presents a nonparametric method for determining
-tolerance limits based on consecutive order statistics.
+tolerance bounds based on consecutive order statistics.
 Vangel (1994) extends this method using non-consecutive order statistics.</p>
-<p>The extended Hanson-Koopmans method calculates a tolerance limit
+<p>The extended Hanson--Koopmans method calculates a tolerance bound
 (basis value) based on two order statistics and a weighting value
 <code>z</code>. The value of <code>z</code> is based on the sample size, which
-order statistics are selected, the desired quantile and the desired
-confidence interval.</p>
+order statistics are selected, the desired content of the tolerance
+bond and the desired confidence level.</p>
 <p>The function <code>hk_ext_z</code> calculates the weighting variable <code>z</code>
-based on selected order statistics <code>i</code> and <code>j</code>.</p>
+based on selected order statistics <code>i</code> and <code>j</code>. Based on this
+value <code>z</code>, the tolerance bound can be calculated as:</p>
+<p>$$S = z X_{(i)} + (1 - z) X_{(j)}$$</p>
+<p>Where \(X_{(i)}\) and \(X_{(j)}\) are the <code>i-th</code>
+and <code>j-th</code> ordered observation.</p>
 <p>The function <code>hk_ext_z_j_opt</code> determines the value of <code>j</code> and
 the corresponding value of <code>z</code>, assuming <code>i=1</code>. The value
 of <code>j</code> is selected such that the computed tolerance limit is
@@ -212,7 +216,36 @@ vol. 23, no. 4. pp. 1137–1154, 1994.</p>
 “Tolerance Limits for the Class of Distributions with Increasing
 Hazard Rates,” The Annals of Mathematical Statistics,
 vol. 35, no. 4. pp. 1561–1570, 1964.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/basis.html'>basis_hk_ext</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># The factors from Table 1 of Vangel (1994) can be recreated</span>
+<span class='co'># using the hk_ext_z function. For the sample size n=21,</span>
+<span class='co'># the median is the 11th ordered observation. The factor</span>
+<span class='co'># required for calculating the tolerance bound with a content</span>
+<span class='co'># of 0.9 and a confidence level of 0.95 based on the median</span>
+<span class='co'># and first ordered observation can be calculated as follows.</span>
+<span class='fu'><a href='www.cmstatr.net/reference/hk_ext.html'>hk_ext_z</a></span>(n = <span class='fl'>21</span>, i = <span class='fl'>1</span>, j = <span class='fl'>11</span>, p = <span class='fl'>0.9</span>, conf = <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 1.204806</div><div class='input'>
+<span class='co'>## [1] 1.204806</span>
+
+<span class='co'># The hk_ext_z_j_opt function can be used to refine this value</span>
+<span class='co'># of z by finding an optimum value of j, rather than simply</span>
+<span class='co'># using the median. Here, we find that the optimal observation</span>
+<span class='co'># to use is the 10th, not the 11th (which is the median).</span>
+<span class='fu'><a href='www.cmstatr.net/reference/hk_ext.html'>hk_ext_z_j_opt</a></span>(n = <span class='fl'>21</span>, p = <span class='fl'>0.9</span>, conf = <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; $z
+#&gt; [1] 1.217717
+#&gt; 
+#&gt; $j
+#&gt; [1] 10
+#&gt; </div><div class='input'>
+<span class='co'>## $z</span>
+<span class='co'>## [1] 1.217717</span>
+<span class='co'>##</span>
+<span class='co'>## $j</span>
+<span class='co'>## [1] 10</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

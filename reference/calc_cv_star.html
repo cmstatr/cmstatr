@@ -47,7 +47,8 @@
 
 
 <meta property="og:title" content="Calculate the modified CV from the CV — calc_cv_star" />
-<meta property="og:description" content="This function calculates the Modified CV based on a (unmodified) CV.
+<meta property="og:description" content="This function calculates the modified coefficient of variation (CV)
+based on a (unmodified) CV.
 The modified CV is calculated based on the rules in CMH-17-1G. Those
 rules are:
 
@@ -89,7 +90,7 @@ For CV &amp;gt; 8%, CV* = CV
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -152,7 +153,8 @@ For CV &amp;gt; 8%, CV* = CV
     </div>
 
     <div class="ref-description">
-    <p>This function calculates the Modified CV based on a (unmodified) CV.
+    <p>This function calculates the modified coefficient of variation (CV)
+based on a (unmodified) CV.
 The modified CV is calculated based on the rules in CMH-17-1G. Those
 rules are:</p>
 <ul>
@@ -163,7 +165,7 @@ rules are:</p>
 
     </div>
 
-    <pre class="usage"><span class='fu'>calc_cv_star</span>(<span class='no'>cv</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></span>(<span class='kw'>cv</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,7 +184,17 @@ rules are:</p>
     <p>"Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,"
 SAE International, CMH-17-1G, Mar. 2012.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
+    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/cv.html'>cv</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># The modified CV for values of CV smaller than 4% is 6%</span>
+<span class='fu'><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></span>(<span class='fl'>0.01</span>)</div><div class='output co'>#&gt; [1] 0.06</div><div class='input'><span class='co'>## [1] 0.06</span>
+
+<span class='co'># The modified CV for values of CV larger than 8% is unchanged</span>
+<span class='fu'><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></span>(<span class='fl'>0.09</span>)</div><div class='output co'>#&gt; [1] 0.09</div><div class='input'><span class='co'>## [1] 0.09</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

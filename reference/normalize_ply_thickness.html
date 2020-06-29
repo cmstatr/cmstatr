@@ -47,8 +47,8 @@
 
 
 <meta property="og:title" content="Normalizes strength values to ply thickness — normalize_ply_thickness" />
-<meta property="og:description" content="This function takes a strength value (or a vector of strength values) and a
-value (or vector of the same length as strength) of the measured thicknesses
+<meta property="og:description" content="This function takes a vector of strength values and a
+vector of measured thicknesses, and a nominal thickness
 and returns the normalized strength." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
@@ -83,7 +83,7 @@ and returns the normalized strength." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -146,12 +146,12 @@ and returns the normalized strength." />
     </div>
 
     <div class="ref-description">
-    <p>This function takes a strength value (or a vector of strength values) and a
-value (or vector of the same length as strength) of the measured thicknesses
+    <p>This function takes a vector of strength values and a
+vector of measured thicknesses, and a nominal thickness
 and returns the normalized strength.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>normalize_ply_thickness</span>(<span class='no'>strength</span>, <span class='no'>measured_thk</span>, <span class='no'>nom_thk</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/normalize_ply_thickness.html'>normalize_ply_thickness</a></span>(<span class='kw'>strength</span>, <span class='kw'>measured_thk</span>, <span class='kw'>nom_thk</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,22 +173,58 @@ length as strength</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A value (or vector) with the normalized strength values</p>
+    <p>The normalized strength values</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>It is often necessary to normalize strength values so that variation in
 specimen thickness does not unnecessarily increase variation in strength.
-See CMH-17, or other references, for information about the cases where
+See CMH-17-1G, or other references, for information about the cases where
 normalization is appropriate.</p>
 <p>Either cured ply thickness or laminate thickness may be used for
-<code>measured_thk</code> and <code>nom_thk</code>, as long as CPT or laminate
-thickness is used for both.</p>
+<code>measured_thk</code> and <code>nom_thk</code>, as long as the same decision
+made for both values.</p>
 <p>The formula applied is:
-$$normalized value = test value * t_measured / t_nominal$$</p>
+$$normalized\,value = test\,value \frac{t_{measured}}{t_{nominal}}$$</p>
 <p>If you need to normalize based on fiber volume fraction (or another method),
 you will first need to calculate the nominal cured ply thickness (or laminate
 thickness). Those calculations are outside the scope of this documentation.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
+    <p>“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+
+<span class='kw'>carbon.fabric.2</span> <span class='op'>%&gt;%</span>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='kw'>thickness</span>, <span class='kw'>strength</span>) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(normalized_strength = <span class='fu'><a href='www.cmstatr.net/reference/normalize_ply_thickness.html'>normalize_ply_thickness</a></span>(<span class='kw'>strength</span>,
+                                                       <span class='kw'>thickness</span>,
+                                                       <span class='fl'>0.105</span>)) <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fl'>10</span>)</div><div class='output co'>#&gt;    thickness strength normalized_strength
+#&gt; 1      0.112  142.817            152.3381
+#&gt; 2      0.113  135.901            146.2554
+#&gt; 3      0.113  132.511            142.6071
+#&gt; 4      0.112  135.586            144.6251
+#&gt; 5      0.113  125.145            134.6799
+#&gt; 6      0.113  135.203            145.5042
+#&gt; 7      0.113  128.547            138.3411
+#&gt; 8      0.113  127.709            137.4392
+#&gt; 9      0.113  127.074            136.7558
+#&gt; 10     0.114  126.879            137.7543</div><div class='input'>
+<span class='co'>##    thickness strength normalized_strength</span>
+<span class='co'>## 1      0.112  142.817            152.3381</span>
+<span class='co'>## 2      0.113  135.901            146.2554</span>
+<span class='co'>## 3      0.113  132.511            142.6071</span>
+<span class='co'>## 4      0.112  135.586            144.6251</span>
+<span class='co'>## 5      0.113  125.145            134.6799</span>
+<span class='co'>## 6      0.113  135.203            145.5042</span>
+<span class='co'>## 7      0.113  128.547            138.3411</span>
+<span class='co'>## 8      0.113  127.709            137.4392</span>
+<span class='co'>## 9      0.113  127.074            136.7558</span>
+<span class='co'>## 10     0.114  126.879            137.7543</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

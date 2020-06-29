@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Equivalency based on mean and extremum — equiv_mean_extremum • cmstatr</title>
+<title>Test for decrease in mean or minimum individual — equiv_mean_extremum • cmstatr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,23 @@
 
 
 
-<meta property="og:title" content="Equivalency based on mean and extremum — equiv_mean_extremum" />
-<meta property="og:description" content="Determines equivalency or equivalency thresholds based on both minimum
-individual and mean." />
+<meta property="og:title" content="Test for decrease in mean or minimum individual — equiv_mean_extremum" />
+<meta property="og:description" content="This test is used when determining if a new process or
+manufacturing location produces material properties that are
+&quot;equivalent&quot; to an existing dataset, and hence the existing
+basis values are applicable to the new dataset. This test is also
+sometimes used for determining if a new batch of material is acceptable.
+This function determines thresholds based on both minimum
+individual and mean, and optionally evaluates a sample against those
+thresholds. The joint distribution between the sample mean
+and sample minimum is used to generate these thresholds.
+When there is no true difference between the existing (&quot;qualification&quot;)
+and the new population from which the sample is obtained, there is a
+probability of \(\alpha\) of falsely concluding that there is a
+difference in mean or variance. It is assumed that both the original
+and new populations are normally distributed.
+According to Vangel (2002), this test provides improved power compared
+with a test of mean and standard deviation." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
 
@@ -82,7 +96,7 @@ individual and mean." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -139,25 +153,39 @@ individual and mean." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Equivalency based on mean and extremum</h1>
+    <h1>Test for decrease in mean or minimum individual</h1>
     <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/equiv.R'><code>R/equiv.R</code></a></small>
     <div class="hidden name"><code>equiv_mean_extremum.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Determines equivalency or equivalency thresholds based on both minimum
-individual and mean.</p>
+    <p>This test is used when determining if a new process or
+manufacturing location produces material properties that are
+"equivalent" to an existing dataset, and hence the existing
+basis values are applicable to the new dataset. This test is also
+sometimes used for determining if a new batch of material is acceptable.
+This function determines thresholds based on both minimum
+individual and mean, and optionally evaluates a sample against those
+thresholds. The joint distribution between the sample mean
+and sample minimum is used to generate these thresholds.
+When there is no true difference between the existing ("qualification")
+and the new population from which the sample is obtained, there is a
+probability of \(\alpha\) of falsely concluding that there is a
+difference in mean or variance. It is assumed that both the original
+and new populations are normally distributed.
+According to Vangel (2002), this test provides improved power compared
+with a test of mean and standard deviation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>equiv_mean_extremum</span>(
-  <span class='kw'>df_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>alpha</span>,
-  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/equiv_mean_extremum.html'>equiv_mean_extremum</a></span>(
+  df_qual = <span class='kw'>NULL</span>,
+  data_qual = <span class='kw'>NULL</span>,
+  mean_qual = <span class='kw'>NULL</span>,
+  sd_qual = <span class='kw'>NULL</span>,
+  data_sample = <span class='kw'>NULL</span>,
+  n_sample = <span class='kw'>NULL</span>,
+  <span class='kw'>alpha</span>,
+  modcv = <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -217,10 +245,10 @@ with the following named elements:</p>
   passed to this function or the length of the vector <code>data_sample</code>.</p></dd>
 <dt><code>k1</code></dt><dd><p>the factor used to calculate the minimum individual
   threshold. The minimum individual threshold is calculated as
-  \(Wmin = qual_mean - k1 * qual_sd\)</p></dd>
+  \(W_{min} = qual\,mean - k_1 \cdot qual\,sd\)</p></dd>
 <dt><code>k2</code></dt><dd><p>the factor used to calculate the threshold for mean. The
   threshold for mean is calculated as
-  \(Wmean = qual_mean - k2 * qual_sd\)</p></dd>
+  \(W_{mean} = qual\,mean - k_2 \cdot qual\,sd\)</p></dd>
 <dt><code>modcv</code></dt><dd><p>logical value indicating whether the acceptance
   thresholds are calculated using the modified CV approach</p></dd>
 <dt><code>cv</code></dt><dd><p>the coefficient of variation of the qualification data.
@@ -247,7 +275,19 @@ with the following named elements:</p>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There are several optional arguments to this function. However, you can't
+    <p>This function is used to
+determine acceptance limits for a sample mean and sample minimum.
+These acceptance limits are often used to set acceptance limits for
+material strength for each lot of material, or each new manufacturing
+site. When a sample meets the criteria that its mean and its minimum are
+both greater than these limits, then one may accept the lot of material
+or the new manufacturing site.</p>
+<p>This procedure is used to ensure that the strength of material processed
+at a second site, or made with a new batch of material are not degraded
+relative to the data originally used to determine basis values for the
+material. For more information about the use of this procedure, see
+CMH-17-1G or PS-ACE 100-2002-006.</p>
+<p>There are several optional arguments to this function. However, you can't
 omit all of the optional arguments. You must supply either
 <code>data_sample</code> or <code>n_sample</code>, but not both. You must also supply
 either <code>data_qual</code> (and <code>df_qual</code> if <code>data_qual</code> is a
@@ -256,18 +296,34 @@ but if you supply <code>data_qual</code> (and possibly <code>df_qual</code>) you
 not supply either <code>mean_qual</code> or <code>sd_qual</code> (and visa-versa). This
 function will issue a warning or error if you violate any of these rules.</p>
 <p>If <code>modcv</code> is TRUE, the standard deviation used to calculate the
-thresholds will be replaced with a standard deviation calculated by
+thresholds will be replaced with a standard deviation calculated
+using the Modified Coefficient of Variation (CV) approach.
+The Modified CV approach is a way of adding extra variance to the
+qualification data in the case that the qualification data has less
+variance than expected, which sometimes occurs when qualification testing
+is performed in a short period of time.
+Using the Modified CV approach, the standard deviation is calculated by
 multiplying <code>CV_star * mean_qual</code> where <code>mean_qual</code> is either the
 value supplied or the value calculated by <code><a href='https://rdrr.io/r/base/mean.html'>mean(data_qual)</a></code> and
-\(CV* = 0.06\) if \(CV &lt; 0.04\), \(CV* = cv / 2 + 0.04\)
-if \(0.04 &lt;= cv &lt;= 0.08\) and \(CV* = CV\) otherwise.</p>
+\(CV*\) is the value computed by <code><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></code>.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
+and an Extremum, Technometrics, vol. 44, no. 3. pp. 242–249. 2002.</p>
+<p>“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.</p>
+<p>Federal Aviation Administration, “Material Qualification and Equivalency
+for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
+Sep. 2003.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='k_equiv.html'>k_equiv</a></code></p></div>
+    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/k_equiv.html'>k_equiv</a></code></p>
+<p><code><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>equiv_mean_extremum</span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='fl'>6</span>,
-                    <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='fl'>5.5</span>, <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
+    <pre class="examples"><div class='input'><span class='fu'><a href='www.cmstatr.net/reference/equiv_mean_extremum.html'>equiv_mean_extremum</a></span>(alpha = <span class='fl'>0.01</span>, n_sample = <span class='fl'>6</span>,
+                    mean_qual = <span class='fl'>100</span>, sd_qual = <span class='fl'>5.5</span>, modcv = <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6, 
 #&gt;     alpha = 0.01, modcv = TRUE)
@@ -276,18 +332,19 @@ if \(0.04 &lt;= cv &lt;= 0.08\) and \(CV* = CV\) otherwise.</p>
 #&gt; 
 #&gt; For alpha = 0.01 and n = 6 
 #&gt; ( k1 = 3.128346 and k2 = 1.044342 )
-#&gt;                    Min Individual      Sample Mean 
-#&gt;      Thresholds:         78.88367         92.95069 </div><div class='input'><span class='co'>##</span>
+#&gt;                  Min Individual   Sample Mean   
+#&gt;      Thresholds:    78.88367        92.95069    </div><div class='input'><span class='co'>##</span>
 <span class='co'>## Call:</span>
 <span class='co'>## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,</span>
-<span class='co'>##                     alpha = 0.01, modcv = TRUE)</span>
+<span class='co'>##     alpha = 0.01, modcv = TRUE)</span>
 <span class='co'>##</span>
 <span class='co'>## Modified CV used: CV* = 0.0675 ( CV = 0.055 )</span>
 <span class='co'>##</span>
 <span class='co'>## For alpha = 0.01 and n = 6</span>
 <span class='co'>## ( k1 = 3.128346 and k2 = 1.044342 )</span>
-<span class='co'>##               Min Individual      Sample Mean</span>
-<span class='co'>## Thresholds:         78.88367         92.95069</span></div></pre>
+<span class='co'>##                   Min Individual   Sample Mean</span>
+<span class='co'>##      Thresholds:    78.88367        92.95069</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

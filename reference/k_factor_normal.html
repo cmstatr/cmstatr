@@ -49,8 +49,15 @@ distribution — k_factor_normal • cmstatr</title>
 
 <meta property="og:title" content="Calculate k factor for basis values (\(kB\), \(kA\)) with normal
 distribution — k_factor_normal" />
-<meta property="og:description" content="Calculate k factor for basis values (\(kB\), \(kA\)) with normal
-distribution" />
+<meta property="og:description" content="The factors returned by this function are used when calculating basis
+values (one-sided confidence bounds) when the data are normally
+distributed. The basis value will
+be equal to \(\bar{x} - k s\),
+where \(\bar{x}\) is the sample mean,
+\(s\) is the sample standard deviation and \(k\) is the result
+of this function.
+This function is internally used by basis_normal when
+computing basis values." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
 
@@ -84,7 +91,7 @@ distribution" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -148,11 +155,18 @@ distribution</h1>
     </div>
 
     <div class="ref-description">
-    <p>Calculate k factor for basis values (\(kB\), \(kA\)) with normal
-distribution</p>
+    <p>The factors returned by this function are used when calculating basis
+values (one-sided confidence bounds) when the data are normally
+distributed. The basis value will
+be equal to \(\bar{x} - k s\),
+where \(\bar{x}\) is the sample mean,
+\(s\) is the sample standard deviation and \(k\) is the result
+of this function.
+This function is internally used by <code><a href='www.cmstatr.net/reference/basis.html'>basis_normal</a></code> when
+computing basis values.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>k_factor_normal</span>(<span class='no'>n</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</pre>
+    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/k_factor_normal.html'>k_factor_normal</a></span>(<span class='kw'>n</span>, p = <span class='fl'>0.9</span>, conf = <span class='fl'>0.95</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -163,11 +177,12 @@ distribution</p>
     </tr>
     <tr>
       <th>p</th>
-      <td><p>should be 0.90 for B-Basis and 0.99 for A-Basis</p></td>
+      <td><p>the desired content of the tolerance bound.
+Should be 0.90 for B-Basis and 0.99 for A-Basis</p></td>
     </tr>
     <tr>
       <th>conf</th>
-      <td><p>confidence interval. Should be 0.95 for both A- and B-Basis</p></td>
+      <td><p>confidence level. Should be 0.95 for both A- and B-Basis</p></td>
     </tr>
     </table>
 
@@ -178,8 +193,13 @@ distribution</p>
 
     <p>This function calculates the k factors used when determining A- and
 B-Basis values for normally distributed data. To get \(kB\), set
-<code>p = 0.90</code> and <code>conf = 0.95</code>. To get \(kA\), set
-<code>p = 0.99</code> and <code>conf = 0.95</code>.</p>
+the content of the tolerance bound to <code>p = 0.90</code> and
+the confidence level to <code>conf = 0.95</code>. To get \(kA\), set
+<code>p = 0.99</code> and <code>conf = 0.95</code>. While other tolerance bound
+contents and confidence levels may be computed, they are infrequently
+needed in practice.</p>
+<p>The k-factor is calculated using equation 2.2.3 of
+Krishnamoorthy and Mathew (2008).</p>
 <p>This function has been validated against the \(kB\) tables in
 CMH-17-1G for each value of \(n\) from \(n = 2\) to \(n = 95\).
 It has been validated against the \(kA\) tables in CMH-17-1G for each
@@ -189,7 +209,38 @@ emits warnings that "full precision may not have been achieved." When
 validating the results of this function against the tables in CMH-17-1G,
 the maximum allowable difference between the two is 0.002. The tables in
 CMH-17-1G give values to three decimal places.</p>
+<p>For more information about tolerance bounds in general, see
+Meeker, et. al. (2017).</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
+    <p>K. Krishnamoorthy and T. Mathew, Statistical Tolerance Regions: Theory,
+Applications, and Computation. Hoboken: John Wiley &amp; Sons, 2008.</p>
+<p>W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
+for Practitioners and Researchers, Second Edition.
+Hoboken: John Wiley &amp; Sons, 2017.</p>
+<p>“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+Guideline for Characterization of Structural Materials,” SAE International,
+CMH-17-1G, Mar. 2012.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/basis.html'>basis_normal</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>kb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='www.cmstatr.net/reference/k_factor_normal.html'>k_factor_normal</a></span>(n = <span class='fl'>10</span>, p = <span class='fl'>0.9</span>, conf = <span class='fl'>0.95</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>kb</span>)</div><div class='output co'>#&gt; [1] 2.35464</div><div class='input'>
+<span class='co'>## [1] 2.35464</span>
+
+<span class='co'># This can be used to caclulate the B-Basis if</span>
+<span class='co'># the sample mean and sample standard deviation</span>
+<span class='co'># is known, and data is assumed to be normally</span>
+<span class='co'># distributed</span>
+
+<span class='kw'>sample_mean</span> <span class='op'>&lt;-</span> <span class='fl'>90</span>
+<span class='kw'>sample_sd</span> <span class='op'>&lt;-</span> <span class='fl'>5.2</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='st'>"B-Basis:"</span>)</div><div class='output co'>#&gt; [1] "B-Basis:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='kw'>sample_mean</span> <span class='op'>-</span> <span class='kw'>sample_sd</span> <span class='op'>*</span> <span class='kw'>kb</span>)</div><div class='output co'>#&gt; [1] 77.75587</div><div class='input'>
+<span class='co'>## [1] B-Basis:</span>
+<span class='co'>## [1] 77.75587</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
