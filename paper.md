@@ -51,8 +51,8 @@ damage and other factors, however those adjustments are outside the
 scope of the present software package.
 
 For a detailed discussion of the theory and applications of tolerance
-bounds, the reader is referred to [@Meeker_Hahn_Escobar_2017] or
-[@Krishnamoorthy_Mathew_2008].
+bounds, the reader is referred to @Meeker_Hahn_Escobar_2017 or
+@Krishnamoorthy_Mathew_2008.
 
 Currently, many users use MS Excel spreadsheets to perform these
 analyses. The MS Excel spreadsheets typically used, such as `STAT-17`
@@ -82,11 +82,11 @@ are written to work with the `tidyverse` [@tidyverse] and most functions
 have similar argument lists. The intent is to make the package easy to
 learn and use.
 
-The implementation of `cmstatr` also aims to avoid the use of look-up
+The implementation of `cmstatr` also aims to avoid the use of lookup
 tables that are prevalent in calculation spreadsheets and minimize the
 use of approximations. While this decision leads to increased
 computation time, the typically small data sets (tens to hundreds of
-observations) associated with composite material test data, and the
+observations) associated with composite material test data and the
 speed of modern computers make this practical for interactive
 programming.
 
@@ -175,9 +175,9 @@ example above, the output shows that the Anderson--Darling test for
 normality [@Lawless_1982] rejects the hypothesis that the data is drawn
 from a normal distribution.
 
-Two non-parametric basis calculations, based on [@Guenther_1970] and
-[@Vangel_1994] are also implemented in `cmstatr`. These functions
-perform the same diagnostic tests, but omits the Anderson--Darling test
+Two non-parametric basis calculations, based on @Guenther_1970 and
+@Vangel_1994 are also implemented in `cmstatr`. These functions
+perform the same diagnostic tests, but omit the Anderson--Darling test
 for a particular distribution.
 
 The diagnostic test can be run directly using `cmstatr` as well. For
