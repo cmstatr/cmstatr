@@ -86,9 +86,8 @@ The implementation of `cmstatr` also aims to avoid the use of lookup
 tables that are prevalent in calculation spreadsheets and minimize the
 use of approximations. While this decision leads to increased
 computation time, the typically small data sets (tens to hundreds of
-observations) associated with composite material test data and the
-speed of modern computers make this practical for interactive
-programming.
+observations) associated with composite material test data and the speed
+of modern computers make this practical for interactive programming.
 
 # Example Usage
 
@@ -176,9 +175,9 @@ normality [@Lawless_1982] rejects the hypothesis that the data is drawn
 from a normal distribution.
 
 Two non-parametric basis calculations, based on @Guenther_1970 and
-@Vangel_1994 are also implemented in `cmstatr`. These functions
-perform the same diagnostic tests, but omit the Anderson--Darling test
-for a particular distribution.
+@Vangel_1994 are also implemented in `cmstatr`. These functions perform
+the same diagnostic tests, but omit the Anderson--Darling test for a
+particular distribution.
 
 The diagnostic test can be run directly using `cmstatr` as well. For
 example, the failed diagnostic test above can be run as follows:
