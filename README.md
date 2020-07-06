@@ -9,6 +9,7 @@
 status](https://github.com/ComtekAdvancedStructures/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/ComtekAdvancedStructures/cmstatr/actions?workflow=R-CMD-check)
 [![`Codecov` test
 coverage](https://codecov.io/gh/comtekadvancedstructures/cmstatr/branch/master/graph/badge.svg)](https://codecov.io/gh/comtekadvancedstructures/cmstatr?branch=master)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.02265/status.svg)](https://doi.org/10.21105/joss.02265)
 <!-- badges: end -->
 
 # What It Does
