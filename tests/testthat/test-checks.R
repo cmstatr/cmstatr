@@ -16,19 +16,19 @@ test_that("perform_checks produces warnings unless overriden", {
   expect_warning(res <- perform_checks(sample_rules, pos = -1, neg = -1, z = 0),
                  regexp = "positive")
   names(res) <- NULL
-  expect_equal(res, c(FALSE, TRUE, TRUE), )
+  expect_equal(res, c("F", "P", "P"), )
   perform_checks(sample_rules, pos = -1, neg = -1, z = 0,
                  override = "positive")
   expect_warning(res <- perform_checks(sample_rules, pos = 1, neg = 1, z = 0),
                  regexp = "negative")
   names(res) <- NULL
-  expect_equal(res, c(TRUE, FALSE, TRUE))
+  expect_equal(res, c("P", "F", "P"))
   perform_checks(sample_rules, pos = 1, neg = 1, z = 0,
                  override = "negative")
   expect_warning(res <- perform_checks(sample_rules, pos = 1, neg = -1, z = 1),
                  regexp = "zero")
   names(res) <- NULL
-  expect_equal(res, c(TRUE, TRUE, FALSE))
+  expect_equal(res, c("P", "P", "F"))
   perform_checks(sample_rules, pos = 1, neg = -1, z = 1,
                  override = "zero")
 

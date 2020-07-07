@@ -277,6 +277,15 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' using \code{\link{normalize_group_mean}}
 #' using \code{\link{levene_test}}.
 #'
+#' The object returned by these functions includes the named vector
+#' \code{diagnostic_results}. This contains all of the diagnostic tests
+#' performed. The name of each element of the vector corresponds with the
+#' name of the diagnostic test. The contents of each element will be
+#' "P" if the diagnostic test passed, "F" if the diagnostic test failed,
+#' "O" if the diagnostic test was overridden and \code{NA} if the
+#' diagnostic test was skipped (typically because an optional
+#' argument was not supplied).
+#'
 #' @return an object of class \code{basis}
 #' This object has the following fields:
 #' \item{\code{call}}{the expression used to call this function}
@@ -295,6 +304,10 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' \item{\code{override}}{a vector of the names of diagnostic tests that
 #'                        were overridden. \code{NULL} if none were
 #'                        overridden}
+#' \item{\code{diagnostic_results}}{a named character vector containing the
+#'                                  results of all the diagnostic tests. See
+#'                                  the Details section for additional
+#'                                  information}
 #' \item{\code{diagnostic_failures}}{a vector containing any diagnostic tests
 #'                                   that produced failures}
 #' \item{\code{n}}{the number of observations}
@@ -338,7 +351,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' # A single-point basis value can be calculated as follows
 #' # in this example, three failed diagnostic tests are
-#' # overriden.
+#' # overridden.
 #'
 #' carbon.fabric %>%
 #'   filter(test == "FC") %>%
@@ -363,7 +376,7 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' # A set of pooled basis values can also be calculated
 #' # using the pooled standard deviation method, as follows.
-#' # In this example, one failed diagnostic test is overriden.
+#' # In this example, one failed diagnostic test is overridden.
 #' carbon.fabric %>%
 #'   filter(test == "WT") %>%
 #'   basis_pooled_sd(strength, condition, batch,
@@ -408,7 +421,8 @@ new_basis <- function(
   res$batch <- batch
   res$modcv_transformed_data <- NA
   res$override <- override
-  res$diagnostic_failures <- character(0)
+  res$diagnostic_results <- character(0L)
+  res$diagnostic_failures <- character(0L)
   res$n <- length(res$data)
   res$r <- NA
   if (!is.null(groups) & !all(is.na(groups))) {
@@ -425,18 +439,20 @@ new_basis <- function(
 #' @description
 #' Glance accepts an object of type basis and returns a
 #' \code{\link[tibble:tibble]{tibble::tibble}} with
-#' one row of summaries.
+#' one row of summaries for each basis value.
 #'
 #' Glance does not do any calculations: it just gathers the results in a
 #' tibble.
 #'
 #' @param x a basis object
+#' @param include_diagnostics a logical value indicating whether to include
+#'                            columns for diagnostic tests. Default FALSE.
 #' @param ... Additional arguments. Not used. Included only to match generic
 #'            signature.
 #'
 #'
 #' @return
-#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' A \code{\link[tibble:tibble]{tibble::tibble}} with the following
 #' columns:
 #'
 #' \item{\code{p}}{the the content of the tolerance bound.
@@ -452,37 +468,68 @@ new_basis <- function(
 #'        be \code{NA} for single-point basis values}
 #' \item{\code{basis}}{the basis value}
 #'
+#' @details
+#' For the pooled basis methods (\code{basis_pooled_cv} and
+#' \code{basis_pooled_sd}), the \code{\link[tibble:tibble]{tibble::tibble}}
+#' returned by \code{glance} will have one row for each group included in
+#' the pooling. For all other basis methods, the resulting \code{tibble}
+#' will have a single row.
+#'
+#' If \code{include_diagnostics=TRUE}, there will be additional columns
+#' corresponding with the diagnostic tests performed. These column(s) will
+#' be of type character and will contain a "P" if the diagnostic test
+#' passed, a "F" if the diagnostic test failed, an "O" if the diagnostic
+#' test was overridden or \code{NA} if the test was not run (typically
+#' because an optional argument was not passed to the function that
+#' computed the basis value).
+#'
 #'
 #' @seealso
 #' \code{\link{basis}}
 #'
 #' @examples
+#' set.seed(10)
 #' x <- rnorm(20, 100, 5)
 #' b <- basis_normal(x = x)
 #' glance(b)
 #'
-#' # ## A tibble: 1 x 6
-#' #       p  conf distribution  n r     basis
-#' #   <dbl> <dbl> <chr>     <int> <lgl> <dbl>
-#' # 1   0.9  0.95 Normal       20 NA    87.8
+#' ## # A tibble: 1 x 7
+#' ##       p  conf distribution modcv     n r     basis
+#' ##   <dbl> <dbl> <chr>        <lgl> <int> <lgl> <dbl>
+#' ## 1   0.9  0.95 Normal       FALSE    20 NA     92.0
+#'
+#'
+#' glance(b, include_diagnostics = TRUE)
+#'
+#' ## # A tibble: 1 x 11
+#' ##        p  conf distribution modcv     n r     basis outliers_within…
+#' ##    <dbl> <dbl> <chr>        <lgl> <int> <lgl> <dbl> <chr>
+#' ##  1   0.9  0.95 Normal       FALSE    20 NA     92.0 NA
+#' ## # … with 3 more variables: between_batch_variability <chr>,
+#' ## #   outliers <chr>, anderson_darling_normal <chr>
 #'
 #' @method glance basis
 #' @importFrom tibble tibble
 #'
 #' @export
-glance.basis <- function(x, ...) {  # nolint
-  with(
-    x,
-    tibble::tibble(
-      p = p,
-      conf = conf,
-      distribution = distribution,
-      modcv = modcv,
-      n = n,
-      r = r,
-      basis = basis
-    )
+glance.basis <- function(x, include_diagnostics = FALSE, ...) {  # nolint
+  res <- tibble::tibble(
+    p = x$p,
+    conf = x$conf,
+    distribution = x$distribution,
+    modcv = x$modcv,
+    n = x$n,
+    r = x$r,
+    basis = x$basis
   )
+
+  if (include_diagnostics) {
+    for (dn in names(x$diagnostic_results)) {
+      res[[dn]] <- x$diagnostic_results[[dn]]
+    }
+  }
+
+  res
 }
 
 print_diagnostic_helper <- function(heading, vec) {
@@ -605,9 +652,10 @@ basis_normal <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  check_result <- perform_checks(basis_normal_rules, x = res$data,
-                                 batch = res$batch, override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
+  res$diagnostic_results <- perform_checks(
+    basis_normal_rules, x = res$data, batch = res$batch, override = override
+  )
+  res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
 
@@ -657,9 +705,10 @@ basis_lognormal <- function(data = NULL, x, batch = NULL, p = 0.90,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  check_result <- perform_checks(basis_lognormal_rules, x = res$data,
-                                 batch = res$batch, override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
+  res$diagnostic_results <- perform_checks(
+    basis_lognormal_rules, x = res$data, batch = res$batch, override = override
+  )
+  res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
   res$basis <- exp(mean(log(res$data)) - k * sd(log(res$data)))
@@ -708,9 +757,10 @@ basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  check_result <- perform_checks(basis_weibull_rules, x = res$data,
-                                 batch = res$batch, override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
+  res$diagnostic_results <- perform_checks(
+    basis_weibull_rules, x = res$data, batch = res$batch, override = override
+  )
+  res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   dist <- fitdistr(res$data, "weibull")
 
@@ -867,11 +917,11 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
     x_ad <- data_to_use
   }
 
-  check_result <- perform_checks(pooled_rules_cv, x = data_to_use,
-                                 x_ad = x_ad,
-                                 groups = res$groups,
-                                 batch = res$batch, override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
+  res$diagnostic_results <- perform_checks(
+    pooled_rules_cv, x = data_to_use, x_ad = x_ad,
+    groups = res$groups, batch = res$batch, override = override
+  )
+  res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   norm_data <- normalize_group_mean(data_to_use, res$groups)
 
@@ -948,11 +998,11 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
     x_ad <- data_to_use
   }
 
-  check_result <- perform_checks(pooled_rules_sd, x = data_to_use,
-                                 x_ad = x_ad,
-                                 groups = res$groups,
-                                 batch = res$batch, override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
+  res$diagnostic_results <- perform_checks(
+    pooled_rules_sd, x = data_to_use, x_ad = x_ad,
+    groups = res$groups, batch = res$batch, override = override
+  )
+  res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   pooled_sd <- sqrt(
     sum(
@@ -1201,12 +1251,11 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  check_result <- perform_checks(basis_hk_ext_rules, x = res$data,
-                                 batch = res$batch, n = res$n,
-                                 p = res$p, conf = res$conf,
-                                 method = method,
-                                 override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
+  res$diagnostic_results <- perform_checks(
+    basis_hk_ext_rules, x = res$data, batch = res$batch, n = res$n,
+    p = res$p, conf = res$conf, method = method, override = override
+  )
+  res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   if (method == "optimum-order") {
     zj <- hk_ext_z_j_opt(res$n, p, conf)
@@ -1391,11 +1440,11 @@ basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  check_result <- perform_checks(nonpara_large_sample_rules,
-                                 x = res$data, batch = res$batch, n = res$n,
-                                 p = res$p, conf = res$conf,
-                                 override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
+  res$diagnostic_results <- perform_checks(
+    nonpara_large_sample_rules, x = res$data, batch = res$batch, n = res$n,
+    p = res$p, conf = res$conf, override = override
+  )
+  res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   x_ordered <- sort(res$data)
   r <- nonpara_binomial_rank(res$n, p, conf)
@@ -1460,10 +1509,11 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     stop("ANOVA cannot be computed with fewer than 2 groups")
   }
 
-  check_result <- perform_checks(rules = anova_rules,
-                                 x = res$data, groups = res$groups,
-                                 r = res$r, override = override)
-  res$diagnostic_failures <- names(check_result[!check_result])
+  res$diagnostic_results <- perform_checks(
+    rules = anova_rules, x = res$data, groups = res$groups,
+    r = res$r, override = override
+  )
+  res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   grand_mean <- mean(res$data)
 
