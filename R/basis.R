@@ -1293,6 +1293,7 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #'
 #' @export
 nonpara_binomial_rank <- function(n, p, conf) {
+  p_orig <- p
   p <- 1 - p
 
   e_fcn <- function(r) {
@@ -1307,7 +1308,7 @@ nonpara_binomial_rank <- function(n, p, conf) {
   if (e1 < conf) {
     stop(paste0(
       "Sample size ", n, " is too small to compute a non-parametric ",
-      "tolerance limit for p=", p, " and conf=", conf))
+      "tolerance limit for p=", p_orig, " and conf=", conf))
   }
 
   r2 <- n
@@ -1315,7 +1316,7 @@ nonpara_binomial_rank <- function(n, p, conf) {
 
   if (e2 > conf) {
     stop(paste0(
-      "No rank found for n=", n, ", p=", p, " conf=", conf))
+      "No rank found for n=", n, ", p=", p_orig, " conf=", conf))
   }
 
   for (i in 1:n) {

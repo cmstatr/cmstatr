@@ -1555,11 +1555,13 @@ test_that("Non-parametric ranks for A-Basis match CMH-17-1G Table 8.5.13", {
 })
 
 test_that("nonpara_binomial_rank raises and error when sample too small", {
-  expect_error(nonpara_binomial_rank(298, 0.99, 0.95))
+  expect_error(nonpara_binomial_rank(298, 0.99, 0.95),
+               "p.*0\\.99.*conf.*0\\.95")
 })
 
 test_that("nonpara_binomial_rank raises an error when it can't converge", {
-  expect_error(nonpara_binomial_rank(4000, 0.00001, 0.01))
+  expect_error(nonpara_binomial_rank(4000, 0.00001, 0.01),
+               "p.*1e-05.*conf.*0\\.01")
 })
 
 cmh_17_1g_8_5_12 <- tribble(
