@@ -20,13 +20,22 @@ are those described in CMH-17-1G.
 
 # Installation
 
-This package is not yet on CRAN (but it will be soon). For now, install
-from `github` using `devtools`. This will also install the dependencies
-required to build the vignettes.
+To install `cmstatr` from CRAN, simply run:
+
+``` r
+install.packages("cmstatr")
+```
+
+If you want the latest development version, you can install it from
+`github` using `devtools`. This will also install the dependencies
+required to build the vignettes. Optionally, change the value of the
+argument `ref` to install `cmstatr` from a different branch of the
+repository.
 
 ``` r
 install.packages(c("devtools", "rmarkdown", "dplyr", "tidyr"))
 devtools::install_github("ComtekAdvancedStructures/cmstatr", build_vignettes = TRUE,
+                         ref = "master",
                          build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
@@ -85,7 +94,7 @@ avoided wherever possible.
 If you’ve found a bug, please open an issue in this repository and
 describe the bug. Please include a [reproducible
 example](https://reprex.tidyverse.org/) of the bug. If you’re able to
-fix the bug, please do so by submitting a pull request.
+fix the bug, you can do so by submitting a pull request.
 
 If your bug is related to a particular data set, sharing that data set
 will help to fix the bug. If you cannot share the data set, please strip
@@ -103,7 +112,7 @@ discuss the proposed change in an issue first.
 
   - Please create a git branch for each pull request (PR)
   - Before submitting a pull request, please make sure that `R CMD
-    CHECK` passes with no errors, warnings or notes
+    check` passes with no errors, warnings or notes
   - New and modified code should follow the style guide enforced by the
     [`lintr`](https://cran.r-project.org/package=lintr) package
   - Document all exported functions using
