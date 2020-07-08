@@ -1806,8 +1806,7 @@ test_that("glance.basis produces expected value", {
 
   res <- cmh_17_1g_8_3_11_1_1_etw2 %>%
     basis_anova(strength, batch,
-                override = c("between_group_variability",
-                             "number_of_groups"))
+                override = c("number_of_groups"))
 
   glance_res <- glance(res)
 
@@ -1817,4 +1816,35 @@ test_that("glance.basis produces expected value", {
   expect_equal(glance_res[["n"]][1], nrow(cmh_17_1g_8_3_11_1_1_etw2))
   expect_equal(glance_res[["r"]][1], 3)
   expect_equal(glance_res[["basis"]][1], 63.2, tolerance = 0.05)
+
+  glance_res_2 <- glance(res, TRUE)
+
+  for (gn in names(glance_res)) {
+    expect_equal(glance_res[[gn]], glance_res_2[[gn]])
+  }
+
+  expect_equal(glance_res_2[["outliers_within_group"]], "P")
+  expect_equal(glance_res_2[["equality_of_variance"]], "P")
+  expect_equal(glance_res_2[["number_of_groups"]], "O")
+
+  expect_warning({
+    glance_res_3 <- cmh_17_1g_8_3_11_1_1_etw2 %>%
+      basis_anova(strength, batch) %>%
+      glance(TRUE)
+  })
+
+  expect_equal(glance_res_3[["outliers_within_group"]], "P")
+  expect_equal(glance_res_3[["equality_of_variance"]], "P")
+  expect_equal(glance_res_3[["number_of_groups"]], "F")
+})
+
+test_that("glance for pooled methods works", {
+  res <- carbon.fabric %>%
+    filter(test == "WT") %>%
+    basis_pooled_sd(strength, condition, batch,
+                    override = c("outliers_within_batch")) %>%
+    glance(TRUE)
+
+  # 3 conditions should produce 3 basis values and hence 3 rows
+  expect_equal(nrow(res), 3)
 })
