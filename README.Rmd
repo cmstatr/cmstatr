@@ -23,7 +23,16 @@ knitr::opts_chunk$set(
 # What It Does
 The `cmstatr` package provides functions for performing statistical analysis
 of composite material data. The statistical methods implemented are those
-described in CMH-17-1G.
+described in [CMH-17-1G](https://www.cmh17.org/).
+This package focuses on calculating basis values (lower tolerance
+bounds) for material strength properties, as well as performing the
+associated diagnostic tests. Functions are also provided for testing
+for equivalency between alternate samples and the "qualification"
+or "baseline" samples.
+
+Additional details about the package are available in the paper by
+Kloppenborg (2020,
+[https://doi.org/10.21105/joss.02265](https://doi.org/10.21105/joss.02265)).
 
 # Installation
 To install `cmstatr` from CRAN, simply run:
