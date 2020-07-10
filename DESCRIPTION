@@ -13,8 +13,21 @@ Authors@R: c(
       role = c("ctb"))
   )
 Description: An implementation of the statistical methods commonly
-             used for advanced composite materials in the R language.
-URL: https://www.cmstatr.net/, https://github.com/ComtekAdvancedStructures/cmstatr
+  used for advanced composite materials in aerospace applications.
+  This package focuses on calculating basis values (lower tolerance
+  bounds) for material strength properties, as well as performing the
+  associated diagnostic tests. This package provides functions for
+  calculating basis values assuming several different distributions,
+  as well as providing functions for non-parametric methods of computing
+  basis values. Functions are also provided for testing the hypothesis
+  that there is no difference between strength and modulus data from an
+  alternate sample and that from a "qualification" or "baseline" sample.
+  For a discussion of these statistical methods and their use, see the
+  Composite Materials Handbook, Volume 1 (2012, ISBN: 978-0-7680-7811-4).
+  Additional details about this package are available in the paper by
+  Kloppenborg (2020, <doi:10.21105/joss.02265>).
+URL: https://www.cmstatr.net/,
+  https://github.com/ComtekAdvancedStructures/cmstatr
 BugReports: https://github.com/ComtekAdvancedStructures/cmstatr/issues
 License: AGPL-3
 Encoding: UTF-8
