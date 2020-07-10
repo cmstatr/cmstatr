@@ -532,13 +532,16 @@ glance.basis <- function(x, include_diagnostics = FALSE, ...) {  # nolint
   res
 }
 
-print_diagnostic_helper <- function(heading, vec) {
+format_diagnostic_helper <- function(heading, vec) {
   if (!is.null(vec) & length(vec) > 0) {
-    cat(heading, "\n")
-    cat("    `")
-    cat(paste(vec, collapse = "`,\n    `"))
-    cat("`\n")
+    return(paste0(
+      heading, "\n",
+      "    `",
+      paste(vec, collapse = "`,\n    `"),
+      "`\n"
+    ))
   }
+  return("")
 }
 
 #' @export
@@ -558,10 +561,14 @@ print.basis <- function(x, ...) {
     cat("Modified CV Approach Used", "\n")
   }
 
-  print_diagnostic_helper("The following diagnostic tests failed:",
-                          x$diagnostic_failures)
-  print_diagnostic_helper("The following diagnostic tests were overridden:",
-                          x$override)
+  cat(format_diagnostic_helper(
+    "The following diagnostic tests failed:",
+    x$diagnostic_failures)
+  )
+  cat(format_diagnostic_helper(
+    "The following diagnostic tests were overridden:",
+    x$override)
+  )
 
   if (x$conf == 0.95 & x$p == 0.9) {
     cat("B-Basis: ", " ( p =", x$p, ", conf =", x$conf, ")\n")
