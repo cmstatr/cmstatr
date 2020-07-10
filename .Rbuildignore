@@ -12,3 +12,4 @@ GenerateFakeData.R
 ^logo-notes.md$
 ^logo.svg$
 ^cran-comments.md
+^CRAN-RELEASE$
