@@ -93,7 +93,7 @@ tests can be overridden if needed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -307,6 +307,10 @@ This object has the following fields:</p>
 <dt><code>override</code></dt><dd><p>a vector of the names of diagnostic tests that
                        were overridden. <code>NULL</code> if none were
                        overridden</p></dd>
+<dt><code>diagnostic_results</code></dt><dd><p>a named character vector containing the
+                                 results of all the diagnostic tests. See
+                                 the Details section for additional
+                                 information</p></dd>
 <dt><code>diagnostic_failures</code></dt><dd><p>a vector containing any diagnostic tests
                                   that produced failures</p></dd>
 <dt><code>n</code></dt><dd><p>the number of observations</p></dd>
@@ -459,6 +463,14 @@ data using <code><a href='www.cmstatr.net/reference/levene_test.html'>levene_tes
 checks for equality of variances of all data after transforming it
 using <code><a href='www.cmstatr.net/reference/normalize_group_mean.html'>normalize_group_mean</a></code>
 using <code><a href='www.cmstatr.net/reference/levene_test.html'>levene_test</a></code>.</p>
+<p>The object returned by these functions includes the named vector
+<code>diagnostic_results</code>. This contains all of the diagnostic tests
+performed. The name of each element of the vector corresponds with the
+name of the diagnostic test. The contents of each element will be
+"P" if the diagnostic test passed, "F" if the diagnostic test failed,
+"O" if the diagnostic test was overridden and <code>NA</code> if the
+diagnostic test was skipped (typically because an optional
+argument was not supplied).</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -491,7 +503,7 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 
 <span class='co'># A single-point basis value can be calculated as follows</span>
 <span class='co'># in this example, three failed diagnostic tests are</span>
-<span class='co'># overriden.</span>
+<span class='co'># overridden.</span>
 
 <span class='kw'>carbon.fabric</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span> <span class='op'>==</span> <span class='st'>"FC"</span>) <span class='op'>%&gt;%</span>
@@ -505,7 +517,7 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 #&gt;     "outliers_within_batch", "anderson_darling_normal"))
 #&gt; 
 #&gt; Distribution:  Normal 	( n = 18 )
-#&gt; The following diagnostic tests were overridden: 
+#&gt; The following diagnostic tests were overridden:
 #&gt;     `outliers`,
 #&gt;     `outliers_within_batch`,
 #&gt;     `anderson_darling_normal`
@@ -527,7 +539,7 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 
 <span class='co'># A set of pooled basis values can also be calculated</span>
 <span class='co'># using the pooled standard deviation method, as follows.</span>
-<span class='co'># In this example, one failed diagnostic test is overriden.</span>
+<span class='co'># In this example, one failed diagnostic test is overridden.</span>
 <span class='kw'>carbon.fabric</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span> <span class='op'>==</span> <span class='st'>"WT"</span>) <span class='op'>%&gt;%</span>
   <span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_pooled_sd</a></span>(<span class='kw'>strength</span>, <span class='kw'>condition</span>, <span class='kw'>batch</span>,
@@ -537,7 +549,7 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 #&gt;     override = c("outliers_within_batch"))
 #&gt; 
 #&gt; Distribution:  Normal - Pooled Standard Deviation 	( n = 54, r = 3 )
-#&gt; The following diagnostic tests were overridden: 
+#&gt; The following diagnostic tests were overridden:
 #&gt;     `outliers_within_batch`
 #&gt; B-Basis:   ( p = 0.9 , conf = 0.95 )
 #&gt; CTD  127.6914 

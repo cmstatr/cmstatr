@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -240,7 +240,7 @@
 <span class="co">#&gt;     "between_batch_variability"))</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Distribution:  Normal    ( n = 28 )</span>
-<span class="co">#&gt; The following diagnostic tests were overridden: </span>
+<span class="co">#&gt; The following diagnostic tests were overridden:</span>
 <span class="co">#&gt;     `outliers_within_batch`,</span>
 <span class="co">#&gt;     `between_batch_variability`</span>
 <span class="co">#&gt; B-Basis:   ( p = 0.9 , conf = 0.95 )</span>
@@ -259,7 +259,7 @@
 <span class="co">#&gt; basis_normal(data = ., x = strength.norm, batch = batch)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Distribution:  Normal    ( n = 28 )</span>
-<span class="co">#&gt; The following diagnostic tests failed: </span>
+<span class="co">#&gt; The following diagnostic tests failed:</span>
 <span class="co">#&gt;     `between_batch_variability`</span>
 <span class="co">#&gt; B-Basis:   ( p = 0.9 , conf = 0.95 )</span>
 <span class="co">#&gt; 129.9583</span>
@@ -273,8 +273,8 @@
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; ad_ksample(data = ., x = strength.norm, groups = batch)</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; N = 28          k = 3           </span>
-<span class="co">#&gt; ADK = 6.65      p-value = 0.0025892</span>
+<span class="co">#&gt; N = 28           k = 3            </span>
+<span class="co">#&gt; ADK = 6.65       p-value = 0.0025892 </span>
 <span class="co">#&gt; Conclusion: Samples do not come from the same distribution (alpha = 0.025 )</span>
 </pre></div>
 <p>For the Anderson–Darling k-Sample test, <span class="math inline">\(\alpha=0.025\)</span> is normally used. In this case the p-value is <span class="math inline">\(p=0.0026\)</span>, so it is no where near <span class="math inline">\(\alpha\)</span> (note the number of decimal places).</p>
@@ -398,8 +398,8 @@
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; levene_test(data = ., x = strength.norm, groups = condition)</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; n = 91          k = 5           </span>
-<span class="co">#&gt; F = 5.260731    p-value = 0.0007727083</span>
+<span class="co">#&gt; n = 91           k = 5            </span>
+<span class="co">#&gt; F = 5.260731     p-value = 0.0007727083 </span>
 <span class="co">#&gt; Conclusion: Samples have unequal variance ( alpha = 0.05 )</span>
 </pre></div>
 <p>The result from Levene’s test indicates that the variance for each condition is not equal. This indicates that the data cannot be pooled using the “pooled standard deviation” method.</p>
@@ -414,8 +414,8 @@
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; levene_test(data = ., x = strength_norm_group, groups = condition)</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; n = 91          k = 5           </span>
-<span class="co">#&gt; F = 1.839645    p-value = 0.1285863</span>
+<span class="co">#&gt; n = 91           k = 5            </span>
+<span class="co">#&gt; F = 1.839645     p-value = 0.1285863 </span>
 <span class="co">#&gt; Conclusion: Samples have equal variances ( alpha = 0.05 )</span>
 </pre></div>
 <p>The Levene’s test thus shows the variances of the pooled data are equal. We can move on to performing an Anderson–Darling test for normality on the pooled data.</p>
@@ -490,8 +490,8 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; For alpha = 0.01 and n = 5 </span>
 <span class="co">#&gt; ( k1 = 3.071482 and k2 = 1.142506 )</span>
-<span class="co">#&gt;                  Min Individual   Sample Mean   </span>
-<span class="co">#&gt;      Thresholds:    69.89842        82.16867</span>
+<span class="co">#&gt;                   Min Individual    Sample Mean    </span>
+<span class="co">#&gt;      Thresholds:     69.89842         82.16867</span>
 </pre></div>
 <p>If you’re determining equivalency limits for modulus, a different approach is generally used so that bilateral limits are set. <code>cmstatr</code> can do this as well, using the function <code>equiv_change_mean</code>.</p>
 </div>

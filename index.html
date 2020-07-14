@@ -18,8 +18,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Statistical Methods for Composite Material Data">
-<meta property="og:description" content="An implementation of the statistical methods commonly
-             used for advanced composite materials in the R language.">
+<meta property="og:description" content='An implementation of the statistical methods commonly
+  used for advanced composite materials in aerospace applications.
+  This package focuses on calculating basis values (lower tolerance
+  bounds) for material strength properties, as well as performing the
+  associated diagnostic tests. This package provides functions for
+  calculating basis values assuming several different distributions,
+  as well as providing functions for non-parametric methods of computing
+  basis values. Functions are also provided for testing the hypothesis
+  that there is no difference between strength and modulus data from an
+  alternate sample and that from a "qualification" or "baseline" sample.
+  For a discussion of these statistical methods and their use, see the
+  Composite Materials Handbook, Volume 1 (2012, ISBN: 978-0-7680-7811-4).
+  Additional details about this package are available in the paper by
+  Kloppenborg (2020, &lt;doi:10.21105/joss.02265&gt;).'>
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png">
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -40,7 +52,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -107,15 +119,21 @@
 <div id="what-it-does" class="section level1">
 <h1 class="hasAnchor">
 <a href="#what-it-does" class="anchor"></a>What It Does</h1>
-<p>The <code>cmstatr</code> package provides functions for performing statistical analysis of composite material data. The statistical methods implemented are those described in CMH-17-1G.</p>
+<p>The <code>cmstatr</code> package provides functions for performing statistical analysis of composite material data. The statistical methods implemented are those described in <a href="https://www.cmh17.org/">CMH-17-1G</a>. This package focuses on calculating basis values (lower tolerance bounds) for material strength properties, as well as performing the associated diagnostic tests. Functions are also provided for testing for equivalency between alternate samples and the “qualification” or “baseline” samples.</p>
+<p>Additional details about the package are available in the paper by Kloppenborg (2020, <a href="https://doi.org/10.21105/joss.02265" class="uri">https://doi.org/10.21105/joss.02265</a>).</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
-<p>This package is not yet on CRAN (but it will be soon). For now, install from <code>github</code> using <code>devtools</code>. This will also install the dependencies required to build the vignettes.</p>
+<p>To install <code>cmstatr</code> from CRAN, simply run:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"cmstatr"</span>)
+</pre></div>
+<p>If you want the latest development version, you can install it from <code>github</code> using <code>devtools</code>. This will also install the dependencies required to build the vignettes. Optionally, change the value of the argument <code>ref</code> to install <code>cmstatr</code> from a different branch of the repository.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"devtools"</span>, <span class="st">"rmarkdown"</span>, <span class="st">"dplyr"</span>, <span class="st">"tidyr"</span>))
 <span class="kw">devtools</span>::<span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"ComtekAdvancedStructures/cmstatr"</span>, build_vignettes = <span class="fl">TRUE</span>,
+                         ref = <span class="st">"master"</span>,
                          build_opts = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span>))
 </pre></div>
 </div>
@@ -123,7 +141,7 @@
 <h1 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h1>
 <p>To compute a B-Basis value from an example data set packaged with <code>cmstatr</code> you can do the following:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
+<div class="sourceCode" id="cb3"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org">dplyr</a></span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://www.cmstatr.net">cmstatr</a></span>)
 
@@ -140,11 +158,11 @@
 <span class="co">#&gt; 76.88082</span>
 </pre></div>
 <p>For more examples of usage of the <code>cmstatr</code> package, see the tutorial vignette, which can be <a href="https://www.cmstatr.net/articles/cmstatr_Tutorial.html">viewed online</a>, or can be loaded as follows, once the package is installed:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
+<div class="sourceCode" id="cb4"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">"cmstatr_Tutorial"</span>)
 </pre></div>
 <p>There is also a vignette showing some examples of the types of graphs that are typically produced when analyzing composite materials. You can view this <a href="https://www.cmstatr.net/articles/cmstatr_Graphing.html">vignette online</a>, or you can load this vignette with:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
+<div class="sourceCode" id="cb5"><pre class="downlit">
 <span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">"cmstatr_Graphing"</span>)
 </pre></div>
 </div>
@@ -157,7 +175,7 @@
 <div id="issues" class="section level1">
 <h1 class="hasAnchor">
 <a href="#issues" class="anchor"></a>Issues</h1>
-<p>If you’ve found a bug, please open an issue in this repository and describe the bug. Please include a <a href="https://reprex.tidyverse.org/">reproducible example</a> of the bug. If you’re able to fix the bug, please do so by submitting a pull request.</p>
+<p>If you’ve found a bug, please open an issue in this repository and describe the bug. Please include a <a href="https://reprex.tidyverse.org/">reproducible example</a> of the bug. If you’re able to fix the bug, you can do so by submitting a pull request.</p>
 <p>If your bug is related to a particular data set, sharing that data set will help to fix the bug. If you cannot share the data set, please strip any identifying information and optionally scale the data by an unspecified factor so that the bug can be reproduced and diagnosed.</p>
 </div>
 <div id="contributing" class="section level1">
@@ -169,7 +187,7 @@
 <a href="#contribution-guidelines" class="anchor"></a>Contribution Guidelines</h2>
 <ul>
 <li>Please create a git branch for each pull request (PR)</li>
-<li>Before submitting a pull request, please make sure that <code>R CMD CHECK</code> passes with no errors, warnings or notes</li>
+<li>Before submitting a pull request, please make sure that <code>R CMD check</code> passes with no errors, warnings or notes</li>
 <li>New and modified code should follow the style guide enforced by the <a href="https://cran.r-project.org/package=lintr"><code>lintr</code></a> package</li>
 <li>Document all exported functions using <a href="https://cran.r-project.org/package=roxygen2"><code>roxygen2</code></a>
 </li>
@@ -185,6 +203,8 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=cmstatr">https://​cloud.r-project.org/​package=cmstatr</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/ComtekAdvancedStructures/cmstatr/">https://​github.com/​ComtekAdvancedStructures/​cmstatr/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/ComtekAdvancedStructures/cmstatr/issues">https://​github.com/​ComtekAdvancedStructures/​cmstatr/​issues</a>
@@ -195,6 +215,12 @@
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.r-project.org/Licenses/AGPL-3">AGPL-3</a></li>
+</ul>
+</div>
+<div class="citation">
+<h2>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html">Citing cmstatr</a></li>
 </ul>
 </div>
 <div class="developers">

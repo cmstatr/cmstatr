@@ -85,7 +85,7 @@ tibble." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
       </span>
     </div>
 
@@ -197,9 +197,9 @@ columns:</p>
 )
 <span class='kw'>levene_result</span> <span class='op'>&lt;-</span> <span class='fu'><a href='www.cmstatr.net/reference/levene_test.html'>levene_test</a></span>(<span class='kw'>df</span>, <span class='kw'>strength</span>, <span class='kw'>groups</span>)
 <span class='fu'><a href='https://rdrr.io/pkg/generics/man/glance.html'>glance</a></span>(<span class='kw'>levene_result</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 1 x 7</span><span>
-#&gt;   alpha modcv     n     k       f     p reject_equal_variance
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span>   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>                
-#&gt; </span><span style='color: #555555;'>1</span><span>  0.05 FALSE    11     2 0.007</span><span style='text-decoration: underline;'>44</span><span> 0.933 FALSE                </div><div class='input'>
+#&gt;   alpha modcv     n     k     f      p reject_equal_variance
+#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>                
+#&gt; </span><span style='color: #555555;'>1</span><span>  0.05 FALSE    11     2  6.01 0.036</span><span style='text-decoration: underline;'>7</span><span> TRUE                 </div><div class='input'>
 <span class='co'>## # A tibble: 1 x 7</span>
 <span class='co'>##   alpha modcv     n     k      f     p reject_equal_variance</span>
 <span class='co'>##   &lt;dbl&gt; &lt;lgl&gt; &lt;int&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;</span>
