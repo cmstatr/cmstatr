@@ -196,10 +196,10 @@ print.adk <- function(x, ...) {
   justify <- c("left", "left")
   width <- c(16L, 16L)
 
-  print_row_equal(list("N", x$n, "k", x$k),
-                  justify, width, ...)
-  print_row_equal(list("ADK", x$ad, "p-value", x$p),
-                  justify, width, ...)
+  cat(format_row_equal(list("N", x$n, "k", x$k),
+                       justify, width, ...))
+  cat(format_row_equal(list("ADK", x$ad, "p-value", x$p),
+                       justify, width, ...))
   if (x$reject_same_dist) {
     cat("Conclusion: Samples do not come from the same distribution (alpha =",
         x$alpha, ")\n\n")

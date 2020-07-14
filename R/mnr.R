@@ -287,11 +287,13 @@ print.mnr <- function(x, ...) {
     justify <- c("right", "left", "left")
     width <- c(8L, 2L, 16L)
 
-    print_row(list("Index", " ", "Value"), justify, width, ...)
+    cat(format_row(list("Index", " ", "Value"), justify, width, ...))
 
     for (j in seq(along.with = x$outliers$index)) {
-      print_row(list(x$outliers[["index"]][j], " ", x$outliers[["value"]][j]),
-                justify, width, ...)
+      cat(format_row(
+        list(x$outliers[["index"]][j], " ", x$outliers[["value"]][j]),
+        justify, width, ...)
+      )
     }
 
   }

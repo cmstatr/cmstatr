@@ -336,22 +336,22 @@ print.equiv_mean_extremum <- function(x, ...) {
   }
 
   cat("For alpha =", format(x$alpha, ...),
-       "and n =", format(x$n_sample, ...),
+      "and n =", format(x$n_sample, ...),
       "\n( k1 =", format(x$k1, ...),
       "and k2 =", format(x$k2, ...), ")\n")
 
-  print_row(list("", "Min Individual", "Sample Mean"),
-            justify, col_width, ...)
+  cat(format_row(list("", "Min Individual", "Sample Mean"),
+                 justify, col_width, ...))
 
   if (!is.null(x$min_sample)) {
-    print_row(list("Sample:", x$min_sample, x$mean_sample),
-              justify, col_width, ...)
+    cat(format_row(list("Sample:", x$min_sample, x$mean_sample),
+                   justify, col_width, ...))
   }
-  print_row(list("Thresholds:", x$threshold_min_indiv, x$threshold_mean),
-            justify, col_width, ...)
+  cat(format_row(list("Thresholds:", x$threshold_min_indiv, x$threshold_mean),
+                 justify, col_width, ...))
   if (!is.null(x$result_min_indiv)) {
-    print_row(list("Equivalency:", x$result_min_indiv, x$result_mean),
-              justify, col_width, ...)
+    cat(format_row(list("Equivalency:", x$result_min_indiv, x$result_mean),
+                   justify, col_width, ...))
   }
 }
 
@@ -916,18 +916,20 @@ print.equiv_change_mean <- function(x, ...) {
   justify2 <- c("right", "centre")
   width2 <- c(16L, 32L)
 
-  print_row(list("", "Qualification", "Sample"),
-            justify3, width3, ...)
-  print_row(list("Number", x$n_qual, x$n_sample),
-            justify3, width3, ...)
-  print_row(list("Mean", x$mean_qual, x$mean_sample),
-            justify3, width3, ...)
-  print_row(list("SD", x$sd_qual, x$sd_sample),
-            justify3, width3, ...)
-  print_row(list("Result", x$result),
-            justify2, width2, ...)
-  print_row(list("Passing Range", paste0(format(x$threshold[1], ...),
-                                      " to ",
-                                      format(x$threshold[2], ...))),
-            justify2, width2, ...)
+  cat(format_row(list("", "Qualification", "Sample"),
+                 justify3, width3, ...))
+  cat(format_row(list("Number", x$n_qual, x$n_sample),
+                 justify3, width3, ...))
+  cat(format_row(list("Mean", x$mean_qual, x$mean_sample),
+                 justify3, width3, ...))
+  cat(format_row(list("SD", x$sd_qual, x$sd_sample),
+                 justify3, width3, ...))
+  cat(format_row(list("Result", x$result),
+                 justify2, width2, ...))
+  cat(format_row(
+    list("Passing Range", paste0(format(x$threshold[1], ...),
+                                 " to ",
+                                 format(x$threshold[2], ...))),
+    justify2, width2, ...)
+  )
 }
