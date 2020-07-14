@@ -13,8 +13,10 @@
 #' @param ... arguments to pass to the rules
 #'
 #' @return
-#' a named vector of logicals. TRUE if the test passed or was not run
-#' due to a missing argument. FALSE if the test failed.
+#' a named vector of characters. "P" if the test passed,
+#' "F" if the test failed, "O" if the test was overridden,
+#' and NA if the test was not run
+#' due to a missing argument.
 #'
 #' @noRd
 #'
@@ -30,15 +32,16 @@ perform_checks <- function(rules, override = c(), ...) {
       cur_rule <- rules[[cur_rule_name]]
       all_formal_names <- fn_fmls_names(cur_rule)
       missing_formals <- vapply(all_formal_names, function(cur_formal_name) {
-        is.null(args[[cur_formal_name]]) & cur_formal_name != "..."
-      },
-      FUN.VALUE = logical(1L))
+          is.null(args[[cur_formal_name]]) & cur_formal_name != "..."
+        },
+        FUN.VALUE = logical(1L)
+      )
       if (!any(missing_formals)) {
         if ((message <- do.call(cur_rule, args)) != "") {
           warn(paste0("`", cur_rule_name, "` failed: ", message))
-          return(FALSE)
+          return("F")
         }
-        return(TRUE)
+        return("P")
       } else {
         inform(
           paste0("`", cur_rule_name, "` not run because parameter",
@@ -47,12 +50,24 @@ perform_checks <- function(rules, override = c(), ...) {
                  paste(all_formal_names[missing_formals], collapse = "`, `"),
                  "` not specified")
         )
-        return(TRUE)
+        return(NA_character_)
       }
     } else {
       # in override list
-      return(TRUE)
+      return("O")
     }
   },
-  FUN.VALUE = logical(1L))
+  FUN.VALUE = character(1L))
+}
+
+#' Gets the names of the diagnostic tests that failed
+#'
+#' @param x a named character vector created by perform_checks
+#'
+#' @return
+#' A character vector of the tests that failed (if any)
+#'
+#' @noRd
+get_check_failure_names <- function(x) {
+  names(x[x == "F" & !is.na(x)])
 }

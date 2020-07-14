@@ -1,3 +1,7 @@
+# Version 0.7.0
+- Added optional argument to `glance.basis` to add diagnostic test results
+  to resulting `data.frame`
+
 # Version 0.6.0
 - Improved the documentation for several functions
 - Made minor formatting changes to the `print` methods for:

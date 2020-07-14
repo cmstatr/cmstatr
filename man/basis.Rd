@@ -125,6 +125,10 @@ This object has the following fields:
 \item{\code{override}}{a vector of the names of diagnostic tests that
                        were overridden. \code{NULL} if none were
                        overridden}
+\item{\code{diagnostic_results}}{a named character vector containing the
+                                 results of all the diagnostic tests. See
+                                 the Details section for additional
+                                 information}
 \item{\code{diagnostic_failures}}{a vector containing any diagnostic tests
                                   that produced failures}
 \item{\code{n}}{the number of observations}
@@ -306,13 +310,22 @@ data using \code{\link{levene_test}} and \code{basis_pooled_cv}
 checks for equality of variances of all data after transforming it
 using \code{\link{normalize_group_mean}}
 using \code{\link{levene_test}}.
+
+The object returned by these functions includes the named vector
+\code{diagnostic_results}. This contains all of the diagnostic tests
+performed. The name of each element of the vector corresponds with the
+name of the diagnostic test. The contents of each element will be
+"P" if the diagnostic test passed, "F" if the diagnostic test failed,
+"O" if the diagnostic test was overridden and \code{NA} if the
+diagnostic test was skipped (typically because an optional
+argument was not supplied).
 }
 \examples{
 library(dplyr)
 
 # A single-point basis value can be calculated as follows
 # in this example, three failed diagnostic tests are
-# overriden.
+# overridden.
 
 carbon.fabric \%>\%
   filter(test == "FC") \%>\%
@@ -337,7 +350,7 @@ carbon.fabric \%>\%
 
 # A set of pooled basis values can also be calculated
 # using the pooled standard deviation method, as follows.
-# In this example, one failed diagnostic test is overriden.
+# In this example, one failed diagnostic test is overridden.
 carbon.fabric \%>\%
   filter(test == "WT") \%>\%
   basis_pooled_sd(strength, condition, batch,

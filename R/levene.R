@@ -210,15 +210,15 @@ print.levene <- function(x, ...) {
   justify <- c("left", "left")
   width <- c(16L, 16L)
 
-  print_row_equal(list("n", x$n, "k", x$k),
-            justify, width, ...)
+  cat(format_row_equal(list("n", x$n, "k", x$k),
+                       justify, width, ...))
 
   if (x$modcv == TRUE) {
     cat("Modified CV Approach Used", "\n")
   }
 
-  print_row_equal(list("F", x$f, "p-value", x$p),
-            justify, width, ...)
+  cat(format_row_equal(list("F", x$f, "p-value", x$p),
+                       justify, width, ...))
   if (x$reject_equal_variance) {
     cat("Conclusion: Samples have unequal variance ( alpha =",
         x$alpha, ")\n\n")

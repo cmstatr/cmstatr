@@ -4,16 +4,19 @@
 \alias{glance.basis}
 \title{Glance at a basis object}
 \usage{
-\method{glance}{basis}(x, ...)
+\method{glance}{basis}(x, include_diagnostics = FALSE, ...)
 }
 \arguments{
 \item{x}{a basis object}
+
+\item{include_diagnostics}{a logical value indicating whether to include
+columns for diagnostic tests. Default FALSE.}
 
 \item{...}{Additional arguments. Not used. Included only to match generic
 signature.}
 }
 \value{
-A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+A \code{\link[tibble:tibble]{tibble::tibble}} with the following
 columns:
 
 \item{\code{p}}{the the content of the tolerance bound.
@@ -32,20 +35,46 @@ columns:
 \description{
 Glance accepts an object of type basis and returns a
 \code{\link[tibble:tibble]{tibble::tibble}} with
-one row of summaries.
+one row of summaries for each basis value.
 
 Glance does not do any calculations: it just gathers the results in a
 tibble.
 }
+\details{
+For the pooled basis methods (\code{basis_pooled_cv} and
+\code{basis_pooled_sd}), the \code{\link[tibble:tibble]{tibble::tibble}}
+returned by \code{glance} will have one row for each group included in
+the pooling. For all other basis methods, the resulting \code{tibble}
+will have a single row.
+
+If \code{include_diagnostics=TRUE}, there will be additional columns
+corresponding with the diagnostic tests performed. These column(s) will
+be of type character and will contain a "P" if the diagnostic test
+passed, a "F" if the diagnostic test failed, an "O" if the diagnostic
+test was overridden or \code{NA} if the test was not run (typically
+because an optional argument was not passed to the function that
+computed the basis value).
+}
 \examples{
+set.seed(10)
 x <- rnorm(20, 100, 5)
 b <- basis_normal(x = x)
 glance(b)
 
-# ## A tibble: 1 x 6
-#       p  conf distribution  n r     basis
-#   <dbl> <dbl> <chr>     <int> <lgl> <dbl>
-# 1   0.9  0.95 Normal       20 NA    87.8
+## # A tibble: 1 x 7
+##       p  conf distribution modcv     n r     basis
+##   <dbl> <dbl> <chr>        <lgl> <int> <lgl> <dbl>
+## 1   0.9  0.95 Normal       FALSE    20 NA     92.0
+
+
+glance(b, include_diagnostics = TRUE)
+
+## # A tibble: 1 x 11
+##        p  conf distribution modcv     n r     basis outliers_within…
+##    <dbl> <dbl> <chr>        <lgl> <int> <lgl> <dbl> <chr>
+##  1   0.9  0.95 Normal       FALSE    20 NA     92.0 NA
+## # … with 3 more variables: between_batch_variability <chr>,
+## #   outliers <chr>, anderson_darling_normal <chr>
 
 }
 \seealso{
