@@ -171,75 +171,75 @@ tests of the data prior to calculating the basis values. These diagnostic
 tests can be overridden if needed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_normal</a></span>(
-  data = <span class='kw'>NULL</span>,
-  <span class='kw'>x</span>,
-  batch = <span class='kw'>NULL</span>,
-  p = <span class='fl'>0.9</span>,
-  conf = <span class='fl'>0.95</span>,
-  override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
+    <pre class="usage"><span class='fu'>basis_normal</span>(
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>x</span>,
+  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
 )
 
-<span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_lognormal</a></span>(
-  data = <span class='kw'>NULL</span>,
-  <span class='kw'>x</span>,
-  batch = <span class='kw'>NULL</span>,
-  p = <span class='fl'>0.9</span>,
-  conf = <span class='fl'>0.95</span>,
-  override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
+<span class='fu'>basis_lognormal</span>(
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>x</span>,
+  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
 )
 
-<span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_weibull</a></span>(
-  data = <span class='kw'>NULL</span>,
-  <span class='kw'>x</span>,
-  batch = <span class='kw'>NULL</span>,
-  p = <span class='fl'>0.9</span>,
-  conf = <span class='fl'>0.95</span>,
-  override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
+<span class='fu'>basis_weibull</span>(
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>x</span>,
+  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
 )
 
-<span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_pooled_cv</a></span>(
-  data = <span class='kw'>NULL</span>,
-  <span class='kw'>x</span>,
-  <span class='kw'>groups</span>,
-  batch = <span class='kw'>NULL</span>,
-  p = <span class='fl'>0.9</span>,
-  conf = <span class='fl'>0.95</span>,
-  modcv = <span class='fl'>FALSE</span>,
-  override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
+<span class='fu'>basis_pooled_cv</span>(
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>x</span>,
+  <span class='no'>groups</span>,
+  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
 )
 
-<span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_pooled_sd</a></span>(
-  data = <span class='kw'>NULL</span>,
-  <span class='kw'>x</span>,
-  <span class='kw'>groups</span>,
-  batch = <span class='kw'>NULL</span>,
-  p = <span class='fl'>0.9</span>,
-  conf = <span class='fl'>0.95</span>,
-  modcv = <span class='fl'>FALSE</span>,
-  override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
+<span class='fu'>basis_pooled_sd</span>(
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>x</span>,
+  <span class='no'>groups</span>,
+  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
 )
 
-<span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_hk_ext</a></span>(
-  data = <span class='kw'>NULL</span>,
-  <span class='kw'>x</span>,
-  batch = <span class='kw'>NULL</span>,
-  p = <span class='fl'>0.9</span>,
-  conf = <span class='fl'>0.95</span>,
-  method = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"optimum-order"</span>, <span class='st'>"woodward-frawley"</span>),
-  override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
+<span class='fu'>basis_hk_ext</span>(
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>x</span>,
+  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"optimum-order"</span>, <span class='st'>"woodward-frawley"</span>),
+  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
 )
 
-<span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_nonpara_large_sample</a></span>(
-  data = <span class='kw'>NULL</span>,
-  <span class='kw'>x</span>,
-  batch = <span class='kw'>NULL</span>,
-  p = <span class='fl'>0.9</span>,
-  conf = <span class='fl'>0.95</span>,
-  override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
+<span class='fu'>basis_nonpara_large_sample</span>(
+  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>x</span>,
+  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
+  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
 )
 
-<span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_anova</a></span>(data = <span class='kw'>NULL</span>, <span class='kw'>x</span>, <span class='kw'>groups</span>, p = <span class='fl'>0.9</span>, conf = <span class='fl'>0.95</span>, override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>())</pre>
+<span class='fu'>basis_anova</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='no'>groups</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -338,32 +338,32 @@ is a way of
 adding extra variance to datasets with unexpectedly low variance.</p>
 <p><code>basis_normal</code> calculate the basis value by subtracting \(k\) times
 the standard deviation from the mean. \(k\) is given by
-the function <code><a href='www.cmstatr.net/reference/k_factor_normal.html'>k_factor_normal</a></code>. The equations in
+the function <code><a href='k_factor_normal.html'>k_factor_normal</a></code>. The equations in
 Krishnamoorthy and Mathew (2008) are used.
 <code>basis_normal</code> also
 performs a diagnostic test for outliers (using
-<code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and a diagnostic test for normality (using
-<code><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_normal</a></code>).
+<code><a href='anderson_darling.html'>anderson_darling_normal</a></code>).
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_lognormal</code> calculates the basis value in the same way
 that <code>basis_normal</code> does, except that the natural logarithm of the
 data is taken.</p>
 <p><code>basis_lognormal</code> function also performs
 a diagnostic test for outliers (using
-<code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and a diagnostic test for normality (using
-<code><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_lognormal</a></code>).
+<code><a href='anderson_darling.html'>anderson_darling_lognormal</a></code>).
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_weibull</code> calculates the basis value for data distributed
 according to a Weibull distribution. The confidence level for the
@@ -373,14 +373,14 @@ with tables published in CMH-17-1G. Results differ between this function
 and STAT17 by approximately 0.5%.</p>
 <p><code>basis_weibull</code> function also performs
 a diagnostic test for outliers (using
-<code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and a diagnostic test for normality (using
-<code><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_weibull</a></code>).
+<code><a href='anderson_darling.html'>anderson_darling_weibull</a></code>).
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_hk_ext</code> calculates the basis value using the Extended
 Hanson--Koopmans method, as described in CMH-17-1G and Vangel (1994).
@@ -406,14 +406,14 @@ agreement can be as poor as 1% with the result of this function
 being more conservative than STAT-17.</p>
 <p><code>basis_hk_ext</code> also performs
 a diagnostic test for outliers (using
-<code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and performs a pair of tests that the sample size and method selected
 follow the guidance described above.
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_nonpara_large_sample</code> calculates the basis value
 using the large sample method described in CMH-17-1G. This method uses
@@ -423,21 +423,21 @@ of this function have been verified against results of the STAT-17
 program.</p>
 <p><code>basis_nonpara_large_sample</code> also performs
 a diagnostic test for outliers (using
-<code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and performs a test that the sample size is sufficiently large.
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_anova</code> calculates basis values using the ANOVA method.
 <code>x</code> specifies the data (normally strength) and <code>groups</code>
 indicates the group corresponding to each observation. This method is
 described in CMH-17-1G. This function automatically performs a diagnostic
 test for outliers within each group
-(using <code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>) and a test for between
-group variability (using <code><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></code>) as well as checking
+(using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>) and a test for between
+group variability (using <code><a href='ad_ksample.html'>ad_ksample</a></code>) as well as checking
 that the data contains at least 5 groups.
 This function has been verified against the results of the STAT-17 program.</p>
 <p><code>basis_pooled_sd</code> calculates basis values by pooling the data from
@@ -451,18 +451,18 @@ and <code>group</code> indicates the group corresponding to each observation.
 This method is described in CMH-17-1G.</p>
 <p><code>basis_pooled_sd</code> and <code>basis_pooled_cv</code> both automatically
 perform a number of diagnostic tests. Using
-<code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>, they check that there are no
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>, they check that there are no
 outliers within each group and batch (provided that <code>batch</code> is
 specified). They check the between batch variability using
-<code><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></code>. They check that there are no outliers within
+<code><a href='ad_ksample.html'>ad_ksample</a></code>. They check that there are no outliers within
 each group (pooling all batches) using
-<code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code>. They check for the normality
-of the pooled data using <code><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_normal</a></code>.
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>. They check for the normality
+of the pooled data using <code><a href='anderson_darling.html'>anderson_darling_normal</a></code>.
 <code>basis_pooled_sd</code> checks for equality of variance of all
-data using <code><a href='www.cmstatr.net/reference/levene_test.html'>levene_test</a></code> and <code>basis_pooled_cv</code>
+data using <code><a href='levene_test.html'>levene_test</a></code> and <code>basis_pooled_cv</code>
 checks for equality of variances of all data after transforming it
-using <code><a href='www.cmstatr.net/reference/normalize_group_mean.html'>normalize_group_mean</a></code>
-using <code><a href='www.cmstatr.net/reference/levene_test.html'>levene_test</a></code>.</p>
+using <code><a href='normalize_group_mean.html'>normalize_group_mean</a></code>
+using <code><a href='levene_test.html'>levene_test</a></code>.</p>
 <p>The object returned by these functions includes the named vector
 <code>diagnostic_results</code>. This contains all of the diagnostic tests
 performed. The name of each element of the vector corresponds with the
@@ -488,28 +488,28 @@ for Practitioners and Researchers, Second Edition.
 Hoboken: John Wiley &amp; Sons, 2017.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/hk_ext.html'>hk_ext_z_j_opt</a></code></p>
-<p><code><a href='www.cmstatr.net/reference/k_factor_normal.html'>k_factor_normal</a></code></p>
-<p><code><a href='www.cmstatr.net/reference/transform_mod_cv.html'>transform_mod_cv</a></code></p>
-<p><code><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></code></p>
-<p><code><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_normal</a></code></p>
-<p><code><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_lognormal</a></code></p>
-<p><code><a href='www.cmstatr.net/reference/anderson_darling.html'>anderson_darling_weibull</a></code></p>
-<p><code><a href='www.cmstatr.net/reference/ad_ksample.html'>ad_ksample</a></code></p>
-<p><code><a href='www.cmstatr.net/reference/normalize_group_mean.html'>normalize_group_mean</a></code></p></div>
+    <div class='dont-index'><p><code><a href='hk_ext.html'>hk_ext_z_j_opt</a></code></p>
+<p><code><a href='k_factor_normal.html'>k_factor_normal</a></code></p>
+<p><code><a href='transform_mod_cv.html'>transform_mod_cv</a></code></p>
+<p><code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code></p>
+<p><code><a href='anderson_darling.html'>anderson_darling_normal</a></code></p>
+<p><code><a href='anderson_darling.html'>anderson_darling_lognormal</a></code></p>
+<p><code><a href='anderson_darling.html'>anderson_darling_weibull</a></code></p>
+<p><code><a href='ad_ksample.html'>ad_ksample</a></code></p>
+<p><code><a href='normalize_group_mean.html'>normalize_group_mean</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 
 <span class='co'># A single-point basis value can be calculated as follows</span>
 <span class='co'># in this example, three failed diagnostic tests are</span>
 <span class='co'># overridden.</span>
 
-<span class='kw'>carbon.fabric</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span> <span class='op'>==</span> <span class='st'>"FC"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>condition</span> <span class='op'>==</span> <span class='st'>"RTD"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_normal</a></span>(<span class='kw'>strength</span>, <span class='kw'>batch</span>,
-               override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"outliers"</span>,
+<span class='no'>carbon.fabric</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>test</span> <span class='kw'>==</span> <span class='st'>"FC"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>condition</span> <span class='kw'>==</span> <span class='st'>"RTD"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>basis_normal</span>(<span class='no'>strength</span>, <span class='no'>batch</span>,
+               <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"outliers"</span>,
                             <span class='st'>"outliers_within_batch"</span>,
                             <span class='st'>"anderson_darling_normal"</span>))</div><div class='output co'>#&gt; 
 #&gt; Call:
@@ -540,10 +540,10 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 <span class='co'># A set of pooled basis values can also be calculated</span>
 <span class='co'># using the pooled standard deviation method, as follows.</span>
 <span class='co'># In this example, one failed diagnostic test is overridden.</span>
-<span class='kw'>carbon.fabric</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span> <span class='op'>==</span> <span class='st'>"WT"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='www.cmstatr.net/reference/basis.html'>basis_pooled_sd</a></span>(<span class='kw'>strength</span>, <span class='kw'>condition</span>, <span class='kw'>batch</span>,
-                  override = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"outliers_within_batch"</span>))</div><div class='output co'>#&gt; 
+<span class='no'>carbon.fabric</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>test</span> <span class='kw'>==</span> <span class='st'>"WT"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>basis_pooled_sd</span>(<span class='no'>strength</span>, <span class='no'>condition</span>, <span class='no'>batch</span>,
+                  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"outliers_within_batch"</span>))</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; basis_pooled_sd(data = ., x = strength, groups = condition, batch = batch, 
 #&gt;     override = c("outliers_within_batch"))
@@ -556,17 +556,18 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 #&gt; ETW  125.0698 
 #&gt; RTD  132.1457 
 #&gt; </div><div class='input'>
-<span class='co'>## Call:</span>
-<span class='co'>## basis_pooled_sd(data = ., x = strength, groups = condition,</span>
-<span class='co'>##                 batch = batch, override = c("outliers_within_batch"))</span>
-<span class='co'>##</span>
-<span class='co'>## Distribution:  Normal - Pooled Standard Deviation 	( n = 54, r = 3 )</span>
-<span class='co'>## The following diagnostic tests were overridden:</span>
-<span class='co'>##     `outliers_within_batch`</span>
-<span class='co'>## B-Basis:   ( p = 0.9 , conf = 0.95 )</span>
-<span class='co'>## CTD  127.6914</span>
-<span class='co'>## ETW  125.0698</span>
-<span class='co'>## RTD  132.1457</span>
+## Call:
+## basis_pooled_sd(data = ., x = strength, groups = condition,
+##                 batch = batch, override = c("outliers_within_batch"))
+##
+## Distribution:  Normal - Pooled Standard Deviation 	( n = 54, r = 3 )
+## The following diagnostic tests were overridden:
+##     `outliers_within_batch`
+## B-Basis:   ( p = 0.9 , conf = 0.95 )
+## CTD  127.6914
+## ETW  125.0698
+## RTD  132.1457
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -583,7 +584,7 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

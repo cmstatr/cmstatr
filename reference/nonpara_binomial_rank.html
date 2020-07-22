@@ -152,10 +152,10 @@ basis_nonpara_large_sample." />
 bounds for large samples. This function should only be used for
 computing B-Basis for samples larger than 28 or A-Basis for samples
 larger than 298. This function is used by
-<code><a href='www.cmstatr.net/reference/basis.html'>basis_nonpara_large_sample</a></code>.</p>
+<code><a href='basis.html'>basis_nonpara_large_sample</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/nonpara_binomial_rank.html'>nonpara_binomial_rank</a></span>(<span class='kw'>n</span>, <span class='kw'>p</span>, <span class='kw'>conf</span>)</pre>
+    <pre class="usage"><span class='fu'>nonpara_binomial_rank</span>(<span class='no'>n</span>, <span class='no'>p</span>, <span class='no'>conf</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -212,17 +212,18 @@ Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/basis.html'>basis_nonpara_large_sample</a></code></p></div>
+    <div class='dont-index'><p><code><a href='basis.html'>basis_nonpara_large_sample</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='www.cmstatr.net/reference/nonpara_binomial_rank.html'>nonpara_binomial_rank</a></span>(n = <span class='fl'>1693</span>, p = <span class='fl'>0.99</span>, conf = <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 11</div><div class='input'><span class='co'>## [1] 11</span>
+    <pre class="examples"><div class='input'><span class='fu'>nonpara_binomial_rank</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1693</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.99</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 11</div><div class='input'><span class='co'>## [1] 11</span>
 
 <span class='co'># The above example indicates that for a sample of 1693 observations,</span>
 <span class='co'># the A-Basis is best approximated as the 11th ordered observation.</span>
 <span class='co'># In the example below, the same ordered observation would also be used</span>
 <span class='co'># for a sample of size 1702.</span>
 
-<span class='fu'><a href='www.cmstatr.net/reference/nonpara_binomial_rank.html'>nonpara_binomial_rank</a></span>(n = <span class='fl'>1702</span>, p = <span class='fl'>0.99</span>, conf = <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 11</div><div class='input'><span class='co'>## [1] 11</span>
+<span class='fu'>nonpara_binomial_rank</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>1702</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.99</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 11</div><div class='input'>## [1] 11
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -239,7 +240,7 @@ CMH-17-1G, Mar. 2012.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

@@ -165,7 +165,7 @@ rules are:</p>
 
     </div>
 
-    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></span>(<span class='kw'>cv</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_cv_star</span>(<span class='no'>cv</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -186,14 +186,15 @@ Guideline for Characterization of Structural Materials,"
 SAE International, CMH-17-1G, Mar. 2012.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/cv.html'>cv</a></code></p></div>
+    <div class='dont-index'><p><code><a href='cv.html'>cv</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># The modified CV for values of CV smaller than 4% is 6%</span>
-<span class='fu'><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></span>(<span class='fl'>0.01</span>)</div><div class='output co'>#&gt; [1] 0.06</div><div class='input'><span class='co'>## [1] 0.06</span>
+<span class='fu'>calc_cv_star</span>(<span class='fl'>0.01</span>)</div><div class='output co'>#&gt; [1] 0.06</div><div class='input'><span class='co'>## [1] 0.06</span>
 
 <span class='co'># The modified CV for values of CV larger than 8% is unchanged</span>
-<span class='fu'><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></span>(<span class='fl'>0.09</span>)</div><div class='output co'>#&gt; [1] 0.09</div><div class='input'><span class='co'>## [1] 0.09</span>
+<span class='fu'>calc_cv_star</span>(<span class='fl'>0.09</span>)</div><div class='output co'>#&gt; [1] 0.09</div><div class='input'>## [1] 0.09
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -210,7 +211,7 @@ SAE International, CMH-17-1G, Mar. 2012.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

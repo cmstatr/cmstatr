@@ -149,9 +149,9 @@ as described by Vangel (1994)." />
 as described by Vangel (1994).</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/hk_ext.html'>hk_ext_z</a></span>(<span class='kw'>n</span>, <span class='kw'>i</span>, <span class='kw'>j</span>, <span class='kw'>p</span>, <span class='kw'>conf</span>)
+    <pre class="usage"><span class='fu'>hk_ext_z</span>(<span class='no'>n</span>, <span class='no'>i</span>, <span class='no'>j</span>, <span class='no'>p</span>, <span class='no'>conf</span>)
 
-<span class='fu'><a href='www.cmstatr.net/reference/hk_ext.html'>hk_ext_z_j_opt</a></span>(<span class='kw'>n</span>, <span class='kw'>p</span>, <span class='kw'>conf</span>)</pre>
+<span class='fu'>hk_ext_z_j_opt</span>(<span class='no'>n</span>, <span class='no'>p</span>, <span class='no'>conf</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -218,7 +218,7 @@ Hazard Rates,” The Annals of Mathematical Statistics,
 vol. 35, no. 4. pp. 1561–1570, 1964.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/basis.html'>basis_hk_ext</a></code></p></div>
+    <div class='dont-index'><p><code><a href='basis.html'>basis_hk_ext</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># The factors from Table 1 of Vangel (1994) can be recreated</span>
@@ -227,24 +227,25 @@ vol. 35, no. 4. pp. 1561–1570, 1964.</p>
 <span class='co'># required for calculating the tolerance bound with a content</span>
 <span class='co'># of 0.9 and a confidence level of 0.95 based on the median</span>
 <span class='co'># and first ordered observation can be calculated as follows.</span>
-<span class='fu'><a href='www.cmstatr.net/reference/hk_ext.html'>hk_ext_z</a></span>(n = <span class='fl'>21</span>, i = <span class='fl'>1</span>, j = <span class='fl'>11</span>, p = <span class='fl'>0.9</span>, conf = <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 1.204806</div><div class='input'>
+<span class='fu'>hk_ext_z</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>21</span>, <span class='kw'>i</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>j</span> <span class='kw'>=</span> <span class='fl'>11</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 1.204806</div><div class='input'>
 <span class='co'>## [1] 1.204806</span>
 
 <span class='co'># The hk_ext_z_j_opt function can be used to refine this value</span>
 <span class='co'># of z by finding an optimum value of j, rather than simply</span>
 <span class='co'># using the median. Here, we find that the optimal observation</span>
 <span class='co'># to use is the 10th, not the 11th (which is the median).</span>
-<span class='fu'><a href='www.cmstatr.net/reference/hk_ext.html'>hk_ext_z_j_opt</a></span>(n = <span class='fl'>21</span>, p = <span class='fl'>0.9</span>, conf = <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; $z
+<span class='fu'>hk_ext_z_j_opt</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>21</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; $z
 #&gt; [1] 1.217717
 #&gt; 
 #&gt; $j
 #&gt; [1] 10
 #&gt; </div><div class='input'>
-<span class='co'>## $z</span>
-<span class='co'>## [1] 1.217717</span>
-<span class='co'>##</span>
-<span class='co'>## $j</span>
-<span class='co'>## [1] 10</span>
+## $z
+## [1] 1.217717
+##
+## $j
+## [1] 10
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -261,7 +262,7 @@ vol. 35, no. 4. pp. 1561–1570, 1964.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

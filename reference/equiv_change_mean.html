@@ -151,18 +151,18 @@ a sample. This is normally used to check for properties such as modulus.
 This function is a wrapper for a two-sample t--test.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/equiv_change_mean.html'>equiv_change_mean</a></span>(
-  df_qual = <span class='kw'>NULL</span>,
-  data_qual = <span class='kw'>NULL</span>,
-  n_qual = <span class='kw'>NULL</span>,
-  mean_qual = <span class='kw'>NULL</span>,
-  sd_qual = <span class='kw'>NULL</span>,
-  data_sample = <span class='kw'>NULL</span>,
-  n_sample = <span class='kw'>NULL</span>,
-  mean_sample = <span class='kw'>NULL</span>,
-  sd_sample = <span class='kw'>NULL</span>,
-  <span class='kw'>alpha</span>,
-  modcv = <span class='fl'>FALSE</span>
+    <pre class="usage"><span class='fu'>equiv_change_mean</span>(
+  <span class='kw'>df_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>n_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>mean_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>sd_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>alpha</span>,
+  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -290,7 +290,7 @@ is performed in a short period of time.
 Using the Modified CV approach, the standard deviation is calculated by
 multiplying <code>CV_star * mean_qual</code> where <code>mean_qual</code> is either the
 value supplied or the value calculated by <code><a href='https://rdrr.io/r/base/mean.html'>mean(data_qual)</a></code> and
-\(CV*\) is determined using <code><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></code>.</p>
+\(CV*\) is determined using <code><a href='calc_cv_star.html'>calc_cv_star</a></code>.</p>
 <p>Note that the modified CV option should only be used if that data passes the
 Anderson--Darling test.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
@@ -300,13 +300,13 @@ Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></code></p>
+    <div class='dont-index'><p><code><a href='calc_cv_star.html'>calc_cv_star</a></code></p>
 <p><code><a href='https://rdrr.io/r/stats/t.test.html'>t.test</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='www.cmstatr.net/reference/equiv_change_mean.html'>equiv_change_mean</a></span>(alpha = <span class='fl'>0.05</span>, n_sample = <span class='fl'>9</span>, mean_sample = <span class='fl'>9.02</span>,
-                  sd_sample = <span class='fl'>0.15785</span>, n_qual = <span class='fl'>28</span>, mean_qual = <span class='fl'>9.24</span>,
-                  sd_qual = <span class='fl'>0.162</span>, modcv = <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
+    <pre class="examples"><div class='input'><span class='fu'>equiv_change_mean</span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='fl'>9</span>, <span class='kw'>mean_sample</span> <span class='kw'>=</span> <span class='fl'>9.02</span>,
+                  <span class='kw'>sd_sample</span> <span class='kw'>=</span> <span class='fl'>0.15785</span>, <span class='kw'>n_qual</span> <span class='kw'>=</span> <span class='fl'>28</span>, <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='fl'>9.24</span>,
+                  <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='fl'>0.162</span>, <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162, 
 #&gt;     n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785, alpha = 0.05, 
@@ -320,19 +320,20 @@ CMH-17-1G, Mar. 2012.</p>
 #&gt;               SD      0.162           0.15785      
 #&gt;           Result               PASS               
 #&gt;    Passing Range       8.856695 to 9.623305       </div><div class='input'>
-<span class='co'>## Call:</span>
-<span class='co'>## equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162,</span>
-<span class='co'>##                   n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785,</span>
-<span class='co'>##                   alpha = 0.05,modcv = TRUE)</span>
-<span class='co'>##</span>
-<span class='co'>## For alpha = 0.05</span>
-<span class='co'>## Modified CV used</span>
-<span class='co'>##                   Qualification        Sample</span>
-<span class='co'>##           Number        28               9</span>
-<span class='co'>##             Mean       9.24             9.02</span>
-<span class='co'>##               SD      0.162           0.15785</span>
-<span class='co'>##           Result               PASS</span>
-<span class='co'>##    Passing Range       8.856695 to 9.623305</span>
+## Call:
+## equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162,
+##                   n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785,
+##                   alpha = 0.05,modcv = TRUE)
+##
+## For alpha = 0.05
+## Modified CV used
+##                   Qualification        Sample
+##           Number        28               9
+##             Mean       9.24             9.02
+##               SD      0.162           0.15785
+##           Result               PASS
+##    Passing Range       8.856695 to 9.623305
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -349,7 +350,7 @@ CMH-17-1G, Mar. 2012.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

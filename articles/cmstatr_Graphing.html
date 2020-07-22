@@ -110,19 +110,16 @@
     
 <p>This vignette demonstrates how to create some of the graphs commonly used when analyzing composite material data. Here, we rely on the <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a> package for graphing. This package can be loaded either on its own, or through the <code>tidyverse</code> meta-package, which also includes packages such as <code>dplyr</code> that we will also use.</p>
 <p>We’ll need to load a few packages in order to proceed.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org">dplyr</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://tidyr.tidyverse.org">tidyr</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://www.cmstatr.net">cmstatr</a></span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">ggplot2</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tidyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">cmstatr</span>)</pre></body></html></div>
 <p>Throughout this vignette, we’ll use one of the example data sets that comes with <code>cmstatr</code> and we’ll focus on the warp-tension data as an example. We’ll load the example data in a variable as follows. By default the condition will be in an arbitrary order, but throughout the visualization, we’ll want the conditions shown in a particular order (from coldest and driest to hottest and wettest). We can define the order of the conditions using the <code>ordered</code> function. For brevity, only the first few rows of the data set are displayed below.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="kw">dat</span> <span class="op">&lt;-</span> <span class="kw">carbon.fabric.2</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">test</span> <span class="op">==</span> <span class="st">"WT"</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(condition = <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="kw">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">dat</span> <span class="kw">&lt;-</span> <span class="no">carbon.fabric.2</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">test</span> <span class="kw">==</span> <span class="st">"WT"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
 
-<span class="kw">dat</span> <span class="op">%&gt;%</span>
+<span class="no">dat</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>)
 <span class="co">#&gt;    test condition batch thickness nplies strength modulus failure_mode</span>
 <span class="co">#&gt; 1    WT       CTD     A     0.112     14  142.817   9.285          LAT</span>
@@ -134,16 +131,14 @@
 <span class="co">#&gt; 7    WT       CTD     A     0.113     14  128.547   9.088          LAB</span>
 <span class="co">#&gt; 8    WT       CTD     B     0.113     14  127.709   9.199          LGM</span>
 <span class="co">#&gt; 9    WT       CTD     B     0.113     14  127.074   9.058          LGM</span>
-<span class="co">#&gt; 10   WT       CTD     B     0.114     14  126.879   9.306          LGM</span>
-</pre></div>
+<span class="co">#&gt; 10   WT       CTD     B     0.114     14  126.879   9.306          LGM</span></pre></body></html></div>
 <p>We’ll then calculate the B-Basis value using the pooling by standard deviation method. This data set happens to fail some of the diagnostic tests, but for the purpose of this example, we’ll ignore those failures using the <code>override</code> argument.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">b_basis_pooled</span> <span class="op">&lt;-</span> <span class="kw">dat</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/basis.html">basis_pooled_cv</a></span>(<span class="kw">strength</span>, <span class="kw">condition</span>, <span class="kw">batch</span>,
-                  override = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_group_variability"</span>,
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="no">b_basis_pooled</span> <span class="kw">&lt;-</span> <span class="no">dat</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/basis.html">basis_pooled_cv</a></span>(<span class="no">strength</span>, <span class="no">condition</span>, <span class="no">batch</span>,
+                  <span class="kw">override</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_group_variability"</span>,
                                <span class="st">"normalized_variance_equal"</span>))
 
-<span class="kw">b_basis_pooled</span>
+<span class="no">b_basis_pooled</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; basis_pooled_cv(data = ., x = strength, groups = condition, batch = batch, </span>
@@ -157,91 +152,78 @@
 <span class="co">#&gt; CTD   125.1325 </span>
 <span class="co">#&gt; RTD   129.3447 </span>
 <span class="co">#&gt; ETW   123.809 </span>
-<span class="co">#&gt; ETW2  120.3191</span>
-</pre></div>
+<span class="co">#&gt; ETW2  120.3191</span></pre></body></html></div>
 <p>The object returned from <code>basis_pooled_cv</code> contains a number of values. One value is a <code>data.frame</code> containing the groups (i.e. conditions) and the corresponding basis values. This looks like the following. We’ll use this in the visualizations.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="kw">b_basis_pooled</span><span class="op">$</span><span class="kw">basis</span>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="no">b_basis_pooled</span>$<span class="no">basis</span>
 <span class="co">#&gt;      group    value</span>
 <span class="co">#&gt; CTD    CTD 125.1325</span>
 <span class="co">#&gt; RTD    RTD 129.3447</span>
 <span class="co">#&gt; ETW    ETW 123.8090</span>
-<span class="co">#&gt; ETW2  ETW2 120.3191</span>
-</pre></div>
+<span class="co">#&gt; ETW2  ETW2 120.3191</span></pre></body></html></div>
 <div id="batch-plots" class="section level1">
 <h1 class="hasAnchor">
 <a href="#batch-plots" class="anchor"></a>Batch Plots</h1>
 <p>Batch plots are used to identify differences between batches. Simple batch plots can be created using box plots and adding horizontal lines for the basis values as follows. Note that the heavy line in the box of the box plot is the <em>median</em>, not the mean. The two hinges correspond with the first and third quantiles and the whiskers extend to the most extreme data point, or 1.5 times the inner quantile range.</p>
 <p>In the code below, we use the function <code>rename</code> to rename the column <code>group</code> to <code>condition</code>. The <code>data.frame</code> produced by <code>basis_pooled_cv</code> uses the columns <code>value</code> and <code>group</code>, but to match the data, we need the column with the conditions to be named <code>condition</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">dat</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">batch</span>, y = <span class="kw">strength</span>)) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span>(width = <span class="fl">0.25</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(yintercept = <span class="kw">value</span>),
-             data = <span class="kw">b_basis_pooled</span><span class="op">$</span><span class="kw">basis</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(condition = <span class="kw">group</span>),
-             color = <span class="st">"blue"</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(<span class="kw">.</span> <span class="op">~</span> <span class="kw">condition</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Batch Plot"</span>)
-</pre></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="no">dat</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">batch</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">strength</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html">geom_jitter</a></span>(<span class="kw">width</span> <span class="kw">=</span> <span class="fl">0.25</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_hline</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">yintercept</span> <span class="kw">=</span> <span class="no">value</span>),
+             <span class="kw">data</span> <span class="kw">=</span> <span class="no">b_basis_pooled</span>$<span class="no">basis</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>),
+             <span class="kw">color</span> <span class="kw">=</span> <span class="st">"blue"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(<span class="no">.</span> ~ <span class="no">condition</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Batch Plot"</span>)</pre></body></html></div>
 <p><img src="cmstatr_Graphing_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
 </div>
 <div id="quantile-plots" class="section level1">
 <h1 class="hasAnchor">
 <a href="#quantile-plots" class="anchor"></a>Quantile Plots</h1>
 <p>A quantile plot provides a graphical summary of sample values. This plot displays the sample values and the corresponding quantile. A quantile plot can be used to examine the symmetry and tail sizes of the underlying distribution. Sharp rises may indicate the presence of outliers.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="kw">dat</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">strength</span>, color = <span class="kw">condition</span>)) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_ecdf.html">stat_ecdf</a></span>(geom = <span class="st">"point"</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html">coord_flip</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Quantile Plot"</span>)
-</pre></div>
+<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">dat</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">strength</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_ecdf.html">stat_ecdf</a></span>(<span class="kw">geom</span> <span class="kw">=</span> <span class="st">"point"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_flip.html">coord_flip</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Quantile Plot"</span>)</pre></body></html></div>
 <p><img src="cmstatr_Graphing_files/figure-html/unnamed-chunk-6-1.png" width="576"></p>
 </div>
 <div id="normal-survival-function-plots" class="section level1">
 <h1 class="hasAnchor">
 <a href="#normal-survival-function-plots" class="anchor"></a>Normal Survival Function Plots</h1>
 <p>An empirical survival function, and the corresponding normal survival function can be plotted using two <code>ggplot</code> “stat” functions provided by <code>cmstatr</code>. In the example below, the empirical survival function is plotted for each condition, and the survival function for a normal distribution with the mean and variance from the data is also plotted (the survival function is 1 minus the cumulative distribution function). This type of plot can be used to identify how closely the data follows a normal distribution, and also to compare the distributions of the various conditions.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="kw">dat</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">strength</span>, color = <span class="kw">condition</span>)) <span class="op">+</span>
-  <span class="fu"><a href="../reference/stat_normal_surv_func.html">stat_normal_surv_func</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="../reference/stat_esf.html">stat_esf</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Normal Survival Function Plot"</span>)
-</pre></div>
+<div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="no">dat</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">strength</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="../reference/stat_normal_surv_func.html">stat_normal_surv_func</a></span>() +
+  <span class="fu"><a href="../reference/stat_esf.html">stat_esf</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Normal Survival Function Plot"</span>)</pre></body></html></div>
 <p><img src="cmstatr_Graphing_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
 </div>
 <div id="normal-score-plots" class="section level1">
 <h1 class="hasAnchor">
 <a href="#normal-score-plots" class="anchor"></a>Normal Score Plots</h1>
 <p>The normal scores plot calculates the normal score and plots it against the normal score. Normal plots are useful to investigate distributions of the data.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="kw">dat</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="kw">condition</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(norm.score = <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span>(<span class="kw">strength</span>)) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">norm.score</span>, y = <span class="kw">strength</span>, colour = <span class="kw">condition</span>)) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Normal Scores Plot"</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>()
-</pre></div>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">dat</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">norm.score</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span>(<span class="no">strength</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">norm.score</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">strength</span>, <span class="kw">colour</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Normal Scores Plot"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>()</pre></body></html></div>
 <p><img src="cmstatr_Graphing_files/figure-html/unnamed-chunk-8-1.png" width="576"></p>
 </div>
 <div id="q-q-plots" class="section level1">
 <h1 class="hasAnchor">
 <a href="#q-q-plots" class="anchor"></a>Q-Q Plots</h1>
 <p>A Q-Q plot compares the data against the theoretical quantiles for a particular distribution. A line is also plotted showing the normal distribution with mean and variance from the data. If the data exactly followed a normal distribution, all points would fall on this line.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="kw">dat</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(sample = <span class="kw">strength</span>, colour = <span class="kw">condition</span>)) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span>() <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Q-Q Plot"</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>()
-</pre></div>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">dat</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">sample</span> <span class="kw">=</span> <span class="no">strength</span>, <span class="kw">colour</span> <span class="kw">=</span> <span class="no">condition</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span>() +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Q-Q Plot"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>()</pre></body></html></div>
 <p><img src="cmstatr_Graphing_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
 </div>
 <div id="property-plots" class="section level1">
@@ -250,65 +232,60 @@
 <p>Property plots allow for a variety of properties for a group to be compared to other properties within the same group, as well as to other group properties. The properties included in this plot are A-Basis, B-Basis, Pooled A- and B-Basis, Pooled Modified CV (Coefficient of Variation) A- and B-Basis, Mean, and Min for each group.</p>
 <p>The property plots will take a bit of work to construct.</p>
 <p>First, the distribution of each group must be determined. Once the distribution has been determined, the proper basis calculation based on that distribution should be filled in below. We also have a column in the tables below for extra arguments to pass to the <code>basis</code> function, such as overrides required or the method for the <code>basis_hk_ext</code> function to use.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="kw">b_basis_fcn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html">tribble</a></span>(
-  <span class="op">~</span><span class="kw">condition</span>, <span class="op">~</span><span class="kw">fcn</span>, <span class="op">~</span><span class="kw">args</span>,
-  <span class="st">"CTD"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(override = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>)),
-  <span class="st">"RTD"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(override = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>)),
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="no">b_basis_fcn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+  ~<span class="no">condition</span>, ~<span class="no">fcn</span>, ~<span class="no">args</span>,
+  <span class="st">"CTD"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">override</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>)),
+  <span class="st">"RTD"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">override</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>)),
   <span class="st">"ETW"</span>, <span class="st">"basis_hk_ext"</span>, <span class="kw">NULL</span>,
-  <span class="st">"ETW2"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(override = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>))
+  <span class="st">"ETW2"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">override</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>))
 )
 
-<span class="kw">a_basis_fcn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html">tribble</a></span>(
-  <span class="op">~</span><span class="kw">condition</span>, <span class="op">~</span><span class="kw">fcn</span>, <span class="op">~</span><span class="kw">args</span>,
-  <span class="st">"CTD"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(override = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>)),
-  <span class="st">"RTD"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(override = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>)),
-  <span class="st">"ETW"</span>, <span class="st">"basis_hk_ext"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(method = <span class="st">"woodward-frawley"</span>),
-  <span class="st">"ETW2"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(override = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>))
-)
-</pre></div>
+<span class="no">a_basis_fcn</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tribble</a></span>(
+  ~<span class="no">condition</span>, ~<span class="no">fcn</span>, ~<span class="no">args</span>,
+  <span class="st">"CTD"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">override</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>)),
+  <span class="st">"RTD"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">override</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>)),
+  <span class="st">"ETW"</span>, <span class="st">"basis_hk_ext"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">method</span> <span class="kw">=</span> <span class="st">"woodward-frawley"</span>),
+  <span class="st">"ETW2"</span>, <span class="st">"basis_normal"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">override</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_batch_variability"</span>))
+)</pre></body></html></div>
 <p>We’ll write a function that takes the data and information about the distribution and computes the single-point basis value. We’ll use this function for both A- and B-Basis, so we’ll add a parameter for the probability (0.90 or 0.99).</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="kw">single_point_fcn</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">group_x</span>, <span class="kw">group_batch</span>, <span class="kw">cond</span>, <span class="kw">basis_fcn</span>, <span class="kw">p</span>) {
-  <span class="kw">fcn</span> <span class="op">&lt;-</span> <span class="kw">basis_fcn</span><span class="op">$</span><span class="kw">fcn</span>[<span class="kw">basis_fcn</span><span class="op">$</span><span class="kw">condition</span> <span class="op">==</span> <span class="kw">cond</span>[<span class="fl">1</span>]]
-  <span class="kw">extra_args</span> <span class="op">&lt;-</span> <span class="kw">basis_fcn</span><span class="op">$</span><span class="kw">args</span>[<span class="kw">basis_fcn</span><span class="op">$</span><span class="kw">condition</span> <span class="op">==</span> <span class="kw">cond</span>[<span class="fl">1</span>]]
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="no">single_point_fcn</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">group_x</span>, <span class="no">group_batch</span>, <span class="no">cond</span>, <span class="no">basis_fcn</span>, <span class="no">p</span>) {
+  <span class="no">fcn</span> <span class="kw">&lt;-</span> <span class="no">basis_fcn</span>$<span class="no">fcn</span>[<span class="no">basis_fcn</span>$<span class="no">condition</span> <span class="kw">==</span> <span class="no">cond</span>[<span class="fl">1</span>]]
+  <span class="no">extra_args</span> <span class="kw">&lt;-</span> <span class="no">basis_fcn</span>$<span class="no">args</span>[<span class="no">basis_fcn</span>$<span class="no">condition</span> <span class="kw">==</span> <span class="no">cond</span>[<span class="fl">1</span>]]
 
-  <span class="kw">args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-    <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(x = <span class="kw">group_x</span>, batch = <span class="kw">group_batch</span>, p = <span class="kw">p</span>),
-    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="kw">extra_args</span>))
-  <span class="kw">basis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="kw">fcn</span>, <span class="kw">args</span>)
-  <span class="kw">basis</span><span class="op">$</span><span class="kw">basis</span>
+  <span class="no">args</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
+    <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">group_x</span>, <span class="kw">batch</span> <span class="kw">=</span> <span class="no">group_batch</span>, <span class="kw">p</span> <span class="kw">=</span> <span class="no">p</span>),
+    <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="no">extra_args</span>))
+  <span class="no">basis</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="no">fcn</span>, <span class="no">args</span>)
+  <span class="no">basis</span>$<span class="no">basis</span>
 }
 
-<span class="kw">single_point_results</span> <span class="op">&lt;-</span> <span class="kw">dat</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="kw">condition</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(single_point_b_basis = <span class="fu">single_point_fcn</span>(
-              <span class="kw">strength</span>, <span class="kw">batch</span>, <span class="kw">condition</span>, <span class="kw">b_basis_fcn</span>, <span class="fl">0.90</span>),
-            single_point_a_basis = <span class="fu">single_point_fcn</span>(
-              <span class="kw">strength</span>, <span class="kw">batch</span>, <span class="kw">condition</span>, <span class="kw">a_basis_fcn</span>, <span class="fl">0.99</span>),
-            minimum = <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw">strength</span>),
-            mean = <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="kw">strength</span>)) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(condition = <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="kw">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
+<span class="no">single_point_results</span> <span class="kw">&lt;-</span> <span class="no">dat</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">condition</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">single_point_b_basis</span> <span class="kw">=</span> <span class="fu">single_point_fcn</span>(
+              <span class="no">strength</span>, <span class="no">batch</span>, <span class="no">condition</span>, <span class="no">b_basis_fcn</span>, <span class="fl">0.90</span>),
+            <span class="kw">single_point_a_basis</span> <span class="kw">=</span> <span class="fu">single_point_fcn</span>(
+              <span class="no">strength</span>, <span class="no">batch</span>, <span class="no">condition</span>, <span class="no">a_basis_fcn</span>, <span class="fl">0.99</span>),
+            <span class="kw">minimum</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="no">strength</span>),
+            <span class="kw">mean</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(<span class="no">strength</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
 <span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
 
-<span class="kw">single_point_results</span>
+<span class="no">single_point_results</span>
 <span class="co">#&gt; # A tibble: 4 x 5</span>
 <span class="co">#&gt;   condition single_point_b_basis single_point_a_basis minimum  mean</span>
 <span class="co">#&gt;   &lt;ord&gt;                    &lt;dbl&gt;                &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 CTD                       121.                 111.    125.  135.</span>
 <span class="co">#&gt; 2 RTD                       128.                 119.    127.  140.</span>
 <span class="co">#&gt; 3 ETW                       121.                 103.    125.  134.</span>
-<span class="co">#&gt; 4 ETW2                      123.                 119.    123.  130.</span>
-</pre></div>
+<span class="co">#&gt; 4 ETW2                      123.                 119.    123.  130.</span></pre></body></html></div>
 <p>In the above code, we also ensure that the condition column is still in the order we expect.</p>
 <p>We’ve already computed the B-Basis of the data using a pooling method. We’ll do the same for A-Basis:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="kw">a_basis_pooled</span> <span class="op">&lt;-</span> <span class="kw">dat</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/basis.html">basis_pooled_cv</a></span>(<span class="kw">strength</span>, <span class="kw">condition</span>, <span class="kw">batch</span>, p = <span class="fl">0.99</span>,
-                  override = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_group_variability"</span>,
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">a_basis_pooled</span> <span class="kw">&lt;-</span> <span class="no">dat</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="../reference/basis.html">basis_pooled_cv</a></span>(<span class="no">strength</span>, <span class="no">condition</span>, <span class="no">batch</span>, <span class="kw">p</span> <span class="kw">=</span> <span class="fl">0.99</span>,
+                  <span class="kw">override</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"between_group_variability"</span>,
                                <span class="st">"normalized_variance_equal"</span>))
 
-<span class="kw">a_basis_pooled</span>
+<span class="no">a_basis_pooled</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; basis_pooled_cv(data = ., x = strength, groups = condition, batch = batch, </span>
@@ -322,61 +299,51 @@
 <span class="co">#&gt; CTD   118.3205 </span>
 <span class="co">#&gt; RTD   122.2636 </span>
 <span class="co">#&gt; ETW   117.074 </span>
-<span class="co">#&gt; ETW2  113.7601</span>
-</pre></div>
+<span class="co">#&gt; ETW2  113.7601</span></pre></body></html></div>
 <p>As we saw before, the returned object has a property called <code>basis</code>, which is a <code>data.frame</code> for the pooling methods.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="kw">a_basis_pooled</span><span class="op">$</span><span class="kw">basis</span>
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">a_basis_pooled</span>$<span class="no">basis</span>
 <span class="co">#&gt;      group    value</span>
 <span class="co">#&gt; CTD    CTD 118.3205</span>
 <span class="co">#&gt; RTD    RTD 122.2636</span>
 <span class="co">#&gt; ETW    ETW 117.0740</span>
-<span class="co">#&gt; ETW2  ETW2 113.7601</span>
-</pre></div>
+<span class="co">#&gt; ETW2  ETW2 113.7601</span></pre></body></html></div>
 <p>We can take this <code>data.frame</code> and change the column names to suit our needs.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="kw">a_basis_pooled</span><span class="op">$</span><span class="kw">basis</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(condition = <span class="kw">group</span>,
-         b_basis_pooled = <span class="kw">value</span>)
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">a_basis_pooled</span>$<span class="no">basis</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>,
+         <span class="kw">b_basis_pooled</span> <span class="kw">=</span> <span class="no">value</span>)
 <span class="co">#&gt;      condition b_basis_pooled</span>
 <span class="co">#&gt; CTD        CTD       118.3205</span>
 <span class="co">#&gt; RTD        RTD       122.2636</span>
 <span class="co">#&gt; ETW        ETW       117.0740</span>
-<span class="co">#&gt; ETW2      ETW2       113.7601</span>
-</pre></div>
+<span class="co">#&gt; ETW2      ETW2       113.7601</span></pre></body></html></div>
 <p>We can combine all these steps into one statement. We’ll also ensure that the conditions are listed in the order we want.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="kw">a_basis_pooled_results</span> <span class="op">&lt;-</span> <span class="kw">a_basis_pooled</span><span class="op">$</span><span class="kw">basis</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(condition = <span class="kw">group</span>,
-         a_basis_pooled = <span class="kw">value</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(condition = <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="kw">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="no">a_basis_pooled_results</span> <span class="kw">&lt;-</span> <span class="no">a_basis_pooled</span>$<span class="no">basis</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>,
+         <span class="kw">a_basis_pooled</span> <span class="kw">=</span> <span class="no">value</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
 
-<span class="kw">a_basis_pooled_results</span>
+<span class="no">a_basis_pooled_results</span>
 <span class="co">#&gt;   condition a_basis_pooled</span>
 <span class="co">#&gt; 1       CTD       118.3205</span>
 <span class="co">#&gt; 2       RTD       122.2636</span>
 <span class="co">#&gt; 3       ETW       117.0740</span>
-<span class="co">#&gt; 4      ETW2       113.7601</span>
-</pre></div>
+<span class="co">#&gt; 4      ETW2       113.7601</span></pre></body></html></div>
 <p>And the same thing for B-Basis:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="kw">b_basis_pooled_results</span> <span class="op">&lt;-</span> <span class="kw">b_basis_pooled</span><span class="op">$</span><span class="kw">basis</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(condition = <span class="kw">group</span>,
-         b_basis_pooled = <span class="kw">value</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(condition = <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="kw">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="no">b_basis_pooled_results</span> <span class="kw">&lt;-</span> <span class="no">b_basis_pooled</span>$<span class="no">basis</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="no">group</span>,
+         <span class="kw">b_basis_pooled</span> <span class="kw">=</span> <span class="no">value</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">condition</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">ordered</a></span>(<span class="no">condition</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"CTD"</span>, <span class="st">"RTD"</span>, <span class="st">"ETW"</span>, <span class="st">"ETW2"</span>)))
 
-<span class="kw">b_basis_pooled_results</span>
+<span class="no">b_basis_pooled_results</span>
 <span class="co">#&gt;   condition b_basis_pooled</span>
 <span class="co">#&gt; 1       CTD       125.1325</span>
 <span class="co">#&gt; 2       RTD       129.3447</span>
 <span class="co">#&gt; 3       ETW       123.8090</span>
-<span class="co">#&gt; 4      ETW2       120.3191</span>
-</pre></div>
+<span class="co">#&gt; 4      ETW2       120.3191</span></pre></body></html></div>
 <p>We can use the function <code>inner_join</code> from the <code>dplyr</code> package to combine the three sets of computational results. Each row for each condition will be concatenated.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="kw">single_point_results</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="kw">b_basis_pooled_results</span>, by = <span class="st">"condition"</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="kw">a_basis_pooled_results</span>, by = <span class="st">"condition"</span>)
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">single_point_results</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">b_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">a_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>)
 <span class="co">#&gt; # A tibble: 4 x 7</span>
 <span class="co">#&gt;   condition single_point_b_… single_point_a_… minimum  mean b_basis_pooled</span>
 <span class="co">#&gt;   &lt;ord&gt;                &lt;dbl&gt;            &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;          &lt;dbl&gt;</span>
@@ -384,14 +351,12 @@
 <span class="co">#&gt; 2 RTD                   128.             119.    127.  140.           129.</span>
 <span class="co">#&gt; 3 ETW                   121.             103.    125.  134.           124.</span>
 <span class="co">#&gt; 4 ETW2                  123.             119.    123.  130.           120.</span>
-<span class="co">#&gt; # … with 1 more variable: a_basis_pooled &lt;dbl&gt;</span>
-</pre></div>
+<span class="co">#&gt; # … with 1 more variable: a_basis_pooled &lt;dbl&gt;</span></pre></body></html></div>
 <p>To use this table in the plot we’re trying to construct, we want to “lengthen” the table as follows.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit">
-<span class="kw">single_point_results</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="kw">b_basis_pooled_results</span>, by = <span class="st">"condition"</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="kw">a_basis_pooled_results</span>, by = <span class="st">"condition"</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(cols = <span class="kw">single_point_b_basis</span><span class="op">:</span><span class="kw">a_basis_pooled</span>)
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">single_point_results</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">b_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">a_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(<span class="kw">cols</span> <span class="kw">=</span> <span class="no">single_point_b_basis</span>:<span class="no">a_basis_pooled</span>)
 <span class="co">#&gt; # A tibble: 24 x 3</span>
 <span class="co">#&gt;    condition name                 value</span>
 <span class="co">#&gt;    &lt;ord&gt;     &lt;chr&gt;                &lt;dbl&gt;</span>
@@ -405,20 +370,17 @@
 <span class="co">#&gt;  8 RTD       single_point_a_basis  119.</span>
 <span class="co">#&gt;  9 RTD       minimum               127.</span>
 <span class="co">#&gt; 10 RTD       mean                  140.</span>
-<span class="co">#&gt; # … with 14 more rows</span>
-</pre></div>
+<span class="co">#&gt; # … with 14 more rows</span></pre></body></html></div>
 <p>We can now make a plot based on this:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="kw">single_point_results</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="kw">b_basis_pooled_results</span>, by = <span class="st">"condition"</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="kw">a_basis_pooled_results</span>, by = <span class="st">"condition"</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(cols = <span class="kw">single_point_b_basis</span><span class="op">:</span><span class="kw">a_basis_pooled</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(x = <span class="kw">condition</span>, y = <span class="kw">value</span>)) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(y = <span class="kw">strength</span>), data = <span class="kw">dat</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(shape = <span class="kw">name</span>, color = <span class="kw">name</span>)) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Property Graph"</span>) <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>()
-</pre></div>
+<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">single_point_results</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">b_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">inner_join</a></span>(<span class="no">a_basis_pooled_results</span>, <span class="kw">by</span> <span class="kw">=</span> <span class="st">"condition"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span>(<span class="kw">cols</span> <span class="kw">=</span> <span class="no">single_point_b_basis</span>:<span class="no">a_basis_pooled</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">x</span> <span class="kw">=</span> <span class="no">condition</span>, <span class="kw">y</span> <span class="kw">=</span> <span class="no">value</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">y</span> <span class="kw">=</span> <span class="no">strength</span>), <span class="kw">data</span> <span class="kw">=</span> <span class="no">dat</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="kw">shape</span> <span class="kw">=</span> <span class="no">name</span>, <span class="kw">color</span> <span class="kw">=</span> <span class="no">name</span>)) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Property Graph"</span>) +
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>()</pre></body></html></div>
 <p><img src="cmstatr_Graphing_files/figure-html/unnamed-chunk-19-1.png" width="576"></p>
 </div>
   </div>
@@ -438,7 +400,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

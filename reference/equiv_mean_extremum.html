@@ -177,15 +177,15 @@ According to Vangel (2002), this test provides improved power compared
 with a test of mean and standard deviation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/equiv_mean_extremum.html'>equiv_mean_extremum</a></span>(
-  df_qual = <span class='kw'>NULL</span>,
-  data_qual = <span class='kw'>NULL</span>,
-  mean_qual = <span class='kw'>NULL</span>,
-  sd_qual = <span class='kw'>NULL</span>,
-  data_sample = <span class='kw'>NULL</span>,
-  n_sample = <span class='kw'>NULL</span>,
-  <span class='kw'>alpha</span>,
-  modcv = <span class='fl'>FALSE</span>
+    <pre class="usage"><span class='fu'>equiv_mean_extremum</span>(
+  <span class='kw'>df_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>data_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>alpha</span>,
+  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -305,7 +305,7 @@ is performed in a short period of time.
 Using the Modified CV approach, the standard deviation is calculated by
 multiplying <code>CV_star * mean_qual</code> where <code>mean_qual</code> is either the
 value supplied or the value calculated by <code><a href='https://rdrr.io/r/base/mean.html'>mean(data_qual)</a></code> and
-\(CV*\) is the value computed by <code><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></code>.</p>
+\(CV*\) is the value computed by <code><a href='calc_cv_star.html'>calc_cv_star</a></code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
@@ -318,12 +318,12 @@ for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
 Sep. 2003.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='www.cmstatr.net/reference/k_equiv.html'>k_equiv</a></code></p>
-<p><code><a href='www.cmstatr.net/reference/calc_cv_star.html'>calc_cv_star</a></code></p></div>
+    <div class='dont-index'><p><code><a href='k_equiv.html'>k_equiv</a></code></p>
+<p><code><a href='calc_cv_star.html'>calc_cv_star</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='www.cmstatr.net/reference/equiv_mean_extremum.html'>equiv_mean_extremum</a></span>(alpha = <span class='fl'>0.01</span>, n_sample = <span class='fl'>6</span>,
-                    mean_qual = <span class='fl'>100</span>, sd_qual = <span class='fl'>5.5</span>, modcv = <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
+    <pre class="examples"><div class='input'><span class='fu'>equiv_mean_extremum</span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='fl'>6</span>,
+                    <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='fl'>5.5</span>, <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6, 
 #&gt;     alpha = 0.01, modcv = TRUE)
@@ -333,17 +333,18 @@ Sep. 2003.</p>
 #&gt; For alpha = 0.01 and n = 6 
 #&gt; ( k1 = 3.128346 and k2 = 1.044342 )
 #&gt;                   Min Individual    Sample Mean    
-#&gt;      Thresholds:     78.88367         92.95069     </div><div class='input'><span class='co'>##</span>
-<span class='co'>## Call:</span>
-<span class='co'>## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,</span>
-<span class='co'>##     alpha = 0.01, modcv = TRUE)</span>
-<span class='co'>##</span>
-<span class='co'>## Modified CV used: CV* = 0.0675 ( CV = 0.055 )</span>
-<span class='co'>##</span>
-<span class='co'>## For alpha = 0.01 and n = 6</span>
-<span class='co'>## ( k1 = 3.128346 and k2 = 1.044342 )</span>
-<span class='co'>##                   Min Individual   Sample Mean</span>
-<span class='co'>##      Thresholds:    78.88367        92.95069</span>
+#&gt;      Thresholds:     78.88367         92.95069     </div><div class='input'>##
+## Call:
+## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
+##     alpha = 0.01, modcv = TRUE)
+##
+## Modified CV used: CV* = 0.0675 ( CV = 0.055 )
+##
+## For alpha = 0.01 and n = 6
+## ( k1 = 3.128346 and k2 = 1.044342 )
+##                   Min Individual   Sample Mean
+##      Thresholds:    78.88367        92.95069
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -360,7 +361,7 @@ Sep. 2003.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

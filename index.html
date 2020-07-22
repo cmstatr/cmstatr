@@ -126,45 +126,35 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>To install <code>cmstatr</code> from CRAN, simply run:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"cmstatr"</span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"cmstatr"</span>)</pre></div>
 <p>If you want the latest development version, you can install it from <code>github</code> using <code>devtools</code>. This will also install the dependencies required to build the vignettes. Optionally, change the value of the argument <code>ref</code> to install <code>cmstatr</code> from a different branch of the repository.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"devtools"</span>, <span class="st">"rmarkdown"</span>, <span class="st">"dplyr"</span>, <span class="st">"tidyr"</span>))
-<span class="kw">devtools</span>::<span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"ComtekAdvancedStructures/cmstatr"</span>, build_vignettes = <span class="fl">TRUE</span>,
-                         ref = <span class="st">"master"</span>,
-                         build_opts = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span>))
-</pre></div>
+<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"devtools"</span>, <span class="st">"rmarkdown"</span>, <span class="st">"dplyr"</span>, <span class="st">"tidyr"</span>))
+<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"ComtekAdvancedStructures/cmstatr"</span>, <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
+                         <span class="kw">ref</span> <span class="kw">=</span> <span class="st">"master"</span>,
+                         <span class="kw">build_opts</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span>))</pre></div>
 </div>
 <div id="usage" class="section level1">
 <h1 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h1>
 <p>To compute a B-Basis value from an example data set packaged with <code>cmstatr</code> you can do the following:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org">dplyr</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://www.cmstatr.net">cmstatr</a></span>)
+<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">cmstatr</span>)
 
-<span class="kw">carbon.fabric.2</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">test</span> <span class="op">==</span> <span class="st">"FC"</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="kw">condition</span> <span class="op">==</span> <span class="st">"RTD"</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/basis.html">basis_normal</a></span>(<span class="kw">strength</span>, <span class="kw">batch</span>)
+<span class="no">carbon.fabric.2</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">test</span> <span class="kw">==</span> <span class="st">"FC"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">condition</span> <span class="kw">==</span> <span class="st">"RTD"</span>) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="reference/basis.html">basis_normal</a></span>(<span class="no">strength</span>, <span class="no">batch</span>)
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Call:</span>
 <span class="co">#&gt; basis_normal(data = ., x = strength, batch = batch)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Distribution:  Normal    ( n = 18 )</span>
 <span class="co">#&gt; B-Basis:   ( p = 0.9 , conf = 0.95 )</span>
-<span class="co">#&gt; 76.88082</span>
-</pre></div>
+<span class="co">#&gt; 76.88082</span></pre></div>
 <p>For more examples of usage of the <code>cmstatr</code> package, see the tutorial vignette, which can be <a href="https://www.cmstatr.net/articles/cmstatr_Tutorial.html">viewed online</a>, or can be loaded as follows, once the package is installed:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">"cmstatr_Tutorial"</span>)
-</pre></div>
+<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">"cmstatr_Tutorial"</span>)</pre></div>
 <p>There is also a vignette showing some examples of the types of graphs that are typically produced when analyzing composite materials. You can view this <a href="https://www.cmstatr.net/articles/cmstatr_Graphing.html">vignette online</a>, or you can load this vignette with:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">"cmstatr_Graphing"</span>)
-</pre></div>
+<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">"cmstatr_Graphing"</span>)</pre></div>
 </div>
 <div id="philosophical-notes" class="section level1">
 <h1 class="hasAnchor">
@@ -238,6 +228,8 @@
 <li><a href="https://github.com/ComtekAdvancedStructures/cmstatr/actions?workflow=R-CMD-check"><img src="https://github.com/ComtekAdvancedStructures/cmstatr/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://codecov.io/gh/comtekadvancedstructures/cmstatr?branch=master"><img src="https://codecov.io/gh/comtekadvancedstructures/cmstatr/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://doi.org/10.21105/joss.02265"><img src="https://joss.theoj.org/papers/10.21105/joss.02265/status.svg" alt="DOI"></a></li>
+<li><a href="https://cran.r-project.org/package=cmstatr"><img src="https://www.r-pkg.org/badges/version/cmstatr" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://cran.r-project.org/package=cmstatr"><img src="https://cranlogs.r-pkg.org/badges/cmstatr"></a></li>
 </ul>
 </div>
 </div>
@@ -249,7 +241,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

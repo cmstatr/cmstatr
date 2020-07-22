@@ -151,7 +151,7 @@ deviation to the mean of a sample. This function takes a vector
 of data and calculates the CV.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/cv.html'>cv</a></span>(<span class='kw'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>cv</span>(<span class='no'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -168,26 +168,27 @@ of data and calculates the CV.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>15</span>)  <span class='co'># make this example reproducible</span>
-<span class='kw'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>, mean = <span class='fl'>100</span>, sd = <span class='fl'>5</span>)
-<span class='fu'><a href='www.cmstatr.net/reference/cv.html'>cv</a></span>(<span class='kw'>x</span>)</div><div class='output co'>#&gt; [1] 0.04944505</div><div class='input'><span class='co'>## [1] 0.04944505</span>
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>100</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>5</span>)
+<span class='fu'>cv</span>(<span class='no'>x</span>)</div><div class='output co'>#&gt; [1] 0.04944505</div><div class='input'><span class='co'>## [1] 0.04944505</span>
 
 <span class='co'># the cv function can also be used within a call to dplyr::summarise</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
-<span class='kw'>carbon.fabric</span> <span class='op'>%&gt;%</span>
-<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span> <span class='op'>==</span> <span class='st'>"WT"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='kw'>condition</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span>(mean = <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='kw'>strength</span>), cv = <span class='fu'><a href='www.cmstatr.net/reference/cv.html'>cv</a></span>(<span class='kw'>strength</span>))</div><div class='output co'>#&gt; <span class='message'>`summarise()` ungrouping output (override with `.groups` argument)</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 3</span><span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+<span class='no'>carbon.fabric</span> <span class='kw'>%&gt;%</span>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>test</span> <span class='kw'>==</span> <span class='st'>"WT"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>condition</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span>(<span class='kw'>mean</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span>(<span class='no'>strength</span>), <span class='kw'>cv</span> <span class='kw'>=</span> <span class='fu'>cv</span>(<span class='no'>strength</span>))</div><div class='output co'>#&gt; <span class='message'>`summarise()` ungrouping output (override with `.groups` argument)</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 3</span><span>
 #&gt;   condition  mean     cv
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>1</span><span> CTD        137. 0.041</span><span style='text-decoration: underline;'>7</span><span>
 #&gt; </span><span style='color: #555555;'>2</span><span> ETW        135. 0.031</span><span style='text-decoration: underline;'>0</span><span>
 #&gt; </span><span style='color: #555555;'>3</span><span> RTD        142. 0.045</span><span style='text-decoration: underline;'>1</span><span></div><div class='input'>
-<span class='co'>## # A tibble: 3 x 3</span>
-<span class='co'>##   condition  mean     cv</span>
-<span class='co'>##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span>
-<span class='co'>## 1 CTD        137. 0.0417</span>
-<span class='co'>## 2 ETW        135. 0.0310</span>
-<span class='co'>## 3 RTD        142. 0.0451</span>
+## # A tibble: 3 x 3
+##   condition  mean     cv
+##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+## 1 CTD        137. 0.0417
+## 2 ETW        135. 0.0310
+## 3 RTD        142. 0.0451
+
 
 </div></span></pre>
   </div>
@@ -205,7 +206,7 @@ of data and calculates the CV.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

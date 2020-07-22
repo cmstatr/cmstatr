@@ -155,7 +155,7 @@ the sample mean divided by the sample standard deviation
 exceeds a critical value.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></span>(data = <span class='kw'>NULL</span>, <span class='kw'>x</span>, alpha = <span class='fl'>0.05</span>)</pre>
+    <pre class="usage"><span class='fu'>maximum_normed_residual</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -213,11 +213,11 @@ Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 
-<span class='kw'>carbon.fabric.2</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span><span class='op'>==</span><span class='st'>"FC"</span> <span class='op'>&amp;</span> <span class='kw'>condition</span><span class='op'>==</span><span class='st'>"ETW2"</span> <span class='op'>&amp;</span> <span class='kw'>batch</span><span class='op'>==</span><span class='st'>"A"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></span>(<span class='kw'>strength</span>)</div><div class='output co'>#&gt; 
+<span class='no'>carbon.fabric.2</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>test</span><span class='kw'>==</span><span class='st'>"FC"</span> <span class='kw'>&amp;</span> <span class='no'>condition</span><span class='kw'>==</span><span class='st'>"ETW2"</span> <span class='kw'>&amp;</span> <span class='no'>batch</span><span class='kw'>==</span><span class='st'>"A"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>maximum_normed_residual</span>(<span class='no'>strength</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; maximum_normed_residual(data = ., x = strength)
 #&gt; 
@@ -235,9 +235,9 @@ CMH-17-1G, Mar. 2012.</p>
 <span class='co'>##   Index  Value</span>
 <span class='co'>##       6  44.26</span>
 
-<span class='kw'>carbon.fabric.2</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>test</span><span class='op'>==</span><span class='st'>"FC"</span> <span class='op'>&amp;</span> <span class='kw'>condition</span><span class='op'>==</span><span class='st'>"ETW2"</span> <span class='op'>&amp;</span> <span class='kw'>batch</span><span class='op'>==</span><span class='st'>"B"</span>) <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='www.cmstatr.net/reference/maximum_normed_residual.html'>maximum_normed_residual</a></span>(<span class='kw'>strength</span>)</div><div class='output co'>#&gt; 
+<span class='no'>carbon.fabric.2</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>test</span><span class='kw'>==</span><span class='st'>"FC"</span> <span class='kw'>&amp;</span> <span class='no'>condition</span><span class='kw'>==</span><span class='st'>"ETW2"</span> <span class='kw'>&amp;</span> <span class='no'>batch</span><span class='kw'>==</span><span class='st'>"B"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>maximum_normed_residual</span>(<span class='no'>strength</span>)</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; maximum_normed_residual(data = ., x = strength)
 #&gt; 
@@ -245,12 +245,13 @@ CMH-17-1G, Mar. 2012.</p>
 #&gt; 
 #&gt; No outliers detected ( alpha = 0.05 )
 #&gt; </div><div class='input'>
-<span class='co'>## Call:</span>
-<span class='co'>## maximum_normed_residual(data = ., x = strength)</span>
-<span class='co'>##</span>
-<span class='co'>## MNR =  1.469517  ( critical value = 1.887145 )</span>
-<span class='co'>##</span>
-<span class='co'>## No outliers detected ( alpha = 0.05 )</span>
+## Call:
+## maximum_normed_residual(data = ., x = strength)
+##
+## MNR =  1.469517  ( critical value = 1.887145 )
+##
+## No outliers detected ( alpha = 0.05 )
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -267,7 +268,7 @@ CMH-17-1G, Mar. 2012.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
