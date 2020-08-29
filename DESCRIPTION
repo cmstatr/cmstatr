@@ -33,6 +33,7 @@ License: AGPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
+    dplyr,
     generics,
     ggplot2,
     kSamples,
@@ -41,7 +42,6 @@ Imports:
     stats,
     tibble
 Suggests:
-    dplyr,
     knitr,
     lintr,
     purrr,
@@ -50,6 +50,6 @@ Suggests:
     testthat,
     tidyr,
     vdiffr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Language: en-US
