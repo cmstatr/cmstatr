@@ -8,7 +8,7 @@
 \format{
 An object of class \code{data.frame} with 216 rows and 5 columns.
 
-An object of class \code{data.frame} with 177 rows and 8 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 335 rows and 9 columns.
 }
 \usage{
 carbon.fabric
