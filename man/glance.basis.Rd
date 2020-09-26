@@ -30,6 +30,9 @@ columns:
 \item{\code{n}}{the sample size}
 \item{\code{r}}{the number of groups used in the calculation. This will
        be \code{NA} for single-point basis values}
+\item{\code{group}}{the group for pooling methods. This column is only
+                    present when glancing at a \code{basis} object
+                    created using one of the pooling methods.}
 \item{\code{basis}}{the basis value}
 }
 \description{

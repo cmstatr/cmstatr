@@ -1,3 +1,10 @@
+# Version xxxx
+- When calling `glance.basis` on objects created using either
+  `basis_pooled_cv` or `basis_pooled_sd`, the returned `tibble` would
+  have a nested `tibble` containing the group and basis value. Now,
+  the resulting `tibble` is a single tible that now has the column
+  `group` and `basis`.
+
 # Version 0.7.0
 - Added optional argument to `glance.basis` to add diagnostic test results
   to resulting `data.frame`

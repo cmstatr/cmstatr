@@ -466,6 +466,9 @@ new_basis <- function(
 #' \item{\code{n}}{the sample size}
 #' \item{\code{r}}{the number of groups used in the calculation. This will
 #'        be \code{NA} for single-point basis values}
+#' \item{\code{group}}{the group for pooling methods. This column is only
+#'                     present when glancing at a \code{basis} object
+#'                     created using one of the pooling methods.}
 #' \item{\code{basis}}{the basis value}
 #'
 #' @details
@@ -519,9 +522,17 @@ glance.basis <- function(x, include_diagnostics = FALSE, ...) {  # nolint
     distribution = x$distribution,
     modcv = x$modcv,
     n = x$n,
-    r = x$r,
-    basis = x$basis
+    r = x$r
   )
+
+  if (is.data.frame(x$basis)) {
+    res <- bind_cols(res, tibble::tibble(
+      group = x$basis$group,
+      basis = x$basis$value
+    ))
+  } else {
+    res[["basis"]] <- x$basis
+  }
 
   if (include_diagnostics) {
     for (dn in names(x$diagnostic_results)) {
