@@ -140,6 +140,17 @@ test_that("check that glance.equiv_mean_extremum produces expected results", {
   expect_equal(res$result_mean[1], "PASS")
   expect_equal(res$min_sample[1], min(data_sample))
   expect_equal(res$mean_sample[1], mean(data_sample))
+
+  res <- equiv_mean_extremum(alpha = 0.05, mean_qual = 141.310,
+                             sd_qual = 6.415, n_sample = 9, modcv = TRUE)
+  res <- glance(res)
+
+  expect_equal(ncol(res), 5)
+  expect_equal(res$alpha[1], 0.05)
+  expect_equal(res$n_sample[1], 9)
+  expect_equal(res$modcv[1], TRUE)
+  expect_equal(res$threshold_min_indiv[1], 117.024, tolerance = 1e-2)
+  expect_equal(res$threshold_mean[1], 135.630, tolerance = 1e-2)
 })
 
 test_that("check equiv_change_mean against HYTEQ using some example data", {
