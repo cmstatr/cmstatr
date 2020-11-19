@@ -304,20 +304,27 @@ equiv_mean_extremum <- function(df_qual = NULL, data_qual = NULL,
 #'
 #' @export
 glance.equiv_mean_extremum <- function(x, ...) {  # nolint
-  with(
-    x,
-    tibble::tibble(
-      alpha = alpha,
-      n_sample = n_sample,
-      modcv = modcv,
-      threshold_min_indiv = threshold_min_indiv,
-      threshold_mean = threshold_mean,
-      result_min_indiv = result_min_indiv,
-      result_mean = result_mean,
-      min_sample = min_sample,
-      mean_sample = mean_sample
-    )
+  res <- tibble::tibble(
+    alpha = x[["alpha"]],
+    n_sample = x[["n_sample"]],
+    modcv = x[["modcv"]],
+    threshold_min_indiv = x[["threshold_min_indiv"]],
+    threshold_mean = x[["threshold_mean"]]
   )
+
+  if (!is.null(x[["result_min_indiv"]])) {
+    res[["result_min_indiv"]] <- x[["result_min_indiv"]]
+  }
+  if (!is.null(x[["result_mean"]])) {
+    res[["result_mean"]] <- x[["result_mean"]]
+  }
+  if (!is.null(x[["min_sample"]])) {
+    res[["min_sample"]] <- x[["min_sample"]]
+  }
+  if (!is.null(x[["mean_sample"]])) {
+    res[["mean_sample"]] <- x[["mean_sample"]]
+  }
+  res
 }
 
 
