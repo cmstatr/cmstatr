@@ -1,3 +1,7 @@
+# Version x.x.x
+- Fixed bug in `glance.equiv_mean_extremum` where it would include empty
+  values when a sample was not specified.
+
 # Version 0.7.0
 - Added optional argument to `glance.basis` to add diagnostic test results
   to resulting `data.frame`
