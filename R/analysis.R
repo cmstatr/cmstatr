@@ -4,15 +4,15 @@
 #' @description
 #' Accepts a \code{data.frame} (or similar object) and starts an analysis.
 #' To start an analysis, this function needs to know how to interpret the
-#' columns of the \code{data.frame}: the columns representing the property
-#' (or test), the environmental condition (optional) and, optionally,
+#' columns of the \code{data.frame}: the columns representing the test,
+#' the environmental condition (optional) and, optionally,
 #' a further sub-division of the data. Once the analysis is started,
 #' individual properties can be analyzed.
 #'
 #' @param data a \code{data.frame} (or similar) containing the data to
 #'             analyze
-#' @param property the column in the data.frame indicating the property
-#'                 (test) of each observation
+#' @param test the column in the data.frame indicating the test
+#'             for each observation
 #' @param condition (optional) the column in the data.frame indicating
 #'                  the environmental condition of each observation
 #' @param subgroup (optional) a column in the data.frame indicating
@@ -30,13 +30,13 @@
 #' @importFrom rlang enquo
 #'
 #' @export
-start_analysis <- function(data, property, condition = NULL, subgroup = NULL) {
+start_analysis <- function(data, test, condition = NULL, subgroup = NULL) {
   res <- list()
   class(res) <- "cmanalysis"
 
   res$data <- ungroup(data)
 
-  res$property <- enquo(property)
+  res$test <- enquo(test)
   res$condition <- enquo(condition)
   res$subgroup <- enquo(subgroup)
 
@@ -59,16 +59,16 @@ wrap_warning <- function(w, slot_name, filter) {
 
 #' @importFrom rlang as_label
 #' @noRd
-check_reused_obs <- function(results, cur_property_mask, slot_name, filter) {
-  for (r in results) {
-    if (any(cur_property_mask & r$mask)) {
+check_reused_obs <- function(properties, cur_property_mask, slot_name, filter) {
+  for (p in properties) {
+    if (any(cur_property_mask & p$mask)) {
       # One or more observation was used in a previous result
-      if (!is.null(r$slots[[slot_name]])) {
+      if (!is.null(p$slots[[slot_name]])) {
         warn(paste0(
           "Observation(s) reused when calculating `",
           slot_name,
           "` for filter `",
-          as_label(r$filter),
+          as_label(p$filter),
           "` and `",
           filter,
           "`."
@@ -151,15 +151,15 @@ analyze_property <- function(an, filter, ...) {
   mask <- eval_tidy(enquo(filter), an$data)
   dat <- an$data[mask, ]
 
-  result <- list()
-  result$filter <- enquo(filter)
-  result$mask <- mask
+  prop <- list()
+  prop$filter <- enquo(filter)
+  prop$mask <- mask
 
-  result$property <- unique_values(an$property, dat, result$filter, 1)
-  result$condition <- unique_values(an$condition, dat, result$filter, Inf)
-  result$subgroup <- unique_values(an$subgroup, dat, result$filter, 1)
+  prop$test <- unique_values(an$test, dat, prop$filter, 1)
+  prop$condition <- unique_values(an$condition, dat, prop$filter, Inf)
+  prop$subgroup <- unique_values(an$subgroup, dat, prop$filter, 1)
 
-  result$slots <- list()
+  prop$slots <- list()
   slot_list <- enquos(...)
 
   for (i_slot in seq_along(slot_list)) {
@@ -168,44 +168,44 @@ analyze_property <- function(an, filter, ...) {
       slot_name <- call_name(slot_list[[i_slot]])
     }
 
-    check_reused_obs(an$results, mask, slot_name,
-                     as_label(result$filter))
+    check_reused_obs(an$properties, mask, slot_name,
+                     as_label(prop$filter))
 
     cur_slot_quos <- slot_list[[i_slot]]
 
-    result$slots[[slot_name]] <- withCallingHandlers(
+    prop$slots[[slot_name]] <- withCallingHandlers(
       mini_pipe(dat, cur_slot_quos),
       warning = function(w) {
-        warn(wrap_warning(w, slot_name, as_label(result$filter)))
+        warn(wrap_warning(w, slot_name, as_label(prop$filter)))
       }
     )
 
     # If we're analyzing data that is pooled across environments,
     # check if the slot is pooled
-    if (length(result$condition) > 1) {
-      glance_res <- glance(result$slots[[slot_name]])
+    if (length(prop$condition) > 1) {
+      glance_res <- glance(prop$slots[[slot_name]])
       if (!("group" %in% names(glance_res))) {
         stop(
           paste0("`", slot_name, "` is not pooled across environemnts ",
-                 " for filter `", as_label(result$filter), "`. After ",
+                 " for filter `", as_label(prop$filter), "`. After ",
                  "calling `glance` on the returned object, one of the ",
                  "columns must be called `group`.")
         )
       }
-      condition_df <- data.frame(condition = result$condition)
+      condition_df <- data.frame(condition = prop$condition)
       joined <- join_conditions(glance_res, condition_df, "group",
                                 "condition", slot_name)
-      if (nrow(joined) != length(result$condition)) {
+      if (nrow(joined) != length(prop$condition)) {
         stop(
           paste0("`", slot_name, "` is not pooled across all environments ",
-                 " for filter `", as_label(result$filter), "`."
+                 " for filter `", as_label(prop$filter), "`."
           )
         )
       }
     }
   }
 
-  an$results[[length(an$result) + 1]] <- result
+  an$properties[[length(an$result) + 1]] <- prop
 
   return(an)
 }
@@ -270,15 +270,15 @@ as.data.frame.cmanalysis <- function(x, row.names = NULL,
     return(tbl)
   }
 
-  bind_rows(lapply(x$results, function(r) {
+  bind_rows(lapply(x$properties, function(p) {
     row <- tibble(.rows = 0L)
 
-    row <- add_column(row, x$property, r$property)
-    row <- add_column(row, x$condition, r$condition)
-    row <- add_column(row, x$subgroup, r$subgroup)
-    for (i in seq_along(r$slots)) {
-      s_name <- names(r$slots)[i]
-      g <- glance(r$slots[[i]], ...) %>%
+    row <- add_column(row, x$test, p$test)
+    row <- add_column(row, x$condition, p$condition)
+    row <- add_column(row, x$subgroup, p$subgroup)
+    for (i in seq_along(p$slots)) {
+      s_name <- names(p$slots)[i]
+      g <- glance(p$slots[[i]], ...) %>%
         # Pre-pend the name of the slot to the column name to avoid collisions
         setNames(paste0(s_name, ".", names(.)))
       if (nrow(g) > 1) {

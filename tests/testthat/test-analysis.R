@@ -130,5 +130,5 @@ test_that("Unnamed slots are valid", {
                      basis_normal(strength, batch,
                                   override = c("between_batch_variability")))
 
-  expect_equal(names(res$results[[1]]$slots), "basis_normal")
+  expect_equal(names(res$properties[[1]]$slots), "basis_normal")
 })
