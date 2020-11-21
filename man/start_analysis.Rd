@@ -4,14 +4,14 @@
 \alias{start_analysis}
 \title{Start an analysis for a data set}
 \usage{
-start_analysis(data, property, condition = NULL, subgroup = NULL)
+start_analysis(data, test, condition = NULL, subgroup = NULL)
 }
 \arguments{
 \item{data}{a \code{data.frame} (or similar) containing the data to
 analyze}
 
-\item{property}{the column in the data.frame indicating the property
-(test) of each observation}
+\item{test}{the column in the data.frame indicating the test
+for each observation}
 
 \item{condition}{(optional) the column in the data.frame indicating
 the environmental condition of each observation}
@@ -28,8 +28,8 @@ an object of class \code{cmanalysis} that can be passed to
 \description{
 Accepts a \code{data.frame} (or similar object) and starts an analysis.
 To start an analysis, this function needs to know how to interpret the
-columns of the \code{data.frame}: the columns representing the property
-(or test), the environmental condition (optional) and, optionally,
+columns of the \code{data.frame}: the columns representing the test,
+the environmental condition (optional) and, optionally,
 a further sub-division of the data. Once the analysis is started,
 individual properties can be analyzed.
 }

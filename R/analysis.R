@@ -34,7 +34,7 @@ start_analysis <- function(data, test, condition = NULL, subgroup = NULL) {
   res <- list()
   class(res) <- "cmanalysis"
 
-  res$data <- ungroup(data)
+  res$data <- data.frame(data)
 
   res$test <- enquo(test)
   res$condition <- enquo(condition)
