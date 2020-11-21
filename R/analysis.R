@@ -40,7 +40,7 @@ start_analysis <- function(data, test, condition = NULL, subgroup = NULL) {
   res$condition <- enquo(condition)
   res$subgroup <- enquo(subgroup)
 
-  res$results <- list()
+  res$properties <- list()
 
   return(res)
 }
@@ -205,7 +205,7 @@ analyze_property <- function(an, filter, ...) {
     }
   }
 
-  an$properties[[length(an$result) + 1]] <- prop
+  an$properties[[length(an$properties) + 1]] <- prop
 
   return(an)
 }
