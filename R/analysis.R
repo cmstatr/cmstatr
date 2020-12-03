@@ -148,6 +148,10 @@ discard_obs <- function(data, filter) {
 #'
 #' @export
 analyze_property <- function(an, filter, ...) {
+  if (!inherits(an, "cmanalysis")) {
+    stop("Must pass an `cmanalysis` object created with `start_analysis`.")
+  }
+
   mask <- eval_tidy(enquo(filter), an$data)
   dat <- an$data[mask, ]
 
@@ -258,6 +262,9 @@ join_conditions <- function(left_df, right_df, left_condition_name,
 #' @export
 as.data.frame.cmanalysis <- function(x, row.names = NULL,
                                      optional = FALSE, ...) {
+  if (!inherits(x, "cmanalysis")) {
+    stop("Must pass an `cmanalysis` object created with `start_analysis`.")
+  }
   add_column <- function(tbl, name, val) {
     if (!quo_is_null(name)) {
       new_col <- tibble(!!name := val)
