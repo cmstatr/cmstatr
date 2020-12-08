@@ -4,6 +4,7 @@ on:
       - master
       - develop
       - release**
+      - feature/vdiffr-conditional
   pull_request:
     branches:
       - master
@@ -30,6 +31,8 @@ jobs:
         - { os: ubuntu-16.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", vdiffr: true  }
         - { os: ubuntu-16.04,   r: 'oldrel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", vdiffr: false }
         # r-devel is not available on Ubuntu (ref. r-lib/actions/setup-r/lib/installer)
+        # Define a new configu that will run R CMD check with _R_CHECK_DEPENDS_ONLY_ set
+        - { os: ubuntu-16.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", vdiffr: false, check_depends_only = true  }
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -93,7 +96,16 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
+      - name: Check (Depends Only)
+        if: ${{ matrix.config.check_depends_only }}
+        env:
+          _R_CHECK_CRAN_INCOMING_: false
+          _R_CHECK_DEPENDS_ONLY_: true
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
+        shell: Rscript {0}
+
       - name: Check
+        if: ${{ ! matrix.config.check_depends_only }}
         env:
           _R_CHECK_CRAN_INCOMING_: false
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
