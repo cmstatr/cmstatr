@@ -19,7 +19,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) - ${{ matrix.config.check_depends_only }}
 
     strategy:
       fail-fast: false
@@ -32,7 +32,7 @@ jobs:
         - { os: ubuntu-16.04,   r: 'oldrel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", vdiffr: false }
         # r-devel is not available on Ubuntu (ref. r-lib/actions/setup-r/lib/installer)
         # Define a new configu that will run R CMD check with _R_CHECK_DEPENDS_ONLY_ set
-        - { os: ubuntu-16.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", vdiffr: false, check_depends_only = true  }
+        - { os: ubuntu-16.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", vdiffr: false, check_depends_only: true  }
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -84,8 +84,16 @@ jobs:
           sudo -s eval "$sysreqs"
 
       - name: Install dependencies
+        if: matrix.config.check_depends_only != true
         run: |
           remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("rcmdcheck")
+        shell: Rscript {0}
+
+      - name: Install dependencies (Depends Only)
+        if: matrix.config.check_depends_only == true
+        run: |
+          remotes::install_deps(dependencies = "Depends")
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
@@ -97,7 +105,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Check (Depends Only)
-        if: ${{ matrix.config.check_depends_only }}
+        if: matrix.config.check_depends_only == true
         env:
           _R_CHECK_CRAN_INCOMING_: false
           _R_CHECK_DEPENDS_ONLY_: true
@@ -105,7 +113,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Check
-        if: ${{ ! matrix.config.check_depends_only }}
+        if: matrix.config.check_depends_only != true
         env:
           _R_CHECK_CRAN_INCOMING_: false
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
