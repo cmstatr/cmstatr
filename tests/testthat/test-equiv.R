@@ -1,7 +1,6 @@
 context("equiv")
 
 suppressMessages(library(dplyr))
-suppressMessages(library(tidyr))
 
 test_that("k-factor warnings and errors are raised", {
   expect_error(k_equiv(-0.01, 3))
@@ -13,44 +12,48 @@ test_that("k-factor warnings and errors are raised", {
 
 test_that("k-factors match those published in literature", {
 
-  # the files k1.vangel.csv and k2.vangel.csv contain the k factors
-  # published in Vangel's 2002 paper.
+  if (requireNamespace("tidyr", quietly = TRUE)) {
 
-  k1_vangel <- read.csv(system.file("extdata", "k1.vangel.csv",
-                                    package = "cmstatr")) %>%
-    gather(n, k1, X2:X10) %>%
-    mutate(n = as.numeric(substring(n, 2)))
+    # the files k1.vangel.csv and k2.vangel.csv contain the k factors
+    # published in Vangel's 2002 paper.
 
-  k2_vangel <- read.csv(system.file("extdata", "k2.vangel.csv",
-                                    package = "cmstatr")) %>%
-    gather(n, k2, X2:X10) %>%
-    mutate(n = as.numeric(substring(n, 2)))
+    k1_vangel <- read.csv(system.file("extdata", "k1.vangel.csv",
+                                      package = "cmstatr")) %>%
+      tidyr::gather(n, k1, X2:X10) %>%
+      mutate(n = as.numeric(substring(n, 2)))
 
-  # This test is super slow, so we will only run a sampling of the values that
-  # would normally be used in the validation, unless the flag full_test is set
-  # to TRUE
-  full_test <- FALSE
-  diff_df <- inner_join(k1_vangel, k2_vangel, by = c("alpha", "n")) %>%
-    mutate(error_threshold = case_when(n == 2 & alpha > 0.25 ~ 0.10,
-                                       n == 2 & alpha <= 0.25 ~ 0.02,
-                                       n > 2 & alpha > 0.25 ~ 0.005,
-                                       TRUE ~ 5e-4))
+    k2_vangel <- read.csv(system.file("extdata", "k2.vangel.csv",
+                                      package = "cmstatr")) %>%
+      tidyr::gather(n, k2, X2:X10) %>%
+      mutate(n = as.numeric(substring(n, 2)))
 
-  diff_df <- diff_df %>%
-    sample_n(ifelse(full_test, length(diff_df$k1), 5)) %>%
-    gather(fct, vangel, k1:k2) %>%
-    group_by(alpha, n) %>%
-    mutate(calc = k_equiv(first(alpha), first(n))) %>%
-    mutate(diff = (vangel - calc) / vangel) %>%
-    ungroup() %>%
-    rowwise() %>%
-    mutate(check = expect_lte(abs(diff), error_threshold, label =
-                                paste0("Validation failure for ",
-                                       "alpha=", alpha,
-                                       ", n=", n,
-                                       " computed ", fct, "=", calc,
-                                       " but validation ", fct, "=", vangel,
-                                       ".\n")))
+    # This test is super slow, so we will only run a sampling of the values
+    # that
+    # would normally be used in the validation, unless the flag full_test is
+    # set to TRUE
+    full_test <- FALSE
+    diff_df <- inner_join(k1_vangel, k2_vangel, by = c("alpha", "n")) %>%
+      mutate(error_threshold = case_when(n == 2 & alpha > 0.25 ~ 0.10,
+                                         n == 2 & alpha <= 0.25 ~ 0.02,
+                                         n > 2 & alpha > 0.25 ~ 0.005,
+                                         TRUE ~ 5e-4))
+
+    diff_df <- diff_df %>%
+      sample_n(ifelse(full_test, length(diff_df$k1), 5)) %>%
+      tidyr::gather(fct, vangel, k1:k2) %>%
+      group_by(alpha, n) %>%
+      mutate(calc = k_equiv(first(alpha), first(n))) %>%
+      mutate(diff = (vangel - calc) / vangel) %>%
+      ungroup() %>%
+      rowwise() %>%
+      mutate(check = expect_lte(abs(diff), error_threshold, label =
+                                  paste0("Validation failure for ",
+                                         "alpha=", alpha,
+                                         ", n=", n,
+                                         " computed ", fct, "=", calc,
+                                         " but validation ", fct, "=", vangel,
+                                         ".\n")))
+  }
 })
 
 test_that("check equiv_mean_extremum against HYTEQ using some example data", {
