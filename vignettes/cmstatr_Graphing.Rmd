@@ -15,6 +15,15 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.width = 6
 )
+
+# If any of the required packages are unavailable,
+# don't re-run the code
+required <- c("dplyr", "ggplot2", "tidyr", "cmstatr")
+if (!all(unlist(lapply(required, function(pkg) {
+    requireNamespace(pkg, quietly = TRUE)}
+  )))) {
+  knitr::opts_chunk$set(eval = FALSE)
+}
 ```
 
 This vignette demonstrates how to create some of the graphs commonly used
