@@ -1,4 +1,4 @@
-# Version x.x.x
+# Version 0.7.1
 - Fixed bug in `glance.equiv_mean_extremum` where it would include empty
   values when a sample was not specified.
 - Moved `dplyr` from Suggests to Depends. It is expected that nearly all
