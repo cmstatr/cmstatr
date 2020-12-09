@@ -4,7 +4,6 @@ on:
       - master
       - develop
       - release**
-      - feature/vdiffr-conditional
   pull_request:
     branches:
       - master
