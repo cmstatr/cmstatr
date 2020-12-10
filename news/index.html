@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -141,6 +141,16 @@
       <small>Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="version-071" class="section level1">
+<h1 class="page-header" data-toc-text="0.7.1">
+<a href="#version-071" class="anchor"></a>Version 0.7.1<small> 2020-12-10 </small>
+</h1>
+<ul>
+<li>Fixed bug in <code>glance.equiv_mean_extremum</code> where it would include empty values when a sample was not specified.</li>
+<li>Moved <code>dplyr</code> from Suggests to Depends. It is expected that nearly all users will use this package in their workflow, and a future version of <code>cmstatr</code> will also rely on functionality from <code>dplyr</code>.</li>
+<li>Changed tests and vignettes such that tests and vignette code is not re-run when the necessary packages are not available. Test coverage and re-building of vignettes is unchanged when all packages in Depends and Suggests are available.</li>
+</ul>
+</div>
     <div id="version-070" class="section level1">
 <h1 class="page-header" data-toc-text="0.7.0">
 <a href="#version-070" class="anchor"></a>Version 0.7.0<small> 2020-07-13 </small>
@@ -276,7 +286,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

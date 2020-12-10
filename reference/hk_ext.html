@@ -82,7 +82,7 @@ as described by Vangel (1994)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -149,9 +149,9 @@ as described by Vangel (1994)." />
 as described by Vangel (1994).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hk_ext_z</span>(<span class='no'>n</span>, <span class='no'>i</span>, <span class='no'>j</span>, <span class='no'>p</span>, <span class='no'>conf</span>)
+    <pre class="usage"><span class='fu'>hk_ext_z</span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>i</span>, <span class='va'>j</span>, <span class='va'>p</span>, <span class='va'>conf</span><span class='op'>)</span>
 
-<span class='fu'>hk_ext_z_j_opt</span>(<span class='no'>n</span>, <span class='no'>p</span>, <span class='no'>conf</span>)</pre>
+<span class='fu'>hk_ext_z_j_opt</span><span class='op'>(</span><span class='va'>n</span>, <span class='va'>p</span>, <span class='va'>conf</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -227,24 +227,26 @@ vol. 35, no. 4. pp. 1561–1570, 1964.</p>
 <span class='co'># required for calculating the tolerance bound with a content</span>
 <span class='co'># of 0.9 and a confidence level of 0.95 based on the median</span>
 <span class='co'># and first ordered observation can be calculated as follows.</span>
-<span class='fu'>hk_ext_z</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>21</span>, <span class='kw'>i</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>j</span> <span class='kw'>=</span> <span class='fl'>11</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; [1] 1.204806</div><div class='input'>
+<span class='fu'>hk_ext_z</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>21</span>, i <span class='op'>=</span> <span class='fl'>1</span>, j <span class='op'>=</span> <span class='fl'>11</span>, p <span class='op'>=</span> <span class='fl'>0.9</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 1.204806</div><div class='input'>
 <span class='co'>## [1] 1.204806</span>
 
 <span class='co'># The hk_ext_z_j_opt function can be used to refine this value</span>
 <span class='co'># of z by finding an optimum value of j, rather than simply</span>
 <span class='co'># using the median. Here, we find that the optimal observation</span>
 <span class='co'># to use is the 10th, not the 11th (which is the median).</span>
-<span class='fu'>hk_ext_z_j_opt</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>21</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><div class='output co'>#&gt; $z
+<span class='fu'>hk_ext_z_j_opt</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>21</span>, p <span class='op'>=</span> <span class='fl'>0.9</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $z
 #&gt; [1] 1.217717
 #&gt; 
 #&gt; $j
 #&gt; [1] 10
 #&gt; </div><div class='input'>
-## $z
-## [1] 1.217717
-##
-## $j
-## [1] 10
+<span class='co'>## $z</span>
+<span class='co'>## [1] 1.217717</span>
+<span class='co'>##</span>
+<span class='co'>## $j</span>
+<span class='co'>## [1] 10</span>
 
 </div></pre>
   </div>
@@ -262,7 +264,7 @@ vol. 35, no. 4. pp. 1561–1570, 1964.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

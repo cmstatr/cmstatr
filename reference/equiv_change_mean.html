@@ -83,7 +83,7 @@ This function is a wrapper for a two-sample t--test." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -151,19 +151,19 @@ a sample. This is normally used to check for properties such as modulus.
 This function is a wrapper for a two-sample t--test.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>equiv_change_mean</span>(
-  <span class='kw'>df_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>n_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>mean_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sd_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>alpha</span>,
-  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>equiv_change_mean</span><span class='op'>(</span>
+  df_qual <span class='op'>=</span> <span class='cn'>NULL</span>,
+  data_qual <span class='op'>=</span> <span class='cn'>NULL</span>,
+  n_qual <span class='op'>=</span> <span class='cn'>NULL</span>,
+  mean_qual <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sd_qual <span class='op'>=</span> <span class='cn'>NULL</span>,
+  data_sample <span class='op'>=</span> <span class='cn'>NULL</span>,
+  n_sample <span class='op'>=</span> <span class='cn'>NULL</span>,
+  mean_sample <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sd_sample <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>alpha</span>,
+  modcv <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -304,9 +304,10 @@ CMH-17-1G, Mar. 2012.</p>
 <p><code><a href='https://rdrr.io/r/stats/t.test.html'>t.test</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>equiv_change_mean</span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='fl'>9</span>, <span class='kw'>mean_sample</span> <span class='kw'>=</span> <span class='fl'>9.02</span>,
-                  <span class='kw'>sd_sample</span> <span class='kw'>=</span> <span class='fl'>0.15785</span>, <span class='kw'>n_qual</span> <span class='kw'>=</span> <span class='fl'>28</span>, <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='fl'>9.24</span>,
-                  <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='fl'>0.162</span>, <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
+    <pre class="examples"><div class='input'><span class='fu'>equiv_change_mean</span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>0.05</span>, n_sample <span class='op'>=</span> <span class='fl'>9</span>, mean_sample <span class='op'>=</span> <span class='fl'>9.02</span>,
+                  sd_sample <span class='op'>=</span> <span class='fl'>0.15785</span>, n_qual <span class='op'>=</span> <span class='fl'>28</span>, mean_qual <span class='op'>=</span> <span class='fl'>9.24</span>,
+                  sd_qual <span class='op'>=</span> <span class='fl'>0.162</span>, modcv <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162, 
 #&gt;     n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785, alpha = 0.05, 
@@ -320,19 +321,19 @@ CMH-17-1G, Mar. 2012.</p>
 #&gt;               SD      0.162           0.15785      
 #&gt;           Result               PASS               
 #&gt;    Passing Range       8.856695 to 9.623305       </div><div class='input'>
-## Call:
-## equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162,
-##                   n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785,
-##                   alpha = 0.05,modcv = TRUE)
-##
-## For alpha = 0.05
-## Modified CV used
-##                   Qualification        Sample
-##           Number        28               9
-##             Mean       9.24             9.02
-##               SD      0.162           0.15785
-##           Result               PASS
-##    Passing Range       8.856695 to 9.623305
+<span class='co'>## Call:</span>
+<span class='co'>## equiv_change_mean(n_qual = 28, mean_qual = 9.24, sd_qual = 0.162,</span>
+<span class='co'>##                   n_sample = 9, mean_sample = 9.02, sd_sample = 0.15785,</span>
+<span class='co'>##                   alpha = 0.05,modcv = TRUE)</span>
+<span class='co'>##</span>
+<span class='co'>## For alpha = 0.05</span>
+<span class='co'>## Modified CV used</span>
+<span class='co'>##                   Qualification        Sample</span>
+<span class='co'>##           Number        28               9</span>
+<span class='co'>##             Mean       9.24             9.02</span>
+<span class='co'>##               SD      0.162           0.15785</span>
+<span class='co'>##           Result               PASS</span>
+<span class='co'>##    Passing Range       8.856695 to 9.623305</span>
 
 </div></pre>
   </div>
@@ -350,7 +351,7 @@ CMH-17-1G, Mar. 2012.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

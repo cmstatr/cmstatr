@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Glance at a <code>mnr</code> (maximum normed residual) object — glance.mnr • cmstatr</title>
+<title>Glance at a mnr (maximum normed residual) object — glance.mnr • cmstatr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,7 +46,7 @@
 
 
 
-<meta property="og:title" content="Glance at a <code>mnr</code> (maximum normed residual) object — glance.mnr" />
+<meta property="og:title" content="Glance at a mnr (maximum normed residual) object — glance.mnr" />
 <meta property="og:description" content="Glance accepts an object of type mnr and returns a
 tibble::tibble with
 one row of summaries.
@@ -85,7 +85,7 @@ tibble." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -156,7 +156,7 @@ tibble.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for mnr</span>
-<span class='fu'><a href='https://rdrr.io/pkg/generics/man/glance.html'>glance</a></span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -187,16 +187,17 @@ columns:</p>
     <div class='dont-index'><p><code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>20</span>, <span class='fl'>100</span>, <span class='fl'>5</span>), <span class='fl'>10</span>)
-<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='maximum_normed_residual.html'>maximum_normed_residual</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>)
-<span class='fu'><a href='https://rdrr.io/pkg/generics/man/glance.html'>glance</a></span>(<span class='no'>m</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 1 x 4</span><span>
+    <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>100</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='fl'>10</span><span class='op'>)</span>
+<span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='maximum_normed_residual.html'>maximum_normed_residual</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span><span class='op'>)</span>
+<span class='fu'><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 1 x 4</span><span>
 #&gt;     mnr alpha  crit n_outliers
 #&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
 #&gt; </span><span style='color: #555555;'>1</span><span>  4.26  0.05  2.73          1</div><div class='input'>
-## # A tibble: 1 x 4
-##     mnr alpha  crit n_outliers
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;
-## 1  4.23  0.05  2.73          1
+<span class='co'>## # A tibble: 1 x 4</span>
+<span class='co'>##     mnr alpha  crit n_outliers</span>
+<span class='co'>##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;</span>
+<span class='co'>## 1  4.23  0.05  2.73          1</span>
 
 </div></span></pre>
   </div>
@@ -214,7 +215,7 @@ columns:</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

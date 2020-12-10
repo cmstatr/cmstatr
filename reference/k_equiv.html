@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -147,7 +147,7 @@
     <p>k-factors for determining acceptance based on sample mean and an extremum</p>
     </div>
 
-    <pre class="usage"><span class='fu'>k_equiv</span>(<span class='no'>alpha</span>, <span class='no'>n</span>)</pre>
+    <pre class="usage"><span class='fu'>k_equiv</span><span class='op'>(</span><span class='va'>alpha</span>, <span class='va'>n</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -213,14 +213,18 @@ Sep. 2003.</p>
     <div class='dont-index'><p><code><a href='equiv_mean_extremum.html'>equiv_mean_extremum</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>qual_mean</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>
-<span class='no'>qual_sd</span> <span class='kw'>&lt;-</span> <span class='fl'>3.5</span>
-<span class='no'>k</span> <span class='kw'>&lt;-</span> <span class='fu'>k_equiv</span>(<span class='fl'>0.01</span>, <span class='fl'>5</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='st'>"Minimum Individual Acceptance Limit:"</span>)</div><div class='output co'>#&gt; [1] "Minimum Individual Acceptance Limit:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>qual_mean</span> - <span class='no'>qual_sd</span> * <span class='no'>k</span>[<span class='fl'>1</span>])</div><div class='output co'>#&gt; [1] 89.24981</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='st'>"Minimum Average Acceptance Limit:"</span>)</div><div class='output co'>#&gt; [1] "Minimum Average Acceptance Limit:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>qual_mean</span> - <span class='no'>qual_sd</span> * <span class='no'>k</span>[<span class='fl'>2</span>])</div><div class='output co'>#&gt; [1] 96.00123</div><div class='input'>
-## [1] "Minimum Individual Acceptance Limit:"
-## [1] 89.24981
-## [1] "Minimum Average Acceptance Limit:"
-## [1] 96.00123
+    <pre class="examples"><div class='input'><span class='va'>qual_mean</span> <span class='op'>&lt;-</span> <span class='fl'>100</span>
+<span class='va'>qual_sd</span> <span class='op'>&lt;-</span> <span class='fl'>3.5</span>
+<span class='va'>k</span> <span class='op'>&lt;-</span> <span class='fu'>k_equiv</span><span class='op'>(</span><span class='fl'>0.01</span>, <span class='fl'>5</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='st'>"Minimum Individual Acceptance Limit:"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Minimum Individual Acceptance Limit:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>qual_mean</span> <span class='op'>-</span> <span class='va'>qual_sd</span> <span class='op'>*</span> <span class='va'>k</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 89.24981</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='st'>"Minimum Average Acceptance Limit:"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "Minimum Average Acceptance Limit:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>qual_mean</span> <span class='op'>-</span> <span class='va'>qual_sd</span> <span class='op'>*</span> <span class='va'>k</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 96.00123</div><div class='input'>
+<span class='co'>## [1] "Minimum Individual Acceptance Limit:"</span>
+<span class='co'>## [1] 89.24981</span>
+<span class='co'>## [1] "Minimum Average Acceptance Limit:"</span>
+<span class='co'>## [1] 96.00123</span>
 
 </div></pre>
   </div>
@@ -238,7 +242,7 @@ Sep. 2003.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

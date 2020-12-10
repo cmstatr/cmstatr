@@ -93,7 +93,7 @@ tests can be overridden if needed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -171,75 +171,75 @@ tests of the data prior to calculating the basis values. These diagnostic
 tests can be overridden if needed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>basis_normal</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>x</span>,
-  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
-)
+    <pre class="usage"><span class='fu'>basis_normal</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>x</span>,
+  batch <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p <span class='op'>=</span> <span class='fl'>0.9</span>,
+  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
+  override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>basis_lognormal</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>x</span>,
-  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
-)
+<span class='fu'>basis_lognormal</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>x</span>,
+  batch <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p <span class='op'>=</span> <span class='fl'>0.9</span>,
+  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
+  override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>basis_weibull</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>x</span>,
-  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
-)
+<span class='fu'>basis_weibull</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>x</span>,
+  batch <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p <span class='op'>=</span> <span class='fl'>0.9</span>,
+  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
+  override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>basis_pooled_cv</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>x</span>,
-  <span class='no'>groups</span>,
-  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
-)
+<span class='fu'>basis_pooled_cv</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>x</span>,
+  <span class='va'>groups</span>,
+  batch <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p <span class='op'>=</span> <span class='fl'>0.9</span>,
+  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
+  modcv <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>basis_pooled_sd</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>x</span>,
-  <span class='no'>groups</span>,
-  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
-)
+<span class='fu'>basis_pooled_sd</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>x</span>,
+  <span class='va'>groups</span>,
+  batch <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p <span class='op'>=</span> <span class='fl'>0.9</span>,
+  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
+  modcv <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>basis_hk_ext</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>x</span>,
-  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"optimum-order"</span>, <span class='st'>"woodward-frawley"</span>),
-  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
-)
+<span class='fu'>basis_hk_ext</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>x</span>,
+  batch <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p <span class='op'>=</span> <span class='fl'>0.9</span>,
+  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"optimum-order"</span>, <span class='st'>"woodward-frawley"</span><span class='op'>)</span>,
+  override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>basis_nonpara_large_sample</span>(
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>x</span>,
-  <span class='kw'>batch</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>()
-)
+<span class='fu'>basis_nonpara_large_sample</span><span class='op'>(</span>
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>x</span>,
+  batch <span class='op'>=</span> <span class='cn'>NULL</span>,
+  p <span class='op'>=</span> <span class='fl'>0.9</span>,
+  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
+  override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>basis_anova</span>(<span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>x</span>, <span class='no'>groups</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>())</pre>
+<span class='fu'>basis_anova</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>x</span>, <span class='va'>groups</span>, p <span class='op'>=</span> <span class='fl'>0.9</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -499,19 +499,20 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 <p><code><a href='normalize_group_mean.html'>normalize_group_mean</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 
 <span class='co'># A single-point basis value can be calculated as follows</span>
 <span class='co'># in this example, three failed diagnostic tests are</span>
 <span class='co'># overridden.</span>
 
-<span class='no'>carbon.fabric</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>test</span> <span class='kw'>==</span> <span class='st'>"FC"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>condition</span> <span class='kw'>==</span> <span class='st'>"RTD"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>basis_normal</span>(<span class='no'>strength</span>, <span class='no'>batch</span>,
-               <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"outliers"</span>,
+<span class='va'>carbon.fabric</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>test</span> <span class='op'>==</span> <span class='st'>"FC"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>condition</span> <span class='op'>==</span> <span class='st'>"RTD"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>basis_normal</span><span class='op'>(</span><span class='va'>strength</span>, <span class='va'>batch</span>,
+               override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"outliers"</span>,
                             <span class='st'>"outliers_within_batch"</span>,
-                            <span class='st'>"anderson_darling_normal"</span>))</div><div class='output co'>#&gt; 
+                            <span class='st'>"anderson_darling_normal"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; basis_normal(data = ., x = strength, batch = batch, override = c("outliers", 
 #&gt;     "outliers_within_batch", "anderson_darling_normal"))
@@ -529,7 +530,7 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 <span class='co'>##     override = c("outliers", "outliers_within_batch",</span>
 <span class='co'>##    "anderson_darling_normal"))</span>
 <span class='co'>##</span>
-<span class='co'>## Distribution:  Normal 	( n = 18 )</span>
+<span class='co'>## Distribution:  Normal   ( n = 18 )</span>
 <span class='co'>## The following diagnostic tests were overridden:</span>
 <span class='co'>##     `outliers`,</span>
 <span class='co'>##     `outliers_within_batch`,</span>
@@ -540,10 +541,11 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 <span class='co'># A set of pooled basis values can also be calculated</span>
 <span class='co'># using the pooled standard deviation method, as follows.</span>
 <span class='co'># In this example, one failed diagnostic test is overridden.</span>
-<span class='no'>carbon.fabric</span> <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>test</span> <span class='kw'>==</span> <span class='st'>"WT"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'>basis_pooled_sd</span>(<span class='no'>strength</span>, <span class='no'>condition</span>, <span class='no'>batch</span>,
-                  <span class='kw'>override</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"outliers_within_batch"</span>))</div><div class='output co'>#&gt; 
+<span class='va'>carbon.fabric</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>test</span> <span class='op'>==</span> <span class='st'>"WT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>basis_pooled_sd</span><span class='op'>(</span><span class='va'>strength</span>, <span class='va'>condition</span>, <span class='va'>batch</span>,
+                  override <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"outliers_within_batch"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; basis_pooled_sd(data = ., x = strength, groups = condition, batch = batch, 
 #&gt;     override = c("outliers_within_batch"))
@@ -556,17 +558,17 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 #&gt; ETW  125.0698 
 #&gt; RTD  132.1457 
 #&gt; </div><div class='input'>
-## Call:
-## basis_pooled_sd(data = ., x = strength, groups = condition,
-##                 batch = batch, override = c("outliers_within_batch"))
-##
-## Distribution:  Normal - Pooled Standard Deviation 	( n = 54, r = 3 )
-## The following diagnostic tests were overridden:
-##     `outliers_within_batch`
-## B-Basis:   ( p = 0.9 , conf = 0.95 )
-## CTD  127.6914
-## ETW  125.0698
-## RTD  132.1457
+<span class='co'>## Call:</span>
+<span class='co'>## basis_pooled_sd(data = ., x = strength, groups = condition,</span>
+<span class='co'>##                 batch = batch, override = c("outliers_within_batch"))</span>
+<span class='co'>##</span>
+<span class='co'>## Distribution:  Normal - Pooled Standard Deviation   ( n = 54, r = 3 )</span>
+<span class='co'>## The following diagnostic tests were overridden:</span>
+<span class='co'>##     `outliers_within_batch`</span>
+<span class='co'>## B-Basis:   ( p = 0.9 , conf = 0.95 )</span>
+<span class='co'>## CTD  127.6914</span>
+<span class='co'>## ETW  125.0698</span>
+<span class='co'>## RTD  132.1457</span>
 
 </div></pre>
   </div>
@@ -584,7 +586,7 @@ Hoboken: John Wiley &amp; Sons, 2017.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

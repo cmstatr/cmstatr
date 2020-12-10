@@ -96,7 +96,7 @@ with a test of mean and standard deviation." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -177,16 +177,16 @@ According to Vangel (2002), this test provides improved power compared
 with a test of mean and standard deviation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>equiv_mean_extremum</span>(
-  <span class='kw'>df_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>data_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>alpha</span>,
-  <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>equiv_mean_extremum</span><span class='op'>(</span>
+  df_qual <span class='op'>=</span> <span class='cn'>NULL</span>,
+  data_qual <span class='op'>=</span> <span class='cn'>NULL</span>,
+  mean_qual <span class='op'>=</span> <span class='cn'>NULL</span>,
+  sd_qual <span class='op'>=</span> <span class='cn'>NULL</span>,
+  data_sample <span class='op'>=</span> <span class='cn'>NULL</span>,
+  n_sample <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>alpha</span>,
+  modcv <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -322,8 +322,9 @@ Sep. 2003.</p>
 <p><code><a href='calc_cv_star.html'>calc_cv_star</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>equiv_mean_extremum</span>(<span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>0.01</span>, <span class='kw'>n_sample</span> <span class='kw'>=</span> <span class='fl'>6</span>,
-                    <span class='kw'>mean_qual</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>sd_qual</span> <span class='kw'>=</span> <span class='fl'>5.5</span>, <span class='kw'>modcv</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; 
+    <pre class="examples"><div class='input'><span class='fu'>equiv_mean_extremum</span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>0.01</span>, n_sample <span class='op'>=</span> <span class='fl'>6</span>,
+                    mean_qual <span class='op'>=</span> <span class='fl'>100</span>, sd_qual <span class='op'>=</span> <span class='fl'>5.5</span>, modcv <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; 
 #&gt; Call:
 #&gt; equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6, 
 #&gt;     alpha = 0.01, modcv = TRUE)
@@ -333,17 +334,17 @@ Sep. 2003.</p>
 #&gt; For alpha = 0.01 and n = 6 
 #&gt; ( k1 = 3.128346 and k2 = 1.044342 )
 #&gt;                   Min Individual    Sample Mean    
-#&gt;      Thresholds:     78.88367         92.95069     </div><div class='input'>##
-## Call:
-## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,
-##     alpha = 0.01, modcv = TRUE)
-##
-## Modified CV used: CV* = 0.0675 ( CV = 0.055 )
-##
-## For alpha = 0.01 and n = 6
-## ( k1 = 3.128346 and k2 = 1.044342 )
-##                   Min Individual   Sample Mean
-##      Thresholds:    78.88367        92.95069
+#&gt;      Thresholds:     78.88367         92.95069     </div><div class='input'><span class='co'>##</span>
+<span class='co'>## Call:</span>
+<span class='co'>## equiv_mean_extremum(mean_qual = 100, sd_qual = 5.5, n_sample = 6,</span>
+<span class='co'>##     alpha = 0.01, modcv = TRUE)</span>
+<span class='co'>##</span>
+<span class='co'>## Modified CV used: CV* = 0.0675 ( CV = 0.055 )</span>
+<span class='co'>##</span>
+<span class='co'>## For alpha = 0.01 and n = 6</span>
+<span class='co'>## ( k1 = 3.128346 and k2 = 1.044342 )</span>
+<span class='co'>##                   Min Individual   Sample Mean</span>
+<span class='co'>##      Thresholds:    78.88367        92.95069</span>
 
 </div></pre>
   </div>
@@ -361,7 +362,7 @@ Sep. 2003.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

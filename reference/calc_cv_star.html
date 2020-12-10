@@ -90,7 +90,7 @@ For CV &amp;gt; 8%, CV* = CV
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@ rules are:</p>
 
     </div>
 
-    <pre class="usage"><span class='fu'>calc_cv_star</span>(<span class='no'>cv</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_cv_star</span><span class='op'>(</span><span class='va'>cv</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -190,10 +190,12 @@ SAE International, CMH-17-1G, Mar. 2012.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># The modified CV for values of CV smaller than 4% is 6%</span>
-<span class='fu'>calc_cv_star</span>(<span class='fl'>0.01</span>)</div><div class='output co'>#&gt; [1] 0.06</div><div class='input'><span class='co'>## [1] 0.06</span>
+<span class='fu'>calc_cv_star</span><span class='op'>(</span><span class='fl'>0.01</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.06</div><div class='input'><span class='co'>## [1] 0.06</span>
 
 <span class='co'># The modified CV for values of CV larger than 8% is unchanged</span>
-<span class='fu'>calc_cv_star</span>(<span class='fl'>0.09</span>)</div><div class='output co'>#&gt; [1] 0.09</div><div class='input'>## [1] 0.09
+<span class='fu'>calc_cv_star</span><span class='op'>(</span><span class='fl'>0.09</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 0.09</div><div class='input'><span class='co'>## [1] 0.09</span>
 
 </div></pre>
   </div>
@@ -211,7 +213,7 @@ SAE International, CMH-17-1G, Mar. 2012.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

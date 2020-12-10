@@ -83,7 +83,7 @@ and returns the normalized strength." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -151,7 +151,7 @@ vector of measured thicknesses, and a nominal thickness
 and returns the normalized strength.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>normalize_ply_thickness</span>(<span class='no'>strength</span>, <span class='no'>measured_thk</span>, <span class='no'>nom_thk</span>)</pre>
+    <pre class="usage"><span class='fu'>normalize_ply_thickness</span><span class='op'>(</span><span class='va'>strength</span>, <span class='va'>measured_thk</span>, <span class='va'>nom_thk</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -195,14 +195,15 @@ Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
 
-<span class='no'>carbon.fabric.2</span> <span class='kw'>%&gt;%</span>
-<span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(<span class='no'>thickness</span>, <span class='no'>strength</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span>(<span class='kw'>normalized_strength</span> <span class='kw'>=</span> <span class='fu'>normalize_ply_thickness</span>(<span class='no'>strength</span>,
-                                                       <span class='no'>thickness</span>,
-                                                       <span class='fl'>0.105</span>)) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fl'>10</span>)</div><div class='output co'>#&gt;    thickness strength normalized_strength
+<span class='va'>carbon.fabric.2</span> <span class='op'>%&gt;%</span>
+<span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span><span class='op'>(</span><span class='va'>thickness</span>, <span class='va'>strength</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>normalized_strength <span class='op'>=</span> <span class='fu'>normalize_ply_thickness</span><span class='op'>(</span><span class='va'>strength</span>,
+                                                       <span class='va'>thickness</span>,
+                                                       <span class='fl'>0.105</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    thickness strength normalized_strength
 #&gt; 1      0.112  142.817            152.3381
 #&gt; 2      0.113  135.901            146.2554
 #&gt; 3      0.113  132.511            142.6071
@@ -213,17 +214,17 @@ CMH-17-1G, Mar. 2012.</p>
 #&gt; 8      0.113  127.709            137.4392
 #&gt; 9      0.113  127.074            136.7558
 #&gt; 10     0.114  126.879            137.7543</div><div class='input'>
-##    thickness strength normalized_strength
-## 1      0.112  142.817            152.3381
-## 2      0.113  135.901            146.2554
-## 3      0.113  132.511            142.6071
-## 4      0.112  135.586            144.6251
-## 5      0.113  125.145            134.6799
-## 6      0.113  135.203            145.5042
-## 7      0.113  128.547            138.3411
-## 8      0.113  127.709            137.4392
-## 9      0.113  127.074            136.7558
-## 10     0.114  126.879            137.7543
+<span class='co'>##    thickness strength normalized_strength</span>
+<span class='co'>## 1      0.112  142.817            152.3381</span>
+<span class='co'>## 2      0.113  135.901            146.2554</span>
+<span class='co'>## 3      0.113  132.511            142.6071</span>
+<span class='co'>## 4      0.112  135.586            144.6251</span>
+<span class='co'>## 5      0.113  125.145            134.6799</span>
+<span class='co'>## 6      0.113  135.203            145.5042</span>
+<span class='co'>## 7      0.113  128.547            138.3411</span>
+<span class='co'>## 8      0.113  127.709            137.4392</span>
+<span class='co'>## 9      0.113  127.074            136.7558</span>
+<span class='co'>## 10     0.114  126.879            137.7543</span>
 
 </div></pre>
   </div>
@@ -241,7 +242,7 @@ CMH-17-1G, Mar. 2012.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

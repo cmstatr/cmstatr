@@ -91,7 +91,7 @@ computing basis values." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
       </span>
     </div>
 
@@ -166,7 +166,7 @@ This function is internally used by <code><a href='basis.html'>basis_normal</a><
 computing basis values.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>k_factor_normal</span>(<span class='no'>n</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</pre>
+    <pre class="usage"><span class='fu'>k_factor_normal</span><span class='op'>(</span><span class='va'>n</span>, p <span class='op'>=</span> <span class='fl'>0.9</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -226,8 +226,9 @@ CMH-17-1G, Mar. 2012.</p>
     <div class='dont-index'><p><code><a href='basis.html'>basis_normal</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>kb</span> <span class='kw'>&lt;-</span> <span class='fu'>k_factor_normal</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>conf</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>kb</span>)</div><div class='output co'>#&gt; [1] 2.35464</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='va'>kb</span> <span class='op'>&lt;-</span> <span class='fu'>k_factor_normal</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>10</span>, p <span class='op'>=</span> <span class='fl'>0.9</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>kb</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 2.35464</div><div class='input'>
 <span class='co'>## [1] 2.35464</span>
 
 <span class='co'># This can be used to caclulate the B-Basis if</span>
@@ -235,11 +236,13 @@ CMH-17-1G, Mar. 2012.</p>
 <span class='co'># is known, and data is assumed to be normally</span>
 <span class='co'># distributed</span>
 
-<span class='no'>sample_mean</span> <span class='kw'>&lt;-</span> <span class='fl'>90</span>
-<span class='no'>sample_sd</span> <span class='kw'>&lt;-</span> <span class='fl'>5.2</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='st'>"B-Basis:"</span>)</div><div class='output co'>#&gt; [1] "B-Basis:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>sample_mean</span> - <span class='no'>sample_sd</span> * <span class='no'>kb</span>)</div><div class='output co'>#&gt; [1] 77.75587</div><div class='input'>
-## [1] B-Basis:
-## [1] 77.75587
+<span class='va'>sample_mean</span> <span class='op'>&lt;-</span> <span class='fl'>90</span>
+<span class='va'>sample_sd</span> <span class='op'>&lt;-</span> <span class='fl'>5.2</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='st'>"B-Basis:"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "B-Basis:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>sample_mean</span> <span class='op'>-</span> <span class='va'>sample_sd</span> <span class='op'>*</span> <span class='va'>kb</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 77.75587</div><div class='input'>
+<span class='co'>## [1] B-Basis:</span>
+<span class='co'>## [1] 77.75587</span>
 
 </div></pre>
   </div>
@@ -257,7 +260,7 @@ CMH-17-1G, Mar. 2012.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
