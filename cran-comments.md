@@ -1,53 +1,38 @@
-## CRAN Comment Response (SH, 2020-07-10)
-> Thanks, please omit the redundant "in the R language" in your 
-> Description text and elaborate what statistical methods your provide in 
-> this package.
-
-I've updated DESCRIPTION to address this.
-
-> If there are references describing the (theoretical background of) 
-> methods in your package, please add these in the Description field of 
-> your DESCRIPTION file in the form
-> authors (year) <doi:...>
-> authors (year) <arXiv:...>
-> authors (year, ISBN:...)
-> with no space after 'doi:', 'arXiv:' and angle brackets for auto-linking.
-
-I've updated DESCRIPTION to reference a handbook commonly used in this field
-(this handbook is written by an organization and doesn't list authors or an
-editor, so I hope I've referenced it using the correct format). I've also
-referenced a JOSS paper about this pacakge.
-
-> Please replace cat() by message() or warning() in your functions (except 
-> for print() and summary() functions). Messages and warnings can be 
-> suppressed if needed.
-
-There were previouslu three non-exported functions that used cat. These were
-were only called by the various `print` methods. I've changed the code so that
-these non-exported functions return a character vector and the `print` method
-itself calls `cat`. After this change, the only calls to `cat` are from
-the various `print` methods.
+This re-submission fixes one minor bug and also ensures that
+R CMD check can be successfully run on a system with only the
+packages in Depends available. This is in response to an email
+received from Prof Brian Ripley.
 
 
 ## Test environments
 - win-builder (devel, release, oldrelease)
-- local Ubuntu 18.04 install, R 3.6.3
+- local Windows 10, R 4.0.2
 - GitHub Action runners:
-  - Windows, R 4.0.2
-  - MacOS, R 4.0.2
-  - Ubuntu 16.04, R 4.0.2
+  - Windows, R 4.0.3
+  - MacOS, R 4.0.3
+  - Ubuntu 16.04, R 4.0.3
   - Ubuntu 16.04, R 3.6.3
+  - Ubuntu 16.04, R 4.0.3 (with _R_CHECK_DEPENDS_ONLY_ set)
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
 
-There was 1 NOTE (only on win-builder):
-> * checking CRAN incoming feasibility ... NOTE
-> Maintainer: 'Stefan Kloppenborg <stefan@kloppenborg.ca>'
->
-> New submission
+One NOTE (only) on Win-builder oldrelease, reproduced below.
+This NOTE relates to the TLS certificate for a web page linked from
+a vignette. On my Ubuntu 20.04 machine, Firefox trusts this certificate,
+but curl does not. On my Windows 10 machine, both Firebox and curl
+trust this certificate. So, I guess this has something to do with
+which root CAs are trusted by the system and/or browser. For some reason,
+that Win-builder machine responsible for oldrelease is not trusting
+the TLS certificate. The other two Win-builder machines do trust this
+certificate. I don't believe that there is much I can do to correct this.
 
-Since this is a new package, this note is expected.
+Found the following (possibly) invalid URLs:
+  URL: https://www.cmh17.org/
+    From: inst/doc/cmstatr_Tutorial.html
+    Status: Error
+    Message: libcurl error code 35:
+      	error:1407742E:SSL routines:SSL23_GET_SERVER_HELLO:tlsv1 alert protocol version
 
 ## Downstream dependencies
-This is a new package. There are no downstream dependencies.
+There are no downstream dependencies.

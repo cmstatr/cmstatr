@@ -1,8 +1,8 @@
 Package: cmstatr
 Type: Package
 Title: Statistical Methods for Composite Material Data
-Version: 0.7.0
-Date: 2020-07-08
+Version: 0.7.1
+Date: 2020-12-09
 Depends: R (>= 3.3)
 Authors@R: c(
     person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",

@@ -10,6 +10,8 @@ status](https://github.com/ComtekAdvancedStructures/cmstatr/workflows/R-CMD-chec
 [![`Codecov` test
 coverage](https://codecov.io/gh/comtekadvancedstructures/cmstatr/branch/master/graph/badge.svg)](https://codecov.io/gh/comtekadvancedstructures/cmstatr?branch=master)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02265/status.svg)](https://doi.org/10.21105/joss.02265)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/cmstatr)](https://cran.r-project.org/package=cmstatr)
+[![](https://cranlogs.r-pkg.org/badges/cmstatr)](https://cran.r-project.org/package=cmstatr)
 <!-- badges: end -->
 
 # What It Does
