@@ -1,76 +1,80 @@
 context("Workflow")
 
 suppressMessages(library(dplyr))
-suppressMessages(library(tidyr))
-suppressMessages(library(purrr))
 
 # In this test case, the "steps" refer to the flowchart in CMH-17-1G
 # Figure 8.3.1.1(a)
 
 test_that("carbon.fabric.2 MNR test matches CMH17-STATS (step 7)", {
   # Test for outliers within each batch and condition
-  res <- carbon.fabric.2 %>%
-    filter(test == "FC") %>%
-    group_by(batch, condition) %>%
-    nest() %>%
-    mutate(mnr = map(data, ~maximum_normed_residual(.x, strength)),
-           tidied = map(mnr, glance)) %>%
-    select(-c(mnr, data)) %>%
-    unnest(tidied) %>%
-    ungroup()
 
-  res %>%
-    group_by(condition) %>%
-    summarize(n_outliers = sum(n_outliers)) %>%
-    mutate(expected_outliers = case_when(condition == "ETW2" ~ 1,
-                                         TRUE ~ 0)) %>%
-    rowwise() %>%
-    mutate(expect_equal(n_outliers, expected_outliers))
+  conditions <- unique(carbon.fabric.2$condition)
+  batches <- unique(carbon.fabric.2$batch)
+
+  sapply(conditions, function(c) {
+    n_outliers <- sum(
+      sapply(batches, function(b) {
+        dat <- carbon.fabric.2 %>%
+          filter(test == "FC") %>%
+          filter(condition == c) %>%
+          filter(batch == b)
+
+        mnr <- maximum_normed_residual(data = dat, strength)
+        glance(mnr)$n_outliers
+      })
+    )
+
+    expected_outliers <- case_when(c == "ETW2" ~ 1,
+                                   TRUE ~ 0)
+
+    expect_equal(n_outliers, expected_outliers)
+  })
 })
 
 test_that("carbon.fabric.2 ADK matches CMH17-STATS (step 10)", {
   # Test for between-batch variability within each condition
-  res <- carbon.fabric.2 %>%
-    filter(test == "FC") %>%
-    group_by(condition) %>%
-    nest() %>%
-    mutate(adk = map(data, ~ad_ksample(.x, strength, batch)),
-           tidied = map(adk, glance)) %>%
-    select(-c(adk, data)) %>%
-    unnest(tidied) %>%
-    ungroup()
 
-  res %>%
-    mutate(adk_expected = case_when(condition == "CTD" ~ 0.351,
-                                    condition == "RTD" ~ 0.448,
-                                    condition == "ETD" ~ 0.453,
-                                    condition == "ETW" ~ 1.627,
-                                    condition == "ETW2" ~ 0.784,
-                                    TRUE ~ 0)) %>%
-    # There is a difference between the way that the test statisic is defined
+  conditions <- unique(carbon.fabric.2$condition)
+
+  sapply(conditions, function(c) {
+    dat <- carbon.fabric.2 %>%
+      filter(test == "FC") %>%
+      filter(condition == c)
+    adk <- ad_ksample(dat, strength, batch)
+    ad <- glance(adk)$ad
+    k <- glance(adk)$k
+    reject_same_dist <- glance(adk)$reject_same_dist
+
+    adk_expected <- case_when(c == "CTD" ~ 0.351,
+                              c == "RTD" ~ 0.448,
+                              c == "ETD" ~ 0.453,
+                              c == "ETW" ~ 1.627,
+                              c == "ETW2" ~ 0.784,
+                              TRUE ~ 0)
+    # There is a difference between the way that the test statistic is defined
     # in cmstatr and CMH17-STATS and a corresponding difference in the
     # critical value. See documentation for ad_ksample()
-    mutate(adk_expected = adk_expected * (k - 1)) %>%
-    rowwise() %>%
-    mutate(expect_equal(ad, adk_expected, tolerance = 0.005),
-           expect_false(reject_same_dist))
+    adk_expected <- adk_expected * (k - 1)
+
+    expect_equal(ad, adk_expected, tolerance = 0.005)
+    expect_false(reject_same_dist)
+
+  })
 })
 
 test_that("carbon.fabric.2 MNR test matches CMH17-STATS (step 18)", {
   # Test for outliers within each condition
-  res <- carbon.fabric.2 %>%
-    filter(test == "FC") %>%
-    group_by(condition) %>%
-    nest() %>%
-    mutate(mnr = map(data, ~maximum_normed_residual(.x, strength)),
-           tidied = map(mnr, glance)) %>%
-    select(-c(mnr, data)) %>%
-    unnest(tidied) %>%
-    ungroup()
 
-  res %>%
-    rowwise() %>%
-    mutate(expect_equal(n_outliers, 0))
+  conditions <- unique(carbon.fabric.2$condition)
+
+  sapply(conditions, function(c) {
+    dat <- carbon.fabric.2 %>%
+      filter(test == "FC") %>%
+      filter(condition == c)
+    mnr <- maximum_normed_residual(dat, strength)
+    n_outliers <- glance(mnr)$n_outliers
+    expect_equal(n_outliers, 0)
+  })
 })
 
 test_that("carbon.fabric.2 Normality of pooled norm data matches (step 23)", {
@@ -110,7 +114,7 @@ test_that("carbon.fabric.2 pooled sd basis values match (step 30)", {
 })
 
 test_that("carbon.fabric.2 equality of normalized variance (step 31)", {
-  # Test for equality of normalized variacnes among condition groups
+  # Test for equality of normalized variances among condition groups
   res <- carbon.fabric.2 %>%
     filter(test == "FC") %>%
     mutate(norm_strength = normalize_group_mean(strength, condition)) %>%
@@ -137,31 +141,35 @@ test_that("carbon.fabric.2 pooled CV basis values match (step 39-41)", {
 
 test_that("carbon.fabric.2 ADK matches CMH17-STATS - modCV (step 10)", {
   # Test for between-batch variability within each condition (modified CV)
-  res <- carbon.fabric.2 %>%
-    filter(test == "FC") %>%
-    mutate(trans_strength = transform_mod_cv_ad(strength, condition, batch)) %>%
-    group_by(condition) %>%
-    nest() %>%
-    mutate(adk = map(data, ~ad_ksample(.x, trans_strength, batch)),
-           tidied = map(adk, glance)) %>%
-    select(-c(adk, data)) %>%
-    unnest(tidied) %>%
-    ungroup()
 
-  res %>%
-    mutate(adk_expected = case_when(condition == "CTD" ~ 0.351,
-                                    condition == "RTD" ~ 0.401,
-                                    condition == "ETD" ~ 0.495,
-                                    condition == "ETW" ~ 1.051,
-                                    condition == "ETW2" ~ 0.670,
-                                    TRUE ~ 0)) %>%
-    # There is a difference between the way that the test statisic is defined
+  conditions <- unique(carbon.fabric.2$condition)
+
+  sapply(conditions, function(c) {
+    dat <- carbon.fabric.2 %>%
+      filter(test == "FC") %>%
+      mutate(trans_strength = transform_mod_cv_ad(
+        strength, condition, batch)) %>%
+      filter(condition == c)
+    adk <- ad_ksample(dat, trans_strength, batch)
+    ad <- glance(adk)$ad
+    k <- glance(adk)$k
+    reject_same_dist <- glance(adk)$reject_same_dist
+
+    adk_expected <- case_when(c == "CTD" ~ 0.351,
+                              c == "RTD" ~ 0.401,
+                              c == "ETD" ~ 0.495,
+                              c == "ETW" ~ 1.051,
+                              c == "ETW2" ~ 0.670,
+                              TRUE ~ 0)
+
+    # There is a difference between the way that the test statistic is defined
     # in cmstatr and CMH17-STATS and a corresponding difference in the
     # critical value. See documentation for ad_ksample()
-    mutate(adk_expected = adk_expected * (k - 1)) %>%
-    rowwise() %>%
-    mutate(expect_equal(ad, adk_expected, tolerance = 0.005),
-           expect_false(reject_same_dist))
+    adk_expected <- adk_expected * (k - 1)
+
+    expect_equal(ad, adk_expected, tolerance = 0.005)
+    expect_false(reject_same_dist)
+  })
 })
 
 test_that("carbon.fabric.2 Normality of pooled norm data - modCV (step 23)", {
@@ -412,21 +420,23 @@ test_that("MNR within each batch and condition matches CMH17-STATS", {
   expect_true("outliers_within_batch" %in%
                 res_modcv$diagnostic_failures)
 
-  res_mnr <- test_dat %>%
-    group_by(cond, batch) %>%
-    nest() %>%
-    mutate(mnr = map(data, ~maximum_normed_residual(.x, strength)),
-           tidied = map(mnr, glance)) %>%
-    select(-c(data, mnr)) %>%
-    unnest(cols = c(tidied))
+  conditions <- unique(test_dat$cond)
+  batches <- unique(test_dat$batch)
 
-  res_mnr_outlier_batch <- res_mnr %>%
-    filter(cond == 1 & batch == "C")
-  expect_true(res_mnr_outlier_batch$n_outliers > 0)
+  sapply(conditions, function(c) {
+    sapply(batches, function(b) {
+      dat <- test_dat %>%
+        filter(cond == c & batch == b)
+      mnr <- maximum_normed_residual(dat, strength)
+      n_outliers <- glance(mnr)$n_outliers
 
-  res_mnr_no_outlier_batch <- res_mnr %>%
-    filter(!(cond == 1 & batch == "C"))
-  expect_equal(sum(res_mnr_no_outlier_batch$n_outliers > 0), 0)
+      if (c == 1 & b == "C") {
+        expect_gt(n_outliers, 0)
+      } else {
+        expect_equal(n_outliers, 0)
+      }
+    })
+  })
 })
 
 test_that("ADK for between-batch var. within each cond matches CMH17-STATS", {
@@ -462,30 +472,36 @@ test_that("ADK for between-batch var. within each cond matches CMH17-STATS", {
   expect_false("between_group_variability" %in%
                  res_modcv$diagnostic_failures)
 
-  test_dat %>%
-    group_by(cond) %>%
-    nest() %>%
-    mutate(adk = map(data, ~ad_ksample(.x, strength, batch)),
-           tidied = map(adk, glance)) %>%
-    select(-c(data, adk)) %>%
-    unnest(cols = c(tidied)) %>%
-    mutate(expected = case_when(cond == 1 ~ 1.243,
-                                cond == 2 ~ 3.376,
-                                cond == 3 ~ 2.793)) %>%
-    mutate(expect_equal(ad / (k - 1), expected, tolerance = 7e-3))
+  conditions <- unique(test_dat$cond)
 
-  test_dat %>%
-    mutate(strength = transform_mod_cv_ad(strength, cond, batch)) %>%
-    group_by(cond) %>%
-    nest() %>%
-    mutate(adk = map(data, ~ad_ksample(.x, strength, batch)),
-           tidied = map(adk, glance)) %>%
-    select(-c(data, adk)) %>%
-    unnest(cols = c(tidied)) %>%
-    mutate(expected = case_when(cond == 1 ~ 0.504,
-                                cond == 2 ~ 1.106,
-                                cond == 3 ~ 1.508)) %>%
-    mutate(expect_equal(ad / (k - 1), expected, tolerance = 2e-3))
+  lapply(conditions, function(c) {
+    dat <- test_dat %>%
+      filter(cond == c)
+    adk <- ad_ksample(dat, strength, batch)
+    ad <- glance(adk)$ad
+    k <- glance(adk)$k
+
+    expected <- case_when(c == 1 ~ 1.243,
+                          c == 2 ~ 3.376,
+                          c == 3 ~ 2.793)
+
+    expect_equal(ad / (k - 1), expected, tolerance = 7e-3)
+  })
+
+  lapply(conditions, function(c) {
+    dat <- test_dat %>%
+      mutate(strength = transform_mod_cv_ad(strength, cond, batch)) %>%
+      filter(cond == c)
+    adk <- ad_ksample(dat, strength, batch)
+    ad <- glance(adk)$ad
+    k <- glance(adk)$k
+
+    expected <- case_when(c == 1 ~ 0.504,
+                          c == 2 ~ 1.106,
+                          c == 3 ~ 1.508)
+
+    expect_equal(ad / (k - 1), expected, tolerance = 2e-3)
+  })
 })
 
 test_that("MNR within each condition matches CMH17-STATS", {
@@ -521,42 +537,44 @@ test_that("MNR within each condition matches CMH17-STATS", {
   expect_false("outliers_within_group" %in%
                 res_modcv$diagnostic_failures)
 
-  res_mnr <- test_dat %>%
-    group_by(cond) %>%
-    nest() %>%
-    mutate(mnr = map(data, ~maximum_normed_residual(.x, strength)),
-           tidied = map(mnr, glance)) %>%
-    select(-c(data, mnr)) %>%
-    unnest(cols = c(tidied))
+  conditions <- unique(test_dat$cond)
 
-  expect_equal(sum(res_mnr$n_outliers > 0), 0)
+  lapply(conditions, function(c) {
+    dat <- test_dat %>%
+      filter(cond == c)
+    mnr <- maximum_normed_residual(dat, strength)
+    n_outliers <- glance(mnr)$n_outliers
+    expect_equal(n_outliers, 0)
+  })
 })
 
 test_that("OSL of data from each batch CMH17-STATS", {
-  test_dat %>%
-    group_by(cond) %>%
-    nest() %>%
-    mutate(osl = map(data, ~anderson_darling_normal(.x, strength)),
-           tidied = map(osl, glance)) %>%
-    select(-c(data, osl)) %>%
-    unnest(cols = c(tidied)) %>%
-    mutate(expected = case_when(cond == 1 ~ 0.485,
-                                cond == 2 ~ 0.306,
-                                cond == 3 ~ 0.287)) %>%
-    mutate(expect_equal(osl, expected, tolerance = 1e-3))
+  conditions <- unique(test_dat$cond)
 
-  test_dat %>%
-    mutate(strength = transform_mod_cv_ad(strength, cond, batch)) %>%
-    group_by(cond) %>%
-    nest() %>%
-    mutate(osl = map(data, ~anderson_darling_normal(.x, strength)),
-           tidied = map(osl, glance)) %>%
-    select(-c(data, osl)) %>%
-    unnest(cols = c(tidied)) %>%
-    mutate(expected = case_when(cond == 1 ~ 0.494,
-                                cond == 2 ~ 0.467,
-                                cond == 3 ~ 0.718)) %>%
-    mutate(expect_equal(osl, expected, tolerance = 1e-3))
+  lapply(conditions, function(c) {
+    dat <- test_dat %>%
+      filter(cond == c)
+    osl <- anderson_darling_normal(dat, strength)
+    osl <- glance(osl)$osl
+    expected <- case_when(c == 1 ~ 0.485,
+                          c == 2 ~ 0.306,
+                          c == 3 ~ 0.287)
+    expect_equal(osl, expected, tolerance = 1e-3)
+  })
+
+  lapply(conditions, function(c) {
+    dat <- test_dat %>%
+      mutate(strength = transform_mod_cv_ad(strength, cond, batch)) %>%
+      filter(cond == c)
+    osl <- anderson_darling_normal(dat, strength)
+    osl <- glance(osl)$osl
+
+    expected <- case_when(c == 1 ~ 0.494,
+                          c == 2 ~ 0.467,
+                          c == 3 ~ 0.718)
+
+    expect_equal(osl, expected, tolerance = 1e-3)
+  })
 })
 
 test_that("OSL of pooled data after norm to group mean matches CMH17-STATS", {

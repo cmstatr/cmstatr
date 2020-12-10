@@ -1,3 +1,14 @@
+# Version 0.7.1
+- Fixed bug in `glance.equiv_mean_extremum` where it would include empty
+  values when a sample was not specified.
+- Moved `dplyr` from Suggests to Depends. It is expected that nearly all
+  users will use this package in their workflow, and a future version of
+  `cmstatr` will also rely on functionality from `dplyr`.
+- Changed tests and vignettes such that tests and vignette code
+  is not re-run when the necessary packages are not available. Test coverage
+  and re-building of vignettes is unchanged when all packages in Depends and
+  Suggests are available.
+
 # Version 0.7.0
 - Added optional argument to `glance.basis` to add diagnostic test results
   to resulting `data.frame`

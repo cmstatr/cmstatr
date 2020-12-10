@@ -2,7 +2,13 @@ context("Plotting")
 
 suppressMessages(library(dplyr))
 suppressMessages(library(ggplot2))
-suppressMessages(library(vdiffr))
+
+
+expect_doppelganger <- function(title, fig, path = NULL, ...) {
+  testthat::skip_if_not_installed("vdiffr")
+  vdiffr::expect_doppelganger(title, fig, path = path, ...)
+}
+
 
 expect_doppelganger("stat_esf", {
   carbon.fabric.2 %>%

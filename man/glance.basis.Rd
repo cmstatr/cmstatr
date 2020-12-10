@@ -70,10 +70,10 @@ glance(b)
 glance(b, include_diagnostics = TRUE)
 
 ## # A tibble: 1 x 11
-##        p  conf distribution modcv     n r     basis outliers_within…
+##        p  conf distribution modcv     n r     basis outliers_withinâ€¦
 ##    <dbl> <dbl> <chr>        <lgl> <int> <lgl> <dbl> <chr>
 ##  1   0.9  0.95 Normal       FALSE    20 NA     92.0 NA
-## # … with 3 more variables: between_batch_variability <chr>,
+## # â€¦ with 3 more variables: between_batch_variability <chr>,
 ## #   outliers <chr>, anderson_darling_normal <chr>
 
 }
