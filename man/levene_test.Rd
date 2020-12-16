@@ -26,15 +26,15 @@ Returns an object of class \code{adk}. This object has the following fields:
 \item{\code{groups}}{a vector of the groups used in the computation}
 \item{\code{alpha}}{the value of alpha specified}
 \item{\code{modcv}}{a logical value indicating whether the modified
-                    CV approach was used.}
+CV approach was used.}
 \item{\code{n}}{the total number of observations}
 \item{\code{k}}{the number of groups}
 \item{\code{f}}{the value of the F test statistic}
 \item{\code{p}}{the computed p-value}
 \item{\code{reject_equal_variance}}{a boolean value indicating whether the
-  null hypothesis that all samples have the same variance is rejected}
+null hypothesis that all samples have the same variance is rejected}
 \item{\code{modcv_transformed_data}}{the data after the modified CV
-                                     transformation}
+transformation}
 }
 \description{
 This function performs the Levene's test for equality of variance.
@@ -73,7 +73,7 @@ Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
 }
 \seealso{
-\code{\link{calc_cv_star}}
+\code{\link[=calc_cv_star]{calc_cv_star()}}
 
-\code{\link{transform_mod_cv}}
+\code{\link[=transform_mod_cv]{transform_mod_cv()}}
 }

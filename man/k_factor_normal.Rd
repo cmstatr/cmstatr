@@ -26,7 +26,7 @@ be equal to \eqn{\bar{x} - k s}{x_bar - k s},
 where \eqn{\bar{x}}{x_bar} is the sample mean,
 \eqn{s} is the sample standard deviation and \eqn{k} is the result
 of this function.
-This function is internally used by \code{\link{basis_normal}} when
+This function is internally used by \code{\link[=basis_normal]{basis_normal()}} when
 computing basis values.
 }
 \details{
@@ -87,5 +87,5 @@ Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
 }
 \seealso{
-\code{\link{basis_normal}}
+\code{\link[=basis_normal]{basis_normal()}}
 }

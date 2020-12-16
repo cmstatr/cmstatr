@@ -114,29 +114,29 @@ This object has the following fields:
 \item{\code{p}}{the value of \eqn{p} supplied}
 \item{\code{conf}}{the value of \eqn{conf} supplied}
 \item{\code{modcv}}{a logical value indicating whether the modified
-                    CV approach was used. Only applicable to pooling
-                    methods.}
+CV approach was used. Only applicable to pooling
+methods.}
 \item{\code{data}}{a copy of the data used in the calculation}
 \item{\code{groups}}{a copy of the groups variable.
-                     Only used for pooling and ANOVA methods.}
+Only used for pooling and ANOVA methods.}
 \item{\code{batch}}{a copy of the batch data used for diagnostic tests}
 \item{\code{modcv_transformed_data}}{the data after the modified CV
-                                     transformation}
+transformation}
 \item{\code{override}}{a vector of the names of diagnostic tests that
-                       were overridden. \code{NULL} if none were
-                       overridden}
+were overridden. \code{NULL} if none were
+overridden}
 \item{\code{diagnostic_results}}{a named character vector containing the
-                                 results of all the diagnostic tests. See
-                                 the Details section for additional
-                                 information}
+results of all the diagnostic tests. See
+the Details section for additional
+information}
 \item{\code{diagnostic_failures}}{a vector containing any diagnostic tests
-                                  that produced failures}
+that produced failures}
 \item{\code{n}}{the number of observations}
 \item{\code{r}}{the number of groups, if a pooling method was used.
-                Otherwise it is NULL.}
+Otherwise it is NULL.}
 \item{\code{basis}}{the basis value computed. This is a number
-                    except when pooling methods are used, in
-                    which case it is a data.frame.}
+except when pooling methods are used, in
+which case it is a data.frame.}
 }
 \description{
 Calculate the basis value for a given data set. There are various functions
@@ -173,18 +173,18 @@ adding extra variance to datasets with unexpectedly low variance.
 
 \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
 the standard deviation from the mean. \eqn{k} is given by
-the function \code{\link{k_factor_normal}}. The equations in
+the function \code{\link[=k_factor_normal]{k_factor_normal()}}. The equations in
 Krishnamoorthy and Mathew (2008) are used.
 \code{basis_normal} also
 performs a diagnostic test for outliers (using
-\code{\link{maximum_normed_residual}})
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and a diagnostic test for normality (using
-\code{\link{anderson_darling_normal}}).
+\code{\link[=anderson_darling_normal]{anderson_darling_normal()}}).
 If the argument \code{batch} is given, this function also performs
 a diagnostic test for outliers within
-each batch (using \code{\link{maximum_normed_residual}})
+each batch (using \code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and a diagnostic test for between batch variability (using
-\code{\link{ad_ksample}}). The argument \code{batch} is only used
+\code{\link[=ad_ksample]{ad_ksample()}}). The argument \code{batch} is only used
 for these diagnostic tests.
 
 \code{basis_lognormal} calculates the basis value in the same way
@@ -193,14 +193,14 @@ data is taken.
 
 \code{basis_lognormal} function also performs
 a diagnostic test for outliers (using
-\code{\link{maximum_normed_residual}})
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and a diagnostic test for normality (using
-\code{\link{anderson_darling_lognormal}}).
+\code{\link[=anderson_darling_lognormal]{anderson_darling_lognormal()}}).
 If the argument \code{batch} is given, this function also performs
 a diagnostic test for outliers within
-each batch (using \code{\link{maximum_normed_residual}})
+each batch (using \code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and a diagnostic test for between batch variability (using
-\code{\link{ad_ksample}}). The argument \code{batch} is only used
+\code{\link[=ad_ksample]{ad_ksample()}}). The argument \code{batch} is only used
 for these diagnostic tests.
 
 \code{basis_weibull} calculates the basis value for data distributed
@@ -208,18 +208,18 @@ according to a Weibull distribution. The confidence level for the
 content requested is calculated using the conditional method, as
 described in Lawless (1982) Section 4.1.2b. This has good agreement
 with tables published in CMH-17-1G. Results differ between this function
-and STAT17 by approximately 0.5\%.
+and STAT17 by approximately 0.5\\%.
 
 \code{basis_weibull} function also performs
 a diagnostic test for outliers (using
-\code{\link{maximum_normed_residual}})
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and a diagnostic test for normality (using
-\code{\link{anderson_darling_weibull}}).
+\code{\link[=anderson_darling_weibull]{anderson_darling_weibull()}}).
 If the argument \code{batch} is given, this function also performs
 a diagnostic test for outliers within
-each batch (using \code{\link{maximum_normed_residual}})
+each batch (using \code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and a diagnostic test for between batch variability (using
-\code{\link{ad_ksample}}). The argument \code{batch} is only used
+\code{\link[=ad_ksample]{ad_ksample()}}). The argument \code{batch} is only used
 for these diagnostic tests.
 
 \code{basis_hk_ext} calculates the basis value using the Extended
@@ -241,20 +241,20 @@ method (for use when calculating B-Basis values) is called
 "optimum-order" in this package.
 The results of \code{basis_hk_ext} have been
 verified against example results from the program STAT-17. Agreement is
-typically well within 0.2\%, however, for a few sample sizes, the
-agreement can be as poor as 1\% with the result of this function
+typically well within 0.2\\%, however, for a few sample sizes, the
+agreement can be as poor as 1\\% with the result of this function
 being more conservative than STAT-17.
 
 \code{basis_hk_ext} also performs
 a diagnostic test for outliers (using
-\code{\link{maximum_normed_residual}})
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and performs a pair of tests that the sample size and method selected
 follow the guidance described above.
 If the argument \code{batch} is given, this function also performs
 a diagnostic test for outliers within
-each batch (using \code{\link{maximum_normed_residual}})
+each batch (using \code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and a diagnostic test for between batch variability (using
-\code{\link{ad_ksample}}). The argument \code{batch} is only used
+\code{\link[=ad_ksample]{ad_ksample()}}). The argument \code{batch} is only used
 for these diagnostic tests.
 
 \code{basis_nonpara_large_sample} calculates the basis value
@@ -266,13 +266,13 @@ program.
 
 \code{basis_nonpara_large_sample} also performs
 a diagnostic test for outliers (using
-\code{\link{maximum_normed_residual}})
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and performs a test that the sample size is sufficiently large.
 If the argument \code{batch} is given, this function also performs
 a diagnostic test for outliers within
-each batch (using \code{\link{maximum_normed_residual}})
+each batch (using \code{\link[=maximum_normed_residual]{maximum_normed_residual()}})
 and a diagnostic test for between batch variability (using
-\code{\link{ad_ksample}}). The argument \code{batch} is only used
+\code{\link[=ad_ksample]{ad_ksample()}}). The argument \code{batch} is only used
 for these diagnostic tests.
 
 \code{basis_anova} calculates basis values using the ANOVA method.
@@ -280,8 +280,8 @@ for these diagnostic tests.
 indicates the group corresponding to each observation. This method is
 described in CMH-17-1G. This function automatically performs a diagnostic
 test for outliers within each group
-(using \code{\link{maximum_normed_residual}}) and a test for between
-group variability (using \code{\link{ad_ksample}}) as well as checking
+(using \code{\link[=maximum_normed_residual]{maximum_normed_residual()}}) and a test for between
+group variability (using \code{\link[=ad_ksample]{ad_ksample()}}) as well as checking
 that the data contains at least 5 groups.
 This function has been verified against the results of the STAT-17 program.
 
@@ -298,18 +298,18 @@ This method is described in CMH-17-1G.
 
 \code{basis_pooled_sd} and \code{basis_pooled_cv} both automatically
 perform a number of diagnostic tests. Using
-\code{\link{maximum_normed_residual}}, they check that there are no
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}}, they check that there are no
 outliers within each group and batch (provided that \code{batch} is
 specified). They check the between batch variability using
-\code{\link{ad_ksample}}. They check that there are no outliers within
+\code{\link[=ad_ksample]{ad_ksample()}}. They check that there are no outliers within
 each group (pooling all batches) using
-\code{\link{maximum_normed_residual}}. They check for the normality
-of the pooled data using \code{\link{anderson_darling_normal}}.
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}}. They check for the normality
+of the pooled data using \code{\link[=anderson_darling_normal]{anderson_darling_normal()}}.
 \code{basis_pooled_sd} checks for equality of variance of all
-data using \code{\link{levene_test}} and \code{basis_pooled_cv}
+data using \code{\link[=levene_test]{levene_test()}} and \code{basis_pooled_cv}
 checks for equality of variances of all data after transforming it
-using \code{\link{normalize_group_mean}}
-using \code{\link{levene_test}}.
+using \code{\link[=normalize_group_mean]{normalize_group_mean()}}
+using \code{\link[=levene_test]{levene_test()}}.
 
 The object returned by these functions includes the named vector
 \code{diagnostic_results}. This contains all of the diagnostic tests
@@ -389,21 +389,21 @@ for Practitioners and Researchers, Second Edition.
 Hoboken: John Wiley & Sons, 2017.
 }
 \seealso{
-\code{\link{hk_ext_z_j_opt}}
+\code{\link[=hk_ext_z_j_opt]{hk_ext_z_j_opt()}}
 
-\code{\link{k_factor_normal}}
+\code{\link[=k_factor_normal]{k_factor_normal()}}
 
-\code{\link{transform_mod_cv}}
+\code{\link[=transform_mod_cv]{transform_mod_cv()}}
 
-\code{\link{maximum_normed_residual}}
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}}
 
-\code{\link{anderson_darling_normal}}
+\code{\link[=anderson_darling_normal]{anderson_darling_normal()}}
 
-\code{\link{anderson_darling_lognormal}}
+\code{\link[=anderson_darling_lognormal]{anderson_darling_lognormal()}}
 
-\code{\link{anderson_darling_weibull}}
+\code{\link[=anderson_darling_weibull]{anderson_darling_weibull()}}
 
-\code{\link{ad_ksample}}
+\code{\link[=ad_ksample]{ad_ksample()}}
 
-\code{\link{normalize_group_mean}}
+\code{\link[=normalize_group_mean]{normalize_group_mean()}}
 }

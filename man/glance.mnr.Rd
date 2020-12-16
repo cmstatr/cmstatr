@@ -13,18 +13,18 @@
 signature.}
 }
 \value{
-A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+A one-row \code{\link[tibble:tibble]{tibble::tibble()}} with the following
 columns:
 
 \item{\code{mnr}}{the computed MNR test statistic}
 \item{\code{alpha}}{the value of alpha used for the test}
 \item{\code{crit}}{the critical value given the sample size and the
-                   significance level}
+significance level}
 \item{\code{n_outliers}}{the number of outliers found}
 }
 \description{
 Glance accepts an object of type \code{mnr} and returns a
-\code{\link[tibble:tibble]{tibble::tibble}} with
+\code{\link[tibble:tibble]{tibble::tibble()}} with
 one row of summaries.
 
 Glance does not do any calculations: it just gathers the results in a
@@ -42,5 +42,5 @@ glance(m)
 
 }
 \seealso{
-\code{\link{maximum_normed_residual}}
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}}
 }

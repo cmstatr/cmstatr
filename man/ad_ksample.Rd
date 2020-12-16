@@ -26,12 +26,12 @@ Returns an object of class \code{adk}. This object has the following fields:
 \item{\code{k}}{the number of groups}
 \item{\code{sigma}}{the computed standard deviation of the test statistic}
 \item{\code{ad}}{the value of the Anderson--Darling k-Sample test
-  statistic}
+statistic}
 \item{\code{p}}{the computed p-value}
 \item{\code{reject_same_dist}}{a boolean value indicating whether the null
-  hypothesis that all samples come from the same distribution is rejected}
+hypothesis that all samples come from the same distribution is rejected}
 \item{\code{raw}}{the original results returned from
-  \link[kSamples]{ad.test}}
+\link[kSamples:ad.test]{ad.test}}
 }
 \description{
 This function performs an Anderson--Darling k-sample test. This is used to
@@ -39,7 +39,7 @@ determine if several samples (groups) share a common (unspecified)
 distribution.
 }
 \details{
-This function is a wrapper for the \link[kSamples]{ad.test} function from
+This function is a wrapper for the \link[kSamples:ad.test]{ad.test} function from
 the package \code{kSamples}. The method "exact" is specified in the call to
 \code{ad.test}. Refer to that package's documentation for details.
 

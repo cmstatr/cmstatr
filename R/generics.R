@@ -1,14 +1,14 @@
 #' @importFrom generics augment
 #' @export
-#' @seealso [augment.lm()]
+#' @seealso [generics::augment()]
 generics::augment
 
 #' @importFrom generics tidy
 #' @export
-#' @seealso [tidy.lm()]
+#' @seealso [generics::tidy()]
 generics::tidy
 
 #' @importFrom generics glance
 #' @export
-#' @seealso [glance.lm()]
+#' @seealso [generics::glance()]
 generics::glance

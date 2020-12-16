@@ -13,49 +13,49 @@ k_equiv(alpha, n)
 }
 \value{
 a vector with elements c(k1, k2). k1 is for testing the sample
-  extremum. k2 is for testing the sample mean
+extremum. k2 is for testing the sample mean
 }
 \description{
 k-factors for determining acceptance based on sample mean and an extremum
 }
 \details{
 The k-factors returned by this function are used for determining
-  whether to accept a new dataset.
+whether to accept a new dataset.
 
-  This function is used as part of the procedure for
-  determining acceptance limits for a sample mean and sample minimum.
-  These acceptance limits are often used to set acceptance limits for
-  material strength for each lot of material, or each new manufacturing
-  site. When a sample meets the criteria that its mean and its minimum are
-  both greater than these limits, then one may accept the lot of material
-  or the new manufacturing site.
+This function is used as part of the procedure for
+determining acceptance limits for a sample mean and sample minimum.
+These acceptance limits are often used to set acceptance limits for
+material strength for each lot of material, or each new manufacturing
+site. When a sample meets the criteria that its mean and its minimum are
+both greater than these limits, then one may accept the lot of material
+or the new manufacturing site.
 
-  This procedure is used to ensure that the strength of material processed
-  at a second site, or made with a new batch of material are not degraded
-  relative to the data originally used to determine basis values for the
-  material. For more information about the use of this procedure, see
-  CMH-17-1G or PS-ACE 100-2002-006.
+This procedure is used to ensure that the strength of material processed
+at a second site, or made with a new batch of material are not degraded
+relative to the data originally used to determine basis values for the
+material. For more information about the use of this procedure, see
+CMH-17-1G or PS-ACE 100-2002-006.
 
-  According to Vangel (2002), the use of mean and extremum for this purpose
-  is more powerful than the use of mean and standard deviation.
+According to Vangel (2002), the use of mean and extremum for this purpose
+is more powerful than the use of mean and standard deviation.
 
-  The results of this function match those published by Vangel within
-  0.05\% for \eqn{n > 2} and \eqn{\alpha \le 0.25}. Those results published
-  by Vangel are identical to those published in CMH-17-1G.
+The results of this function match those published by Vangel within
+0.05\\% for \eqn{n > 2} and \eqn{\alpha \le 0.25}. Those results published
+by Vangel are identical to those published in CMH-17-1G.
 
-  This function uses numerical integration and numerical optimization to
-  find values of the factors \eqn{k_1} and \eqn{k_2} based on Vangel's
-  saddle point approximation.
+This function uses numerical integration and numerical optimization to
+find values of the factors \eqn{k_1} and \eqn{k_2} based on Vangel's
+saddle point approximation.
 
-  The value \eqn{n} refers to the number of observations in the sample
-  being compared with the original population (the qualification sample is
-  usually assumed to be equal to the population statistics).
+The value \eqn{n} refers to the number of observations in the sample
+being compared with the original population (the qualification sample is
+usually assumed to be equal to the population statistics).
 
-  The value of \eqn{alpha} is the acceptable probability of a type I error.
-  Normally, this is set to 0.05 for material or process equivalency and 0.01
-  when setting lot acceptance limits. Though, in principle, this parameter
-  can be set to any number between 0 and 1. This function, however, has only
-  been validated in the range of \eqn{1e-5 \le alpha \le 0.5}.
+The value of \eqn{alpha} is the acceptable probability of a type I error.
+Normally, this is set to 0.05 for material or process equivalency and 0.01
+when setting lot acceptance limits. Though, in principle, this parameter
+can be set to any number between 0 and 1. This function, however, has only
+been validated in the range of \eqn{1e-5 \le alpha \le 0.5}.
 }
 \examples{
 qual_mean <- 100
@@ -85,5 +85,5 @@ for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
 Sep. 2003.
 }
 \seealso{
-\code{\link{equiv_mean_extremum}}
+\code{\link[=equiv_mean_extremum]{equiv_mean_extremum()}}
 }

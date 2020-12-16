@@ -13,20 +13,20 @@
 #'              should be used.
 #'
 #' @return
-#' Returns an object of class \code{adk}. This object has the following fields:
-#' \item{\code{call}}{the expression used to call this function}
-#' \item{\code{data}}{the original data supplied by the user}
-#' \item{\code{groups}}{a vector of the groups used in the computation}
-#' \item{\code{alpha}}{the value of alpha specified}
-#' \item{\code{modcv}}{a logical value indicating whether the modified
+#' Returns an object of class `adk`. This object has the following fields:
+#' \item{`call`}{the expression used to call this function}
+#' \item{`data`}{the original data supplied by the user}
+#' \item{`groups`}{a vector of the groups used in the computation}
+#' \item{`alpha`}{the value of alpha specified}
+#' \item{`modcv`}{a logical value indicating whether the modified
 #'                     CV approach was used.}
-#' \item{\code{n}}{the total number of observations}
-#' \item{\code{k}}{the number of groups}
-#' \item{\code{f}}{the value of the F test statistic}
-#' \item{\code{p}}{the computed p-value}
-#' \item{\code{reject_equal_variance}}{a boolean value indicating whether the
+#' \item{`n`}{the total number of observations}
+#' \item{`k`}{the number of groups}
+#' \item{`f`}{the value of the F test statistic}
+#' \item{`p`}{the computed p-value}
+#' \item{`reject_equal_variance`}{a boolean value indicating whether the
 #'   null hypothesis that all samples have the same variance is rejected}
-#' \item{\code{modcv_transformed_data}}{the data after the modified CV
+#' \item{`modcv_transformed_data`}{the data after the modified CV
 #'                                      transformation}
 #' @details
 #' This function performs the Levene's test for equality of variance. The
@@ -37,7 +37,7 @@
 #' Where \eqn{m_i}{mi} is median of the \eqn{ith} group. An F-Test is then
 #' performed on the transformed data.
 #'
-#' When \code{modcv=TRUE}, the data from each group is first transformed
+#' When `modcv=TRUE`, the data from each group is first transformed
 #' according to the modified coefficient of variation (CV) rules before
 #' performing Levene's test.
 #'
@@ -63,8 +63,8 @@
 #' @importFrom rlang enquo eval_tidy
 #' @importFrom stats var.test median pf
 #'
-#' @seealso \code{\link{calc_cv_star}}
-#' @seealso \code{\link{transform_mod_cv}}
+#' @seealso [calc_cv_star()]
+#' @seealso [transform_mod_cv()]
 #'
 #' @export
 levene_test <- function(data = NULL, x, groups, alpha = 0.05, modcv = FALSE) {
@@ -136,38 +136,38 @@ levene_test <- function(data = NULL, x, groups, alpha = 0.05, modcv = FALSE) {
 }
 
 
-#' Glance at a \code{levene} object
+#' Glance at a `levene` object
 #'
 #' @description
-#' Glance accepts an object of type \code{levene} and returns a
-#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' Glance accepts an object of type `levene` and returns a
+#' [tibble::tibble()] with
 #' one row of summaries.
 #'
 #' Glance does not do any calculations: it just gathers the results in a
 #' tibble.
 #'
-#' @param x a \code{levene} object returned from \code{\link{levene_test}}
+#' @param x a `levene` object returned from [levene_test()]
 #' @param ... Additional arguments. Not used. Included only to match generic
 #'            signature.
 #'
 #'
 #' @return
-#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{\code{alpha}}{the value of alpha specified}
-#' \item{\code{modcv}}{a logical value indicating whether the modified
+#' \item{`alpha`}{the value of alpha specified}
+#' \item{`modcv`}{a logical value indicating whether the modified
 #'                     CV approach was used.}
-#' \item{\code{n}}{the total number of observations}
-#' \item{\code{k}}{the number of groups}
-#' \item{\code{f}}{the value of the F test statistic}
-#' \item{\code{p}}{the computed p-value}
-#' \item{\code{reject_equal_variance}}{a boolean value indicating whether the
+#' \item{`n`}{the total number of observations}
+#' \item{`k`}{the number of groups}
+#' \item{`f`}{the value of the F test statistic}
+#' \item{`p`}{the computed p-value}
+#' \item{`reject_equal_variance`}{a boolean value indicating whether the
 #'       null hypothesis that all samples have the same variance is rejected}
 #'
 #'
 #' @seealso
-#' \code{\link{levene_test}}
+#' [levene_test()]
 #'
 #' @examples
 #' df <- data.frame(

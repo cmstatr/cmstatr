@@ -95,5 +95,5 @@ Hazard Rates,” The Annals of Mathematical Statistics,
 vol. 35, no. 4. pp. 1561–1570, 1964.
 }
 \seealso{
-\code{\link{basis_hk_ext}}
+\code{\link[=basis_hk_ext]{basis_hk_ext()}}
 }

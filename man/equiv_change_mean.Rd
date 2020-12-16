@@ -55,41 +55,41 @@ should be used. Defaults to \code{FALSE}}
 \item{\code{call}}{the expression used to call this function}
 \item{\code{alpha}}{the value of alpha passed to this function}
 \item{\code{n_sample}}{the number of observations in the sample for which
-  equivalency is being checked. This is either the value \code{n_sample}
-  passed to this function or the length of the vector \code{data_sample}.}
+equivalency is being checked. This is either the value \code{n_sample}
+passed to this function or the length of the vector \code{data_sample}.}
 \item{\code{mean_sample}}{the mean of the observations in the sample for
-  which equivalency is being checked. This is either the value
-  \code{mean_sample} passed to this function or the mean of the vector
-  \code{data-sample}.}
+which equivalency is being checked. This is either the value
+\code{mean_sample} passed to this function or the mean of the vector
+\code{data-sample}.}
 \item{\code{sd_sample}}{the standard deviation of the observations in the
-  sample for which equivalency is being checked. This is either the value
-  \code{mean_sample} passed to this function or the standard deviation of
-  the vector \code{data-sample}.}
+sample for which equivalency is being checked. This is either the value
+\code{mean_sample} passed to this function or the standard deviation of
+the vector \code{data-sample}.}
 \item{\code{n_qual}}{the number of observations in the qualification data
-  to which the sample is being compared for equivalency. This is either
-  the value \code{n_qual} passed to this function or the length of the
-  vector \code{data_qual}.}
+to which the sample is being compared for equivalency. This is either
+the value \code{n_qual} passed to this function or the length of the
+vector \code{data_qual}.}
 \item{\code{mean_qual}}{the mean of the qualification data to which the
-  sample is being compared for equivalency. This is either the value
-  \code{mean_qual} passed to this function or the mean of the vector
-  \code{data_qual}.}
+sample is being compared for equivalency. This is either the value
+\code{mean_qual} passed to this function or the mean of the vector
+\code{data_qual}.}
 \item{\code{sd_qual}}{the standard deviation of the qualification data to
-  which the sample is being compared for equivalency. This is either the
-  value \code{mean_qual} passed to this function or the standard deviation
-  of the vector \code{data_qual}.}
+which the sample is being compared for equivalency. This is either the
+value \code{mean_qual} passed to this function or the standard deviation
+of the vector \code{data_qual}.}
 \item{\code{modcv}}{logical value indicating whether the equivalency
-  calculations were performed using the modified CV approach}
+calculations were performed using the modified CV approach}
 \item{\code{sp}}{the value of the pooled standard deviation. If
-  \code{modecv = TRUE}, this pooled standard deviation includes the
-  modification to the qualification CV.}
+\code{modecv = TRUE}, this pooled standard deviation includes the
+modification to the qualification CV.}
 \item{\code{t0}}{the test statistic}
 \item{\code{t_req}}{the t-value for \eqn{\alpha / 2} and
-  \eqn{df = n1 + n2 -2}}
+\eqn{df = n1 + n2 -2}}
 \item{\code{threshold}}{a vector with two elements corresponding to the
-  minimum and maximum values of the sample mean that would result in a
-  pass}
+minimum and maximum values of the sample mean that would result in a
+pass}
 \item{\code{result}}{a character vector of either "PASS" or "FAIL"
-  indicating the result of the test for change in mean}
+indicating the result of the test for change in mean}
 }
 \description{
 Checks for change in the mean value between a qualification data set and
@@ -120,7 +120,7 @@ is performed in a short period of time.
 Using the Modified CV approach, the standard deviation is calculated by
 multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
 value supplied or the value calculated by \code{mean(data_qual)} and
-\eqn{CV*} is determined using \code{\link{calc_cv_star}}.
+\eqn{CV*} is determined using \code{\link[=calc_cv_star]{calc_cv_star()}}.
 
 Note that the modified CV option should only be used if that data passes the
 Anderson--Darling test.
@@ -151,7 +151,7 @@ Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
 }
 \seealso{
-\code{\link{calc_cv_star}}
+\code{\link[=calc_cv_star]{calc_cv_star()}}
 
-\code{\link[stats]{t.test}}
+\code{\link[stats:t.test]{stats::t.test()}}
 }

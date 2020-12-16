@@ -8,10 +8,10 @@
 }
 \arguments{
 \item{x}{an \code{mnr} object created by
-\code{\link{maximum_normed_residual}}}
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}}}
 
 \item{data}{a \code{data.frame} or
-\code{\link[tibble:tibble]{tibble::tibble}}
+\code{\link[tibble:tibble]{tibble::tibble()}}
 containing the original data that was passed to
 \code{maximum_normed_residual}}
 
@@ -21,17 +21,17 @@ signature.}
 \value{
 When \code{data} is supplied, \code{augment} returns \code{data}, but with
 one column appended. When \code{data} is not supplied, \code{augment}
-returns a new \code{\link[tibble:tibble]{tibble::tibble}} with the column
+returns a new \code{\link[tibble:tibble]{tibble::tibble()}} with the column
 \code{values} containing the original values used by
 \code{maximum_normed_residaul} plus one additional column. The additional
 column is:
 
 \item{\code{.outler}}{a logical value indicating whether the observation
-                      is an outlier}
+is an outlier}
 }
 \description{
 Augment accepts an \code{mnr} object (returned from the function
-\code{\link{maximum_normed_residual}}) and a dataset and adds the column
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}}) and a dataset and adds the column
 \code{.outlier} to the dataset. The column \code{.outlier} is a logical
 vector indicating whether each observation is an outlier.
 
@@ -70,5 +70,5 @@ augment(m)
 
 }
 \seealso{
-\code{\link{maximum_normed_residual}}
+\code{\link[=maximum_normed_residual]{maximum_normed_residual()}}
 }

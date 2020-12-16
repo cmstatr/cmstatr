@@ -13,27 +13,27 @@
 #' @param alpha the significance level (default 0.025)
 #'
 #' @return
-#' Returns an object of class \code{adk}. This object has the following fields:
-#' \item{\code{call}}{the expression used to call this function}
-#' \item{\code{data}}{the original data used to compute the ADK}
-#' \item{\code{groups}}{a vector of the groups used in the computation}
-#' \item{\code{alpha}}{the value of alpha specified}
-#' \item{\code{n}}{the total number of observations}
-#' \item{\code{k}}{the number of groups}
-#' \item{\code{sigma}}{the computed standard deviation of the test statistic}
-#' \item{\code{ad}}{the value of the Anderson--Darling k-Sample test
+#' Returns an object of class `adk`. This object has the following fields:
+#' \item{`call`}{the expression used to call this function}
+#' \item{`data`}{the original data used to compute the ADK}
+#' \item{`groups`}{a vector of the groups used in the computation}
+#' \item{`alpha`}{the value of alpha specified}
+#' \item{`n`}{the total number of observations}
+#' \item{`k`}{the number of groups}
+#' \item{`sigma`}{the computed standard deviation of the test statistic}
+#' \item{`ad`}{the value of the Anderson--Darling k-Sample test
 #'   statistic}
-#' \item{\code{p}}{the computed p-value}
-#' \item{\code{reject_same_dist}}{a boolean value indicating whether the null
+#' \item{`p`}{the computed p-value}
+#' \item{`reject_same_dist`}{a boolean value indicating whether the null
 #'   hypothesis that all samples come from the same distribution is rejected}
-#' \item{\code{raw}}{the original results returned from
-#'   \link[kSamples]{ad.test}}
+#' \item{`raw`}{the original results returned from
+#'   [ad.test][kSamples::ad.test]}
 #'
 #'
 #' @details
-#' This function is a wrapper for the \link[kSamples]{ad.test} function from
-#' the package \code{kSamples}. The method "exact" is specified in the call to
-#' \code{ad.test}. Refer to that package's documentation for details.
+#' This function is a wrapper for the [ad.test][kSamples::ad.test] function from
+#' the package `kSamples`. The method "exact" is specified in the call to
+#' `ad.test`. Refer to that package's documentation for details.
 #'
 #' There is a minor difference in the formulation of the Anderson--Darling
 #' k-Sample test in CMH-17-1G, compared with that in the Scholz and
@@ -48,7 +48,7 @@
 #'
 #' For more information about the difference between this function and
 #' the formulation in CMH-17-1G, see the vignette on the subject, which
-#' can be accessed by running \code{vignette("adktest")}
+#' can be accessed by running `vignette("adktest")`
 #'
 #' @references
 #' F. W. Scholz and M. Stephens, “K-Sample Anderson--Darling Tests,” Journal
@@ -126,37 +126,37 @@ ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
   return(res)
 }
 
-#' Glance at a \code{adk} (Anderson--Darling k-Sample) object
+#' Glance at a `adk` (Anderson--Darling k-Sample) object
 #'
 #' @description
-#' Glance accepts an object of type \code{adk} and returns a
-#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' Glance accepts an object of type `adk` and returns a
+#' [tibble::tibble()] with
 #' one row of summaries.
 #'
 #' Glance does not do any calculations: it just gathers the results in a
 #' tibble.
 #'
-#' @param x an \code{adk} object
+#' @param x an `adk` object
 #' @param ... Additional arguments. Not used. Included only to match generic
 #'            signature.
 #'
 #'
 #' @return
-#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{\code{alpha}}{the significance level for the test}
-#' \item{\code{n}}{the sample size for the test}
-#' \item{\code{k}}{the number of samples}
-#' \item{\code{sigma}}{the computed standard deviation of the test statistic}
-#' \item{\code{ad}}{the test statistic}
-#' \item{\code{p}}{the p-value of the test}
-#' \item{\code{reject_same_dist}}{whether the test concludes that the samples
+#' \item{`alpha`}{the significance level for the test}
+#' \item{`n`}{the sample size for the test}
+#' \item{`k`}{the number of samples}
+#' \item{`sigma`}{the computed standard deviation of the test statistic}
+#' \item{`ad`}{the test statistic}
+#' \item{`p`}{the p-value of the test}
+#' \item{`reject_same_dist`}{whether the test concludes that the samples
 #'                                are drawn from different populations}
 #'
 #'
 #' @seealso
-#' \code{\link{ad_ksample}}
+#' [ad_ksample()]
 #'
 #' @examples
 #' x <- c(rnorm(20, 100, 5), rnorm(20, 105, 6))

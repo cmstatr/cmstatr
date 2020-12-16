@@ -13,24 +13,24 @@
 signature.}
 }
 \value{
-A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+A one-row \code{\link[tibble:tibble]{tibble::tibble()}} with the following
 columns:
 
 \item{\code{dist}}{the distribution used}
 \item{\code{n}}{the number of observations in the sample}
 \item{\code{A}}{the Anderson--Darling test statistic}
 \item{\code{osl}}{the observed significance level (p-value),
-    assuming the
-    parameters of the distribution are estimated from the data}
- \item{\code{alpha}}{the required significance level for the test.
-   This value is given by the user.}
+assuming the
+parameters of the distribution are estimated from the data}
+\item{\code{alpha}}{the required significance level for the test.
+This value is given by the user.}
 \item{\code{reject_distribution}}{a logical value indicating whether
-   the hypothesis that the data is drawn from the specified distribution
-   should be rejected}
+the hypothesis that the data is drawn from the specified distribution
+should be rejected}
 }
 \description{
 Glance accepts an object of type \code{anderson_darling} and
-returns a \code{\link[tibble:tibble]{tibble::tibble}} with
+returns a \code{\link[tibble:tibble]{tibble::tibble()}} with
 one row of summaries.
 
 Glance does not do any calculations: it just gathers the results in a
@@ -48,5 +48,5 @@ glance(ad)
 
 }
 \seealso{
-\code{\link{anderson_darling}}
+\code{\link[=anderson_darling]{anderson_darling()}}
 }

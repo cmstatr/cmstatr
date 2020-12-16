@@ -53,3 +53,4 @@ Suggests:
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Language: en-US
+Roxygen: list(markdown = TRUE)

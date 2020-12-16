@@ -9,7 +9,7 @@
 #' where \eqn{\bar{x}}{x_bar} is the sample mean,
 #' \eqn{s} is the sample standard deviation and \eqn{k} is the result
 #' of this function.
-#' This function is internally used by \code{\link{basis_normal}} when
+#' This function is internally used by [basis_normal()] when
 #' computing basis values.
 #'
 #' @param n the number of observations (i.e. coupons)
@@ -20,9 +20,9 @@
 #' @details
 #' This function calculates the k factors used when determining A- and
 #' B-Basis values for normally distributed data. To get \eqn{kB}, set
-#' the content of the tolerance bound to \code{p = 0.90} and
-#' the confidence level to \code{conf = 0.95}. To get \eqn{kA}, set
-#' \code{p = 0.99} and \code{conf = 0.95}. While other tolerance bound
+#' the content of the tolerance bound to `p = 0.90` and
+#' the confidence level to `conf = 0.95`. To get \eqn{kA}, set
+#' `p = 0.99` and `conf = 0.95`. While other tolerance bound
 #' contents and confidence levels may be computed, they are infrequently
 #' needed in practice.
 #'
@@ -57,7 +57,7 @@
 #' CMH-17-1G, Mar. 2012.
 #'
 #' @seealso
-#' \code{\link{basis_normal}}
+#' [basis_normal()]
 #'
 #' @examples
 #' kb <- k_factor_normal(n = 10, p = 0.9, conf = 0.95)
@@ -121,13 +121,13 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'               for A-Basis.
 #'
 #' @details
-#' \code{data} is an optional argument. If \code{data} is given, it should
+#' `data` is an optional argument. If `data` is given, it should
 #' be a
-#' \code{data.frame} (or similar object). When \code{data} is specified, the
-#' value of \code{x} is expected to be a variable within \code{data}. If
-#' \code{data} is not specified, \code{x} must be a vector.
+#' `data.frame` (or similar object). When `data` is specified, the
+#' value of `x` is expected to be a variable within `data`. If
+#' `data` is not specified, `x` must be a vector.
 #'
-#' When \code{modcv=TRUE} is set, which is only applicable to the
+#' When `modcv=TRUE` is set, which is only applicable to the
 #' pooling methods,
 #' the data is first modified according to the modified coefficient
 #' of variation (CV)
@@ -137,58 +137,58 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' is a way of
 #' adding extra variance to datasets with unexpectedly low variance.
 #'
-#' \code{basis_normal} calculate the basis value by subtracting \eqn{k} times
+#' `basis_normal` calculate the basis value by subtracting \eqn{k} times
 #' the standard deviation from the mean. \eqn{k} is given by
-#' the function \code{\link{k_factor_normal}}. The equations in
+#' the function [k_factor_normal()]. The equations in
 #' Krishnamoorthy and Mathew (2008) are used.
-#' \code{basis_normal} also
+#' `basis_normal` also
 #' performs a diagnostic test for outliers (using
-#' \code{\link{maximum_normed_residual}})
+#' [maximum_normed_residual()])
 #' and a diagnostic test for normality (using
-#' \code{\link{anderson_darling_normal}}).
-#' If the argument \code{batch} is given, this function also performs
+#' [anderson_darling_normal()]).
+#' If the argument `batch` is given, this function also performs
 #' a diagnostic test for outliers within
-#' each batch (using \code{\link{maximum_normed_residual}})
+#' each batch (using [maximum_normed_residual()])
 #' and a diagnostic test for between batch variability (using
-#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' [ad_ksample()]). The argument `batch` is only used
 #' for these diagnostic tests.
 #'
-#' \code{basis_lognormal} calculates the basis value in the same way
-#' that \code{basis_normal} does, except that the natural logarithm of the
+#' `basis_lognormal` calculates the basis value in the same way
+#' that `basis_normal` does, except that the natural logarithm of the
 #' data is taken.
 #'
-#' \code{basis_lognormal} function also performs
+#' `basis_lognormal` function also performs
 #' a diagnostic test for outliers (using
-#' \code{\link{maximum_normed_residual}})
+#' [maximum_normed_residual()])
 #' and a diagnostic test for normality (using
-#' \code{\link{anderson_darling_lognormal}}).
-#' If the argument \code{batch} is given, this function also performs
+#' [anderson_darling_lognormal()]).
+#' If the argument `batch` is given, this function also performs
 #' a diagnostic test for outliers within
-#' each batch (using \code{\link{maximum_normed_residual}})
+#' each batch (using [maximum_normed_residual()])
 #' and a diagnostic test for between batch variability (using
-#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' [ad_ksample()]). The argument `batch` is only used
 #' for these diagnostic tests.
 #'
-#' \code{basis_weibull} calculates the basis value for data distributed
+#' `basis_weibull` calculates the basis value for data distributed
 #' according to a Weibull distribution. The confidence level for the
 #' content requested is calculated using the conditional method, as
 #' described in Lawless (1982) Section 4.1.2b. This has good agreement
 #' with tables published in CMH-17-1G. Results differ between this function
 #' and STAT17 by approximately 0.5\%.
 #'
-#' \code{basis_weibull} function also performs
+#' `basis_weibull` function also performs
 #' a diagnostic test for outliers (using
-#' \code{\link{maximum_normed_residual}})
+#' [maximum_normed_residual()])
 #' and a diagnostic test for normality (using
-#' \code{\link{anderson_darling_weibull}}).
-#' If the argument \code{batch} is given, this function also performs
+#' [anderson_darling_weibull()]).
+#' If the argument `batch` is given, this function also performs
 #' a diagnostic test for outliers within
-#' each batch (using \code{\link{maximum_normed_residual}})
+#' each batch (using [maximum_normed_residual()])
 #' and a diagnostic test for between batch variability (using
-#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' [ad_ksample()]). The argument `batch` is only used
 #' for these diagnostic tests.
 #'
-#' \code{basis_hk_ext} calculates the basis value using the Extended
+#' `basis_hk_ext` calculates the basis value using the Extended
 #' Hanson--Koopmans method, as described in CMH-17-1G and Vangel (1994).
 #' For nonparametric distributions, this function should be used for samples
 #' up to n=28 for B-Basis and up to \eqn{n=299} for A-Basis.
@@ -197,135 +197,135 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' is used: this is called the "woodward-frawley" method in this package,
 #' after the paper in which this approach is described (as referenced
 #' by Vangel (1994)). For B-Basis, another approach is used whereby the
-#' first and \code{j-th} order statistic are used to calculate the basis value.
-#' In this approach, the \code{j-th} order statistic is selected to minimize
+#' first and `j-th` order statistic are used to calculate the basis value.
+#' In this approach, the `j-th` order statistic is selected to minimize
 #' the difference between the tolerance limit (assuming that the order
 #' statistics are equal to the expected values from a standard normal
 #' distribution) and the population quantile for a standard normal
 #' distribution. This approach is described in Vangel (1994). This second
 #' method (for use when calculating B-Basis values) is called
 #' "optimum-order" in this package.
-#' The results of \code{basis_hk_ext} have been
+#' The results of `basis_hk_ext` have been
 #' verified against example results from the program STAT-17. Agreement is
 #' typically well within 0.2\%, however, for a few sample sizes, the
 #' agreement can be as poor as 1\% with the result of this function
 #' being more conservative than STAT-17.
 #'
-#' \code{basis_hk_ext} also performs
+#' `basis_hk_ext` also performs
 #' a diagnostic test for outliers (using
-#' \code{\link{maximum_normed_residual}})
+#' [maximum_normed_residual()])
 #' and performs a pair of tests that the sample size and method selected
 #' follow the guidance described above.
-#' If the argument \code{batch} is given, this function also performs
+#' If the argument `batch` is given, this function also performs
 #' a diagnostic test for outliers within
-#' each batch (using \code{\link{maximum_normed_residual}})
+#' each batch (using [maximum_normed_residual()])
 #' and a diagnostic test for between batch variability (using
-#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' [ad_ksample()]). The argument `batch` is only used
 #' for these diagnostic tests.
 #'
-#' \code{basis_nonpara_large_sample} calculates the basis value
+#' `basis_nonpara_large_sample` calculates the basis value
 #' using the large sample method described in CMH-17-1G. This method uses
 #' a sum of binomials to determine the rank of the ordered statistic
 #' corresponding with the desired tolerance limit (basis value). Results
 #' of this function have been verified against results of the STAT-17
 #' program.
 #'
-#' \code{basis_nonpara_large_sample} also performs
+#' `basis_nonpara_large_sample` also performs
 #' a diagnostic test for outliers (using
-#' \code{\link{maximum_normed_residual}})
+#' [maximum_normed_residual()])
 #' and performs a test that the sample size is sufficiently large.
-#' If the argument \code{batch} is given, this function also performs
+#' If the argument `batch` is given, this function also performs
 #' a diagnostic test for outliers within
-#' each batch (using \code{\link{maximum_normed_residual}})
+#' each batch (using [maximum_normed_residual()])
 #' and a diagnostic test for between batch variability (using
-#' \code{\link{ad_ksample}}). The argument \code{batch} is only used
+#' [ad_ksample()]). The argument `batch` is only used
 #' for these diagnostic tests.
 #'
-#' \code{basis_anova} calculates basis values using the ANOVA method.
-#' \code{x} specifies the data (normally strength) and \code{groups}
+#' `basis_anova` calculates basis values using the ANOVA method.
+#' `x` specifies the data (normally strength) and `groups`
 #' indicates the group corresponding to each observation. This method is
 #' described in CMH-17-1G. This function automatically performs a diagnostic
 #' test for outliers within each group
-#' (using \code{\link{maximum_normed_residual}}) and a test for between
-#' group variability (using \code{\link{ad_ksample}}) as well as checking
+#' (using [maximum_normed_residual()]) and a test for between
+#' group variability (using [ad_ksample()]) as well as checking
 #' that the data contains at least 5 groups.
 #' This function has been verified against the results of the STAT-17 program.
 #'
-#' \code{basis_pooled_sd} calculates basis values by pooling the data from
-#' several groups together. \code{x} specifies the data (normally strength)
-#' and \code{group} indicates the group corresponding to each observation.
+#' `basis_pooled_sd` calculates basis values by pooling the data from
+#' several groups together. `x` specifies the data (normally strength)
+#' and `group` indicates the group corresponding to each observation.
 #' This method is described in CMH-17-1G and matches the pooling method
 #' implemented in ASAP 2008.
 #'
-#' \code{basis_pooled_cv} calculates basis values by pooling the data from
-#' several groups together. \code{x} specifies the data (normally strength)
-#' and \code{group} indicates the group corresponding to each observation.
+#' `basis_pooled_cv` calculates basis values by pooling the data from
+#' several groups together. `x` specifies the data (normally strength)
+#' and `group` indicates the group corresponding to each observation.
 #' This method is described in CMH-17-1G.
 #'
-#' \code{basis_pooled_sd} and \code{basis_pooled_cv} both automatically
+#' `basis_pooled_sd` and `basis_pooled_cv` both automatically
 #' perform a number of diagnostic tests. Using
-#' \code{\link{maximum_normed_residual}}, they check that there are no
-#' outliers within each group and batch (provided that \code{batch} is
+#' [maximum_normed_residual()], they check that there are no
+#' outliers within each group and batch (provided that `batch` is
 #' specified). They check the between batch variability using
-#' \code{\link{ad_ksample}}. They check that there are no outliers within
+#' [ad_ksample()]. They check that there are no outliers within
 #' each group (pooling all batches) using
-#' \code{\link{maximum_normed_residual}}. They check for the normality
-#' of the pooled data using \code{\link{anderson_darling_normal}}.
-#' \code{basis_pooled_sd} checks for equality of variance of all
-#' data using \code{\link{levene_test}} and \code{basis_pooled_cv}
+#' [maximum_normed_residual()]. They check for the normality
+#' of the pooled data using [anderson_darling_normal()].
+#' `basis_pooled_sd` checks for equality of variance of all
+#' data using [levene_test()] and `basis_pooled_cv`
 #' checks for equality of variances of all data after transforming it
-#' using \code{\link{normalize_group_mean}}
-#' using \code{\link{levene_test}}.
+#' using [normalize_group_mean()]
+#' using [levene_test()].
 #'
 #' The object returned by these functions includes the named vector
-#' \code{diagnostic_results}. This contains all of the diagnostic tests
+#' `diagnostic_results`. This contains all of the diagnostic tests
 #' performed. The name of each element of the vector corresponds with the
 #' name of the diagnostic test. The contents of each element will be
 #' "P" if the diagnostic test passed, "F" if the diagnostic test failed,
-#' "O" if the diagnostic test was overridden and \code{NA} if the
+#' "O" if the diagnostic test was overridden and `NA` if the
 #' diagnostic test was skipped (typically because an optional
 #' argument was not supplied).
 #'
-#' @return an object of class \code{basis}
+#' @return an object of class `basis`
 #' This object has the following fields:
-#' \item{\code{call}}{the expression used to call this function}
-#' \item{\code{distribution}}{the distribution used (normal, etc.)}
-#' \item{\code{p}}{the value of \eqn{p} supplied}
-#' \item{\code{conf}}{the value of \eqn{conf} supplied}
-#' \item{\code{modcv}}{a logical value indicating whether the modified
+#' \item{`call`}{the expression used to call this function}
+#' \item{`distribution`}{the distribution used (normal, etc.)}
+#' \item{`p`}{the value of \eqn{p} supplied}
+#' \item{`conf`}{the value of \eqn{conf} supplied}
+#' \item{`modcv`}{a logical value indicating whether the modified
 #'                     CV approach was used. Only applicable to pooling
 #'                     methods.}
-#' \item{\code{data}}{a copy of the data used in the calculation}
-#' \item{\code{groups}}{a copy of the groups variable.
+#' \item{`data`}{a copy of the data used in the calculation}
+#' \item{`groups`}{a copy of the groups variable.
 #'                      Only used for pooling and ANOVA methods.}
-#' \item{\code{batch}}{a copy of the batch data used for diagnostic tests}
-#' \item{\code{modcv_transformed_data}}{the data after the modified CV
+#' \item{`batch`}{a copy of the batch data used for diagnostic tests}
+#' \item{`modcv_transformed_data`}{the data after the modified CV
 #'                                      transformation}
-#' \item{\code{override}}{a vector of the names of diagnostic tests that
-#'                        were overridden. \code{NULL} if none were
+#' \item{`override`}{a vector of the names of diagnostic tests that
+#'                        were overridden. `NULL` if none were
 #'                        overridden}
-#' \item{\code{diagnostic_results}}{a named character vector containing the
+#' \item{`diagnostic_results`}{a named character vector containing the
 #'                                  results of all the diagnostic tests. See
 #'                                  the Details section for additional
 #'                                  information}
-#' \item{\code{diagnostic_failures}}{a vector containing any diagnostic tests
+#' \item{`diagnostic_failures`}{a vector containing any diagnostic tests
 #'                                   that produced failures}
-#' \item{\code{n}}{the number of observations}
-#' \item{\code{r}}{the number of groups, if a pooling method was used.
+#' \item{`n`}{the number of observations}
+#' \item{`r`}{the number of groups, if a pooling method was used.
 #'                 Otherwise it is NULL.}
-#' \item{\code{basis}}{the basis value computed. This is a number
+#' \item{`basis`}{the basis value computed. This is a number
 #'                     except when pooling methods are used, in
 #'                     which case it is a data.frame.}
 #'
-#' @seealso \code{\link{hk_ext_z_j_opt}}
-#' @seealso \code{\link{k_factor_normal}}
-#' @seealso \code{\link{transform_mod_cv}}
-#' @seealso \code{\link{maximum_normed_residual}}
-#' @seealso \code{\link{anderson_darling_normal}}
-#' @seealso \code{\link{anderson_darling_lognormal}}
-#' @seealso \code{\link{anderson_darling_weibull}}
-#' @seealso \code{\link{ad_ksample}}
-#' @seealso \code{\link{normalize_group_mean}}
+#' @seealso [hk_ext_z_j_opt()]
+#' @seealso [k_factor_normal()]
+#' @seealso [transform_mod_cv()]
+#' @seealso [maximum_normed_residual()]
+#' @seealso [anderson_darling_normal()]
+#' @seealso [anderson_darling_lognormal()]
+#' @seealso [anderson_darling_weibull()]
+#' @seealso [ad_ksample()]
+#' @seealso [normalize_group_mean()]
 #'
 #' @references
 #' J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -438,7 +438,7 @@ new_basis <- function(
 #'
 #' @description
 #' Glance accepts an object of type basis and returns a
-#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' [tibble::tibble()] with
 #' one row of summaries for each basis value.
 #'
 #' Glance does not do any calculations: it just gathers the results in a
@@ -452,40 +452,40 @@ new_basis <- function(
 #'
 #'
 #' @return
-#' A \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' A [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{\code{p}}{the the content of the tolerance bound.
+#' \item{`p`}{the the content of the tolerance bound.
 #'                 Normally 0.90 or 0.99}
-#' \item{\code{conf}}{the confidence level. Normally 0.95}
-#' \item{\code{distribution}}{a string representing the distribution assumed
+#' \item{`conf`}{the confidence level. Normally 0.95}
+#' \item{`distribution`}{a string representing the distribution assumed
 #'        when calculating the basis value}
-#' \item{\code{modcv}}{a logical value indicating whether the modified
+#' \item{`modcv`}{a logical value indicating whether the modified
 #'                     CV approach was used. Only applicable to pooling
 #'                     methods.}
-#' \item{\code{n}}{the sample size}
-#' \item{\code{r}}{the number of groups used in the calculation. This will
-#'        be \code{NA} for single-point basis values}
-#' \item{\code{basis}}{the basis value}
+#' \item{`n`}{the sample size}
+#' \item{`r`}{the number of groups used in the calculation. This will
+#'        be `NA` for single-point basis values}
+#' \item{`basis`}{the basis value}
 #'
 #' @details
-#' For the pooled basis methods (\code{basis_pooled_cv} and
-#' \code{basis_pooled_sd}), the \code{\link[tibble:tibble]{tibble::tibble}}
-#' returned by \code{glance} will have one row for each group included in
-#' the pooling. For all other basis methods, the resulting \code{tibble}
+#' For the pooled basis methods (`basis_pooled_cv` and
+#' `basis_pooled_sd`), the [tibble::tibble()]
+#' returned by `glance` will have one row for each group included in
+#' the pooling. For all other basis methods, the resulting `tibble`
 #' will have a single row.
 #'
-#' If \code{include_diagnostics=TRUE}, there will be additional columns
+#' If `include_diagnostics=TRUE`, there will be additional columns
 #' corresponding with the diagnostic tests performed. These column(s) will
 #' be of type character and will contain a "P" if the diagnostic test
 #' passed, a "F" if the diagnostic test failed, an "O" if the diagnostic
-#' test was overridden or \code{NA} if the test was not run (typically
+#' test was overridden or `NA` if the test was not run (typically
 #' because an optional argument was not passed to the function that
 #' computed the basis value).
 #'
 #'
 #' @seealso
-#' \code{\link{basis}}
+#' [basis()]
 #'
 #' @examples
 #' set.seed(10)
@@ -1066,11 +1066,11 @@ hk_ext_h <- function(z, n, i, j, p) {
 #' @param conf the confidence level (normally 0.95)
 #'
 #' @return
-#' For \code{hk_ext_z}, the return value is a numeric value representing
+#' For `hk_ext_z`, the return value is a numeric value representing
 #' the parameter z (denoted as k in CMH-17-1G).
 #'
-#' For \code{hk_ext_z_j_opt}, the return value is named list containing
-#' \code{z} and \code{k}. The former is the value of z, as defined by
+#' For `hk_ext_z_j_opt`, the return value is named list containing
+#' `z` and `k`. The former is the value of z, as defined by
 #' Vangel (1994), and the latter is the corresponding order statistic.
 #'
 #' @details
@@ -1080,22 +1080,22 @@ hk_ext_h <- function(z, n, i, j, p) {
 #'
 #' The extended Hanson--Koopmans method calculates a tolerance bound
 #' (basis value) based on two order statistics and a weighting value
-#' \code{z}. The value of \code{z} is based on the sample size, which
+#' `z`. The value of `z` is based on the sample size, which
 #' order statistics are selected, the desired content of the tolerance
 #' bond and the desired confidence level.
 #'
-#' The function \code{hk_ext_z} calculates the weighting variable \code{z}
-#' based on selected order statistics \code{i} and \code{j}. Based on this
-#' value \code{z}, the tolerance bound can be calculated as:
+#' The function `hk_ext_z` calculates the weighting variable `z`
+#' based on selected order statistics `i` and `j`. Based on this
+#' value `z`, the tolerance bound can be calculated as:
 #'
 #' \deqn{S = z X_{(i)} + (1 - z) X_{(j)}}{S = z X(i) + (1 - z) X(j)}
 #'
-#' Where \eqn{X_{(i)}}{X(i)} and \eqn{X_{(j)}}{X(j)} are the \code{i-th}
-#' and \code{j-th} ordered observation.
+#' Where \eqn{X_{(i)}}{X(i)} and \eqn{X_{(j)}}{X(j)} are the `i-th`
+#' and `j-th` ordered observation.
 #'
-#' The function \code{hk_ext_z_j_opt} determines the value of \code{j} and
-#' the corresponding value of \code{z}, assuming \code{i=1}. The value
-#' of \code{j} is selected such that the computed tolerance limit is
+#' The function `hk_ext_z_j_opt` determines the value of `j` and
+#' the corresponding value of `z`, assuming `i=1`. The value
+#' of `j` is selected such that the computed tolerance limit is
 #' nearest to the desired population quantile for a standard normal
 #' distribution when the order statistics are equal to the expected
 #' value of the order statistics for the standard normal distribution.
@@ -1133,7 +1133,7 @@ hk_ext_h <- function(z, n, i, j, p) {
 #' ## $j
 #' ## [1] 10
 #'
-#' @seealso \code{\link{basis_hk_ext}}
+#' @seealso [basis_hk_ext()]
 #'
 #' @name hk_ext
 #'
@@ -1288,7 +1288,7 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #' bounds for large samples. This function should only be used for
 #' computing B-Basis for samples larger than 28 or A-Basis for samples
 #' larger than 298. This function is used by
-#' \code{\link{basis_nonpara_large_sample}}.
+#' [basis_nonpara_large_sample()].
 #'
 #' @param n the sample size
 #' @param p the desired content for the tolerance bound
@@ -1306,14 +1306,14 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #' The results of this function have been verified against the tables in
 #' CMH-17-1G and agreement was found for all sample sizes published in
 #' CMH-17-1G for both A- and B-Basis, as well as the sample sizes
-#' \code{n+1} and \code{n-1}, where
-#' \code{n} is the sample size published in CMH-17-1G.
+#' `n+1` and `n-1`, where
+#' `n` is the sample size published in CMH-17-1G.
 #'
 #' The tables in CMH-17-1G purportedly list the smallest sample sizes
 #' for which a particular rank can be used. That is, for a sample size
-#' one less than the \code{n} published in the table, the next lowest rank
+#' one less than the `n` published in the table, the next lowest rank
 #' would be used. In some cases, the results of this function disagree by a
-#' rank of one for sample sizes one less than the \code{n} published in the
+#' rank of one for sample sizes one less than the `n` published in the
 #' table. This indicates a disagreement in that sample size at which
 #' the rank should change. This is likely due to numerical
 #' differences in this function and the procedure used to generate the tables.
@@ -1327,13 +1327,13 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 #' @references
 #' W. Guenther, “Determination of Sample Size for Distribution-Free
 #' Tolerance Limits,” Jan. 1969.
-#' Available online: \url{https://www.duo.uio.no/handle/10852/48686}
+#' Available online: <https://www.duo.uio.no/handle/10852/48686>
 #'
 #' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
 #'
-#' @seealso \code{\link{basis_nonpara_large_sample}}
+#' @seealso [basis_nonpara_large_sample()]
 #'
 #' @examples
 #' nonpara_binomial_rank(n = 1693, p = 0.99, conf = 0.95)

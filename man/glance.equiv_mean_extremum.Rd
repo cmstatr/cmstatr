@@ -8,42 +8,42 @@
 }
 \arguments{
 \item{x}{an equiv_mean_extremum object returned from
-\code{\link{equiv_mean_extremum}}}
+\code{\link[=equiv_mean_extremum]{equiv_mean_extremum()}}}
 
 \item{...}{Additional arguments. Not used. Included only to match generic
 signature.}
 }
 \value{
-A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+A one-row \code{\link[tibble:tibble]{tibble::tibble()}} with the following
 columns:
 
 \item{\code{alpha}}{the value of alpha passed to this function}
 \item{\code{n_sample}}{the number of observations in the sample for which
-  equivalency is being checked. This is either the value \code{n_sample}
-  passed to this function or the length of the vector \code{data_sample}.}
+equivalency is being checked. This is either the value \code{n_sample}
+passed to this function or the length of the vector \code{data_sample}.}
 \item{\code{modcv}}{logical value indicating whether the acceptance
-  thresholds are calculated using the modified CV approach}
+thresholds are calculated using the modified CV approach}
 \item{\code{threshold_min_indiv}}{The calculated threshold value for
-  minimum individual}
+minimum individual}
 \item{\code{threshold_mean}}{The calculated threshold value for mean}
 \item{\code{result_min_indiv}}{a character vector of either "PASS" or
-  "FAIL" indicating whether the data from \code{data_sample} passes the
-  test for minimum individual. If \code{data_sample} was not supplied,
-  this value will be \code{NULL}}
+"FAIL" indicating whether the data from \code{data_sample} passes the
+test for minimum individual. If \code{data_sample} was not supplied,
+this value will be \code{NULL}}
 \item{\code{result_mean}}{a character vector of either "PASS" or
-  "FAIL" indicating whether the data from \code{data_sample} passes the
-  test for mean. If \code{data_sample} was not supplied, this value will
-  be  \code{NULL}}
+"FAIL" indicating whether the data from \code{data_sample} passes the
+test for mean. If \code{data_sample} was not supplied, this value will
+be  \code{NULL}}
 \item{\code{min_sample}}{The minimum value from the vector
-  \code{data_sample}. if \code{data_sample} was not supplied, this will
-  have a value of \code{NULL}}
+\code{data_sample}. if \code{data_sample} was not supplied, this will
+have a value of \code{NULL}}
 \item{\code{mean_sample}}{The mean value from the vector
-  \code{data_sample}. If \code{data_sample} was not supplied, this will
-  have a value of \code{NULL}}
+\code{data_sample}. If \code{data_sample} was not supplied, this will
+have a value of \code{NULL}}
 }
 \description{
 Glance accepts an object of type \code{equiv_mean_extremum} and returns a
-\code{\link[tibble:tibble]{tibble::tibble}} with
+\code{\link[tibble:tibble]{tibble::tibble()}} with
 one row of summaries.
 
 Glance does not do any calculations: it just gathers the results in a
@@ -64,5 +64,5 @@ glance(eq)
 
 }
 \seealso{
-\code{\link{equiv_mean_extremum}}
+\code{\link[=equiv_mean_extremum]{equiv_mean_extremum()}}
 }
