@@ -2,6 +2,7 @@ library(rlang)
 library(dplyr)
 library(tidyr)
 library(flextable)
+library(data.table)
 
 
 res <- carbon.fabric.2 %>%
@@ -21,11 +22,14 @@ res <- carbon.fabric.2 %>%
 table_format_fcn <- list(
   "basis" = function(x, condition) {
     if (is.data.frame(x$basis)) {
-        return(c(x$basis$value[x$basis$group == condition], x$distribution))
+        return(list(
+          x$basis$value[x$basis$group == condition],
+          x$distribution
+        ))
     }
-    return(c(x$basis, x$distribution))
+    return(list(x$basis, x$distribution))
   },
-  "integer" = function(x, condition) as.character(x)
+  "integer" = function(x, condition) list(x)
 )
 
 footnote_obj <- function(test, slot, i, condition, type, text) {
@@ -65,7 +69,7 @@ footnote_fcn <- list(
     )
   },
   "integer" = function(test, slot, x, c) {
-    c()
+    list()
   }
 )
 
@@ -92,6 +96,17 @@ rows <- bind_rows(lapply(res$properties, function(p) {
         p$condition,
         function(c) {
           cur_cell_value <- table_format_fcn[[cur_class]](s, c)
+          cur_cell_value <- lapply(cur_cell_value, function(v) {
+            if (is.integer(v)) {
+              as.character(v)
+            } else if (is.numeric(v)) {
+              sprintf(v, fmt = "%.2f")
+            } else{
+              v
+            }
+          })
+          cur_cell_value <- unlist(cur_cell_value)
+          print(cur_cell_value)
           slot_name <- names(p$slots)[i_slot]
           footnote_list <<- append(footnote_list, footnote_fcn[[cur_class]](p$test, slot_name, s, c))
           tibble(
@@ -116,39 +131,50 @@ table <- rows_wider %>%
 
 table
 
-table %>%
+table <- table %>%
   footnote(
-    i = c(~ test == "FC" & slot == "b_basis" & i == 2),
-    j = c("CTD", "RTD"),
-    as_paragraph("test"),
-    ref_symbols = "1"
+    i = c(1, 6),
+    j = c(3, 4),
+    as_paragraph("Failed Anderson-Darling Normality Test"),
+    ref_symbols = "a"
   ) #%>%
-  # footnote(
-  #   i = ~ test == "WT" & slot == "b_basis_pooled" & i == 1,
-  #   j = 3:6,
-  #   as_paragraph("test1"),
-  #   ref_symbols = "2"
-  # ) %>%
-  # footnote(
-  #   i = ~ test == "WT" & slot == "b_basis_pooled" & i == 2,
-  #   j = 3:6,
-  #   as_paragraph("test2"),
-  #   ref_symbols = "3"
-  # )
+# footnote(
+#   i = ~ test == "FC" & slot == "b_basis" & i == 1,
+#   j = "RTD",
+#   as_paragraph("Failed Anderson-Darling Normality Test"),
+#   ref_symbols = "a"
+# ) #%>%
+# # footnote(
+# #   i = ~ test == "WT" & slot == "b_basis_pooled" & i == 2,
+# #   j = 3:6,
+# #   as_paragraph("test2"),
+# #   ref_symbols = "3"
+# # )
 
 footnote_text <- list()
 for (fn in footnote_list) {
   if (!fn$text %in% footnote_text) {
+    # This is a new footnote text
     footnote_text <- append(footnote_text, fn$text)
-  }
-  fn_number <- match(fn$text, footnote_text)
-  table <- table %>%
-    footnote(
+    table <- footnote(
+      table,
       i = ~ test == fn$test & slot == fn$slot & i == fn$i,
       j = fn$condition,
       as_paragraph(fn$text),
-      ref_symbols = fn_number
+      ref_symbols = length(footnote_text)
     )
+  } else {
+    # A footnote with the same text was already added
+    # We'll piggyback on that footnote
+    fn_number <- match(fn$text, footnote_text)
+    table <- footnote(
+      table,
+      i = ~ test == fn$test & slot == fn$slot & i == fn$i,
+      j = fn$condition,
+      as_paragraph(fn_number),
+      inline = TRUE
+    )
+  }
 }
 table
 

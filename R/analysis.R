@@ -1,4 +1,19 @@
 
+
+result_formatting <- list(
+  "basis" = function(x, condition) {
+    if (is.data.frame(x$basis)) {
+      return(list(
+        x$basis$value[x$basis$group == condition],
+        x$distribution
+      ))
+    }
+    return(list(x$basis, x$distribution))
+  },
+  "integer" = function(x, condition) list(x)
+)
+
+
 #' Start an analysis for a data set
 #'
 #' @description
@@ -41,6 +56,8 @@ start_analysis <- function(data, test, condition = NULL, subgroup = NULL) {
   res$subgroup <- enquo(subgroup)
 
   res$properties <- list()
+
+  res$result_formatting <- result_formatting
 
   return(res)
 }
@@ -92,6 +109,7 @@ unique_values <- function(variable, property_data, filter, max_values) {
   variable_vector
 }
 
+#' TODO: Document
 #' @importFrom rlang eval_tidy
 discard_obs <- function(data, filter) {
   mask <- eval_tidy(enquo(filter), data)
@@ -237,7 +255,7 @@ join_conditions <- function(left_df, right_df, left_condition_name,
   left_df
 }
 
-#' Create a \code{data.frame} based on an analysis
+#' Create a \code{data.frame} from an analysis
 #'
 #' @description
 #' Create a \code{data.frame} based on an analysis started
@@ -303,3 +321,119 @@ as.data.frame.cmanalysis <- function(x, row.names = NULL,
   })) %>%
     as.data.frame()
 }
+
+
+#' TODO: Document
+#'
+#' @export
+set_result_formatting <- function(an, class, fcn) {
+  if (!inherits(an, "cmanalysis")) {
+    stop("Must pass an `cmanalysis` object created with `start_analysis`.")
+  }
+
+  if (!is.character(class) | length(class) != 1) {
+    stop("Argument `class` must be of type character.")
+  }
+
+  if (!is.function(fcn)) {
+    stop("Argument `fcn` must be a function.")
+  }
+
+  if (length(formals(fcn)) != 2) {
+    stop("Argument `fcn` must be a function with two arguments")
+  }
+
+  an$result_formatting[[class]] <- fcn
+
+  an
+}
+
+
+#' TODO: Document
+#'
+#' @export
+create_flextable <- function(an, numeric_fmt = "%.2f") {
+  if (!inherits(an, "cmanalysis")) {
+    stop("Must pass an `cmanalysis` object created with `start_analysis`.")
+  }
+
+  if (length(an$properties) <= 0) {
+    stop("Cannot create flextable if no properties have been analy")
+  }
+
+  # footnote_list <- list()
+
+  rows <- bind_rows(lapply(an$properties, function(p) {
+    bind_rows(lapply(
+      seq_along(p$slots),
+      function(i_slot) {
+        s <- p$slots[[i_slot]]
+
+        cur_class <- class(s)
+        if (!cur_class %in% names(an$result_formatting)) {
+          stop(paste0("No table formatter defined for class `",
+                      cur_class, "`"))
+        }
+        bind_rows(lapply(
+          p$condition,
+          function(c) {
+            cur_cell_value <- an$result_formatting[[cur_class]](s, c)
+            cur_cell_value <- lapply(cur_cell_value, function(v) {
+              if (is.integer(v)) {
+                as.character(v)
+              } else if (is.numeric(v)) {
+                sprintf(v, fmt = numeric_fmt)
+              } else{
+                v
+              }
+            })
+            cur_cell_value <- unlist(cur_cell_value)
+            slot_name <- names(p$slots)[i_slot]
+            # footnote_list <<- append(
+            #   footnote_list,
+            #   footnote_fcn[[cur_class]](p$test, slot_name, s, c)
+            # )
+            tibble(
+              test = p$test,
+              condition = c,
+              slot = slot_name,
+              i = seq_along(cur_cell_value),
+              value = cur_cell_value
+            )
+          }
+        ))
+      }
+    ))
+  }))
+
+  rows_wider <- pivot_wider(rows, names_from = condition, values_from = value)
+  table <- flextable(rows_wider,
+                     col_keys = names(rows_wider)[names(rows_wider) != "i"])
+  table <- theme_box(table)
+
+  for (p in an$properties) {
+    test_name <- p$test
+    if (length(p$condition) > 1) {
+      # Pooled, so we will merge the cells
+      for (i_slot in seq_along(p$slots)) {
+        slot_name <- names(p$slots)[i_slot]
+
+        table <- merge_h(table,
+                         i = rows_wider[["test"]] == test_name &
+                           rows_wider[["slot"]] == slot_name)
+      }
+    }
+  }
+
+  table <- set_header_labels(table, slot = "")
+  table <- merge_v(table, j = ~ test + slot)
+  table <- align(table, align = "center")
+  table <- align(table, part = "header", align = "center",
+                 j = 3:(ncol(rows_wider) - 1))
+  table <- fix_border_issues(table)
+
+  table  # TODO should return sub-class of flextable with some extra info
+}
+
+
+

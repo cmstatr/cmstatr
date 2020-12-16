@@ -2,7 +2,7 @@
 % Please edit documentation in R/analysis.R
 \name{as.data.frame.cmanalysis}
 \alias{as.data.frame.cmanalysis}
-\title{Create a \code{data.frame} based on an analysis}
+\title{Create a \code{data.frame} from an analysis}
 \usage{
 \method{as.data.frame}{cmanalysis}(x, row.names = NULL, optional = FALSE, ...)
 }
