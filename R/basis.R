@@ -460,7 +460,7 @@ new_basis <- function(
 #' - `r` the number of groups used in the calculation. This will
 #'   be `NA` for single-point basis values
 #' - `group` the group for pooling methods. This column is only
-#'   present when glancing at a \code{basis} object
+#'   present when glancing at a `basis` object
 #'   created using one of the pooling methods.
 #' - `basis` the basis value
 #'

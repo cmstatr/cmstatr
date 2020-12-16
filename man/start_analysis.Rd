@@ -23,7 +23,7 @@ values}
 }
 \value{
 an object of class \code{cmanalysis} that can be passed to
-\code{\link{analyze_property}}.
+\code{\link[=analyze_property]{analyze_property()}}.
 }
 \description{
 Accepts a \code{data.frame} (or similar object) and starts an analysis.
@@ -34,5 +34,5 @@ a further sub-division of the data. Once the analysis is started,
 individual properties can be analyzed.
 }
 \seealso{
-\code{\link{analyze_property}}
+\code{\link[=analyze_property]{analyze_property()}}
 }

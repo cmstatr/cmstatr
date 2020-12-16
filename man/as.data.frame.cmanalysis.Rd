@@ -18,12 +18,12 @@
 }
 \description{
 Create a \code{data.frame} based on an analysis started
-using \code{\link{start_analysis}}. One row is created for
+using \code{\link[=start_analysis]{start_analysis()}}. One row is created for
 each of the combinations of test, condition and sub-group.
 Internally, \code{glance} is called on each of the results
-calculated using \code{\link{analyze_property}}.
+calculated using \code{\link[=analyze_property]{analyze_property()}}.
 }
 \seealso{
-\code{\link{start_analysis}}
-\code{\link{analyze_property}}
+\code{\link[=start_analysis]{start_analysis()}}
+\code{\link[=analyze_property]{analyze_property()}}
 }

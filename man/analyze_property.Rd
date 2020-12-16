@@ -18,7 +18,7 @@ in the data.frame used to start the analysis.}
 observations}
 }
 \description{
-Once an analysis has been begun using \code{\link{start_analysis}},
+Once an analysis has been begun using \code{\link[=start_analysis]{start_analysis()}},
 individual properties can be analyzed using this function by specifying
 which observation to consider, and one or more expressions that perform
 the actual analysis.
@@ -51,5 +51,5 @@ application of the \code{filter}.
 
 }
 \seealso{
-\code{\link{start_analysis}}
+\code{\link[=start_analysis]{start_analysis()}}
 }

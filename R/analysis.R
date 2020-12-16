@@ -17,14 +17,14 @@ result_formatting <- list(
 #' Start an analysis for a data set
 #'
 #' @description
-#' Accepts a \code{data.frame} (or similar object) and starts an analysis.
+#' Accepts a `data.frame` (or similar object) and starts an analysis.
 #' To start an analysis, this function needs to know how to interpret the
-#' columns of the \code{data.frame}: the columns representing the test,
+#' columns of the `data.frame`: the columns representing the test,
 #' the environmental condition (optional) and, optionally,
 #' a further sub-division of the data. Once the analysis is started,
 #' individual properties can be analyzed.
 #'
-#' @param data a \code{data.frame} (or similar) containing the data to
+#' @param data a `data.frame` (or similar) containing the data to
 #'             analyze
 #' @param test the column in the data.frame indicating the test
 #'             for each observation
@@ -35,11 +35,11 @@ result_formatting <- list(
 #'                 in the data.frame containing normalized or as-measured
 #'                 values
 #'
-#' @return an object of class \code{cmanalysis} that can be passed to
-#'         \code{\link{analyze_property}}.
+#' @return an object of class `cmanalysis` that can be passed to
+#'         [analyze_property()].
 #'
 #' @seealso
-#' \code{\link{analyze_property}}
+#' [analyze_property()]
 #'
 #' @importFrom dplyr ungroup
 #' @importFrom rlang enquo
@@ -119,47 +119,47 @@ discard_obs <- function(data, filter) {
 #' Analyze a property as part of the analysis of a data set
 #'
 #' @description
-#' Once an analysis has been begun using \code{\link{start_analysis}},
+#' Once an analysis has been begun using [start_analysis()],
 #' individual properties can be analyzed using this function by specifying
 #' which observation to consider, and one or more expressions that perform
 #' the actual analysis.
 #'
-#' @param an a \code{cmanalysis} object returned from
-#'             \code{start_analysis} or another call to
-#'             \code{analyze_property}
+#' @param an a `cmanalysis` object returned from
+#'             `start_analysis` or another call to
+#'             `analyze_property`
 #' @param filter an data masking expression defined in terms of the variables
 #'               in the data.frame used to start the analysis.
 #' @param ... expressions used to perform the analysis or to discard
 #'            observations
 #'
 #' @details
-#' \code{analyze_property} takes a subset of the entire data set, and performs
+#' `analyze_property` takes a subset of the entire data set, and performs
 #' one or more calculations using that subset. The subset is defined as the
-#' observations for which \code{filter} is \code{TRUE}.
+#' observations for which `filter` is `TRUE`.
 #'
-#' The computation(s) to perform are supplied in the \code{...} argument. One
-#' or more function should be supplied. A \code{data.frame} will be passed to
+#' The computation(s) to perform are supplied in the `...` argument. One
+#' or more function should be supplied. A `data.frame` will be passed to
 #' these function as the first argument (or as an argument denoted with a dot,
-#' for example \code{data = .}). The function(s) supplied should return objects
-#' that have \code{glance} methods. Tidy evaluation is supported.
+#' for example `data = .`). The function(s) supplied should return objects
+#' that have `glance` methods. Tidy evaluation is supported.
 #'
-#' Normally, \code{...} will be a named (for example,
-#' \code{b_basis = basis_normal(strength, batch)}). This name (\code{b_basis}
+#' Normally, `...` will be a named (for example,
+#' `b_basis = basis_normal(strength, batch)`). This name (`b_basis`
 #' in this example) will be used subsequently when referring to this result.
 #' If a name is not supplied, the name of the function called will be used.
 #'
-#' If \code{filter} is \code{TRUE} for more than one value of the condition
+#' If `filter` is `TRUE` for more than one value of the condition
 #' variable, then all objects returned by the function(s) must be pooled across
-#' environments. This is tested by ensuring that the \code{data.frame} returned
-#' from calling \code{glance} on the returned object has a column named
-#' \code{group} that contains all of the values in the condition variable (after
-#' application of the \code{filter}.
+#' environments. This is tested by ensuring that the `data.frame` returned
+#' from calling `glance` on the returned object has a column named
+#' `group` that contains all of the values in the condition variable (after
+#' application of the `filter`.
 #'
 #' @examples
 #' # TODO: Write this
 #'
 #' @seealso
-#' \code{\link{start_analysis}}
+#' [start_analysis()]
 #'
 #' @importFrom rlang eval_tidy enquo enquos call_standardise call_modify
 #' @importFrom rlang as_label eval_tidy warn abort get_expr get_env
@@ -255,24 +255,24 @@ join_conditions <- function(left_df, right_df, left_condition_name,
   left_df
 }
 
-#' Create a \code{data.frame} from an analysis
+#' Create a `data.frame` from an analysis
 #'
 #' @description
-#' Create a \code{data.frame} based on an analysis started
-#' using \code{\link{start_analysis}}. One row is created for
+#' Create a `data.frame` based on an analysis started
+#' using [start_analysis()]. One row is created for
 #' each of the combinations of test, condition and sub-group.
-#' Internally, \code{glance} is called on each of the results
-#' calculated using \code{\link{analyze_property}}.
+#' Internally, `glance` is called on each of the results
+#' calculated using [analyze_property()].
 #'
-#' @param x an \code{cmanalysis} object
+#' @param x an `cmanalysis` object
 #' @param row.names not used. Included to match generic signature only
 #' @param optional not used. Included to match generic signature only
 #' @param ... Additional parameters that are internally passed to the
-#'            \code{glance} methods.
+#'            `glance` methods.
 #'
 #' @seealso
-#' \code{\link{start_analysis}}
-#' \code{\link{analyze_property}}
+#' [start_analysis()]
+#' [analyze_property()]
 #'
 #' @importFrom dplyr bind_cols bind_rows inner_join
 #' @importFrom rlang ensym quo_is_null `:=`
