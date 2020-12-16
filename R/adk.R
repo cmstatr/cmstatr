@@ -14,20 +14,19 @@
 #'
 #' @return
 #' Returns an object of class `adk`. This object has the following fields:
-#' \item{`call`}{the expression used to call this function}
-#' \item{`data`}{the original data used to compute the ADK}
-#' \item{`groups`}{a vector of the groups used in the computation}
-#' \item{`alpha`}{the value of alpha specified}
-#' \item{`n`}{the total number of observations}
-#' \item{`k`}{the number of groups}
-#' \item{`sigma`}{the computed standard deviation of the test statistic}
-#' \item{`ad`}{the value of the Anderson--Darling k-Sample test
-#'   statistic}
-#' \item{`p`}{the computed p-value}
-#' \item{`reject_same_dist`}{a boolean value indicating whether the null
-#'   hypothesis that all samples come from the same distribution is rejected}
-#' \item{`raw`}{the original results returned from
-#'   [ad.test][kSamples::ad.test]}
+#' - `call` the expression used to call this function
+#' - `data` the original data used to compute the ADK
+#' - `groups` a vector of the groups used in the computation
+#' - `alpha` the value of alpha specified
+#' - `n` the total number of observations
+#' - `k` the number of groups
+#' - `sigma` the computed standard deviation of the test statistic
+#' - `ad` the value of the Anderson--Darling k-Sample test statistic
+#' - `p` the computed p-value
+#' - `reject_same_dist` a boolean value indicating whether the null
+#'   hypothesis that all samples come from the same distribution is rejected
+#' - `raw` the original results returned from
+#'   [ad.test][kSamples::ad.test]
 #'
 #'
 #' @details
@@ -145,14 +144,14 @@ ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
 #' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{`alpha`}{the significance level for the test}
-#' \item{`n`}{the sample size for the test}
-#' \item{`k`}{the number of samples}
-#' \item{`sigma`}{the computed standard deviation of the test statistic}
-#' \item{`ad`}{the test statistic}
-#' \item{`p`}{the p-value of the test}
-#' \item{`reject_same_dist`}{whether the test concludes that the samples
-#'                                are drawn from different populations}
+#' - `alpha` the significance level for the test
+#' - `n` the sample size for the test
+#' - `k` the number of samples
+#' - `sigma` the computed standard deviation of the test statistic
+#' - `ad` the test statistic
+#' - `p` the p-value of the test
+#' - `reject_same_dist` whether the test concludes that the samples
+#'   are drawn from different populations
 #'
 #'
 #' @seealso

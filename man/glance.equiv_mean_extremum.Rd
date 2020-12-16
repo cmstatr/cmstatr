@@ -16,30 +16,31 @@ signature.}
 \value{
 A one-row \code{\link[tibble:tibble]{tibble::tibble()}} with the following
 columns:
-
-\item{\code{alpha}}{the value of alpha passed to this function}
-\item{\code{n_sample}}{the number of observations in the sample for which
+\itemize{
+\item \code{alpha} the value of alpha passed to this function
+\item \code{n_sample} the number of observations in the sample for which
 equivalency is being checked. This is either the value \code{n_sample}
-passed to this function or the length of the vector \code{data_sample}.}
-\item{\code{modcv}}{logical value indicating whether the acceptance
-thresholds are calculated using the modified CV approach}
-\item{\code{threshold_min_indiv}}{The calculated threshold value for
-minimum individual}
-\item{\code{threshold_mean}}{The calculated threshold value for mean}
-\item{\code{result_min_indiv}}{a character vector of either "PASS" or
+passed to this function or the length of the vector \code{data_sample}.
+\item \code{modcv} logical value indicating whether the acceptance
+thresholds are calculated using the modified CV approach
+\item \code{threshold_min_indiv} The calculated threshold value for
+minimum individual
+\item \code{threshold_mean} The calculated threshold value for mean
+\item \code{result_min_indiv} a character vector of either "PASS" or
 "FAIL" indicating whether the data from \code{data_sample} passes the
 test for minimum individual. If \code{data_sample} was not supplied,
-this value will be \code{NULL}}
-\item{\code{result_mean}}{a character vector of either "PASS" or
+this value will be \code{NULL}
+\item \code{result_mean} a character vector of either "PASS" or
 "FAIL" indicating whether the data from \code{data_sample} passes the
 test for mean. If \code{data_sample} was not supplied, this value will
-be  \code{NULL}}
-\item{\code{min_sample}}{The minimum value from the vector
+be  \code{NULL}
+\item \code{min_sample} The minimum value from the vector
 \code{data_sample}. if \code{data_sample} was not supplied, this will
-have a value of \code{NULL}}
-\item{\code{mean_sample}}{The mean value from the vector
+have a value of \code{NULL}
+\item \code{mean_sample} The mean value from the vector
 \code{data_sample}. If \code{data_sample} was not supplied, this will
-have a value of \code{NULL}}
+have a value of \code{NULL}
+}
 }
 \description{
 Glance accepts an object of type \code{equiv_mean_extremum} and returns a

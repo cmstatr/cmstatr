@@ -109,34 +109,31 @@ for A-Basis.}
 \value{
 an object of class \code{basis}
 This object has the following fields:
-\item{\code{call}}{the expression used to call this function}
-\item{\code{distribution}}{the distribution used (normal, etc.)}
-\item{\code{p}}{the value of \eqn{p} supplied}
-\item{\code{conf}}{the value of \eqn{conf} supplied}
-\item{\code{modcv}}{a logical value indicating whether the modified
-CV approach was used. Only applicable to pooling
-methods.}
-\item{\code{data}}{a copy of the data used in the calculation}
-\item{\code{groups}}{a copy of the groups variable.
-Only used for pooling and ANOVA methods.}
-\item{\code{batch}}{a copy of the batch data used for diagnostic tests}
-\item{\code{modcv_transformed_data}}{the data after the modified CV
-transformation}
-\item{\code{override}}{a vector of the names of diagnostic tests that
-were overridden. \code{NULL} if none were
-overridden}
-\item{\code{diagnostic_results}}{a named character vector containing the
-results of all the diagnostic tests. See
-the Details section for additional
-information}
-\item{\code{diagnostic_failures}}{a vector containing any diagnostic tests
-that produced failures}
-\item{\code{n}}{the number of observations}
-\item{\code{r}}{the number of groups, if a pooling method was used.
-Otherwise it is NULL.}
-\item{\code{basis}}{the basis value computed. This is a number
-except when pooling methods are used, in
-which case it is a data.frame.}
+\itemize{
+\item \code{call} the expression used to call this function
+\item \code{distribution} the distribution used (normal, etc.)
+\item \code{p} the value of \eqn{p} supplied
+\item \code{conf} the value of \eqn{conf} supplied
+\item \code{modcv} a logical value indicating whether the modified
+CV approach was used. Only applicable to pooling methods.
+\item \code{data} a copy of the data used in the calculation
+\item \code{groups} a copy of the groups variable.
+Only used for pooling and ANOVA methods.
+\item \code{batch} a copy of the batch data used for diagnostic tests
+\item \code{modcv_transformed_data} the data after the modified CV transformation
+\item \code{override} a vector of the names of diagnostic tests that
+were overridden. \code{NULL} if none were overridden
+\item \code{diagnostic_results} a named character vector containing the
+results of all the diagnostic tests. See the Details section for
+additional information
+\item \code{diagnostic_failures} a vector containing any diagnostic tests
+that produced failures
+\item \code{n} the number of observations
+\item \code{r} the number of groups, if a pooling method was used.
+Otherwise it is NULL.
+\item \code{basis} the basis value computed. This is a number
+except when pooling methods are used, in which case it is a data.frame.
+}
 }
 \description{
 Calculate the basis value for a given data set. There are various functions

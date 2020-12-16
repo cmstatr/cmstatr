@@ -14,20 +14,19 @@
 #'
 #' @return
 #' Returns an object of class `adk`. This object has the following fields:
-#' \item{`call`}{the expression used to call this function}
-#' \item{`data`}{the original data supplied by the user}
-#' \item{`groups`}{a vector of the groups used in the computation}
-#' \item{`alpha`}{the value of alpha specified}
-#' \item{`modcv`}{a logical value indicating whether the modified
-#'                     CV approach was used.}
-#' \item{`n`}{the total number of observations}
-#' \item{`k`}{the number of groups}
-#' \item{`f`}{the value of the F test statistic}
-#' \item{`p`}{the computed p-value}
-#' \item{`reject_equal_variance`}{a boolean value indicating whether the
-#'   null hypothesis that all samples have the same variance is rejected}
-#' \item{`modcv_transformed_data`}{the data after the modified CV
-#'                                      transformation}
+#' - `call` the expression used to call this function
+#' - `data` the original data supplied by the user
+#' - `groups` a vector of the groups used in the computation
+#' - `alpha` the value of alpha specified
+#' - `modcv` a logical value indicating whether the modified
+#'   CV approach was used.
+#' - `n` the total number of observations
+#' - `k` the number of groups
+#' - `f` the value of the F test statistic
+#' - `p` the computed p-value
+#' - `reject_equal_variance` a boolean value indicating whether the
+#'   null hypothesis that all samples have the same variance is rejected
+#' - `modcv_transformed_data` the data after the modified CV transformation
 #' @details
 #' This function performs the Levene's test for equality of variance. The
 #' data is transformed as follows:
@@ -155,15 +154,15 @@ levene_test <- function(data = NULL, x, groups, alpha = 0.05, modcv = FALSE) {
 #' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{`alpha`}{the value of alpha specified}
-#' \item{`modcv`}{a logical value indicating whether the modified
-#'                     CV approach was used.}
-#' \item{`n`}{the total number of observations}
-#' \item{`k`}{the number of groups}
-#' \item{`f`}{the value of the F test statistic}
-#' \item{`p`}{the computed p-value}
-#' \item{`reject_equal_variance`}{a boolean value indicating whether the
-#'       null hypothesis that all samples have the same variance is rejected}
+#' - `alpha` the value of alpha specified
+#' - `modcv` a logical value indicating whether the modified
+#'   CV approach was used.
+#' - `n` the total number of observations
+#' - `k` the number of groups
+#' - `f` the value of the F test statistic
+#' - `p` the computed p-value
+#' - `reject_equal_variance` a boolean value indicating whether the
+#'   null hypothesis that all samples have the same variance is rejected
 #'
 #'
 #' @seealso

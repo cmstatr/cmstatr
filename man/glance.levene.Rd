@@ -15,16 +15,17 @@ signature.}
 \value{
 A one-row \code{\link[tibble:tibble]{tibble::tibble()}} with the following
 columns:
-
-\item{\code{alpha}}{the value of alpha specified}
-\item{\code{modcv}}{a logical value indicating whether the modified
-CV approach was used.}
-\item{\code{n}}{the total number of observations}
-\item{\code{k}}{the number of groups}
-\item{\code{f}}{the value of the F test statistic}
-\item{\code{p}}{the computed p-value}
-\item{\code{reject_equal_variance}}{a boolean value indicating whether the
-null hypothesis that all samples have the same variance is rejected}
+\itemize{
+\item \code{alpha} the value of alpha specified
+\item \code{modcv} a logical value indicating whether the modified
+CV approach was used.
+\item \code{n} the total number of observations
+\item \code{k} the number of groups
+\item \code{f} the value of the F test statistic
+\item \code{p} the computed p-value
+\item \code{reject_equal_variance} a boolean value indicating whether the
+null hypothesis that all samples have the same variance is rejected
+}
 }
 \description{
 Glance accepts an object of type \code{levene} and returns a

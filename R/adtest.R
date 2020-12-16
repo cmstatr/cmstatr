@@ -15,19 +15,19 @@
 #' an object of class `anderson_darling`. This object has the following
 #' fields.
 #'
-#' \item{`call`}{the expression used to call this function}
-#' \item{`dist`}{the distribution used}
-#' \item{`data`}{a copy of the data analyzed}
-#' \item{`n`}{the number of observations in the sample}
-#' \item{`A`}{the Anderson--Darling test statistic}
-#' \item{`osl`}{the observed significance level (p-value),
+#' - `call` the expression used to call this function
+#' - `dist` the distribution used
+#' - `data` a copy of the data analyzed
+#' - `n` the number of observations in the sample
+#' - `A` the Anderson--Darling test statistic
+#' - `osl` the observed significance level (p-value),
 #'   assuming the
-#'   parameters of the distribution are estimated from the data}
-#' \item{`alpha`}{the required significance level for the test.
-#'  This value is given by the user.}
-#' \item{`reject_distribution`}{a logical value indicating whether
-#'  the hypothesis that the data is drawn from the specified distribution
-#'  should be rejected}
+#'   parameters of the distribution are estimated from the data
+#' - `alpha` the required significance level for the test.
+#'   This value is given by the user.
+#' - `reject_distribution` a logical value indicating whether
+#'   the hypothesis that the data is drawn from the specified distribution
+#'   should be rejected
 #'
 #' @details
 #' The Anderson--Darling test statistic is calculated for the distribution
@@ -160,17 +160,17 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
 #' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{`dist`}{the distribution used}
-#' \item{`n`}{the number of observations in the sample}
-#' \item{`A`}{the Anderson--Darling test statistic}
-#' \item{`osl`}{the observed significance level (p-value),
+#' - `dist` the distribution used
+#' - `n` the number of observations in the sample
+#' - `A` the Anderson--Darling test statistic
+#' - `osl` the observed significance level (p-value),
 #'     assuming the
-#'     parameters of the distribution are estimated from the data}
-#'  \item{`alpha`}{the required significance level for the test.
-#'    This value is given by the user.}
-#' \item{`reject_distribution`}{a logical value indicating whether
+#'     parameters of the distribution are estimated from the data
+#'  - `alpha` the required significance level for the test.
+#'    This value is given by the user.
+#' - `reject_distribution` a logical value indicating whether
 #'    the hypothesis that the data is drawn from the specified distribution
-#'    should be rejected}
+#'    should be rejected
 #'
 #'
 #' @seealso

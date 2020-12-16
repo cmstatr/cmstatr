@@ -15,15 +15,16 @@ signature.}
 \value{
 A one-row \code{\link[tibble:tibble]{tibble::tibble()}} with the following
 columns:
-
-\item{\code{alpha}}{the significance level for the test}
-\item{\code{n}}{the sample size for the test}
-\item{\code{k}}{the number of samples}
-\item{\code{sigma}}{the computed standard deviation of the test statistic}
-\item{\code{ad}}{the test statistic}
-\item{\code{p}}{the p-value of the test}
-\item{\code{reject_same_dist}}{whether the test concludes that the samples
-are drawn from different populations}
+\itemize{
+\item \code{alpha} the significance level for the test
+\item \code{n} the sample size for the test
+\item \code{k} the number of samples
+\item \code{sigma} the computed standard deviation of the test statistic
+\item \code{ad} the test statistic
+\item \code{p} the p-value of the test
+\item \code{reject_same_dist} whether the test concludes that the samples
+are drawn from different populations
+}
 }
 \description{
 Glance accepts an object of type \code{adk} and returns a

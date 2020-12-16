@@ -41,42 +41,42 @@
 #' Returns an object of class `equiv_mean_extremum`. This object is a list
 #' with the following named elements:
 #'
-#' \item{`call`}{the expression used to call this function}
-#' \item{`alpha`}{the value of alpha passed to this function}
-#' \item{`n_sample`}{the number of observations in the sample for which
+#' - `call` the expression used to call this function
+#' - `alpha` the value of alpha passed to this function
+#' - `n_sample` the number of observations in the sample for which
 #'   equivalency is being checked. This is either the value `n_sample`
-#'   passed to this function or the length of the vector `data_sample`.}
-#' \item{`k1`}{the factor used to calculate the minimum individual
+#'   passed to this function or the length of the vector `data_sample`.
+#' - `k1` the factor used to calculate the minimum individual
 #'   threshold. The minimum individual threshold is calculated as
 #'   \eqn{W_{min} = qual\,mean - k_1 \cdot qual\,sd}{
-#'   Wmin = qual_mean - k1 * qual_sd}}
-#' \item{`k2`}{the factor used to calculate the threshold for mean. The
+#'   Wmin = qual_mean - k1 * qual_sd}
+#' - `k2` the factor used to calculate the threshold for mean. The
 #'   threshold for mean is calculated as
 #'   \eqn{W_{mean} = qual\,mean - k_2 \cdot qual\,sd}{
-#'   Wmean = qual_mean - k2 * qual_sd}}
-#' \item{`modcv`}{logical value indicating whether the acceptance
-#'   thresholds are calculated using the modified CV approach}
-#' \item{`cv`}{the coefficient of variation of the qualification data.
-#'   This value is not modified, even if `modcv=TRUE`}
-#' \item{`cv_star`}{The modified coefficient of variation. If
-#'   `modcv=FALSE`, this will be `NULL`}
-#' \item{`threshold_min_indiv`}{The calculated threshold value for
-#'   minimum individual}
-#' \item{`threshold_mean`}{The calculated threshold value for mean}
-#' \item{`result_min_indiv`}{a character vector of either "PASS" or
+#'   Wmean = qual_mean - k2 * qual_sd}
+#' - `modcv` logical value indicating whether the acceptance
+#'   thresholds are calculated using the modified CV approach
+#' - `cv` the coefficient of variation of the qualification data.
+#'   This value is not modified, even if `modcv=TRUE`
+#' - `cv_star` The modified coefficient of variation. If
+#'   `modcv=FALSE`, this will be `NULL`
+#' - `threshold_min_indiv` The calculated threshold value for
+#'   minimum individual
+#' - `threshold_mean` The calculated threshold value for mean
+#' - `result_min_indiv` a character vector of either "PASS" or
 #'   "FAIL" indicating whether the data from `data_sample` passes the
 #'   test for minimum individual. If `data_sample` was not supplied,
-#'   this value will be `NULL`}
-#' \item{`result_mean`}{a character vector of either "PASS" or
+#'   this value will be `NULL`
+#' - `result_mean` a character vector of either "PASS" or
 #'   "FAIL" indicating whether the data from `data_sample` passes the
 #'   test for mean. If `data_sample` was not supplied, this value will
-#'   be  `NULL`}
-#' \item{`min_sample`}{The minimum value from the vector
+#'   be  `NULL`
+#' - `min_sample` The minimum value from the vector
 #'   `data_sample`. if `data_sample` was not supplied, this will
-#'   have a value of `NULL`}
-#' \item{`mean_sample`}{The mean value from the vector
+#'   have a value of `NULL`
+#' - `mean_sample` The mean value from the vector
 #'   `data_sample`. If `data_sample` was not supplied, this will
-#'   have a value of `NULL`}
+#'   have a value of `NULL`
 #'
 #' @details
 #' This function is used to
@@ -258,29 +258,29 @@ equiv_mean_extremum <- function(df_qual = NULL, data_qual = NULL,
 #' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{`alpha`}{the value of alpha passed to this function}
-#' \item{`n_sample`}{the number of observations in the sample for which
+#' - `alpha` the value of alpha passed to this function
+#' - `n_sample` the number of observations in the sample for which
 #'   equivalency is being checked. This is either the value `n_sample`
-#'   passed to this function or the length of the vector `data_sample`.}
-#' \item{`modcv`}{logical value indicating whether the acceptance
-#'   thresholds are calculated using the modified CV approach}
-#' \item{`threshold_min_indiv`}{The calculated threshold value for
-#'   minimum individual}
-#' \item{`threshold_mean`}{The calculated threshold value for mean}
-#' \item{`result_min_indiv`}{a character vector of either "PASS" or
+#'   passed to this function or the length of the vector `data_sample`.
+#' - `modcv` logical value indicating whether the acceptance
+#'   thresholds are calculated using the modified CV approach
+#' - `threshold_min_indiv` The calculated threshold value for
+#'   minimum individual
+#' - `threshold_mean` The calculated threshold value for mean
+#' - `result_min_indiv` a character vector of either "PASS" or
 #'   "FAIL" indicating whether the data from `data_sample` passes the
 #'   test for minimum individual. If `data_sample` was not supplied,
-#'   this value will be `NULL`}
-#' \item{`result_mean`}{a character vector of either "PASS" or
+#'   this value will be `NULL`
+#' - `result_mean` a character vector of either "PASS" or
 #'   "FAIL" indicating whether the data from `data_sample` passes the
 #'   test for mean. If `data_sample` was not supplied, this value will
-#'   be  `NULL`}
-#' \item{`min_sample`}{The minimum value from the vector
+#'   be  `NULL`
+#' - `min_sample` The minimum value from the vector
 #'   `data_sample`. if `data_sample` was not supplied, this will
-#'   have a value of `NULL`}
-#' \item{`mean_sample`}{The mean value from the vector
+#'   have a value of `NULL`
+#' - `mean_sample` The mean value from the vector
 #'   `data_sample`. If `data_sample` was not supplied, this will
-#'   have a value of `NULL`}
+#'   have a value of `NULL`
 #'
 #'
 #' @seealso
@@ -589,44 +589,44 @@ k_equiv <- function(alpha, n) {
 #'   should be used. Defaults to `FALSE`
 #'
 #' @return
-#' \item{`call`}{the expression used to call this function}
-#' \item{`alpha`}{the value of alpha passed to this function}
-#' \item{`n_sample`}{the number of observations in the sample for which
+#' - `call` the expression used to call this function
+#' - `alpha` the value of alpha passed to this function
+#' - `n_sample` the number of observations in the sample for which
 #'   equivalency is being checked. This is either the value `n_sample`
-#'   passed to this function or the length of the vector `data_sample`.}
-#' \item{`mean_sample`}{the mean of the observations in the sample for
+#'   passed to this function or the length of the vector `data_sample`.
+#' - `mean_sample` the mean of the observations in the sample for
 #'   which equivalency is being checked. This is either the value
 #'   `mean_sample` passed to this function or the mean of the vector
-#'   `data-sample`.}
-#' \item{`sd_sample`}{the standard deviation of the observations in the
+#'   `data-sample`.
+#' - `sd_sample` the standard deviation of the observations in the
 #'   sample for which equivalency is being checked. This is either the value
 #'   `mean_sample` passed to this function or the standard deviation of
-#'   the vector `data-sample`.}
-#' \item{`n_qual`}{the number of observations in the qualification data
+#'   the vector `data-sample`.
+#' - `n_qual` the number of observations in the qualification data
 #'   to which the sample is being compared for equivalency. This is either
 #'   the value `n_qual` passed to this function or the length of the
-#'   vector `data_qual`.}
-#' \item{`mean_qual`}{the mean of the qualification data to which the
+#'   vector `data_qual`.
+#' - `mean_qual` the mean of the qualification data to which the
 #'   sample is being compared for equivalency. This is either the value
 #'   `mean_qual` passed to this function or the mean of the vector
-#'   `data_qual`.}
-#' \item{`sd_qual`}{the standard deviation of the qualification data to
+#'   `data_qual`.
+#' - `sd_qual` the standard deviation of the qualification data to
 #'   which the sample is being compared for equivalency. This is either the
 #'   value `mean_qual` passed to this function or the standard deviation
-#'   of the vector `data_qual`.}
-#' \item{`modcv`}{logical value indicating whether the equivalency
-#'   calculations were performed using the modified CV approach}
-#' \item{`sp`}{the value of the pooled standard deviation. If
+#'   of the vector `data_qual`.
+#' - `modcv` logical value indicating whether the equivalency
+#'   calculations were performed using the modified CV approach
+#' - `sp` the value of the pooled standard deviation. If
 #'   `modecv = TRUE`, this pooled standard deviation includes the
-#'   modification to the qualification CV.}
-#' \item{`t0`}{the test statistic}
-#' \item{`t_req`}{the t-value for \eqn{\alpha / 2} and
-#'   \eqn{df = n1 + n2 -2}}
-#' \item{`threshold`}{a vector with two elements corresponding to the
+#'   modification to the qualification CV.
+#' - `t0` the test statistic
+#' - `t_req` the t-value for \eqn{\alpha / 2} and
+#'   \eqn{df = n1 + n2 -2}
+#' - `threshold` a vector with two elements corresponding to the
 #'   minimum and maximum values of the sample mean that would result in a
-#'   pass}
-#' \item{`result`}{a character vector of either "PASS" or "FAIL"
-#'   indicating the result of the test for change in mean}
+#'   pass
+#' - `result` a character vector of either "PASS" or "FAIL"
+#'   indicating the result of the test for change in mean
 #'
 #' @details
 #' There are several optional arguments to this function. Either (but not both)
@@ -823,44 +823,44 @@ verify_equiv_change_mean_var <- function(n_sample, mean_sample, sd_sample,
 #' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{`alpha`}{the value of alpha passed to this function}
-#' \item{`n_sample`}{the number of observations in the sample for which
+#' - `alpha` the value of alpha passed to this function
+#' - `n_sample` the number of observations in the sample for which
 #'   equivalency is being checked. This is either the value `n_sample`
-#'   passed to this function or the length of the vector `data_sample`.}
-#' \item{`mean_sample`}{the mean of the observations in the sample for
+#'   passed to this function or the length of the vector `data_sample`.
+#' - `mean_sample` the mean of the observations in the sample for
 #'   which equivalency is being checked. This is either the value
 #'   `mean_sample` passed to this function or the mean of the vector
-#'   `data-sample`.}
-#' \item{`sd_sample`}{the standard deviation of the observations in the
+#'   `data-sample`.
+#' - `sd_sample` the standard deviation of the observations in the
 #'   sample for which equivalency is being checked. This is either the value
 #'   `mean_sample` passed to this function or the standard deviation of
-#'   the vector `data-sample`.}
-#' \item{`n_qual`}{the number of observations in the qualification data
+#'   the vector `data-sample`.
+#' - `n_qual` the number of observations in the qualification data
 #'   to which the sample is being compared for equivalency. This is either
 #'   the value `n_qual` passed to this function or the length of the
-#'   vector `data_qual`.}
-#' \item{`mean_qual`}{the mean of the qualification data to which the
+#'   vector `data_qual`.
+#' - `mean_qual` the mean of the qualification data to which the
 #'   sample is being compared for equivalency. This is either the value
 #'   `mean_qual` passed to this function or the mean of the vector
-#'   `data_qual`.}
-#' \item{`sd_qual`}{the standard deviation of the qualification data to
+#'   `data_qual`.
+#' - `sd_qual` the standard deviation of the qualification data to
 #'   which the sample is being compared for equivalency. This is either the
 #'   value `mean_qual` passed to this function or the standard deviation
-#'   of the vector `data_qual`.}
-#' \item{`modcv`}{logical value indicating whether the equivalency
-#'   calculations were performed using the modified CV approach}
-#' \item{`sp`}{the value of the pooled standard deviation. If
+#'   of the vector `data_qual`.
+#' - `modcv` logical value indicating whether the equivalency
+#'   calculations were performed using the modified CV approach
+#' - `sp` the value of the pooled standard deviation. If
 #'   `modecv = TRUE`, this pooled standard deviation includes the
-#'   modification to the qualification CV.}
-#' \item{`t0`}{the test statistic}
-#' \item{`t_req`}{the t-value for \eqn{\alpha / 2} and
-#'   \eqn{df = n1 + n2 -2}}
-#' \item{`threshold_min`}{the minimum value of the sample mean that would
-#'   result in a pass}
-#' \item{`threshold_max`}{the maximum value of the sample mean that would
-#'   result in a pass}
-#' \item{`result`}{a character vector of either "PASS" or "FAIL"
-#'   indicating the result of the test for change in mean}
+#'   modification to the qualification CV.
+#' - `t0` the test statistic
+#' - `t_req` the t-value for \eqn{\alpha / 2} and
+#'   \eqn{df = n1 + n2 -2}
+#' - `threshold_min` the minimum value of the sample mean that would
+#'   result in a pass
+#' - `threshold_max` the maximum value of the sample mean that would
+#'   result in a pass
+#' - `result` a character vector of either "PASS" or "FAIL"
+#'   indicating the result of the test for change in mean
 #'
 #'
 #' @seealso

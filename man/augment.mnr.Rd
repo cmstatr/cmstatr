@@ -25,9 +25,10 @@ returns a new \code{\link[tibble:tibble]{tibble::tibble()}} with the column
 \code{values} containing the original values used by
 \code{maximum_normed_residaul} plus one additional column. The additional
 column is:
-
-\item{\code{.outler}}{a logical value indicating whether the observation
-is an outlier}
+\itemize{
+\item \code{.outler} a logical value indicating whether the observation
+is an outlier
+}
 }
 \description{
 Augment accepts an \code{mnr} object (returned from the function

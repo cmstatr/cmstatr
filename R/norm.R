@@ -146,11 +146,9 @@ normalize_group_mean <- function(x, group) {
 #' The modified CV is calculated based on the rules in CMH-17-1G. Those
 #' rules are:
 #'
-#' \itemize{
-#'   \item{}{For CV < 4\\%, CV* = 6\\%}
-#'   \item{}{For 4\\% <= CV < 8\\%, CV* = CV / 2 + 4\\%}
-#'   \item{}{For CV > 8\\%, CV* = CV}
-#' }
+#' - For CV < 4\\%, CV* = 6\\%
+#' - For 4\\% <= CV < 8\\%, CV* = CV / 2 + 4\\%
+#' - For CV > 8\\%, CV* = CV
 #'
 #' @param cv The CV to modify
 #'

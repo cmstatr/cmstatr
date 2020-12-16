@@ -288,34 +288,29 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'
 #' @return an object of class `basis`
 #' This object has the following fields:
-#' \item{`call`}{the expression used to call this function}
-#' \item{`distribution`}{the distribution used (normal, etc.)}
-#' \item{`p`}{the value of \eqn{p} supplied}
-#' \item{`conf`}{the value of \eqn{conf} supplied}
-#' \item{`modcv`}{a logical value indicating whether the modified
-#'                     CV approach was used. Only applicable to pooling
-#'                     methods.}
-#' \item{`data`}{a copy of the data used in the calculation}
-#' \item{`groups`}{a copy of the groups variable.
-#'                      Only used for pooling and ANOVA methods.}
-#' \item{`batch`}{a copy of the batch data used for diagnostic tests}
-#' \item{`modcv_transformed_data`}{the data after the modified CV
-#'                                      transformation}
-#' \item{`override`}{a vector of the names of diagnostic tests that
-#'                        were overridden. `NULL` if none were
-#'                        overridden}
-#' \item{`diagnostic_results`}{a named character vector containing the
-#'                                  results of all the diagnostic tests. See
-#'                                  the Details section for additional
-#'                                  information}
-#' \item{`diagnostic_failures`}{a vector containing any diagnostic tests
-#'                                   that produced failures}
-#' \item{`n`}{the number of observations}
-#' \item{`r`}{the number of groups, if a pooling method was used.
-#'                 Otherwise it is NULL.}
-#' \item{`basis`}{the basis value computed. This is a number
-#'                     except when pooling methods are used, in
-#'                     which case it is a data.frame.}
+#' - `call` the expression used to call this function
+#' - `distribution` the distribution used (normal, etc.)
+#' - `p` the value of \eqn{p} supplied
+#' - `conf` the value of \eqn{conf} supplied
+#' - `modcv` a logical value indicating whether the modified
+#'   CV approach was used. Only applicable to pooling methods.
+#' - `data` a copy of the data used in the calculation
+#' - `groups` a copy of the groups variable.
+#'   Only used for pooling and ANOVA methods.
+#' - `batch` a copy of the batch data used for diagnostic tests
+#' - `modcv_transformed_data` the data after the modified CV transformation
+#' - `override` a vector of the names of diagnostic tests that
+#'   were overridden. `NULL` if none were overridden
+#' - `diagnostic_results` a named character vector containing the
+#'   results of all the diagnostic tests. See the Details section for
+#'   additional information
+#' - `diagnostic_failures` a vector containing any diagnostic tests
+#'   that produced failures
+#' - `n` the number of observations
+#' - `r` the number of groups, if a pooling method was used.
+#'   Otherwise it is NULL.
+#' - `basis` the basis value computed. This is a number
+#'   except when pooling methods are used, in which case it is a data.frame.
 #'
 #' @seealso [hk_ext_z_j_opt()]
 #' @seealso [k_factor_normal()]
@@ -455,18 +450,16 @@ new_basis <- function(
 #' A [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{`p`}{the the content of the tolerance bound.
-#'                 Normally 0.90 or 0.99}
-#' \item{`conf`}{the confidence level. Normally 0.95}
-#' \item{`distribution`}{a string representing the distribution assumed
-#'        when calculating the basis value}
-#' \item{`modcv`}{a logical value indicating whether the modified
-#'                     CV approach was used. Only applicable to pooling
-#'                     methods.}
-#' \item{`n`}{the sample size}
-#' \item{`r`}{the number of groups used in the calculation. This will
-#'        be `NA` for single-point basis values}
-#' \item{`basis`}{the basis value}
+#' - `p` the the content of the tolerance bound. Normally 0.90 or 0.99
+#' - `conf` the confidence level. Normally 0.95
+#' - `distribution` a string representing the distribution assumed
+#'   when calculating the basis value
+#' - `modcv` a logical value indicating whether the modified
+#'   CV approach was used. Only applicable to pooling methods.
+#' - `n` the sample size
+#' - `r` the number of groups used in the calculation. This will
+#'   be `NA` for single-point basis values
+#' - `basis` the basis value
 #'
 #' @details
 #' For the pooled basis methods (`basis_pooled_cv` and

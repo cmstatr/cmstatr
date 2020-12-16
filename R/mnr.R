@@ -36,15 +36,15 @@
 #'
 #' @return an object of class `mnr`
 #' This object has the following fields:
-#'  \item{`call`}{the expression used to call this function}
-#'  \item{`data`}{the original data used to compute the MNR}
-#'  \item{`alpha`}{the value of alpha given by the user}
-#'  \item{`mnr`}{the computed MNR test statistic}
-#'  \item{`crit`}{the critical value given the sample size and the
-#'                     significance level}
-#'  \item{`outliers`}{a data.frame containing the `index` and
-#'                         `value` of each of the identified outliers}
-#'  \item{`n_outliers`}{the number of outliers found}
+#'  - `call` the expression used to call this function
+#'  - `data` the original data used to compute the MNR
+#'  - `alpha` the value of alpha given by the user
+#'  - `mnr` the computed MNR test statistic
+#'  - `crit` the critical value given the sample size and the
+#'    significance level
+#'  - `outliers` a data.frame containing the `index` and
+#'    `value` of each of the identified outliers
+#'  - `n_outliers` the number of outliers found
 #'
 #' @examples
 #' library(dplyr)
@@ -157,11 +157,11 @@ maximum_normed_residual_crit <- function(n, alpha) {
 #' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{`mnr`}{the computed MNR test statistic}
-#' \item{`alpha`}{the value of alpha used for the test}
-#' \item{`crit`}{the critical value given the sample size and the
-#'                    significance level}
-#' \item{`n_outliers`}{the number of outliers found}
+#' - `mnr` the computed MNR test statistic
+#' - `alpha` the value of alpha used for the test
+#' - `crit` the critical value given the sample size and the
+#'   significance level
+#' - `n_outliers` the number of outliers found
 #'
 #'
 #' @seealso
@@ -222,8 +222,8 @@ glance.mnr <- function(x, ...) {  # nolint
 #' `maximum_normed_residaul` plus one additional column. The additional
 #' column is:
 #'
-#' \item{`.outler`}{a logical value indicating whether the observation
-#'                       is an outlier}
+#' - `.outler` a logical value indicating whether the observation
+#'   is an outlier
 #'
 #' @examples
 #' data <- data.frame(strength = c(80, 98, 96, 97, 98, 120))
