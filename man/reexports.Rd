@@ -8,11 +8,11 @@
 \alias{glance}
 \title{Objects exported from other packages}
 \seealso{
-[augment.lm()]
+\code{\link[generics:augment]{generics::augment()}}
 
-[tidy.lm()]
+\code{\link[generics:tidy]{generics::tidy()}}
 
-[glance.lm()]
+\code{\link[generics:glance]{generics::glance()}}
 }
 \keyword{internal}
 \description{

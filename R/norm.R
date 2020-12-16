@@ -22,7 +22,7 @@
 #' normalization is appropriate.
 #'
 #' Either cured ply thickness or laminate thickness may be used for
-#' \code{measured_thk} and \code{nom_thk}, as long as the same decision
+#' `measured_thk` and `nom_thk`, as long as the same decision
 #' made for both values.
 #'
 #' The formula applied is:
@@ -146,11 +146,9 @@ normalize_group_mean <- function(x, group) {
 #' The modified CV is calculated based on the rules in CMH-17-1G. Those
 #' rules are:
 #'
-#' \itemize{
-#'   \item{}{For CV < 4\%, CV* = 6\%}
-#'   \item{}{For 4\% <= CV < 8\%, CV* = CV / 2 + 4\%}
-#'   \item{}{For CV > 8\%, CV* = CV}
-#' }
+#' - For CV < 4\\%, CV* = 6\\%
+#' - For 4\\% <= CV < 8\\%, CV* = CV / 2 + 4\\%
+#' - For CV > 8\\%, CV* = CV
 #'
 #' @param cv The CV to modify
 #'
@@ -158,7 +156,7 @@ normalize_group_mean <- function(x, group) {
 #' The value of the modified CV
 #'
 #' @seealso
-#' \code{\link{cv}}
+#' [cv()]
 #'
 #' @references
 #' "Composite Materials Handbook, Volume 1. Polymer Matrix Composites
@@ -195,11 +193,11 @@ calc_cv_star <- function(cv) {
 #' testing of new materials over short periods of time.
 #'
 #' Two versions of this transformation are implemented. The first version,
-#' \code{transform_mod_cv()}, transforms the data in a single group (with
+#' `transform_mod_cv()`, transforms the data in a single group (with
 #' no other structure) according to the modified CV rules.
 #'
 #' The second
-#' version, \code{transform_mod_cv_ad()}, transforms data that is structured
+#' version, `transform_mod_cv_ad()`, transforms data that is structured
 #' according to both condition and batch, as is commonly done for
 #' the Anderson--Darling k-Sample and Anderson-Darling tests when pooling
 #' across environments.
@@ -217,12 +215,12 @@ calc_cv_star <- function(cv) {
 #' for the \eqn{ith} group, \eqn{\bar{x_i}}{x_bar_i} is
 #' the group mean and \eqn{x_{ij}}{xij} is the observation.
 #'
-#' \code{transform_mod_cv()} takes a vector
+#' `transform_mod_cv()` takes a vector
 #' containing the observations and transforms the data.
 #' The equation above is used, and all observations
 #' are considered to be from the same group.
 #'
-#' \code{transform_mod_cv_ad()} takes a vector containing the observations
+#' `transform_mod_cv_ad()` takes a vector containing the observations
 #' plus a vector containing the corresponding conditions and a vector
 #' containing the batches. This function first calculates the modified
 #' CV value from the data from each condition (independently). Then,
@@ -296,8 +294,8 @@ calc_cv_star <- function(cv) {
 #' ## 2 ETW       0.0369 0.0600
 #' ## 3 RTD       0.0621 0.0711
 #'
-#' @seealso \code{\link{calc_cv_star}}
-#' @seealso \code{\link{cv}}
+#' @seealso [calc_cv_star()]
+#' @seealso [cv()]
 #'
 #' @name transform_mod_cv
 NULL

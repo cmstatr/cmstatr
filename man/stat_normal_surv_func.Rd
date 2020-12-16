@@ -35,7 +35,7 @@ rather than combining with them.}
 number of points to interpolate.}
 
 \item{pad}{If \code{TRUE}, pad the ESF with additional points
-\code{(-Inf, 0)} and \code{(0, Inf)}.}
+\verb{(-Inf, 0)} and \verb{(0, Inf)}.}
 
 \item{...}{Other arguments to pass on to \code{layer}.}
 }

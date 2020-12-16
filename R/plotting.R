@@ -21,18 +21,18 @@ StatNormalSurvFunc <- ggproto(  # nolint
 #' curve is plotted. The survival function is simply one minus the
 #' CDF.
 #'
-#' @param mapping Set of aesthetic mappings created by \code{aes()}.
+#' @param mapping Set of aesthetic mappings created by `aes()`.
 #' @param data The data to be displayed in this layer. This has the
-#'             same usage as a \code{ggplot2} \code{stat} function.
+#'             same usage as a `ggplot2` `stat` function.
 #' @param geom The geometric object to use to display the data.
 #' @param position Position argument
-#' @param ... Other arguments to pass on to \code{layer}.
-#' @param n If \code{NULL}, do not interpolated. Otherwise, the
+#' @param ... Other arguments to pass on to `layer`.
+#' @param n If `NULL`, do not interpolated. Otherwise, the
 #'          number of points to interpolate.
-#' @param pad If \code{TRUE}, pad the ESF with additional points
-#'            \code{(-Inf, 0)} and \code{(0, Inf)}.
+#' @param pad If `TRUE`, pad the ESF with additional points
+#'            `(-Inf, 0)` and `(0, Inf)`.
 #' @param show.legend Should this layer be included in the legends?
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetic,
+#' @param inherit.aes If `FALSE`, overrides the default aesthetic,
 #'                    rather than combining with them.
 #'
 #' @importFrom ggplot2 layer
@@ -77,18 +77,18 @@ StatESF <- ggproto(  # nolint
 #' distribution function (ECDF). The empirical survival function is
 #' simply ESF = 1 - ECDF.
 #'
-#' @param mapping Set of aesthetic mappings created by \code{aes()}.
+#' @param mapping Set of aesthetic mappings created by `aes()`.
 #' @param data The data to be displayed in this layer. This has the
-#'             same usage as a \code{ggplot2} \code{stat} function.
+#'             same usage as a `ggplot2` `stat` function.
 #' @param geom The geometric object to use to display the data.
 #' @param position Position argument
-#' @param ... Other arguments to pass on to \code{layer}.
-#' @param n If \code{NULL}, do not interpolated. Otherwise, the
+#' @param ... Other arguments to pass on to `layer`.
+#' @param n If `NULL`, do not interpolated. Otherwise, the
 #'          number of points to interpolate.
-#' @param pad If \code{TRUE}, pad the ESF with additional points
-#'            \code{(-Inf, 0)} and \code{(0, Inf)}.
+#' @param pad If `TRUE`, pad the ESF with additional points
+#'            `(-Inf, 0)` and `(0, Inf)`.
 #' @param show.legend Should this layer be included in the legends?
-#' @param inherit.aes If \code{FALSE}, overrides the default aesthetic,
+#' @param inherit.aes If `FALSE`, overrides the default aesthetic,
 #'                    rather than combining with them.
 #'
 #' @importFrom ggplot2 layer

@@ -16,28 +16,27 @@ columns for diagnostic tests. Default FALSE.}
 signature.}
 }
 \value{
-A \code{\link[tibble:tibble]{tibble::tibble}} with the following
+A \code{\link[tibble:tibble]{tibble::tibble()}} with the following
 columns:
-
-\item{\code{p}}{the the content of the tolerance bound.
-                Normally 0.90 or 0.99}
-\item{\code{conf}}{the confidence level. Normally 0.95}
-\item{\code{distribution}}{a string representing the distribution assumed
-       when calculating the basis value}
-\item{\code{modcv}}{a logical value indicating whether the modified
-                    CV approach was used. Only applicable to pooling
-                    methods.}
-\item{\code{n}}{the sample size}
-\item{\code{r}}{the number of groups used in the calculation. This will
-       be \code{NA} for single-point basis values}
-\item{\code{group}}{the group for pooling methods. This column is only
-                    present when glancing at a \code{basis} object
-                    created using one of the pooling methods.}
-\item{\code{basis}}{the basis value}
+\itemize{
+\item \code{p} the the content of the tolerance bound. Normally 0.90 or 0.99
+\item \code{conf} the confidence level. Normally 0.95
+\item \code{distribution} a string representing the distribution assumed
+when calculating the basis value
+\item \code{modcv} a logical value indicating whether the modified
+CV approach was used. Only applicable to pooling methods.
+\item \code{n} the sample size
+\item \code{r} the number of groups used in the calculation. This will
+be \code{NA} for single-point basis values
+\item \code{group} the group for pooling methods. This column is only
+present when glancing at a \code{basis} object
+created using one of the pooling methods.
+\item \code{basis} the basis value
+}
 }
 \description{
 Glance accepts an object of type basis and returns a
-\code{\link[tibble:tibble]{tibble::tibble}} with
+\code{\link[tibble:tibble]{tibble::tibble()}} with
 one row of summaries for each basis value.
 
 Glance does not do any calculations: it just gathers the results in a
@@ -45,7 +44,7 @@ tibble.
 }
 \details{
 For the pooled basis methods (\code{basis_pooled_cv} and
-\code{basis_pooled_sd}), the \code{\link[tibble:tibble]{tibble::tibble}}
+\code{basis_pooled_sd}), the \code{\link[tibble:tibble]{tibble::tibble()}}
 returned by \code{glance} will have one row for each group included in
 the pooling. For all other basis methods, the resulting \code{tibble}
 will have a single row.
@@ -81,5 +80,5 @@ glance(b, include_diagnostics = TRUE)
 
 }
 \seealso{
-\code{\link{basis}}
+\code{\link[=basis]{basis()}}
 }

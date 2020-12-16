@@ -121,7 +121,7 @@ carbon.fabric \%>\%
 
 }
 \seealso{
-\code{\link{calc_cv_star}}
+\code{\link[=calc_cv_star]{calc_cv_star()}}
 
-\code{\link{cv}}
+\code{\link[=cv]{cv()}}
 }

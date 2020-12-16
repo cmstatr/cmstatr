@@ -1,7 +1,6 @@
 context("Anderson-Darling k-Sample")
 
 suppressMessages(library(dplyr))
-suppressMessages(library(tidyr))
 suppressMessages(library(kSamples))  # nolint
 
 test_that("kSamples package gives results that match published example", {
