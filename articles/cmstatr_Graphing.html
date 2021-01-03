@@ -47,7 +47,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -79,7 +79,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/ComtekAdvancedStructures/cmstatr/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -93,8 +93,7 @@
 
       
 
-      </header><script src="cmstatr_Graphing_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="cmstatr_Graphing_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="cmstatr_Graphing_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="cmstatr_Graphing_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Plotting Composite Material Data</h1>
@@ -113,7 +112,7 @@
 <p>We’ll need to load a few packages in order to proceed.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.cmstatr.net/">cmstatr</a></span><span class="op">)</span></code></pre></div>
 <p>Throughout this vignette, we’ll use one of the example data sets that comes with <code>cmstatr</code> and we’ll focus on the warp-tension data as an example. We’ll load the example data in a variable as follows. By default the condition will be in an arbitrary order, but throughout the visualization, we’ll want the conditions shown in a particular order (from coldest and driest to hottest and wettest). We can define the order of the conditions using the <code>ordered</code> function. For brevity, only the first few rows of the data set are displayed below.</p>
