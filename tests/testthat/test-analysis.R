@@ -40,6 +40,8 @@ test_that("as.data.frame on pooled data produces correct results", {
       condition == "RTD" ~ 129.5842,
       TRUE ~ 0
     )) %>%
+    # We expect the column to be called 'slot'.'contents', or in this
+    # case, b_basis_pooled.basis
     mutate(check = expect_equal(basis_correct, b_basis_pooled.basis,
                                 tolerance = 0.01))
 })

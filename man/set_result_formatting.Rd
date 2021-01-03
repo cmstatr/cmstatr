@@ -2,10 +2,60 @@
 % Please edit documentation in R/analysis.R
 \name{set_result_formatting}
 \alias{set_result_formatting}
-\title{TODO: Document}
+\title{Set formatting for a type of result}
 \usage{
 set_result_formatting(an, class, fcn)
 }
+\arguments{
+\item{an}{a \code{cmanalysis} object}
+
+\item{class}{the name of the \code{class} to set the formatting for
+(must be a \code{character} value)}
+
+\item{fcn}{a \code{function}. See Details.}
+}
 \description{
-TODO: Document
+When building a \code{flextable} from an \code{cmanalysis} object, each result
+must be converted into text that will be placed into one or more cells.
+Default formatting is defined for common types of results. This default
+formatting can be overridden or formatting for other types of results can
+be set by this function.
+}
+\details{
+If you want to set the formatting for an object of \code{class} \code{basis}, you
+would set \code{class="basis"}.
+
+The argument \code{fcn} must be a \code{function} with two arguments: the first
+argument is the object to be formatted; the second argument is the
+condition being formatted. The condition argument is only relevant when
+the result is pooled across environments, but the argument must be always
+be present.
+
+The function \code{fcn} must return a list. Each element of this list will
+correspond with one cell in the table. Each element must be of a type
+that can be coerced to \code{character}.
+
+For example, call:\preformatted{set_result_formatting(a, "integer", function(x, c) \{
+  list(
+    x,
+    paste0("x is: ", x),
+    paste0("2 times x is: ", x)
+  )
+\})
+}
+
+Would cause the following cells to be created by \code{\link{create_flextable}} when
+it encounters a result of class \code{integer} and a value of 10:\tabular{l}{
+   10 \cr
+   x is: 10 \cr
+   2 times x is: 20 \cr
+}
+}
+\examples{
+# TODO: Write examples
+
+}
+\seealso{
+\code{\link[=start_analysis]{start_analysis()}}
+\code{\link[=create_flextable]{create_flextable()}}
 }

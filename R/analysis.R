@@ -276,6 +276,7 @@ join_conditions <- function(left_df, right_df, left_condition_name,
 #'
 #' @importFrom dplyr bind_cols bind_rows inner_join
 #' @importFrom rlang ensym quo_is_null `:=`
+#' @importFrom stats setNames
 #' @method as.data.frame cmanalysis
 #' @export
 as.data.frame.cmanalysis <- function(x, row.names = NULL,
@@ -295,7 +296,7 @@ as.data.frame.cmanalysis <- function(x, row.names = NULL,
     return(tbl)
   }
 
-  bind_rows(lapply(x$properties, function(p) {
+  bound_rows <- bind_rows(lapply(x$properties, function(p) {
     row <- tibble(.rows = 0L)
 
     row <- add_column(row, x$test, p$test)
@@ -303,9 +304,9 @@ as.data.frame.cmanalysis <- function(x, row.names = NULL,
     row <- add_column(row, x$subgroup, p$subgroup)
     for (i in seq_along(p$slots)) {
       s_name <- names(p$slots)[i]
-      g <- glance(p$slots[[i]], ...) %>%
+      g <- glance(p$slots[[i]], ...)
         # Pre-pend the name of the slot to the column name to avoid collisions
-        setNames(paste0(s_name, ".", names(.)))
+      g <- setNames(g, paste0(s_name, ".", names(g)))
       if (nrow(g) > 1) {
         assumed_group_name <- paste0(s_name, ".", "group")
         condition_quos <- x$condition
@@ -318,12 +319,66 @@ as.data.frame.cmanalysis <- function(x, row.names = NULL,
     }
 
     row
-  })) %>%
-    as.data.frame()
+  }))
+
+  as.data.frame(bound_rows)
 }
 
 
-#' TODO: Document
+#' Set formatting for a type of result
+#'
+#' @description
+#' When building a `flextable` from an `cmanalysis` object, each result
+#' must be converted into text that will be placed into one or more cells.
+#' Default formatting is defined for common types of results. This default
+#' formatting can be overridden or formatting for other types of results can
+#' be set by this function.
+#'
+#' @param an a `cmanalysis` object
+#' @param class the name of the `class` to set the formatting for
+#'              (must be a `character` value)
+#' @param fcn a `function`. See Details.
+#'
+#' @details
+#' If you want to set the formatting for an object of `class` `basis`, you
+#' would set `class="basis"`.
+#'
+#' The argument `fcn` must be a `function` with two arguments: the first
+#' argument is the object to be formatted; the second argument is the
+#' condition being formatted. The condition argument is only relevant when
+#' the result is pooled across environments, but the argument must be always
+#' be present.
+#'
+#' The function `fcn` must return a list. Each element of this list will
+#' correspond with one cell in the table. Each element must be of a type
+#' that can be coerced to `character`.
+#'
+#' For example, call:
+#'
+#' ```
+#' set_result_formatting(a, "integer", function(x, c) {
+#'   list(
+#'     x,
+#'     paste0("x is: ", x),
+#'     paste0("2 times x is: ", x)
+#'   )
+#' })
+#' ```
+#'
+#' Would cause the following cells to be created by [`create_flextable`] when
+#' it encounters a result of class `integer` and a value of 10:
+#'
+#' | 10               |
+#' | ---------------- |
+#' | x is: 10         |
+#' | 2 times x is: 20 |
+#'
+#' @examples
+#' # TODO: Write examples
+#'
+#' @seealso
+#' [start_analysis()]
+#' [create_flextable()]
 #'
 #' @export
 set_result_formatting <- function(an, class, fcn) {
@@ -349,7 +404,22 @@ set_result_formatting <- function(an, class, fcn) {
 }
 
 
-#' TODO: Document
+#' Create a `flextable` from a `cmanalysis` object
+#'
+#' @description
+#' TODO: Write
+#'
+#' @param an a `cmanalysis` object created with [start_analysis()]
+#' @param numeric_fmt a formatting string (passed to [sprintf()]) used when
+#'                    formatting numeric values
+#'
+#' @seealso
+#' [set_result_formatting()]
+#' [start_analysis()]
+#'
+#' @importFrom flextable align flextable merge_h merge_v theme_box
+#' @importFrom flextable fix_border_issues set_header_labels
+#' @importFrom tidyr pivot_wider
 #'
 #' @export
 create_flextable <- function(an, numeric_fmt = "%.2f") {
@@ -358,7 +428,7 @@ create_flextable <- function(an, numeric_fmt = "%.2f") {
   }
 
   if (length(an$properties) <= 0) {
-    stop("Cannot create flextable if no properties have been analy")
+    stop("Cannot create flextable if no properties have been analyzed")
   }
 
   # footnote_list <- list()
@@ -406,7 +476,8 @@ create_flextable <- function(an, numeric_fmt = "%.2f") {
     ))
   }))
 
-  rows_wider <- pivot_wider(rows, names_from = condition, values_from = value)
+  rows_wider <- pivot_wider(rows, names_from = "condition",
+                            values_from = "value")
   table <- flextable(rows_wider,
                      col_keys = names(rows_wider)[names(rows_wider) != "i"])
   table <- theme_box(table)
@@ -432,8 +503,8 @@ create_flextable <- function(an, numeric_fmt = "%.2f") {
                  j = 3:(ncol(rows_wider) - 1))
   table <- fix_border_issues(table)
 
-  table  # TODO should return sub-class of flextable with some extra info
+  table[["cmanalysis"]] <- an
+  class(table) <- c("cmtable", class(table))
+
+  table
 }
-
-
-

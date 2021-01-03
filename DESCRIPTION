@@ -34,13 +34,15 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     dplyr,
+    flextable,
     generics,
     ggplot2,
     kSamples,
     MASS,
     rlang,
     stats,
-    tibble
+    tibble,
+    tidyr
 Suggests:
     knitr,
     lintr,
@@ -48,7 +50,6 @@ Suggests:
     rmarkdown,
     spelling,
     testthat,
-    tidyr,
     vdiffr
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr

@@ -2,10 +2,20 @@
 % Please edit documentation in R/analysis.R
 \name{create_flextable}
 \alias{create_flextable}
-\title{TODO: Document}
+\title{Create a \code{flextable} from a \code{cmanalysis} object}
 \usage{
 create_flextable(an, numeric_fmt = "\%.2f")
 }
+\arguments{
+\item{an}{a \code{cmanalysis} object created with \code{\link[=start_analysis]{start_analysis()}}}
+
+\item{numeric_fmt}{a formatting string (passed to \code{\link[=sprintf]{sprintf()}}) used when
+formatting numeric values}
+}
 \description{
-TODO: Document
+TODO: Write
+}
+\seealso{
+\code{\link[=set_result_formatting]{set_result_formatting()}}
+\code{\link[=start_analysis]{start_analysis()}}
 }
