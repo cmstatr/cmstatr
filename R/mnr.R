@@ -112,7 +112,13 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
     return(res)
   }
 
-  for (i in 1:(length(res$data) - 1)) {
+  for (i in 1:(length(res$data) - 2)) {
+    # the `maximum_normed_residual_crit` function uses DF=n-2
+    # With each loop, we remove one data point, so if we don't
+    # break early, we can stop looping before n-2
+    # data points (after which DF<=0)
+    cur_mnr <- max(abs(cur_data - mean(cur_data)) / sd(cur_data))
+    cur_crit <- maximum_normed_residual_crit(length(cur_data), alpha)
     if (cur_mnr >= cur_crit) {
       worst_index_cur <- which.max(abs(cur_data - mean(cur_data)))
       res$outliers <- rbind(
@@ -125,8 +131,11 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
       res$n_outliers <- res$n_outliers + 1
       cur_data <- cur_data[-worst_index_cur]
       indicies_cur <- indicies_cur[-worst_index_cur]
-      cur_mnr <- max(abs(cur_data - mean(cur_data)) / sd(cur_data))
-      cur_crit <- maximum_normed_residual_crit(length(cur_data), alpha)
+    } else {
+      # If we didn't remove a data point, then the current MNR and the
+      # critical MNR definitely won't change, so we can short-circuit
+      # this function.
+      break
     }
   }
 

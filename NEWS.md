@@ -1,3 +1,7 @@
+# Version x.x.x
+- Fixed bug causing `maximum_normed_residual` to fail with small data sets
+  where all but two observations would be considered outliers.
+
 # Version 0.7.1
 - Fixed bug in `glance.equiv_mean_extremum` where it would include empty
   values when a sample was not specified.
