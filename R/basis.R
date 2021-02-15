@@ -287,6 +287,51 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' diagnostic test was skipped (typically because an optional
 #' argument was not supplied).
 #'
+#' The following list summarizes the diagnostic tests automatically
+#' performed by each function.
+#'
+#' - `basis_normal`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `anderson_darling_normal`
+#' - `basis_lognormal`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `anderson_darling_lognormal`
+#' - `basis_weibull`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `anderson_darling_weibull`
+#' - `basis_pooled_cv`
+#'   * `outliers_within_batch`
+#'   * `between_group_variability`
+#'   * `outliers_within_group`
+#'   * `pooled_data_normal`
+#'   * `normalized_variance_equal`
+#' - `basis_pooled_sd`
+#'   * `outliers_within_batch`
+#'   * `between_group_variability`
+#'   * `outliers_within_group`
+#'   * `pooled_data_normal`
+#'   * `pooled_variance_equal`
+#' - `basis_hk_ext`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `sample_size`
+#' - `basis_nonpara_large_sample`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `sample_size`
+#' - `basis_anova`
+#'   * `outliers_within_group`
+#'   * `equality_of_variance`
+#'   * `number_of_groups`
+#'
 #' @return an object of class `basis`
 #' This object has the following fields:
 #' - `call` the expression used to call this function

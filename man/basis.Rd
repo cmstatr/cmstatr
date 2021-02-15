@@ -317,6 +317,68 @@ name of the diagnostic test. The contents of each element will be
 "O" if the diagnostic test was overridden and \code{NA} if the
 diagnostic test was skipped (typically because an optional
 argument was not supplied).
+
+The following list summarizes the diagnostic tests automatically
+performed by each function.
+\itemize{
+\item \code{basis_normal}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{anderson_darling_normal}
+}
+\item \code{basis_lognormal}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{anderson_darling_lognormal}
+}
+\item \code{basis_weibull}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{anderson_darling_weibull}
+}
+\item \code{basis_pooled_cv}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_group_variability}
+\item \code{outliers_within_group}
+\item \code{pooled_data_normal}
+\item \code{normalized_variance_equal}
+}
+\item \code{basis_pooled_sd}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_group_variability}
+\item \code{outliers_within_group}
+\item \code{pooled_data_normal}
+\item \code{pooled_variance_equal}
+}
+\item \code{basis_hk_ext}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{sample_size}
+}
+\item \code{basis_nonpara_large_sample}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{sample_size}
+}
+\item \code{basis_anova}
+\itemize{
+\item \code{outliers_within_group}
+\item \code{equality_of_variance}
+\item \code{number_of_groups}
+}
+}
 }
 \examples{
 library(dplyr)
