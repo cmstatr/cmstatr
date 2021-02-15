@@ -115,3 +115,38 @@ test_that("Invalid overrides produce warnings", {
 
   expect_warning(process_overrides("invalid", sample_rules), "diagnostic")
 })
+
+test_that("Errors raised are wrapped with source of warning", {
+  sample_rules <- list(
+    positive = function(pos, ...) {
+      ifelse(pos > 0, "", "Not positive")
+    },
+    negative = function(neg, ...) {
+      ifelse(neg < 0, "", "Not negative")
+    },
+    zero = function(z, ...) {
+      ifelse(z == 0, "", "Not zero")
+    },
+    always_error = function(...) {
+      stop("This is an error")
+      ""
+    }
+  )
+
+  # The "always_error" diagnostic test should result in an error containing
+  # the name of the diagnostic test
+  expect_error(
+    perform_checks(sample_rules, pos = +1, neg = -1, z = 0),
+    "always_error"
+  )
+
+  # The behavior should be the same, even if some tests fail
+  # In this case, the warnings should still be raised, at least
+  # if they occur before the error
+  expect_error(
+    expect_warning(
+      perform_checks(sample_rules, pos = +1, neg = +1, z = 0),
+      "negative"),
+    "always_error"
+  )
+})

@@ -37,7 +37,12 @@ perform_checks <- function(rules, override = c(), ...) {
         FUN.VALUE = logical(1L)
       )
       if (!any(missing_formals)) {
-        if ((message <- do.call(cur_rule, args)) != "") {
+        message <- tryCatch(
+          do.call(cur_rule, args),
+        error = function(e) {
+          stop(paste0("During evaluation of `", cur_rule_name, "`: ", e))
+        })
+        if (message != "") {
           warn(paste0("`", cur_rule_name, "` failed: ", message))
           return("F")
         }
