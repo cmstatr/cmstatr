@@ -245,7 +245,12 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' `basis_anova` calculates basis values using the ANOVA method.
 #' `x` specifies the data (normally strength) and `groups`
 #' indicates the group corresponding to each observation. This method is
-#' described in CMH-17-1G. This function automatically performs a diagnostic
+#' described in CMH-17-1G, but when the ratio of between-batch mean
+#' square to the within-batch mean square is less than or equal
+#' to one, the tolerance factor is calculated based on pooling the data
+#' from all groups. This approach is recommended by Vangel (1992)
+#' and by Krishnamoorthy and Mathew (2008).
+#' This function automatically performs a diagnostic
 #' test for outliers within each group
 #' (using [maximum_normed_residual()]) and a test for between
 #' group variability (using [ad_ksample()]) as well as checking
@@ -386,6 +391,10 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
 #' for Practitioners and Researchers, Second Edition.
 #' Hoboken: John Wiley & Sons, 2017.
+#'
+#' M. Vangel, “New Methods for One-Sided Tolerance Limits for a One-Way
+#' Balanced Random-Effects ANOVA Model,” Technometrics, vol. 34, no. 2.
+#' Taylor & Francis, pp. 176–185, 1992.
 #'
 #' @examples
 #' library(dplyr)
@@ -1626,6 +1635,10 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
 
   tol_factor <- (k0 - k1 / sqrt(effective_batch) + (k1 - k0) * w) /
     (1 - 1 / sqrt(effective_batch))
+
+  if (msb / mse <= 1) {
+    tol_factor <- k0
+  }
 
   res$basis <- grand_mean - tol_factor * pop_sd
 
