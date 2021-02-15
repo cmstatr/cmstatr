@@ -71,3 +71,22 @@ perform_checks <- function(rules, override = c(), ...) {
 get_check_failure_names <- function(x) {
   names(x[x == "F" & !is.na(x)])
 }
+
+process_overrides <- function(override, rules) {
+  if ("all" %in% override) {
+    # Remove the "all" value
+    override <- override[!override %in% "all"]
+    # Add all of the rules to the override vector
+    override <- c(override, names(rules))
+  }
+  # Keep only the unique values of override
+  override <- unique(override)
+  # Warn if there are invalid overrides
+  for (ov in override) {
+    if (!ov %in% names(rules)) {
+      warn(paste0("`", ov, "` is not a valid diagnostic test to override"))
+    }
+  }
+
+  override
+}

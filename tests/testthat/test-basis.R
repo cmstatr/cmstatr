@@ -238,6 +238,16 @@ test_that("normal basis values produce expected diagnostic failures", {
   output <- capture_output(print(res))
   expect_false(grepl("failed", output, ignore.case = TRUE))
 
+  # overriding the diagnostics using "all" should do the same thing
+  res <- basis_normal(x = x, batch = batch,
+                      override = "all")
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "anderson_darling_normal"))
+  expect_length(res$diagnostic_failures, 0)
+
   # call basis_normal without batch
   expect_warning(
     res <- basis_normal(x = x),
@@ -338,6 +348,17 @@ test_that("lognormal basis values produce expected diagnostic failures", {
                  "anderson_darling_lognormal"))
   expect_length(res$diagnostic_failures, 0)
 
+  # overriding the diagnostics with "all" should do the same thing
+  res <- basis_lognormal(x = x, batch = batch,
+                         override = "all")
+
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "anderson_darling_lognormal"))
+  expect_length(res$diagnostic_failures, 0)
+
   # call basis_normal without batch
   expect_warning(
     res <- basis_lognormal(x = x),
@@ -430,6 +451,17 @@ test_that("weibull basis values produce expected diagnostic failures", {
                                       "between_batch_variability",
                                       "outliers",
                                       "anderson_darling_weibull"))
+
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "anderson_darling_weibull"))
+  expect_length(res$diagnostic_failures, 0)
+
+  # overriding the diagnostics with "all" should do the same thing
+  res <- basis_weibull(x = x, batch = batch,
+                       override = "all")
 
   expect_equal(res$override,
                c("outliers_within_batch",
@@ -549,6 +581,18 @@ test_that("non-para (small) basis values produce expected diag failures", {
                  "sample_size"))
   expect_length(res$diagnostic_failures, 0)
 
+  # overriding the diagnostics with "all" should do the same thing
+  res <- basis_hk_ext(x = x_large, batch = batch_large,
+                      method = "woodward-frawley",
+                      override = "all")
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "correct_method_used",
+                 "sample_size"))
+  expect_length(res$diagnostic_failures, 0)
+
   # optimum-order is only for B-Basis. Should fail if we calculate A-Basis
   expect_warning(
     res <- basis_hk_ext(
@@ -639,6 +683,16 @@ test_that("non-para (large) basis values produce expected diag failures", {
                c("outliers_within_batch",
                  "between_batch_variability",
                  "outliers"))
+  expect_length(res$diagnostic_failures, 0)
+
+  # overriding the diagnostics with "all" should do the same thing
+  res <- basis_nonpara_large_sample(x = x_large, batch = batch_large,
+                                    override = "all")
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_batch_variability",
+                 "outliers",
+                 "sample_size"))
   expect_length(res$diagnostic_failures, 0)
 
   expect_warning(
@@ -1799,6 +1853,15 @@ test_that("anova basis values produce expected diagnostic failures", {
                  "equality_of_variance",
                  "number_of_groups"))
   expect_length(res$diagnostic_failures, 0)
+
+  # overriding the diagnostics with "all" should do the same thing
+  res <- basis_anova(x = x, group = batch,
+                     override = "all")
+  expect_equal(res$override,
+               c("outliers_within_group",
+                 "equality_of_variance",
+                 "number_of_groups"))
+  expect_length(res$diagnostic_failures, 0)
 })
 
 test_that("glance.basis produces expected value", {
@@ -1847,4 +1910,27 @@ test_that("glance for pooled methods works", {
 
   # 3 conditions should produce 3 basis values and hence 3 rows
   expect_equal(nrow(res), 3)
+})
+
+test_that("pooled methods process override='all'", {
+
+  res <- basis_pooled_sd(poolable_data, strength, condition, modcv = TRUE,
+                         override = "all")
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_group_variability",
+                 "outliers_within_group",
+                 "pooled_data_normal",
+                 "pooled_variance_equal"))
+  expect_length(res$diagnostic_failures, 0)
+
+  res <- basis_pooled_cv(poolable_data, strength, condition, modcv = TRUE,
+                         override = "all")
+  expect_equal(res$override,
+               c("outliers_within_batch",
+                 "between_group_variability",
+                 "outliers_within_group",
+                 "pooled_data_normal",
+                 "normalized_variance_equal"))
+  expect_length(res$diagnostic_failures, 0)
 })

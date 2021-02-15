@@ -95,7 +95,8 @@ and 0.99 for A-Basis}
 \item{conf}{confidence level Should be 0.95 for both A- and B-Basis}
 
 \item{override}{a list of names of diagnostic tests to override,
-if desired.}
+if desired. Specifying "all" will override all diagnostic
+tests applicable to the current method.}
 
 \item{groups}{the variable in the data.frame representing the groups}
 

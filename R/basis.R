@@ -113,7 +113,8 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'          and 0.99 for A-Basis
 #' @param conf confidence level Should be 0.95 for both A- and B-Basis
 #' @param override a list of names of diagnostic tests to override,
-#'                 if desired.
+#'                 if desired. Specifying "all" will override all diagnostic
+#'                 tests applicable to the current method.
 #' @param modcv a logical value indicating whether the modified CV approach
 #'              should be used. Only applicable to pooling methods.
 #' @param method the method for Hanson--Koopmans nonparametric basis values.
@@ -640,6 +641,8 @@ basis_normal <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, basis_normal_rules)
+
   res <- new_basis(
     call = match.call(),
     distribution = "Normal",
@@ -693,6 +696,8 @@ basis_lognormal <- function(data = NULL, x, batch = NULL, p = 0.90,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, basis_lognormal_rules)
+
   res <- new_basis(
     call = match.call(),
     distribution = "Lognormal",
@@ -744,6 +749,8 @@ basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
     x = batch,
     c = match.call(),
     arg_name = "batch")
+
+  override <- process_overrides(override, basis_weibull_rules)
 
   res <- new_basis(
     call = match.call(),
@@ -894,6 +901,8 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, pooled_rules_cv)
+
   res <- new_basis(
     call = match.call(),
     distribution = "Normal - Pooled CV",
@@ -974,6 +983,8 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
     x = batch,
     c = match.call(),
     arg_name = "batch")
+
+  override <- process_overrides(override, pooled_rules_sd)
 
   res <- new_basis(
     call = match.call(),
@@ -1235,6 +1246,8 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, basis_hk_ext_rules)
+
   res <- new_basis(
     call = match.call(),
     distribution = paste0(
@@ -1429,6 +1442,8 @@ basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, nonpara_large_sample_rules)
+
   res <- new_basis(
     call = match.call(),
     distribution = "Nonparametric (large sample)",
@@ -1493,6 +1508,8 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     x = groups,
     c = match.call(),
     arg_name = "groups")
+
+  override <- process_overrides(override, anova_rules)
 
   res <- new_basis(
     call = match.call(),

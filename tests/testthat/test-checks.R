@@ -65,3 +65,53 @@ test_that("Messages are created for missing parameters", {
     all = TRUE
   )
 })
+
+test_that("User can specify `all` for overrides", {
+  sample_rules <- list(
+    positive = function(pos, ...) {
+      ifelse(pos > 0, "", "Not positive")
+    },
+    negative = function(neg, ...) {
+      ifelse(neg < 0, "", "Not negative")
+    },
+    zero = function(z, ...) {
+      ifelse(z == 0, "", "Not zero")
+    }
+  )
+
+  expect_equal(
+    process_overrides("all", sample_rules),
+    c("positive", "negative", "zero")
+  )
+
+  expect_equal(
+    process_overrides(c("all"), sample_rules),
+    c("positive", "negative", "zero")
+  )
+
+  expect_equal(
+    process_overrides(c("all", "positive"), sample_rules),
+    c("positive", "negative", "zero")
+  )
+
+  expect_equal(
+    process_overrides(c("positive", "all"), sample_rules),
+    c("positive", "negative", "zero")
+  )
+})
+
+test_that("Invalid overrides produce warnings", {
+  sample_rules <- list(
+    positive = function(pos, ...) {
+      ifelse(pos > 0, "", "Not positive")
+    },
+    negative = function(neg, ...) {
+      ifelse(neg < 0, "", "Not negative")
+    },
+    zero = function(z, ...) {
+      ifelse(z == 0, "", "Not zero")
+    }
+  )
+
+  expect_warning(process_overrides("invalid", sample_rules), "diagnostic")
+})
