@@ -62,6 +62,7 @@ select(thickness, strength) \%>\%
 ## 9      0.113  127.074            136.7558
 ## 10     0.114  126.879            137.7543
 
+
 }
 \references{
 “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
