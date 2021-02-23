@@ -4,10 +4,12 @@
 \alias{cv}
 \title{Calculate the coefficient of variation}
 \usage{
-cv(x)
+cv(x, na.rm = FALSE)
 }
 \arguments{
 \item{x}{a vector}
+
+\item{na.rm}{logical. Should missing values be removed?}
 }
 \value{
 The calculated CV

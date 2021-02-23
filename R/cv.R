@@ -7,6 +7,7 @@
 #' of data and calculates the CV.
 #'
 #' @param x a vector
+#' @param na.rm logical. Should missing values be removed?
 #'
 #' @return
 #' The calculated CV
@@ -33,6 +34,6 @@
 #'
 #'
 #' @export
-cv <- function(x) {
-  sd(x) / mean(x)
+cv <- function(x, na.rm = FALSE) {  # nolint
+  sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)  # nolint
 }
