@@ -249,7 +249,8 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' square to the within-batch mean square is less than or equal
 #' to one, the tolerance factor is calculated based on pooling the data
 #' from all groups. This approach is recommended by Vangel (1992)
-#' and by Krishnamoorthy and Mathew (2008).
+#' and by Krishnamoorthy and Mathew (2008), and is also implemented
+#' by the software CMH17-STATS and STAT-17.
 #' This function automatically performs a diagnostic
 #' test for outliers within each group
 #' (using [maximum_normed_residual()]) and a test for between
