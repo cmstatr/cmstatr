@@ -9,15 +9,15 @@
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame for which to find the MNR
-#'          or a vector if \code{data=NULL}
+#'          or a vector if `data=NULL`
 #' @param alpha the significance level for the test. Defaults to 0.05
 #'
 #' @details
-#' \code{data} is an optional argument. If \code{data} is given, it
+#' `data` is an optional argument. If `data` is given, it
 #' should be a
-#' \code{data.frame} (or similar object). When \code{data} is specified, the
-#' value of \code{x} is expected to be a variable within \code{data}. If
-#' \code{data} is not specified, \code{x} must be a vector.
+#' `data.frame` (or similar object). When `data` is specified, the
+#' value of `x` is expected to be a variable within `data`. If
+#' `data` is not specified, `x` must be a vector.
 #'
 #' The maximum normed residual test is a test for outliers. The test statistic
 #' is given in CMH-17-1G. Outliers are identified in the returned object.
@@ -34,17 +34,17 @@
 #' value corresponding with the new sample. This process is repeated until
 #' no values are identified as outliers.
 #'
-#' @return an object of class \code{mnr}
+#' @return an object of class `mnr`
 #' This object has the following fields:
-#'  \item{\code{call}}{the expression used to call this function}
-#'  \item{\code{data}}{the original data used to compute the MNR}
-#'  \item{\code{alpha}}{the value of alpha given by the user}
-#'  \item{\code{mnr}}{the computed MNR test statistic}
-#'  \item{\code{crit}}{the critical value given the sample size and the
-#'                     significance level}
-#'  \item{\code{outliers}}{a data.frame containing the \code{index} and
-#'                         \code{value} of each of the identified outliers}
-#'  \item{\code{n_outliers}}{the number of outliers found}
+#'  - `call` the expression used to call this function
+#'  - `data` the original data used to compute the MNR
+#'  - `alpha` the value of alpha given by the user
+#'  - `mnr` the computed MNR test statistic
+#'  - `crit` the critical value given the sample size and the
+#'    significance level
+#'  - `outliers` a data.frame containing the `index` and
+#'    `value` of each of the identified outliers
+#'  - `n_outliers` the number of outliers found
 #'
 #' @examples
 #' library(dplyr)
@@ -112,7 +112,13 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
     return(res)
   }
 
-  for (i in 1:(length(res$data) - 1)) {
+  for (i in 1:(length(res$data) - 2)) {
+    # the `maximum_normed_residual_crit` function uses DF=n-2
+    # With each loop, we remove one data point, so if we don't
+    # break early, we can stop looping before n-2
+    # data points (after which DF<=0)
+    cur_mnr <- max(abs(cur_data - mean(cur_data)) / sd(cur_data))
+    cur_crit <- maximum_normed_residual_crit(length(cur_data), alpha)
     if (cur_mnr >= cur_crit) {
       worst_index_cur <- which.max(abs(cur_data - mean(cur_data)))
       res$outliers <- rbind(
@@ -125,8 +131,11 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
       res$n_outliers <- res$n_outliers + 1
       cur_data <- cur_data[-worst_index_cur]
       indicies_cur <- indicies_cur[-worst_index_cur]
-      cur_mnr <- max(abs(cur_data - mean(cur_data)) / sd(cur_data))
-      cur_crit <- maximum_normed_residual_crit(length(cur_data), alpha)
+    } else {
+      # If we didn't remove a data point, then the current MNR and the
+      # critical MNR definitely won't change, so we can short-circuit
+      # this function.
+      break
     }
   }
 
@@ -138,34 +147,34 @@ maximum_normed_residual_crit <- function(n, alpha) {
   return((n - 1) / sqrt(n) * sqrt(t ^ 2 / (n - 2 + t ^ 2)))
 }
 
-#' Glance at a \code{mnr} (maximum normed residual) object
+#' Glance at a `mnr` (maximum normed residual) object
 #'
 #' @description
-#' Glance accepts an object of type \code{mnr} and returns a
-#' \code{\link[tibble:tibble]{tibble::tibble}} with
+#' Glance accepts an object of type `mnr` and returns a
+#' [tibble::tibble()] with
 #' one row of summaries.
 #'
 #' Glance does not do any calculations: it just gathers the results in a
 #' tibble.
 #'
-#' @param x An \code{mnr} object
+#' @param x An `mnr` object
 #' @param ... Additional arguments. Not used. Included only to match generic
 #'            signature.
 #'
 #'
 #' @return
-#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{\code{mnr}}{the computed MNR test statistic}
-#' \item{\code{alpha}}{the value of alpha used for the test}
-#' \item{\code{crit}}{the critical value given the sample size and the
-#'                    significance level}
-#' \item{\code{n_outliers}}{the number of outliers found}
+#' - `mnr` the computed MNR test statistic
+#' - `alpha` the value of alpha used for the test
+#' - `crit` the critical value given the sample size and the
+#'   significance level
+#' - `n_outliers` the number of outliers found
 #'
 #'
 #' @seealso
-#' \code{\link{maximum_normed_residual}}
+#' [maximum_normed_residual()]
 #'
 #' @examples
 #' x <- c(rnorm(20, 100, 5), 10)
@@ -193,37 +202,37 @@ glance.mnr <- function(x, ...) {  # nolint
   )
 }
 
-#' Augment data with information from an \code{mnr} object
+#' Augment data with information from an `mnr` object
 #'
 #' @description
-#' Augment accepts an \code{mnr} object (returned from the function
-#' \code{\link{maximum_normed_residual}}) and a dataset and adds the column
-#' \code{.outlier} to the dataset. The column \code{.outlier} is a logical
+#' Augment accepts an `mnr` object (returned from the function
+#' [maximum_normed_residual()]) and a dataset and adds the column
+#' `.outlier` to the dataset. The column `.outlier` is a logical
 #' vector indicating whether each observation is an outlier.
 #'
-#' When passing data into \code{augment} using the \code{data} argument,
+#' When passing data into `augment` using the `data` argument,
 #' the data must be exactly the data that was passed to
-#' \code{maximum_normed_residual}.
+#' `maximum_normed_residual`.
 #'
-#' @param x an \code{mnr} object created by
-#'          \code{\link{maximum_normed_residual}}
-#' @param data a \code{data.frame} or
-#'             \code{\link[tibble:tibble]{tibble::tibble}}
+#' @param x an `mnr` object created by
+#'          [maximum_normed_residual()]
+#' @param data a `data.frame` or
+#'             [tibble::tibble()]
 #'             containing the original data that was passed to
-#'             \code{maximum_normed_residual}
+#'             `maximum_normed_residual`
 #' @param ... Additional arguments. Not used. Included only to match generic
 #'            signature.
 #'
 #' @return
-#' When \code{data} is supplied, \code{augment} returns \code{data}, but with
-#' one column appended. When \code{data} is not supplied, \code{augment}
-#' returns a new \code{\link[tibble:tibble]{tibble::tibble}} with the column
-#' \code{values} containing the original values used by
-#' \code{maximum_normed_residaul} plus one additional column. The additional
+#' When `data` is supplied, `augment` returns `data`, but with
+#' one column appended. When `data` is not supplied, `augment`
+#' returns a new [tibble::tibble()] with the column
+#' `values` containing the original values used by
+#' `maximum_normed_residaul` plus one additional column. The additional
 #' column is:
 #'
-#' \item{\code{.outler}}{a logical value indicating whether the observation
-#'                       is an outlier}
+#' - `.outler` a logical value indicating whether the observation
+#'   is an outlier
 #'
 #' @examples
 #' data <- data.frame(strength = c(80, 98, 96, 97, 98, 120))
@@ -255,7 +264,7 @@ glance.mnr <- function(x, ...) {  # nolint
 #' ## 6    120 FALSE
 #'
 #' @seealso
-#' \code{\link{maximum_normed_residual}}
+#' [maximum_normed_residual()]
 #'
 #' @method augment mnr
 #' @importFrom tibble tibble

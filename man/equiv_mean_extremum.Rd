@@ -44,43 +44,44 @@ supplied (or calculated from \code{data_qual}) will be used directly.}
 \value{
 Returns an object of class \code{equiv_mean_extremum}. This object is a list
 with the following named elements:
-
-\item{\code{call}}{the expression used to call this function}
-\item{\code{alpha}}{the value of alpha passed to this function}
-\item{\code{n_sample}}{the number of observations in the sample for which
-  equivalency is being checked. This is either the value \code{n_sample}
-  passed to this function or the length of the vector \code{data_sample}.}
-\item{\code{k1}}{the factor used to calculate the minimum individual
-  threshold. The minimum individual threshold is calculated as
-  \eqn{W_{min} = qual\,mean - k_1 \cdot qual\,sd}{
-  Wmin = qual_mean - k1 * qual_sd}}
-\item{\code{k2}}{the factor used to calculate the threshold for mean. The
-  threshold for mean is calculated as
-  \eqn{W_{mean} = qual\,mean - k_2 \cdot qual\,sd}{
-  Wmean = qual_mean - k2 * qual_sd}}
-\item{\code{modcv}}{logical value indicating whether the acceptance
-  thresholds are calculated using the modified CV approach}
-\item{\code{cv}}{the coefficient of variation of the qualification data.
-  This value is not modified, even if \code{modcv=TRUE}}
-\item{\code{cv_star}}{The modified coefficient of variation. If
-  \code{modcv=FALSE}, this will be \code{NULL}}
-\item{\code{threshold_min_indiv}}{The calculated threshold value for
-  minimum individual}
-\item{\code{threshold_mean}}{The calculated threshold value for mean}
-\item{\code{result_min_indiv}}{a character vector of either "PASS" or
-  "FAIL" indicating whether the data from \code{data_sample} passes the
-  test for minimum individual. If \code{data_sample} was not supplied,
-  this value will be \code{NULL}}
-\item{\code{result_mean}}{a character vector of either "PASS" or
-  "FAIL" indicating whether the data from \code{data_sample} passes the
-  test for mean. If \code{data_sample} was not supplied, this value will
-  be  \code{NULL}}
-\item{\code{min_sample}}{The minimum value from the vector
-  \code{data_sample}. if \code{data_sample} was not supplied, this will
-  have a value of \code{NULL}}
-\item{\code{mean_sample}}{The mean value from the vector
-  \code{data_sample}. If \code{data_sample} was not supplied, this will
-  have a value of \code{NULL}}
+\itemize{
+\item \code{call} the expression used to call this function
+\item \code{alpha} the value of alpha passed to this function
+\item \code{n_sample} the number of observations in the sample for which
+equivalency is being checked. This is either the value \code{n_sample}
+passed to this function or the length of the vector \code{data_sample}.
+\item \code{k1} the factor used to calculate the minimum individual
+threshold. The minimum individual threshold is calculated as
+\eqn{W_{min} = qual\,mean - k_1 \cdot qual\,sd}{
+  Wmin = qual_mean - k1 * qual_sd}
+\item \code{k2} the factor used to calculate the threshold for mean. The
+threshold for mean is calculated as
+\eqn{W_{mean} = qual\,mean - k_2 \cdot qual\,sd}{
+  Wmean = qual_mean - k2 * qual_sd}
+\item \code{modcv} logical value indicating whether the acceptance
+thresholds are calculated using the modified CV approach
+\item \code{cv} the coefficient of variation of the qualification data.
+This value is not modified, even if \code{modcv=TRUE}
+\item \code{cv_star} The modified coefficient of variation. If
+\code{modcv=FALSE}, this will be \code{NULL}
+\item \code{threshold_min_indiv} The calculated threshold value for
+minimum individual
+\item \code{threshold_mean} The calculated threshold value for mean
+\item \code{result_min_indiv} a character vector of either "PASS" or
+"FAIL" indicating whether the data from \code{data_sample} passes the
+test for minimum individual. If \code{data_sample} was not supplied,
+this value will be \code{NULL}
+\item \code{result_mean} a character vector of either "PASS" or
+"FAIL" indicating whether the data from \code{data_sample} passes the
+test for mean. If \code{data_sample} was not supplied, this value will
+be  \code{NULL}
+\item \code{min_sample} The minimum value from the vector
+\code{data_sample}. if \code{data_sample} was not supplied, this will
+have a value of \code{NULL}
+\item \code{mean_sample} The mean value from the vector
+\code{data_sample}. If \code{data_sample} was not supplied, this will
+have a value of \code{NULL}
+}
 }
 \description{
 This test is used when determining if a new process or
@@ -134,7 +135,7 @@ is performed in a short period of time.
 Using the Modified CV approach, the standard deviation is calculated by
 multiplying \code{CV_star * mean_qual} where \code{mean_qual} is either the
 value supplied or the value calculated by \code{mean(data_qual)} and
-\eqn{CV*} is the value computed by \code{\link{calc_cv_star}}.
+\eqn{CV*} is the value computed by \code{\link[=calc_cv_star]{calc_cv_star()}}.
 }
 \examples{
 equiv_mean_extremum(alpha = 0.01, n_sample = 6,
@@ -165,7 +166,7 @@ for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
 Sep. 2003.
 }
 \seealso{
-\code{\link{k_equiv}}
+\code{\link[=k_equiv]{k_equiv()}}
 
-\code{\link{calc_cv_star}}
+\code{\link[=calc_cv_star]{calc_cv_star()}}
 }

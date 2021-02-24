@@ -12,22 +12,22 @@
 #'              Defaults to 0.05.
 #'
 #' @return
-#' an object of class \code{anderson_darling}. This object has the following
+#' an object of class `anderson_darling`. This object has the following
 #' fields.
 #'
-#' \item{\code{call}}{the expression used to call this function}
-#' \item{\code{dist}}{the distribution used}
-#' \item{\code{data}}{a copy of the data analyzed}
-#' \item{\code{n}}{the number of observations in the sample}
-#' \item{\code{A}}{the Anderson--Darling test statistic}
-#' \item{\code{osl}}{the observed significance level (p-value),
+#' - `call` the expression used to call this function
+#' - `dist` the distribution used
+#' - `data` a copy of the data analyzed
+#' - `n` the number of observations in the sample
+#' - `A` the Anderson--Darling test statistic
+#' - `osl` the observed significance level (p-value),
 #'   assuming the
-#'   parameters of the distribution are estimated from the data}
-#' \item{\code{alpha}}{the required significance level for the test.
-#'  This value is given by the user.}
-#' \item{\code{reject_distribution}}{a logical value indicating whether
-#'  the hypothesis that the data is drawn from the specified distribution
-#'  should be rejected}
+#'   parameters of the distribution are estimated from the data
+#' - `alpha` the required significance level for the test.
+#'   This value is given by the user.
+#' - `reject_distribution` a logical value indicating whether
+#'   the hypothesis that the data is drawn from the specified distribution
+#'   should be rejected
 #'
 #' @details
 #' The Anderson--Darling test statistic is calculated for the distribution
@@ -38,19 +38,19 @@
 #' of the distribution are unknown; these parameters are estimate from the
 #' data.
 #'
-#' The function \code{anderson_darling_normal} computes the Anderson--Darling
+#' The function `anderson_darling_normal` computes the Anderson--Darling
 #' test statistic given a normal distribution with mean and standard deviation
 #' equal to the sample mean and standard deviation.
 #'
-#' The function \code{anderson_darling_lognormal} is the same as
-#' \code{anderson_darling_normal} except that the data is log transformed
+#' The function `anderson_darling_lognormal` is the same as
+#' `anderson_darling_normal` except that the data is log transformed
 #' first.
 #'
-#' The function \code{anderson_darling_weibull} computes the Anderson--Darling
+#' The function `anderson_darling_weibull` computes the Anderson--Darling
 #' test statistic given a Weibull distribution with shape and scale parameters
 #' estimated from the data using a maximum likelihood estimate.
 #'
-#' The test statistic, \code{A}, is modified to account for
+#' The test statistic, `A`, is modified to account for
 #' the fact that the parameters of the population are not known,
 #' but are instead estimated from the sample. This modification is
 #' a function of the sample size only, and is different for each
@@ -58,7 +58,7 @@
 #' have been proposed. This function uses the modification published in
 #' Stephens (1974), Lawless (1982) and CMH-17-1G. Some other implementations
 #' of the Anderson-Darling test, such as the implementation in the
-#' \code{nortest} package, use other modifications, such as the one
+#' `nortest` package, use other modifications, such as the one
 #' published in D'Agostino and Stephens (1986). As such, the p-value
 #' reported by this function may differ from the p-value reported
 #' by implementations of the Anderson--Darling test that use
@@ -75,7 +75,7 @@
 #'
 #'
 #' @references
-#' J. F. Lawless, \emph{Statistical models and methods for lifetime data}.
+#' J. F. Lawless, *Statistical models and methods for lifetime data*.
 #' New York: Wiley, 1982.
 #'
 #' "Composite Materials Handbook, Volume 1. Polymer Matrix
@@ -141,40 +141,40 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
 }
 
 
-#' Glance at an \code{anderson_darling} object
+#' Glance at an `anderson_darling` object
 #'
 #' @description
-#' Glance accepts an object of type \code{anderson_darling} and
-#' returns a \code{\link[tibble:tibble]{tibble::tibble}} with
+#' Glance accepts an object of type `anderson_darling` and
+#' returns a [tibble::tibble()] with
 #' one row of summaries.
 #'
 #' Glance does not do any calculations: it just gathers the results in a
 #' tibble.
 #'
-#' @param x an \code{anderson_darling} object
+#' @param x an `anderson_darling` object
 #' @param ... Additional arguments. Not used. Included only to match generic
 #'            signature.
 #'
 #'
 #' @return
-#' A one-row \code{\link[tibble:tibble]{tibble::tibble}} with the following
+#' A one-row [tibble::tibble()] with the following
 #' columns:
 #'
-#' \item{\code{dist}}{the distribution used}
-#' \item{\code{n}}{the number of observations in the sample}
-#' \item{\code{A}}{the Anderson--Darling test statistic}
-#' \item{\code{osl}}{the observed significance level (p-value),
+#' - `dist` the distribution used
+#' - `n` the number of observations in the sample
+#' - `A` the Anderson--Darling test statistic
+#' - `osl` the observed significance level (p-value),
 #'     assuming the
-#'     parameters of the distribution are estimated from the data}
-#'  \item{\code{alpha}}{the required significance level for the test.
-#'    This value is given by the user.}
-#' \item{\code{reject_distribution}}{a logical value indicating whether
+#'     parameters of the distribution are estimated from the data
+#'  - `alpha` the required significance level for the test.
+#'    This value is given by the user.
+#' - `reject_distribution` a logical value indicating whether
 #'    the hypothesis that the data is drawn from the specified distribution
-#'    should be rejected}
+#'    should be rejected
 #'
 #'
 #' @seealso
-#' \code{\link{anderson_darling}}
+#' [anderson_darling()]
 #'
 #' @examples
 #' x <- rnorm(100, 100, 4)

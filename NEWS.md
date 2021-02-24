@@ -1,3 +1,19 @@
+# Version 0.8.0
+- Updated `basis_anova` so that in cases where the between-batch variance
+  is small compared with the within-batch variance, a tolerance factor
+  that doesn't consider the structure of the data is used. This matches the
+  recommendation of Vangel (1992).
+- Added the alias `override="all"` to allow overriding all applicable
+  diagnostic tests that are automatically run by the `basis_...` functions.
+- Improved documentation of diagnostic tests
+- Added `na.rm` argument to `cv` with identical behavior to the `na.rm`
+  argument of `mean` and `sd`.
+- Fixed bug causing `maximum_normed_residual` to fail with small data sets
+  where all but two observations would be considered outliers.
+- When diagnostic tests produce an error (when automatically run by the
+  `basis_...` functions), the error message now identifies which test
+  produced the error.
+
 # Version 0.7.1
 - Fixed bug in `glance.equiv_mean_extremum` where it would include empty
   values when a sample was not specified.

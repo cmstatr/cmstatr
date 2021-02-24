@@ -17,11 +17,10 @@ This function calculates the modified coefficient of variation (CV)
 based on a (unmodified) CV.
 The modified CV is calculated based on the rules in CMH-17-1G. Those
 rules are:
-
 \itemize{
-  \item{}{For CV < 4\%, CV* = 6\%}
-  \item{}{For 4\% <= CV < 8\%, CV* = CV / 2 + 4\%}
-  \item{}{For CV > 8\%, CV* = CV}
+\item For CV < 4\\\%, CV* = 6\\\%
+\item For 4\\\% <= CV < 8\\\%, CV* = CV / 2 + 4\\\%
+\item For CV > 8\\\%, CV* = CV
 }
 }
 \examples{
@@ -40,5 +39,5 @@ Guideline for Characterization of Structural Materials,"
 SAE International, CMH-17-1G, Mar. 2012.
 }
 \seealso{
-\code{\link{cv}}
+\code{\link[=cv]{cv()}}
 }
