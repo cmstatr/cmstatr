@@ -1,18 +1,14 @@
-This re-submission fixes one minor bug and also ensures that
-R CMD check can be successfully run on a system with only the
-packages in Depends available. This is in response to an email
-received from Prof Brian Ripley.
-
+This re-submission fixes some minor bugs and adds some new functionality.
 
 ## Test environments
 - win-builder (devel, release, oldrelease)
-- local Windows 10, R 4.0.2
+- local Ubuntu 20.04, R 4.0.4
 - GitHub Action runners:
-  - Windows, R 4.0.3
-  - MacOS, R 4.0.3
-  - Ubuntu 16.04, R 4.0.3
+  - Windows, R 4.0.4
+  - MacOS, R 4.0.4
+  - Ubuntu 16.04, R 4.0.4
   - Ubuntu 16.04, R 3.6.3
-  - Ubuntu 16.04, R 4.0.3 (with _R_CHECK_DEPENDS_ONLY_ set)
+  - MacOS, R 4.0.4 (with _R_CHECK_DEPENDS_ONLY_ set)
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
