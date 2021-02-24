@@ -1,4 +1,4 @@
-# Version x.x.x
+# Version 0.8.0
 - Updated `basis_anova` so that in cases where the between-batch variance
   is small compared with the within-batch variance, a tolerance factor
   that doesn't consider the structure of the data is used. This matches the
