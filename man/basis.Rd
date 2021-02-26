@@ -95,7 +95,8 @@ and 0.99 for A-Basis}
 \item{conf}{confidence level Should be 0.95 for both A- and B-Basis}
 
 \item{override}{a list of names of diagnostic tests to override,
-if desired.}
+if desired. Specifying "all" will override all diagnostic
+tests applicable to the current method.}
 
 \item{groups}{the variable in the data.frame representing the groups}
 
@@ -275,7 +276,13 @@ for these diagnostic tests.
 \code{basis_anova} calculates basis values using the ANOVA method.
 \code{x} specifies the data (normally strength) and \code{groups}
 indicates the group corresponding to each observation. This method is
-described in CMH-17-1G. This function automatically performs a diagnostic
+described in CMH-17-1G, but when the ratio of between-batch mean
+square to the within-batch mean square is less than or equal
+to one, the tolerance factor is calculated based on pooling the data
+from all groups. This approach is recommended by Vangel (1992)
+and by Krishnamoorthy and Mathew (2008), and is also implemented
+by the software CMH17-STATS and STAT-17.
+This function automatically performs a diagnostic
 test for outliers within each group
 (using \code{\link[=maximum_normed_residual]{maximum_normed_residual()}}) and a test for between
 group variability (using \code{\link[=ad_ksample]{ad_ksample()}}) as well as checking
@@ -316,6 +323,68 @@ name of the diagnostic test. The contents of each element will be
 "O" if the diagnostic test was overridden and \code{NA} if the
 diagnostic test was skipped (typically because an optional
 argument was not supplied).
+
+The following list summarizes the diagnostic tests automatically
+performed by each function.
+\itemize{
+\item \code{basis_normal}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{anderson_darling_normal}
+}
+\item \code{basis_lognormal}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{anderson_darling_lognormal}
+}
+\item \code{basis_weibull}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{anderson_darling_weibull}
+}
+\item \code{basis_pooled_cv}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_group_variability}
+\item \code{outliers_within_group}
+\item \code{pooled_data_normal}
+\item \code{normalized_variance_equal}
+}
+\item \code{basis_pooled_sd}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_group_variability}
+\item \code{outliers_within_group}
+\item \code{pooled_data_normal}
+\item \code{pooled_variance_equal}
+}
+\item \code{basis_hk_ext}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{sample_size}
+}
+\item \code{basis_nonpara_large_sample}
+\itemize{
+\item \code{outliers_within_batch}
+\item \code{between_batch_variability}
+\item \code{outliers}
+\item \code{sample_size}
+}
+\item \code{basis_anova}
+\itemize{
+\item \code{outliers_within_group}
+\item \code{equality_of_variance}
+\item \code{number_of_groups}
+}
+}
 }
 \examples{
 library(dplyr)
@@ -384,6 +453,10 @@ Applications, and Computation. Hoboken: John Wiley & Sons, 2008.
 W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
 for Practitioners and Researchers, Second Edition.
 Hoboken: John Wiley & Sons, 2017.
+
+M. Vangel, “New Methods for One-Sided Tolerance Limits for a One-Way
+Balanced Random-Effects ANOVA Model,” Technometrics, vol. 34, no. 2.
+Taylor & Francis, pp. 176–185, 1992.
 }
 \seealso{
 \code{\link[=hk_ext_z_j_opt]{hk_ext_z_j_opt()}}

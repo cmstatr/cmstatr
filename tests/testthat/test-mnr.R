@@ -283,6 +283,22 @@ test_that(
 
 })
 
+test_that("Datasets with repeated value non-outliers work", {
+  # It was found that for small data sets where there are three
+  # outliers and two duplicate values, the MNR calculation
+  # would fail. This is a regression test against this.
+
+  # This has always worked
+  d1 <- c(673, 621, 690, 689, 689.5)
+  res <- maximum_normed_residual(x = d1)
+  expect_equal(res$n_outliers, 2)
+
+  # This would previously fail
+  d2 <- c(673, 621, 690, 689, 689)
+  res <- maximum_normed_residual(x = d2)
+  expect_equal(res$n_outliers, 3)
+})
+
 test_that("Vectors with no variance produce reasonable results", {
   x <- rep(100, 10)
   res <- maximum_normed_residual(x = x)

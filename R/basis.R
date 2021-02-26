@@ -113,7 +113,8 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #'          and 0.99 for A-Basis
 #' @param conf confidence level Should be 0.95 for both A- and B-Basis
 #' @param override a list of names of diagnostic tests to override,
-#'                 if desired.
+#'                 if desired. Specifying "all" will override all diagnostic
+#'                 tests applicable to the current method.
 #' @param modcv a logical value indicating whether the modified CV approach
 #'              should be used. Only applicable to pooling methods.
 #' @param method the method for Hanson--Koopmans nonparametric basis values.
@@ -244,7 +245,13 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' `basis_anova` calculates basis values using the ANOVA method.
 #' `x` specifies the data (normally strength) and `groups`
 #' indicates the group corresponding to each observation. This method is
-#' described in CMH-17-1G. This function automatically performs a diagnostic
+#' described in CMH-17-1G, but when the ratio of between-batch mean
+#' square to the within-batch mean square is less than or equal
+#' to one, the tolerance factor is calculated based on pooling the data
+#' from all groups. This approach is recommended by Vangel (1992)
+#' and by Krishnamoorthy and Mathew (2008), and is also implemented
+#' by the software CMH17-STATS and STAT-17.
+#' This function automatically performs a diagnostic
 #' test for outliers within each group
 #' (using [maximum_normed_residual()]) and a test for between
 #' group variability (using [ad_ksample()]) as well as checking
@@ -285,6 +292,51 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' "O" if the diagnostic test was overridden and `NA` if the
 #' diagnostic test was skipped (typically because an optional
 #' argument was not supplied).
+#'
+#' The following list summarizes the diagnostic tests automatically
+#' performed by each function.
+#'
+#' - `basis_normal`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `anderson_darling_normal`
+#' - `basis_lognormal`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `anderson_darling_lognormal`
+#' - `basis_weibull`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `anderson_darling_weibull`
+#' - `basis_pooled_cv`
+#'   * `outliers_within_batch`
+#'   * `between_group_variability`
+#'   * `outliers_within_group`
+#'   * `pooled_data_normal`
+#'   * `normalized_variance_equal`
+#' - `basis_pooled_sd`
+#'   * `outliers_within_batch`
+#'   * `between_group_variability`
+#'   * `outliers_within_group`
+#'   * `pooled_data_normal`
+#'   * `pooled_variance_equal`
+#' - `basis_hk_ext`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `sample_size`
+#' - `basis_nonpara_large_sample`
+#'   * `outliers_within_batch`
+#'   * `between_batch_variability`
+#'   * `outliers`
+#'   * `sample_size`
+#' - `basis_anova`
+#'   * `outliers_within_group`
+#'   * `equality_of_variance`
+#'   * `number_of_groups`
 #'
 #' @return an object of class `basis`
 #' This object has the following fields:
@@ -340,6 +392,10 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
 #' for Practitioners and Researchers, Second Edition.
 #' Hoboken: John Wiley & Sons, 2017.
+#'
+#' M. Vangel, “New Methods for One-Sided Tolerance Limits for a One-Way
+#' Balanced Random-Effects ANOVA Model,” Technometrics, vol. 34, no. 2.
+#' Taylor & Francis, pp. 176–185, 1992.
 #'
 #' @examples
 #' library(dplyr)
@@ -651,6 +707,8 @@ basis_normal <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, basis_normal_rules)
+
   res <- new_basis(
     call = match.call(),
     distribution = "Normal",
@@ -704,6 +762,8 @@ basis_lognormal <- function(data = NULL, x, batch = NULL, p = 0.90,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, basis_lognormal_rules)
+
   res <- new_basis(
     call = match.call(),
     distribution = "Lognormal",
@@ -755,6 +815,8 @@ basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
     x = batch,
     c = match.call(),
     arg_name = "batch")
+
+  override <- process_overrides(override, basis_weibull_rules)
 
   res <- new_basis(
     call = match.call(),
@@ -905,6 +967,8 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, pooled_rules_cv)
+
   res <- new_basis(
     call = match.call(),
     distribution = "Normal - Pooled CV",
@@ -985,6 +1049,8 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
     x = batch,
     c = match.call(),
     arg_name = "batch")
+
+  override <- process_overrides(override, pooled_rules_sd)
 
   res <- new_basis(
     call = match.call(),
@@ -1246,6 +1312,8 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, basis_hk_ext_rules)
+
   res <- new_basis(
     call = match.call(),
     distribution = paste0(
@@ -1440,6 +1508,8 @@ basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
     c = match.call(),
     arg_name = "batch")
 
+  override <- process_overrides(override, nonpara_large_sample_rules)
+
   res <- new_basis(
     call = match.call(),
     distribution = "Nonparametric (large sample)",
@@ -1504,6 +1574,8 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     x = groups,
     c = match.call(),
     arg_name = "groups")
+
+  override <- process_overrides(override, anova_rules)
 
   res <- new_basis(
     call = match.call(),
@@ -1575,6 +1647,10 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
 
   tol_factor <- (k0 - k1 / sqrt(effective_batch) + (k1 - k0) * w) /
     (1 - 1 / sqrt(effective_batch))
+
+  if (msb / mse <= 1) {
+    tol_factor <- k0
+  }
 
   res$basis <- grand_mean - tol_factor * pop_sd
 

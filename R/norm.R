@@ -60,6 +60,9 @@
 #' ## 9      0.113  127.074            136.7558
 #' ## 10     0.114  126.879            137.7543
 #'
+#'
+#' @importFrom dplyr select mutate
+#'
 #' @export
 normalize_ply_thickness <- function(strength, measured_thk, nom_thk) {
   if (length(strength) != length(measured_thk)) {

@@ -37,7 +37,12 @@ perform_checks <- function(rules, override = c(), ...) {
         FUN.VALUE = logical(1L)
       )
       if (!any(missing_formals)) {
-        if ((message <- do.call(cur_rule, args)) != "") {
+        message <- tryCatch(
+          do.call(cur_rule, args),
+        error = function(e) {
+          stop(paste0("During evaluation of `", cur_rule_name, "`: ", e))
+        })
+        if (message != "") {
           warn(paste0("`", cur_rule_name, "` failed: ", message))
           return("F")
         }
@@ -70,4 +75,23 @@ perform_checks <- function(rules, override = c(), ...) {
 #' @noRd
 get_check_failure_names <- function(x) {
   names(x[x == "F" & !is.na(x)])
+}
+
+process_overrides <- function(override, rules) {
+  if ("all" %in% override) {
+    # Remove the "all" value
+    override <- override[!override %in% "all"]
+    # Add all of the rules to the override vector
+    override <- c(override, names(rules))
+  }
+  # Keep only the unique values of override
+  override <- unique(override)
+  # Warn if there are invalid overrides
+  for (ov in override) {
+    if (!ov %in% names(rules)) {
+      warn(paste0("`", ov, "` is not a valid diagnostic test to override"))
+    }
+  }
+
+  override
 }
