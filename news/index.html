@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -141,6 +141,19 @@
       <small>Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="version-080" class="section level1">
+<h1 class="page-header" data-toc-text="0.8.0">
+<a href="#version-080" class="anchor"></a>Version 0.8.0<small> 2021-02-24 </small>
+</h1>
+<ul>
+<li>Updated <code>basis_anova</code> so that in cases where the between-batch variance is small compared with the within-batch variance, a tolerance factor that doesn’t consider the structure of the data is used. This matches the recommendation of Vangel (1992).</li>
+<li>Added the alias <code>override="all"</code> to allow overriding all applicable diagnostic tests that are automatically run by the <code>basis_...</code> functions.</li>
+<li>Improved documentation of diagnostic tests</li>
+<li>Added <code>na.rm</code> argument to <code>cv</code> with identical behavior to the <code>na.rm</code> argument of <code>mean</code> and <code>sd</code>.</li>
+<li>Fixed bug causing <code>maximum_normed_residual</code> to fail with small data sets where all but two observations would be considered outliers.</li>
+<li>When diagnostic tests produce an error (when automatically run by the <code>basis_...</code> functions), the error message now identifies which test produced the error.</li>
+</ul>
+</div>
     <div id="version-071" class="section level1">
 <h1 class="page-header" data-toc-text="0.7.1">
 <a href="#version-071" class="anchor"></a>Version 0.7.1<small> 2020-12-10 </small>

@@ -83,7 +83,7 @@ This function is a wrapper for a two-sample t--test." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -227,45 +227,46 @@ should be used. Defaults to <code>FALSE</code></p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     
-
-<dt><code>call</code></dt><dd><p>the expression used to call this function</p></dd>
-<dt><code>alpha</code></dt><dd><p>the value of alpha passed to this function</p></dd>
-<dt><code>n_sample</code></dt><dd><p>the number of observations in the sample for which
-  equivalency is being checked. This is either the value <code>n_sample</code>
-  passed to this function or the length of the vector <code>data_sample</code>.</p></dd>
-<dt><code>mean_sample</code></dt><dd><p>the mean of the observations in the sample for
-  which equivalency is being checked. This is either the value
-  <code>mean_sample</code> passed to this function or the mean of the vector
-  <code>data-sample</code>.</p></dd>
-<dt><code>sd_sample</code></dt><dd><p>the standard deviation of the observations in the
-  sample for which equivalency is being checked. This is either the value
-  <code>mean_sample</code> passed to this function or the standard deviation of
-  the vector <code>data-sample</code>.</p></dd>
-<dt><code>n_qual</code></dt><dd><p>the number of observations in the qualification data
-  to which the sample is being compared for equivalency. This is either
-  the value <code>n_qual</code> passed to this function or the length of the
-  vector <code>data_qual</code>.</p></dd>
-<dt><code>mean_qual</code></dt><dd><p>the mean of the qualification data to which the
-  sample is being compared for equivalency. This is either the value
-  <code>mean_qual</code> passed to this function or the mean of the vector
-  <code>data_qual</code>.</p></dd>
-<dt><code>sd_qual</code></dt><dd><p>the standard deviation of the qualification data to
-  which the sample is being compared for equivalency. This is either the
-  value <code>mean_qual</code> passed to this function or the standard deviation
-  of the vector <code>data_qual</code>.</p></dd>
-<dt><code>modcv</code></dt><dd><p>logical value indicating whether the equivalency
-  calculations were performed using the modified CV approach</p></dd>
-<dt><code>sp</code></dt><dd><p>the value of the pooled standard deviation. If
-  <code>modecv = TRUE</code>, this pooled standard deviation includes the
-  modification to the qualification CV.</p></dd>
-<dt><code>t0</code></dt><dd><p>the test statistic</p></dd>
-<dt><code>t_req</code></dt><dd><p>the t-value for \(\alpha / 2\) and
-  \(df = n1 + n2 -2\)</p></dd>
-<dt><code>threshold</code></dt><dd><p>a vector with two elements corresponding to the
-  minimum and maximum values of the sample mean that would result in a
-  pass</p></dd>
-<dt><code>result</code></dt><dd><p>a character vector of either "PASS" or "FAIL"
-  indicating the result of the test for change in mean</p></dd>
+<ul>
+<li><p><code>call</code> the expression used to call this function</p></li>
+<li><p><code>alpha</code> the value of alpha passed to this function</p></li>
+<li><p><code>n_sample</code> the number of observations in the sample for which
+equivalency is being checked. This is either the value <code>n_sample</code>
+passed to this function or the length of the vector <code>data_sample</code>.</p></li>
+<li><p><code>mean_sample</code> the mean of the observations in the sample for
+which equivalency is being checked. This is either the value
+<code>mean_sample</code> passed to this function or the mean of the vector
+<code>data-sample</code>.</p></li>
+<li><p><code>sd_sample</code> the standard deviation of the observations in the
+sample for which equivalency is being checked. This is either the value
+<code>mean_sample</code> passed to this function or the standard deviation of
+the vector <code>data-sample</code>.</p></li>
+<li><p><code>n_qual</code> the number of observations in the qualification data
+to which the sample is being compared for equivalency. This is either
+the value <code>n_qual</code> passed to this function or the length of the
+vector <code>data_qual</code>.</p></li>
+<li><p><code>mean_qual</code> the mean of the qualification data to which the
+sample is being compared for equivalency. This is either the value
+<code>mean_qual</code> passed to this function or the mean of the vector
+<code>data_qual</code>.</p></li>
+<li><p><code>sd_qual</code> the standard deviation of the qualification data to
+which the sample is being compared for equivalency. This is either the
+value <code>mean_qual</code> passed to this function or the standard deviation
+of the vector <code>data_qual</code>.</p></li>
+<li><p><code>modcv</code> logical value indicating whether the equivalency
+calculations were performed using the modified CV approach</p></li>
+<li><p><code>sp</code> the value of the pooled standard deviation. If
+<code>modecv = TRUE</code>, this pooled standard deviation includes the
+modification to the qualification CV.</p></li>
+<li><p><code>t0</code> the test statistic</p></li>
+<li><p><code>t_req</code> the t-value for \(\alpha / 2\) and
+\(df = n1 + n2 -2\)</p></li>
+<li><p><code>threshold</code> a vector with two elements corresponding to the
+minimum and maximum values of the sample mean that would result in a
+pass</p></li>
+<li><p><code>result</code> a character vector of either "PASS" or "FAIL"
+indicating the result of the test for change in mean</p></li>
+</ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -290,7 +291,7 @@ is performed in a short period of time.
 Using the Modified CV approach, the standard deviation is calculated by
 multiplying <code>CV_star * mean_qual</code> where <code>mean_qual</code> is either the
 value supplied or the value calculated by <code><a href='https://rdrr.io/r/base/mean.html'>mean(data_qual)</a></code> and
-\(CV*\) is determined using <code><a href='calc_cv_star.html'>calc_cv_star</a></code>.</p>
+\(CV*\) is determined using <code><a href='calc_cv_star.html'>calc_cv_star()</a></code>.</p>
 <p>Note that the modified CV option should only be used if that data passes the
 Anderson--Darling test.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
@@ -300,8 +301,8 @@ Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='calc_cv_star.html'>calc_cv_star</a></code></p>
-<p><code><a href='https://rdrr.io/r/stats/t.test.html'>t.test</a></code></p></div>
+    <div class='dont-index'><p><code><a href='calc_cv_star.html'>calc_cv_star()</a></code></p>
+<p><code><a href='https://rdrr.io/r/stats/t.test.html'>stats::t.test()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>equiv_change_mean</span><span class='op'>(</span>alpha <span class='op'>=</span> <span class='fl'>0.05</span>, n_sample <span class='op'>=</span> <span class='fl'>9</span>, mean_sample <span class='op'>=</span> <span class='fl'>9.02</span>,

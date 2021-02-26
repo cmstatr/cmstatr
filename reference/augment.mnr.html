@@ -48,7 +48,7 @@
 
 <meta property="og:title" content="Augment data with information from an mnr object — augment.mnr" />
 <meta property="og:description" content="Augment accepts an mnr object (returned from the function
-maximum_normed_residual) and a dataset and adds the column
+maximum_normed_residual()) and a dataset and adds the column
 .outlier to the dataset. The column .outlier is a logical
 vector indicating whether each observation is an outlier.
 When passing data into augment using the data argument,
@@ -87,7 +87,7 @@ maximum_normed_residual." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -151,7 +151,7 @@ maximum_normed_residual." />
 
     <div class="ref-description">
     <p>Augment accepts an <code>mnr</code> object (returned from the function
-<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>) and a dataset and adds the column
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>) and a dataset and adds the column
 <code>.outlier</code> to the dataset. The column <code>.outlier</code> is a logical
 vector indicating whether each observation is an outlier.</p>
 <p>When passing data into <code>augment</code> using the <code>data</code> argument,
@@ -168,12 +168,12 @@ the data must be exactly the data that was passed to
     <tr>
       <th>x</th>
       <td><p>an <code>mnr</code> object created by
-<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code></p></td>
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code></p></td>
     </tr>
     <tr>
       <th>data</th>
       <td><p>a <code>data.frame</code> or
-<code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble</a></code>
+<code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble()</a></code>
 containing the original data that was passed to
 <code>maximum_normed_residual</code></p></td>
     </tr>
@@ -188,16 +188,17 @@ signature.</p></td>
 
     <p>When <code>data</code> is supplied, <code>augment</code> returns <code>data</code>, but with
 one column appended. When <code>data</code> is not supplied, <code>augment</code>
-returns a new <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble</a></code> with the column
+returns a new <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble()</a></code> with the column
 <code>values</code> containing the original values used by
 <code>maximum_normed_residaul</code> plus one additional column. The additional
-column is:</p>
-<dt><code>.outler</code></dt><dd><p>a logical value indicating whether the observation
-                      is an outlier</p></dd>
+column is:</p><ul>
+<li><p><code>.outler</code> a logical value indicating whether the observation
+is an outlier</p></li>
+</ul>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code></p></div>
+    <div class='dont-index'><p><code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>strength <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>80</span>, <span class='fl'>98</span>, <span class='fl'>96</span>, <span class='fl'>97</span>, <span class='fl'>98</span>, <span class='fl'>120</span><span class='op'>)</span><span class='op'>)</span>
@@ -223,15 +224,15 @@ column is:</p>
 <span class='co'># or augment can be called without the orignal data and it will be</span>
 <span class='co'># reconstructed</span>
 <span class='fu'><a href='https://generics.r-lib.org/reference/augment.html'>augment</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 6 x 2</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 6 x 2</span><span>
 #&gt;   values .outlier
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span>   
-#&gt; </span><span style='color: #555555;'>1</span><span>     80 FALSE   
-#&gt; </span><span style='color: #555555;'>2</span><span>     98 FALSE   
-#&gt; </span><span style='color: #555555;'>3</span><span>     96 FALSE   
-#&gt; </span><span style='color: #555555;'>4</span><span>     97 FALSE   
-#&gt; </span><span style='color: #555555;'>5</span><span>     98 FALSE   
-#&gt; </span><span style='color: #555555;'>6</span><span>    120 FALSE   </div><div class='input'>
+#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>   
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>     80 FALSE   
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span>     98 FALSE   
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span>     96 FALSE   
+#&gt; </span><span style='color: #BCBCBC;'>4</span><span>     97 FALSE   
+#&gt; </span><span style='color: #BCBCBC;'>5</span><span>     98 FALSE   
+#&gt; </span><span style='color: #BCBCBC;'>6</span><span>    120 FALSE   </div><div class='input'>
 <span class='co'>## # A tibble: 6 x 2</span>
 <span class='co'>##   values .outlier</span>
 <span class='co'>##    &lt;dbl&gt; &lt;lgl&gt;</span>

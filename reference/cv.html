@@ -83,7 +83,7 @@ of data and calculates the CV." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -151,7 +151,7 @@ deviation to the mean of a sample. This function takes a vector
 of data and calculates the CV.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cv</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cv</span><span class='op'>(</span><span class='va'>x</span>, na.rm <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -159,6 +159,10 @@ of data and calculates the CV.</p>
     <tr>
       <th>x</th>
       <td><p>a vector</p></td>
+    </tr>
+    <tr>
+      <th>na.rm</th>
+      <td><p>logical. Should missing values be removed?</p></td>
     </tr>
     </table>
 
@@ -178,12 +182,12 @@ of data and calculates the CV.</p>
 <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>test</span> <span class='op'>==</span> <span class='st'>"WT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>condition</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>strength</span><span class='op'>)</span>, cv <span class='op'>=</span> <span class='fu'>cv</span><span class='op'>(</span><span class='va'>strength</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`summarise()` ungrouping output (override with `.groups` argument)</span></div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 3 x 3</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 3</span><span>
 #&gt;   condition  mean     cv
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span> CTD        137. 0.041</span><span style='text-decoration: underline;'>7</span><span>
-#&gt; </span><span style='color: #555555;'>2</span><span> ETW        135. 0.031</span><span style='text-decoration: underline;'>0</span><span>
-#&gt; </span><span style='color: #555555;'>3</span><span> RTD        142. 0.045</span><span style='text-decoration: underline;'>1</span><span></div><div class='input'>
+#&gt; </span><span style='color: #BCBCBC;'>*</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span> CTD        137. 0.041</span><span style='text-decoration: underline;'>7</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>2</span><span> ETW        135. 0.031</span><span style='text-decoration: underline;'>0</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>3</span><span> RTD        142. 0.045</span><span style='text-decoration: underline;'>1</span><span></div><div class='input'>
 <span class='co'>## # A tibble: 3 x 3</span>
 <span class='co'>##   condition  mean     cv</span>
 <span class='co'>##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span>

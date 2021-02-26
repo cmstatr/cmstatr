@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -165,39 +165,39 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a vector with elements c(k1, k2). k1 is for testing the sample
-  extremum. k2 is for testing the sample mean</p>
+extremum. k2 is for testing the sample mean</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The k-factors returned by this function are used for determining
-  whether to accept a new dataset.</p>
+whether to accept a new dataset.</p>
 <p>This function is used as part of the procedure for
-  determining acceptance limits for a sample mean and sample minimum.
-  These acceptance limits are often used to set acceptance limits for
-  material strength for each lot of material, or each new manufacturing
-  site. When a sample meets the criteria that its mean and its minimum are
-  both greater than these limits, then one may accept the lot of material
-  or the new manufacturing site.</p>
+determining acceptance limits for a sample mean and sample minimum.
+These acceptance limits are often used to set acceptance limits for
+material strength for each lot of material, or each new manufacturing
+site. When a sample meets the criteria that its mean and its minimum are
+both greater than these limits, then one may accept the lot of material
+or the new manufacturing site.</p>
 <p>This procedure is used to ensure that the strength of material processed
-  at a second site, or made with a new batch of material are not degraded
-  relative to the data originally used to determine basis values for the
-  material. For more information about the use of this procedure, see
-  CMH-17-1G or PS-ACE 100-2002-006.</p>
+at a second site, or made with a new batch of material are not degraded
+relative to the data originally used to determine basis values for the
+material. For more information about the use of this procedure, see
+CMH-17-1G or PS-ACE 100-2002-006.</p>
 <p>According to Vangel (2002), the use of mean and extremum for this purpose
-  is more powerful than the use of mean and standard deviation.</p>
+is more powerful than the use of mean and standard deviation.</p>
 <p>The results of this function match those published by Vangel within
-  0.05% for \(n &gt; 2\) and \(\alpha \le 0.25\). Those results published
-  by Vangel are identical to those published in CMH-17-1G.</p>
+0.05\<!-- % for \eqn{n &gt; 2} and \eqn{\alpha \le 0.25}. Those results published -->
+by Vangel are identical to those published in CMH-17-1G.</p>
 <p>This function uses numerical integration and numerical optimization to
-  find values of the factors \(k_1\) and \(k_2\) based on Vangel's
-  saddle point approximation.</p>
+find values of the factors \(k_1\) and \(k_2\) based on Vangel's
+saddle point approximation.</p>
 <p>The value \(n\) refers to the number of observations in the sample
-  being compared with the original population (the qualification sample is
-  usually assumed to be equal to the population statistics).</p>
+being compared with the original population (the qualification sample is
+usually assumed to be equal to the population statistics).</p>
 <p>The value of \(alpha\) is the acceptable probability of a type I error.
-  Normally, this is set to 0.05 for material or process equivalency and 0.01
-  when setting lot acceptance limits. Though, in principle, this parameter
-  can be set to any number between 0 and 1. This function, however, has only
-  been validated in the range of \(1e-5 \le alpha \le 0.5\).</p>
+Normally, this is set to 0.05 for material or process equivalency and 0.01
+when setting lot acceptance limits. Though, in principle, this parameter
+can be set to any number between 0 and 1. This function, however, has only
+been validated in the range of \(1e-5 \le alpha \le 0.5\).</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>M. G. Vangel. Lot Acceptance and Compliance Testing Using the Sample Mean
@@ -210,7 +210,7 @@ for Polymer Matrix Composite Material Systems,” PS-ACE 100-2002-006,
 Sep. 2003.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='equiv_mean_extremum.html'>equiv_mean_extremum</a></code></p></div>
+    <div class='dont-index'><p><code><a href='equiv_mean_extremum.html'>equiv_mean_extremum()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>qual_mean</span> <span class='op'>&lt;-</span> <span class='fl'>100</span>

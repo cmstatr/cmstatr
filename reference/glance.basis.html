@@ -48,7 +48,7 @@
 
 <meta property="og:title" content="Glance at a basis object — glance.basis" />
 <meta property="og:description" content="Glance accepts an object of type basis and returns a
-tibble::tibble with
+tibble::tibble() with
 one row of summaries for each basis value.
 Glance does not do any calculations: it just gathers the results in a
 tibble." />
@@ -85,7 +85,7 @@ tibble." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -149,7 +149,7 @@ tibble." />
 
     <div class="ref-description">
     <p>Glance accepts an object of type basis and returns a
-<code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble</a></code> with
+<code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble()</a></code> with
 one row of summaries for each basis value.</p>
 <p>Glance does not do any calculations: it just gathers the results in a
 tibble.</p>
@@ -179,25 +179,24 @@ signature.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble</a></code> with the following
-columns:</p>
-<dt><code>p</code></dt><dd><p>the the content of the tolerance bound.
-                Normally 0.90 or 0.99</p></dd>
-<dt><code>conf</code></dt><dd><p>the confidence level. Normally 0.95</p></dd>
-<dt><code>distribution</code></dt><dd><p>a string representing the distribution assumed
-       when calculating the basis value</p></dd>
-<dt><code>modcv</code></dt><dd><p>a logical value indicating whether the modified
-                    CV approach was used. Only applicable to pooling
-                    methods.</p></dd>
-<dt><code>n</code></dt><dd><p>the sample size</p></dd>
-<dt><code>r</code></dt><dd><p>the number of groups used in the calculation. This will
-       be <code>NA</code> for single-point basis values</p></dd>
-<dt><code>basis</code></dt><dd><p>the basis value</p></dd>
+    <p>A <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble()</a></code> with the following
+columns:</p><ul>
+<li><p><code>p</code> the the content of the tolerance bound. Normally 0.90 or 0.99</p></li>
+<li><p><code>conf</code> the confidence level. Normally 0.95</p></li>
+<li><p><code>distribution</code> a string representing the distribution assumed
+when calculating the basis value</p></li>
+<li><p><code>modcv</code> a logical value indicating whether the modified
+CV approach was used. Only applicable to pooling methods.</p></li>
+<li><p><code>n</code> the sample size</p></li>
+<li><p><code>r</code> the number of groups used in the calculation. This will
+be <code>NA</code> for single-point basis values</p></li>
+<li><p><code>basis</code> the basis value</p></li>
+</ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>For the pooled basis methods (<code>basis_pooled_cv</code> and
-<code>basis_pooled_sd</code>), the <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble</a></code>
+<code>basis_pooled_sd</code>), the <code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble()</a></code>
 returned by <code>glance</code> will have one row for each group included in
 the pooling. For all other basis methods, the resulting <code>tibble</code>
 will have a single row.</p>
@@ -210,17 +209,17 @@ because an optional argument was not passed to the function that
 computed the basis value).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='basis.html'>basis</a></code></p></div>
+    <div class='dont-index'><p><code><a href='basis.html'>basis()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>
 <span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>100</span>, <span class='fl'>5</span><span class='op'>)</span>
 <span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'><a href='basis.html'>basis_normal</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>`outliers_within_batch` not run because parameter `batch` not specified</span></div><div class='output co'>#&gt; <span class='message'>`between_batch_variability` not run because parameter `batch` not specified</span></div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></span><span class='op'>(</span><span class='va'>b</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 1 x 7</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 7</span><span>
 #&gt;       p  conf distribution modcv     n r     basis
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'>1</span><span>   0.9  0.95 Normal       FALSE    20 </span><span style='color: #BB0000;'>NA</span><span>     92.0</div><div class='input'>
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>   0.9  0.95 Normal       FALSE    20 </span><span style='color: #BB0000;'>NA</span><span>     92.0</div><div class='input'>
 <span class='co'>## # A tibble: 1 x 7</span>
 <span class='co'>##       p  conf distribution modcv     n r     basis</span>
 <span class='co'>##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;lgl&gt; &lt;int&gt; &lt;lgl&gt; &lt;dbl&gt;</span>
@@ -228,17 +227,17 @@ computed the basis value).</p>
 
 
 <span class='fu'><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></span><span class='op'>(</span><span class='va'>b</span>, include_diagnostics <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; </span><span style='color: #555555;'># A tibble: 1 x 11</span><span>
-#&gt;       p  conf distribution modcv     n r     basis outliers_within…
-#&gt;   </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>           
-#&gt; </span><span style='color: #555555;'>1</span><span>   0.9  0.95 Normal       FALSE    20 </span><span style='color: #BB0000;'>NA</span><span>     92.0 </span><span style='color: #BB0000;'>NA</span><span>              
-#&gt; </span><span style='color: #555555;'># … with 3 more variables: between_batch_variability </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>, outliers </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span style='color: #555555;'>,</span><span>
-#&gt; </span><span style='color: #555555;'>#   anderson_darling_normal </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span></div><div class='input'>
+</div><div class='output co'>#&gt; </span><span style='color: #949494;'># A tibble: 1 x 11</span><span>
+#&gt;       p  conf distribution modcv     n r     basis outliers_within_batch
+#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>        </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                
+#&gt; </span><span style='color: #BCBCBC;'>1</span><span>   0.9  0.95 Normal       FALSE    20 </span><span style='color: #BB0000;'>NA</span><span>     92.0 </span><span style='color: #BB0000;'>NA</span><span>                   
+#&gt; </span><span style='color: #949494;'># … with 3 more variables: between_batch_variability &lt;chr&gt;, outliers &lt;chr&gt;,</span><span>
+#&gt; </span><span style='color: #949494;'>#   anderson_darling_normal &lt;chr&gt;</span><span></div><div class='input'>
 <span class='co'>## # A tibble: 1 x 11</span>
-<span class='co'>##        p  conf distribution modcv     n r     basis outliers_withinâ€¦</span>
+<span class='co'>##        p  conf distribution modcv     n r     basis outliers_within…</span>
 <span class='co'>##    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;        &lt;lgl&gt; &lt;int&gt; &lt;lgl&gt; &lt;dbl&gt; &lt;chr&gt;</span>
 <span class='co'>##  1   0.9  0.95 Normal       FALSE    20 NA     92.0 NA</span>
-<span class='co'>## # â€¦ with 3 more variables: between_batch_variability &lt;chr&gt;,</span>
+<span class='co'>## # … with 3 more variables: between_batch_variability &lt;chr&gt;,</span>
 <span class='co'>## #   outliers &lt;chr&gt;, anderson_darling_normal &lt;chr&gt;</span>
 
 </div></span></pre>

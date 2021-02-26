@@ -83,7 +83,7 @@ distribution." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -177,21 +177,21 @@ Anderson--Darling k-Sample test (usually strength)</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns an object of class <code>adk</code>. This object has the following fields:</p>
-<dt><code>call</code></dt><dd><p>the expression used to call this function</p></dd>
-<dt><code>data</code></dt><dd><p>the original data used to compute the ADK</p></dd>
-<dt><code>groups</code></dt><dd><p>a vector of the groups used in the computation</p></dd>
-<dt><code>alpha</code></dt><dd><p>the value of alpha specified</p></dd>
-<dt><code>n</code></dt><dd><p>the total number of observations</p></dd>
-<dt><code>k</code></dt><dd><p>the number of groups</p></dd>
-<dt><code>sigma</code></dt><dd><p>the computed standard deviation of the test statistic</p></dd>
-<dt><code>ad</code></dt><dd><p>the value of the Anderson--Darling k-Sample test
-  statistic</p></dd>
-<dt><code>p</code></dt><dd><p>the computed p-value</p></dd>
-<dt><code>reject_same_dist</code></dt><dd><p>a boolean value indicating whether the null
-  hypothesis that all samples come from the same distribution is rejected</p></dd>
-<dt><code>raw</code></dt><dd><p>the original results returned from
-  <a href='https://rdrr.io/pkg/kSamples/man/ad.test.html'>ad.test</a></p></dd>
+    <p>Returns an object of class <code>adk</code>. This object has the following fields:</p><ul>
+<li><p><code>call</code> the expression used to call this function</p></li>
+<li><p><code>data</code> the original data used to compute the ADK</p></li>
+<li><p><code>groups</code> a vector of the groups used in the computation</p></li>
+<li><p><code>alpha</code> the value of alpha specified</p></li>
+<li><p><code>n</code> the total number of observations</p></li>
+<li><p><code>k</code> the number of groups</p></li>
+<li><p><code>sigma</code> the computed standard deviation of the test statistic</p></li>
+<li><p><code>ad</code> the value of the Anderson--Darling k-Sample test statistic</p></li>
+<li><p><code>p</code> the computed p-value</p></li>
+<li><p><code>reject_same_dist</code> a boolean value indicating whether the null
+hypothesis that all samples come from the same distribution is rejected</p></li>
+<li><p><code>raw</code> the original results returned from
+<a href='https://rdrr.io/pkg/kSamples/man/ad.test.html'>ad.test</a></p></li>
+</ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 

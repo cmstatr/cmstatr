@@ -93,7 +93,7 @@ tests can be overridden if needed." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -268,7 +268,8 @@ and 0.99 for A-Basis</p></td>
     <tr>
       <th>override</th>
       <td><p>a list of names of diagnostic tests to override,
-if desired.</p></td>
+if desired. Specifying "all" will override all diagnostic
+tests applicable to the current method.</p></td>
     </tr>
     <tr>
       <th>groups</th>
@@ -290,35 +291,31 @@ for A-Basis.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>an object of class <code>basis</code>
-This object has the following fields:</p>
-<dt><code>call</code></dt><dd><p>the expression used to call this function</p></dd>
-<dt><code>distribution</code></dt><dd><p>the distribution used (normal, etc.)</p></dd>
-<dt><code>p</code></dt><dd><p>the value of \(p\) supplied</p></dd>
-<dt><code>conf</code></dt><dd><p>the value of \(conf\) supplied</p></dd>
-<dt><code>modcv</code></dt><dd><p>a logical value indicating whether the modified
-                    CV approach was used. Only applicable to pooling
-                    methods.</p></dd>
-<dt><code>data</code></dt><dd><p>a copy of the data used in the calculation</p></dd>
-<dt><code>groups</code></dt><dd><p>a copy of the groups variable.
-                     Only used for pooling and ANOVA methods.</p></dd>
-<dt><code>batch</code></dt><dd><p>a copy of the batch data used for diagnostic tests</p></dd>
-<dt><code>modcv_transformed_data</code></dt><dd><p>the data after the modified CV
-                                     transformation</p></dd>
-<dt><code>override</code></dt><dd><p>a vector of the names of diagnostic tests that
-                       were overridden. <code>NULL</code> if none were
-                       overridden</p></dd>
-<dt><code>diagnostic_results</code></dt><dd><p>a named character vector containing the
-                                 results of all the diagnostic tests. See
-                                 the Details section for additional
-                                 information</p></dd>
-<dt><code>diagnostic_failures</code></dt><dd><p>a vector containing any diagnostic tests
-                                  that produced failures</p></dd>
-<dt><code>n</code></dt><dd><p>the number of observations</p></dd>
-<dt><code>r</code></dt><dd><p>the number of groups, if a pooling method was used.
-                Otherwise it is NULL.</p></dd>
-<dt><code>basis</code></dt><dd><p>the basis value computed. This is a number
-                    except when pooling methods are used, in
-                    which case it is a data.frame.</p></dd>
+This object has the following fields:</p><ul>
+<li><p><code>call</code> the expression used to call this function</p></li>
+<li><p><code>distribution</code> the distribution used (normal, etc.)</p></li>
+<li><p><code>p</code> the value of \(p\) supplied</p></li>
+<li><p><code>conf</code> the value of \(conf\) supplied</p></li>
+<li><p><code>modcv</code> a logical value indicating whether the modified
+CV approach was used. Only applicable to pooling methods.</p></li>
+<li><p><code>data</code> a copy of the data used in the calculation</p></li>
+<li><p><code>groups</code> a copy of the groups variable.
+Only used for pooling and ANOVA methods.</p></li>
+<li><p><code>batch</code> a copy of the batch data used for diagnostic tests</p></li>
+<li><p><code>modcv_transformed_data</code> the data after the modified CV transformation</p></li>
+<li><p><code>override</code> a vector of the names of diagnostic tests that
+were overridden. <code>NULL</code> if none were overridden</p></li>
+<li><p><code>diagnostic_results</code> a named character vector containing the
+results of all the diagnostic tests. See the Details section for
+additional information</p></li>
+<li><p><code>diagnostic_failures</code> a vector containing any diagnostic tests
+that produced failures</p></li>
+<li><p><code>n</code> the number of observations</p></li>
+<li><p><code>r</code> the number of groups, if a pooling method was used.
+Otherwise it is NULL.</p></li>
+<li><p><code>basis</code> the basis value computed. This is a number
+except when pooling methods are used, in which case it is a data.frame.</p></li>
+</ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -338,49 +335,49 @@ is a way of
 adding extra variance to datasets with unexpectedly low variance.</p>
 <p><code>basis_normal</code> calculate the basis value by subtracting \(k\) times
 the standard deviation from the mean. \(k\) is given by
-the function <code><a href='k_factor_normal.html'>k_factor_normal</a></code>. The equations in
+the function <code><a href='k_factor_normal.html'>k_factor_normal()</a></code>. The equations in
 Krishnamoorthy and Mathew (2008) are used.
 <code>basis_normal</code> also
 performs a diagnostic test for outliers (using
-<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and a diagnostic test for normality (using
-<code><a href='anderson_darling.html'>anderson_darling_normal</a></code>).
+<code><a href='anderson_darling.html'>anderson_darling_normal()</a></code>).
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample()</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_lognormal</code> calculates the basis value in the same way
 that <code>basis_normal</code> does, except that the natural logarithm of the
 data is taken.</p>
 <p><code>basis_lognormal</code> function also performs
 a diagnostic test for outliers (using
-<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and a diagnostic test for normality (using
-<code><a href='anderson_darling.html'>anderson_darling_lognormal</a></code>).
+<code><a href='anderson_darling.html'>anderson_darling_lognormal()</a></code>).
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample()</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_weibull</code> calculates the basis value for data distributed
 according to a Weibull distribution. The confidence level for the
 content requested is calculated using the conditional method, as
 described in Lawless (1982) Section 4.1.2b. This has good agreement
 with tables published in CMH-17-1G. Results differ between this function
-and STAT17 by approximately 0.5%.</p>
+and STAT17 by approximately 0.5\<!-- %. --></p>
 <p><code>basis_weibull</code> function also performs
 a diagnostic test for outliers (using
-<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and a diagnostic test for normality (using
-<code><a href='anderson_darling.html'>anderson_darling_weibull</a></code>).
+<code><a href='anderson_darling.html'>anderson_darling_weibull()</a></code>).
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample()</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_hk_ext</code> calculates the basis value using the Extended
 Hanson--Koopmans method, as described in CMH-17-1G and Vangel (1994).
@@ -401,19 +398,19 @@ method (for use when calculating B-Basis values) is called
 "optimum-order" in this package.
 The results of <code>basis_hk_ext</code> have been
 verified against example results from the program STAT-17. Agreement is
-typically well within 0.2%, however, for a few sample sizes, the
-agreement can be as poor as 1% with the result of this function
+typically well within 0.2\<!-- %, however, for a few sample sizes, the -->
+agreement can be as poor as 1\<!-- % with the result of this function -->
 being more conservative than STAT-17.</p>
 <p><code>basis_hk_ext</code> also performs
 a diagnostic test for outliers (using
-<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and performs a pair of tests that the sample size and method selected
 follow the guidance described above.
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample()</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_nonpara_large_sample</code> calculates the basis value
 using the large sample method described in CMH-17-1G. This method uses
@@ -423,21 +420,27 @@ of this function have been verified against results of the STAT-17
 program.</p>
 <p><code>basis_nonpara_large_sample</code> also performs
 a diagnostic test for outliers (using
-<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and performs a test that the sample size is sufficiently large.
 If the argument <code>batch</code> is given, this function also performs
 a diagnostic test for outliers within
-each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>)
+each batch (using <code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>)
 and a diagnostic test for between batch variability (using
-<code><a href='ad_ksample.html'>ad_ksample</a></code>). The argument <code>batch</code> is only used
+<code><a href='ad_ksample.html'>ad_ksample()</a></code>). The argument <code>batch</code> is only used
 for these diagnostic tests.</p>
 <p><code>basis_anova</code> calculates basis values using the ANOVA method.
 <code>x</code> specifies the data (normally strength) and <code>groups</code>
 indicates the group corresponding to each observation. This method is
-described in CMH-17-1G. This function automatically performs a diagnostic
+described in CMH-17-1G, but when the ratio of between-batch mean
+square to the within-batch mean square is less than or equal
+to one, the tolerance factor is calculated based on pooling the data
+from all groups. This approach is recommended by Vangel (1992)
+and by Krishnamoorthy and Mathew (2008), and is also implemented
+by the software CMH17-STATS and STAT-17.
+This function automatically performs a diagnostic
 test for outliers within each group
-(using <code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>) and a test for between
-group variability (using <code><a href='ad_ksample.html'>ad_ksample</a></code>) as well as checking
+(using <code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>) and a test for between
+group variability (using <code><a href='ad_ksample.html'>ad_ksample()</a></code>) as well as checking
 that the data contains at least 5 groups.
 This function has been verified against the results of the STAT-17 program.</p>
 <p><code>basis_pooled_sd</code> calculates basis values by pooling the data from
@@ -451,18 +454,18 @@ and <code>group</code> indicates the group corresponding to each observation.
 This method is described in CMH-17-1G.</p>
 <p><code>basis_pooled_sd</code> and <code>basis_pooled_cv</code> both automatically
 perform a number of diagnostic tests. Using
-<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>, they check that there are no
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>, they check that there are no
 outliers within each group and batch (provided that <code>batch</code> is
 specified). They check the between batch variability using
-<code><a href='ad_ksample.html'>ad_ksample</a></code>. They check that there are no outliers within
+<code><a href='ad_ksample.html'>ad_ksample()</a></code>. They check that there are no outliers within
 each group (pooling all batches) using
-<code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code>. They check for the normality
-of the pooled data using <code><a href='anderson_darling.html'>anderson_darling_normal</a></code>.
+<code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code>. They check for the normality
+of the pooled data using <code><a href='anderson_darling.html'>anderson_darling_normal()</a></code>.
 <code>basis_pooled_sd</code> checks for equality of variance of all
-data using <code><a href='levene_test.html'>levene_test</a></code> and <code>basis_pooled_cv</code>
+data using <code><a href='levene_test.html'>levene_test()</a></code> and <code>basis_pooled_cv</code>
 checks for equality of variances of all data after transforming it
-using <code><a href='normalize_group_mean.html'>normalize_group_mean</a></code>
-using <code><a href='levene_test.html'>levene_test</a></code>.</p>
+using <code><a href='normalize_group_mean.html'>normalize_group_mean()</a></code>
+using <code><a href='levene_test.html'>levene_test()</a></code>.</p>
 <p>The object returned by these functions includes the named vector
 <code>diagnostic_results</code>. This contains all of the diagnostic tests
 performed. The name of each element of the vector corresponds with the
@@ -471,6 +474,59 @@ name of the diagnostic test. The contents of each element will be
 "O" if the diagnostic test was overridden and <code>NA</code> if the
 diagnostic test was skipped (typically because an optional
 argument was not supplied).</p>
+<p>The following list summarizes the diagnostic tests automatically
+performed by each function.</p><ul>
+<li><p><code>basis_normal</code></p><ul>
+<li><p><code>outliers_within_batch</code></p></li>
+<li><p><code>between_batch_variability</code></p></li>
+<li><p><code>outliers</code></p></li>
+<li><p><code>anderson_darling_normal</code></p></li>
+</ul></li>
+<li><p><code>basis_lognormal</code></p><ul>
+<li><p><code>outliers_within_batch</code></p></li>
+<li><p><code>between_batch_variability</code></p></li>
+<li><p><code>outliers</code></p></li>
+<li><p><code>anderson_darling_lognormal</code></p></li>
+</ul></li>
+<li><p><code>basis_weibull</code></p><ul>
+<li><p><code>outliers_within_batch</code></p></li>
+<li><p><code>between_batch_variability</code></p></li>
+<li><p><code>outliers</code></p></li>
+<li><p><code>anderson_darling_weibull</code></p></li>
+</ul></li>
+<li><p><code>basis_pooled_cv</code></p><ul>
+<li><p><code>outliers_within_batch</code></p></li>
+<li><p><code>between_group_variability</code></p></li>
+<li><p><code>outliers_within_group</code></p></li>
+<li><p><code>pooled_data_normal</code></p></li>
+<li><p><code>normalized_variance_equal</code></p></li>
+</ul></li>
+<li><p><code>basis_pooled_sd</code></p><ul>
+<li><p><code>outliers_within_batch</code></p></li>
+<li><p><code>between_group_variability</code></p></li>
+<li><p><code>outliers_within_group</code></p></li>
+<li><p><code>pooled_data_normal</code></p></li>
+<li><p><code>pooled_variance_equal</code></p></li>
+</ul></li>
+<li><p><code>basis_hk_ext</code></p><ul>
+<li><p><code>outliers_within_batch</code></p></li>
+<li><p><code>between_batch_variability</code></p></li>
+<li><p><code>outliers</code></p></li>
+<li><p><code>sample_size</code></p></li>
+</ul></li>
+<li><p><code>basis_nonpara_large_sample</code></p><ul>
+<li><p><code>outliers_within_batch</code></p></li>
+<li><p><code>between_batch_variability</code></p></li>
+<li><p><code>outliers</code></p></li>
+<li><p><code>sample_size</code></p></li>
+</ul></li>
+<li><p><code>basis_anova</code></p><ul>
+<li><p><code>outliers_within_group</code></p></li>
+<li><p><code>equality_of_variance</code></p></li>
+<li><p><code>number_of_groups</code></p></li>
+</ul></li>
+</ul>
+
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>J. F. Lawless, Statistical Models and Methods for Lifetime Data.
@@ -486,17 +542,20 @@ Applications, and Computation. Hoboken: John Wiley &amp; Sons, 2008.</p>
 <p>W. Meeker, G. Hahn, and L. Escobar, Statistical Intervals: A Guide
 for Practitioners and Researchers, Second Edition.
 Hoboken: John Wiley &amp; Sons, 2017.</p>
+<p>M. Vangel, “New Methods for One-Sided Tolerance Limits for a One-Way
+Balanced Random-Effects ANOVA Model,” Technometrics, vol. 34, no. 2.
+Taylor &amp; Francis, pp. 176–185, 1992.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='hk_ext.html'>hk_ext_z_j_opt</a></code></p>
-<p><code><a href='k_factor_normal.html'>k_factor_normal</a></code></p>
-<p><code><a href='transform_mod_cv.html'>transform_mod_cv</a></code></p>
-<p><code><a href='maximum_normed_residual.html'>maximum_normed_residual</a></code></p>
-<p><code><a href='anderson_darling.html'>anderson_darling_normal</a></code></p>
-<p><code><a href='anderson_darling.html'>anderson_darling_lognormal</a></code></p>
-<p><code><a href='anderson_darling.html'>anderson_darling_weibull</a></code></p>
-<p><code><a href='ad_ksample.html'>ad_ksample</a></code></p>
-<p><code><a href='normalize_group_mean.html'>normalize_group_mean</a></code></p></div>
+    <div class='dont-index'><p><code><a href='hk_ext.html'>hk_ext_z_j_opt()</a></code></p>
+<p><code><a href='k_factor_normal.html'>k_factor_normal()</a></code></p>
+<p><code><a href='transform_mod_cv.html'>transform_mod_cv()</a></code></p>
+<p><code><a href='maximum_normed_residual.html'>maximum_normed_residual()</a></code></p>
+<p><code><a href='anderson_darling.html'>anderson_darling_normal()</a></code></p>
+<p><code><a href='anderson_darling.html'>anderson_darling_lognormal()</a></code></p>
+<p><code><a href='anderson_darling.html'>anderson_darling_weibull()</a></code></p>
+<p><code><a href='ad_ksample.html'>ad_ksample()</a></code></p>
+<p><code><a href='normalize_group_mean.html'>normalize_group_mean()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>

@@ -83,7 +83,7 @@ hypothesis that a sample is drawn from that distribution." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
       </span>
     </div>
 
@@ -178,20 +178,21 @@ Defaults to 0.05.</p></td>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>an object of class <code>anderson_darling</code>. This object has the following
-fields.</p>
-<dt><code>call</code></dt><dd><p>the expression used to call this function</p></dd>
-<dt><code>dist</code></dt><dd><p>the distribution used</p></dd>
-<dt><code>data</code></dt><dd><p>a copy of the data analyzed</p></dd>
-<dt><code>n</code></dt><dd><p>the number of observations in the sample</p></dd>
-<dt><code>A</code></dt><dd><p>the Anderson--Darling test statistic</p></dd>
-<dt><code>osl</code></dt><dd><p>the observed significance level (p-value),
-  assuming the
-  parameters of the distribution are estimated from the data</p></dd>
-<dt><code>alpha</code></dt><dd><p>the required significance level for the test.
- This value is given by the user.</p></dd>
-<dt><code>reject_distribution</code></dt><dd><p>a logical value indicating whether
- the hypothesis that the data is drawn from the specified distribution
- should be rejected</p></dd>
+fields.</p><ul>
+<li><p><code>call</code> the expression used to call this function</p></li>
+<li><p><code>dist</code> the distribution used</p></li>
+<li><p><code>data</code> a copy of the data analyzed</p></li>
+<li><p><code>n</code> the number of observations in the sample</p></li>
+<li><p><code>A</code> the Anderson--Darling test statistic</p></li>
+<li><p><code>osl</code> the observed significance level (p-value),
+assuming the
+parameters of the distribution are estimated from the data</p></li>
+<li><p><code>alpha</code> the required significance level for the test.
+This value is given by the user.</p></li>
+<li><p><code>reject_distribution</code> a logical value indicating whether
+the hypothesis that the data is drawn from the specified distribution
+should be rejected</p></li>
+</ul>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
