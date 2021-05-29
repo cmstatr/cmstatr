@@ -97,7 +97,6 @@ each package used is listed at the end of this vignette.
 library(cmstatr)
 library(dplyr)
 library(testthat)
-testthat::local_edition(2)
 ```
 
 Throughout this vignette, the `testthat` package will be used. Expressions
@@ -121,28 +120,28 @@ Not all checks are performed on all data sets.
 
 Function                        | Tests
 --------------------------------|---------------------------
-`ad_ksample()`                  | [Section 3.1](#cf-ad)
-`anderson_darling_normal()`     | 
-`anderson_darling_lognormal()`  | 
-`anderson_darling_weibull()`    | 
-`basis_normal()`                |
-`basis_lognormal()`             |
-`basis_weibull()`               |
-`basis_pooled_cv()`             |
-`basis_pooled_sd()`             |
-`basis_hk_ext()`                |
-`basis_nonpara_large_sample()`  |
-`basis_anova()`                 |
+`ad_ksample()`                  | [Section 3.1](#cf-ad), [Section X.X.X](#c11-adk), [Section X.X](#cl-adk)
+`anderson_darling_normal()`     | [Section X.X.X](#c11-ad), [Section X.X](#ods-adn)
+`anderson_darling_lognormal()`  | [Section X.X.X](#c11-ad), [Section X.X](#ods-adl)
+`anderson_darling_weibull()`    | [Section X.X.X](#c11-ad), [Section X.X](#ods-adw)
+`basis_normal()`                | [Section X.X](#ods-nb)
+`basis_lognormal()`             | [Section X.X](#ods-lb)
+`basis_weibull()`               | [Section X.X](#ods-wb)
+`basis_pooled_cv()`             | [Section X.X.X](#c12-pcv), [Section X.X.X](#c12-pcvmcv),
+`basis_pooled_sd()`             | [Section X.X.X](#c12-psd), [Section X.X.X](#c12-psdmcv)
+`basis_hk_ext()`                | [Section X.X.X](#c11-hk-wf), [Section X.X](#ods-hkb), [Section X.X](#ods-hkb2)
+`basis_nonpara_large_sample()`  | [Section X.X](#ods-lsnb)
+`basis_anova()`                 | [Section X.X.X](#c11-anova)
 `calc_cv_star()`                |
 `cv()`                          |
-`equiv_change_mean()`           |
-`equiv_mean_extremum()`         |
-`hk_ext_z()`                    |
+`equiv_change_mean()`           | [Section X.X](#ods-ecm)
+`equiv_mean_extremum()`         | [Section X.X](#ods-eme)
+`hk_ext_z()`                    | [Section X.X](#pf-hk)
 `hk_ext_z_j_opt()`              |
 `k_equiv()`                     |
-`k_factor_normal()`             |
-`levene_test()`                 |
-`maximum_normed_residual()`     |
+`k_factor_normal()`             | [Section X.X](#pf-kb), [Section X.X](#pf-ka)
+`levene_test()`                 | [Section X.X.X](#c11-lbc), [Section X.X.X](#c11-lbb)
+`maximum_normed_residual()`     | [Section X.X.X](#c11-mnr)
 `nonpara_binomial_rank()`       |
 `normalize_group_mean()`        |
 `normalize_ply_thickness()`     |
@@ -266,7 +265,7 @@ dat_8_3_11_1_1 <- tribble(
 dat_8_3_11_1_1
 ```
 
-### X.X.X Maximum Normed Residual Test
+### X.X.X Maximum Normed Residual Test {#c11-mnr}
 CMH-17-1G Table 8.3.11.1.1(a) provides results of the MNR test from
 ASAP for this data set. Batches 2 and 3 of the ETW data is considered
 here and the results of `cmstatr` are compared with those published in
@@ -303,7 +302,7 @@ res
 ```
 
 
-### X.X.X Anderson--Darling k--Sample Test
+### X.X.X Anderson--Darling k--Sample Test {#c11-adk}
 
 For the ETW condition, the ADK test statistic given in @[CMH-17-1G] is
 $ADK = 0.793$ and the test concludes that the samples come from the
@@ -338,7 +337,7 @@ expect_true(res$reject_same_dist)
 res
 ```
 
-### X.X.X Anderson--Darling Tests for Distribution
+### X.X.X Anderson--Darling Tests for Distribution {#c11-ad}
 
 CMH-17-1G Section 8.3.11.2.1 contains results from STAT17 for
 the "observed significance level" from the Anderson--Darling test
@@ -377,7 +376,7 @@ res
 ```
 
 
-### X.X.X Levene's Test (Between Conditions)
+### X.X.X Levene's Test (Between Conditions) {#c11-lbc}
 
 ??? The test statistic is different in the handbook????
 
@@ -387,7 +386,7 @@ dat_8_3_11_1_1 %>%
   levene_test(strength, condition)
 ```
 
-### X.X.X Levene's Test (Between Batches)
+### X.X.X Levene's Test (Between Batches) #{c11-lbb}
 
 CMH-17-1G Section 8.3.11.2.2 provides output from STAT17. The
 ETW2 condition from the present data set was analyzed by STAT17
@@ -416,7 +415,7 @@ res
 
 
 
-### X.X.X Nonparametric Basis Values
+### X.X.X Nonparametric Basis Values {#c11-hk-wf}
 CMH-17-1G Section 8.3.11.2.1 provides STAT17 outputs for the ETW
 condition of the present data set. The nonparametric Basis values are listed.
 In this case, the Hanson--Koopmans method is used. The published A-Basis
@@ -439,7 +438,7 @@ dat_8_3_11_1_1 %>%
 
 
 
-### X.X.X Single-Point ANOVA Basis Value
+### X.X.X Single-Point ANOVA Basis Value {#c11-anova}
 CMH-17-1G Section 8.3.11.2.2 provides output from STAT17 for
 the ETW2 condition from the present data set. STAT17 reports
 A- and B-Basis values based on the ANOVA method of 34.6 and
@@ -501,7 +500,7 @@ dat_8_3_11_1_2 <- tribble(
 ```
 
 
-### X.X.X Pooled SD A- and B-Basis
+### X.X.X Pooled SD A- and B-Basis {#c12-psd}
 CMH-17-1G Table 8.3.11.2(k) provides outputs from ASAP for the data set
 above. ASAP uses the pooled SD method. ASAP produces the following
 results, which are quite similar to those produced by `cmstatr`.
@@ -543,7 +542,7 @@ expect_equal(res$basis$value[res$basis$group == "ETW2"],
 res
 ```
 
-### X.X.X Pooled SD A- and B-Basis (Mod CV)
+### X.X.X Pooled SD A- and B-Basis (Mod CV) {#c12-psdmcv}
 
 The present data set was input into CMH17-STATS and the software was set
 to use the modified CV transform with the pooled SD method. CMH17-STATS
@@ -596,7 +595,7 @@ res
 
 
 
-### X.X.X Pooled CV A- and B-Basis
+### X.X.X Pooled CV A- and B-Basis {#c12-pcv}
 This data set was input into CMH17-STATS and the Pooled CV method was selected.
 The results from CMH17-STATS were as follows. `cmstatr` produces very similar
 results.
@@ -634,7 +633,7 @@ res
 ```
 
 
-### X.X.X Pooled CV A- and B-Basis (Mod CV)
+### X.X.X Pooled CV A- and B-Basis (Mod CV) {#c12-pcvmcv}
 This data set was input into CMH17-STATS and the Pooled CV method was selected
 with the modified CV transform. Additionally, the ETW2 condition was removed.
 The results from CMH17-STATS were as follows. `cmstatr` produces very similar
@@ -674,12 +673,12 @@ res
 ```
 
 
-# Other Data Sets
+# X. Other Data Sets
 This section contains various small data sets. In most cases, these data sets
 were generated randomly for the purpose of comparing `cmstatr` to other
 software.
 
-## Anderson--Darling Test (Normal)
+## X.X Anderson--Darling Test (Normal) {#ods-adn}
 The following data set was randomly generated. When this is
 entered into STAT17 [@STAT-17], that software gives the value
 $OSL = 0.465$, which matches the result of `cmstatr`
@@ -714,7 +713,7 @@ expect_equal(res$osl, 0.465, tolerance = 0.002)
 res
 ```
 
-## Anderson--Darling Test (Lognormal)
+## X.X Anderson--Darling Test (Lognormal) {#ods-adl}
 The following data set was randomly generated. When this is
 entered into STAT17 [@STAT-17], that software gives the value
 $OSL = 0.480$, which matches the result of `cmstatr`
@@ -750,7 +749,7 @@ expect_equal(res$osl, 0.480, tolerance = 0.002)
 res
 ```
 
-## Anderson--Darling Test (Weibull)
+## Anderson--Darling Test (Weibull) {#ods-adw}
 The following data set was randomly generated. When this is
 entered into STAT17 [@STAT-17], that software gives the value
 $OSL = 0.179$, which matches the result of `cmstatr`
@@ -786,7 +785,7 @@ expect_equal(res$osl, 0.179, tolerance = 0.002)
 res
 ```
 
-## X.X Normal A- and B-Basis
+## X.X Normal A- and B-Basis {#ods-nb}
 
 The following data was input into STAT17 and the A- and B-Basis values
 were computed assuming normally distributed data. The results were 120.336
@@ -813,7 +812,7 @@ res
 ```
 
 
-## X.X Lognormal A- and B-Basis
+## X.X Lognormal A- and B-Basis {#ods-lb}
 
 The following data was input into STAT17 and the A- and B-Basis values
 were computed assuming lognormally distributed data. The results were 121.710
@@ -839,7 +838,7 @@ res
 ```
 
 
-## X.X Weibull A- and B-Basis
+## X.X Weibull A- and B-Basis {#ods-wb}
 
 The following data was input into STAT17 and the A- and B-Basis values
 were computed assuming data following the Weibull distribution.
@@ -865,7 +864,7 @@ expect_equal(res$basis, 125.441, tolerance = 0.3)
 res
 ```
 
-## X.X Extended Hanson--Koopman A- and B-Basis
+## X.X Extended Hanson--Koopman A- and B-Basis {#ods-hkb}
 
 The following data was input into STAT17 and the A- and B-Basis values
 were computed using the nonparametric (small sample) method.
@@ -894,7 +893,7 @@ res
 ```
 
 
-## X.X Extended Hanson--Koopman B-Basis
+## X.X Extended Hanson--Koopman B-Basis {#ods-hkb2}
 The following random numbers were generated.
 
 ```{r}
@@ -942,7 +941,7 @@ expect_equal(res$basis, 128.82397, tolerance = 0.001)
 res
 ```
 
-## X.X Large Sample Nonparametric B-Basis
+## X.X Large Sample Nonparametric B-Basis {#ods-lsnb}
 
 The following data was input into STAT17 and the B-Basis value
 was computed using the nonparametric (large sample) method.
@@ -966,7 +965,7 @@ expect_equal(res$basis, 122.738297, tolerance = 0.005)
 res
 ```
 
-## Acceptance Limits Based on Mean and Extremum
+## X.X Acceptance Limits Based on Mean and Extremum {#ods-eme}
 
 Results from `cmstatr`'s `equiv_mean_extremum` function were compared with
 results from HYTEQ. The summary statistics for the qualification data
@@ -996,7 +995,7 @@ res
 ```
 
 
-## Acceptance Based on Change in Mean
+## Acceptance Based on Change in Mean {#ods-ecm}
 
 Results from `cmstatr`'s `equiv_change_mean` function were compared with
 results from HYTEQ. The following parameters were used. A value of
@@ -1034,7 +1033,7 @@ res
 In this section, results from `cmstatr` are compared with values published
 in literature.
 
-## X.X Anderson--Darling K--Sample Test
+## X.X Anderson--Darling K--Sample Test {#cl-adk}
 [@Stephens1987] provides example data that compares measurements obtained
 in four labs. Their paper gives values of the ADK test statistic as well as
 p-values.
@@ -1069,12 +1068,12 @@ res
 ```
 
 
-# Comparison with Published Factors
+# X. Comparison with Published Factors
 Various factors, such as tolerance limit factors, are published in various
 publications. This section compares those published factors with those
 computed by `cmstatr`.
 
-## Normal kB Factors
+## X.X Normal kB Factors {#pf-kb}
 B-Basis tolerance limit factors assuming a normal distribution are published in
 CMH-17-1G. Those factors are reproduced below and are compared with the
 results of `cmstatr`. The published factors and those computed by `cmstatr`
@@ -1125,7 +1124,7 @@ tribble(
     abs(kB_published - kB_cmstatr), 5e-3))
 ```
 
-## Normal kA Factors
+## Normal kA Factors {#pf-ka}
 A-Basis tolerance limit factors assuming a normal distribution are published in
 CMH-17-1G. Those factors are reproduced below and are compared with the
 results of `cmstatr`. The published factors and those computed by `cmstatr`
@@ -1176,7 +1175,7 @@ tribble(
     abs(kA_published - kA_cmstatr), 5e-4))
 ```
 
-## Nonparametric B-Basis Extended Hanson--Koopman
+## X.X Nonparametric B-Basis Extended Hanson--Koopman {#pf-hk}
 Vangel [@Vangel1994] provides extensive tables of $z$ for the case where
 $i=1$ and $j$ is the median observation. This section checks the results of
 `cmstatr`'s function against those tables. Only the odd values of $n$
