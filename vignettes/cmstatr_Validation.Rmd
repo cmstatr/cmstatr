@@ -97,6 +97,7 @@ each package used is listed at the end of this vignette.
 library(cmstatr)
 library(dplyr)
 library(testthat)
+testthat::local_edition(2)
 ```
 
 Throughout this vignette, the `testthat` package will be used. Expressions
@@ -210,7 +211,7 @@ res
 
 
 # X. Comparison with Examples from CMH-17-1G
-## X.X Section 8.3.11.1.1
+## X.X Dataset From Section 8.3.11.1.1
 
 [@CMH-17-1G] provides an example data set and results from
 ASAP [@ASAP2008] and STAT17 [@STAT-17]. This example data set is duplicated
@@ -461,6 +462,217 @@ expect_equal(res$basis, 63.2, tolerance = 5e-3)
 res
 ```
 
+## X.X Dataset From Section 8.3.11.1.2
+
+[@CMH-17-1G] provides an example data set and results from
+ASAP [@ASAP2008]. This example data set is duplicated
+below:
+
+```{r}
+dat_8_3_11_1_2 <- tribble(
+  ~batch, ~strength, ~condition,
+  1, 79.04517, "CTD", 1, 103.2006, "RTD", 1, 63.22764, "ETW", 1, 54.09806, "ETW2",
+  1, 102.6014, "CTD", 1, 105.1034, "RTD", 1, 70.84454, "ETW", 1, 58.87615, "ETW2",
+  1, 97.79372, "CTD", 1, 105.1893, "RTD", 1, 66.43223, "ETW", 1, 61.60167, "ETW2",
+  1, 92.86423, "CTD", 1, 100.4189, "RTD", 1, 75.37771, "ETW", 1, 60.23973, "ETW2",
+  1, 117.218,  "CTD", 2, 85.32319, "RTD", 1, 72.43773, "ETW", 1, 61.4808,  "ETW2",
+  1, 108.7168, "CTD", 2, 92.69923, "RTD", 1, 68.43073, "ETW", 1, 64.55832, "ETW2",
+  1, 112.2773, "CTD", 2, 98.45242, "RTD", 1, 69.72524, "ETW", 2, 57.76131, "ETW2",
+  1, 114.0129, "CTD", 2, 104.1014, "RTD", 2, 66.20343, "ETW", 2, 49.91463, "ETW2",
+  2, 106.8452, "CTD", 2, 91.51841, "RTD", 2, 60.51251, "ETW", 2, 61.49271, "ETW2",
+  2, 112.3911, "CTD", 2, 101.3746, "RTD", 2, 65.69334, "ETW", 2, 57.7281,  "ETW2",
+  2, 115.5658, "CTD", 2, 101.5828, "RTD", 2, 62.73595, "ETW", 2, 62.11653, "ETW2",
+  2, 87.40657, "CTD", 2, 99.57384, "RTD", 2, 59.00798, "ETW", 2, 62.69353, "ETW2",
+  2, 102.2785, "CTD", 2, 88.84826, "RTD", 2, 62.37761, "ETW", 3, 61.38523, "ETW2",
+  2, 110.6073, "CTD", 3, 92.18703, "RTD", 3, 64.3947,  "ETW", 3, 60.39053, "ETW2",
+  3, 105.2762, "CTD", 3, 101.8234, "RTD", 3, 72.8491,  "ETW", 3, 59.17616, "ETW2",
+  3, 110.8924, "CTD", 3, 97.68909, "RTD", 3, 66.56226, "ETW", 3, 60.17616, "ETW2",
+  3, 108.7638, "CTD", 3, 101.5172, "RTD", 3, 66.56779, "ETW", 3, 46.47396, "ETW2",
+  3, 110.9833, "CTD", 3, 100.0481, "RTD", 3, 66.00123, "ETW", 3, 51.16616, "ETW2",
+  3, 101.3417, "CTD", 3, 102.0544, "RTD", 3, 59.62108, "ETW",
+  3, 100.0251, "CTD",                     3, 60.61167, "ETW",
+                                          3, 57.65487, "ETW",
+                                          3, 66.51241, "ETW",
+                                          3, 64.89347, "ETW",
+                                          3, 57.73054, "ETW",
+                                          3, 68.94086, "ETW",
+                                          3, 61.63177, "ETW"
+)
+```
+
+
+### X.X.X Pooled SD A- and B-Basis
+CMH-17-1G Table 8.3.11.2(k) provides outputs from ASAP for the data set
+above. ASAP uses the pooled SD method. ASAP produces the following
+results, which are quite similar to those produced by `cmstatr`.
+
+Condition | CTD   | RTD   | ETW   | ETW2
+----------|-------|-------|-------|------
+B-Basis   | 93.64 | 87.30 | 54.33 | 47.12
+A-Basis   | 89.19 | 79.86 | 46.84 | 39.69
+
+```{r}
+
+res <- basis_pooled_sd(dat_8_3_11_1_2, strength, condition,
+                         override = "all")
+
+expect_equal(res$basis$value[res$basis$group == "CTD"],
+           93.64, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "RTD"],
+           87.30, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW"],
+           54.33, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW2"],
+           47.12, tolerance = 0.01)
+res
+```
+
+
+```{r}
+res <- basis_pooled_sd(dat_8_3_11_1_2, strength, condition,
+                       p = 0.99, conf = 0.95,
+                       override = "all")
+expect_equal(res$basis$value[res$basis$group == "CTD"],
+           86.19, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "RTD"],
+           79.86, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW"],
+           46.84, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW2"],
+           39.69, tolerance = 0.01)
+res
+```
+
+### X.X.X Pooled SD A- and B-Basis (Mod CV)
+
+The present data set was input into CMH17-STATS and the software was set
+to use the modified CV transform with the pooled SD method. CMH17-STATS
+indicates that the transformed data fails the XXXX test....which one???
+...does `cmstatr` fail the same test???
+
+```{r}
+dat_8_3_11_1_2 %>%
+  basis_pooled_sd(strength, condition, modcv = TRUE)
+```
+
+After removal of the ETW2 condition, CMH17-STATS reports the pooled A- and 
+B-Basis (mod CV) shown in the following table.
+`cmstatr` computes very similar values.
+
+Condition | CTD   | RTD   | ETW
+----------|-------|-------|------
+B-Basis   | 92.25 | 85.91 | 52.97
+A-Basis   | 83.81 | 77.48 | 44.47
+
+
+```{r}
+res <- dat_8_3_11_1_2 %>%
+  filter(condition != "ETW2") %>%
+  basis_pooled_sd(strength, condition, modcv = TRUE)
+expect_equal(res$basis$value[res$basis$group == "CTD"],
+             92.25, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "RTD"],
+             85.91, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW"],
+             52.97, tolerance = 0.01)
+res
+```
+
+
+               
+```{r}
+res <- dat_8_3_11_1_2 %>%
+  filter(condition != "ETW2") %>%
+  basis_pooled_sd(strength, condition,
+                  p = 0.99, conf = 0.95, modcv = TRUE)
+expect_equal(res$basis$value[res$basis$group == "CTD"],
+             83.81, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "RTD"],
+             77.48, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW"],
+             44.47, tolerance = 0.01)
+res
+```
+
+
+
+### X.X.X Pooled CV A- and B-Basis
+This data set was input into CMH17-STATS and the Pooled CV method was selected.
+The results from CMH17-STATS were as follows. `cmstatr` produces very similar
+results.
+
+Condition | CTD   | RTD   | ETW   | ETW2
+----------|-------|-------|-------|------
+B-Basis   | 90.89 | 85.37 | 56.79 | 50.55
+A-Basis   | 81.62 | 76.67 | 50.98 | 45.40
+
+```{r}
+res <- basis_pooled_cv(dat_8_3_11_1_2, strength, condition, override = "all")
+expect_equal(res$basis$value[res$basis$group == "CTD"],
+             90.89, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "RTD"],
+             85.37, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW"],
+             56.79, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW2"],
+             50.55, tolerance = 0.01)
+res
+```
+
+```{r}
+res <- basis_pooled_cv(dat_8_3_11_1_2, strength, condition,
+                       p = 0.99, conf = 0.95, override = "all")
+expect_equal(res$basis$value[res$basis$group == "CTD"],
+             81.62, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "RTD"],
+             76.67, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW"],
+             50.98, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW2"],
+             45.40, tolerance = 0.01)
+res
+```
+
+
+### X.X.X Pooled CV A- and B-Basis (Mod CV)
+This data set was input into CMH17-STATS and the Pooled CV method was selected
+with the modified CV transform. Additionally, the ETW2 condition was removed.
+The results from CMH17-STATS were as follows. `cmstatr` produces very similar
+results.
+
+Condition | CTD   | RTD   | ETW   
+----------|-------|-------|-------
+B-Basis   | 90.31 | 84.83 | 56.43 
+A-Basis   | 80.57 | 75.69 | 50.33 
+
+
+```{r}
+res <- dat_8_3_11_1_2 %>%
+  filter(condition != "ETW2") %>%
+  basis_pooled_cv(strength, condition, modcv = TRUE)
+expect_equal(res$basis$value[res$basis$group == "CTD"],
+             90.31, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "RTD"],
+             84.83, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW"],
+             56.43, tolerance = 0.01)
+res
+```
+
+```{r}
+res <- dat_8_3_11_1_2 %>%
+  filter(condition != "ETW2") %>%
+  basis_pooled_cv(strength, condition, modcv = TRUE,
+                  p = 0.99, conf = 0.95)
+expect_equal(res$basis$value[res$basis$group == "CTD"],
+             80.57, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "RTD"],
+             75.69, tolerance = 0.01)
+expect_equal(res$basis$value[res$basis$group == "ETW"],
+             50.33, tolerance = 0.01)
+res
+```
+
 
 # Other Data Sets
 This section contains various small data sets. In most cases, these data sets
@@ -574,6 +786,112 @@ expect_equal(res$osl, 0.179, tolerance = 0.002)
 res
 ```
 
+## X.X Normal A- and B-Basis
+
+The following data was input into STAT17 and the A- and B-Basis values
+were computed assuming normally distributed data. The results were 120.336
+and 129.287, respectively. `cmstatr` reports very similar values.
+
+
+```{r}
+dat <- c(
+  137.4438, 139.5395, 150.8900, 141.4474, 141.8203, 151.8821, 143.9245,
+  132.9732, 136.6419, 138.1723, 148.7668, 143.2830, 143.5429, 141.7023,
+  137.4732, 152.3380, 144.1589, 128.5218
+)
+
+res <- basis_normal(x = dat, p = 0.99, conf = 0.95)
+expect_equal(res$basis, 120.336, tolerance = 0.0005)
+res
+```
+
+
+```{r}
+res <- basis_normal(x = dat, p = 0.9, conf = 0.95)
+expect_equal(res$basis, 129.287, tolerance = 0.0005)
+res
+```
+
+
+## X.X Lognormal A- and B-Basis
+
+The following data was input into STAT17 and the A- and B-Basis values
+were computed assuming lognormally distributed data. The results were 121.710
+and 129.664, respectively. `cmstatr` reports very similar values.
+
+
+```{r}
+dat <- c(
+  137.4438, 139.5395, 150.8900, 141.4474, 141.8203, 151.8821, 143.9245,
+  132.9732, 136.6419, 138.1723, 148.7668, 143.2830, 143.5429, 141.7023,
+  137.4732, 152.3380, 144.1589, 128.5218
+)
+
+res <- basis_lognormal(x = dat, p = 0.99, conf = 0.95)
+expect_equal(res$basis, 121.710, tolerance = 0.0005)
+res
+```
+
+```{r}
+res <- basis_lognormal(x = dat, p = 0.9, conf = 0.95)
+expect_equal(res$basis, 129.664, tolerance = 0.0005)
+res
+```
+
+
+## X.X Weibull A- and B-Basis
+
+The following data was input into STAT17 and the A- and B-Basis values
+were computed assuming data following the Weibull distribution.
+The results were 109.150
+and 125.441, respectively. `cmstatr` reports very similar values.
+
+
+```{r}
+dat <- c(
+  137.4438, 139.5395, 150.8900, 141.4474, 141.8203, 151.8821, 143.9245,
+  132.9732, 136.6419, 138.1723, 148.7668, 143.2830, 143.5429, 141.7023,
+  137.4732, 152.3380, 144.1589, 128.5218
+)
+
+res <- basis_weibull(x = dat, p = 0.99, conf = 0.95)
+expect_equal(res$basis, 109.150, tolerance = 0.6)
+res
+```
+
+```{r}
+res <- basis_weibull(x = dat, p = 0.9, conf = 0.95)
+expect_equal(res$basis, 125.441, tolerance = 0.3)
+res
+```
+
+## X.X Extended Hanson--Koopman A- and B-Basis
+
+The following data was input into STAT17 and the A- and B-Basis values
+were computed using the nonparametric (small sample) method.
+The results were 99.651
+and 124.156, respectively. `cmstatr` reports very similar values.
+
+```{r}
+dat <- c(
+  137.4438, 139.5395, 150.8900, 141.4474, 141.8203, 151.8821, 143.9245,
+  132.9732, 136.6419, 138.1723, 148.7668, 143.2830, 143.5429, 141.7023,
+  137.4732, 152.3380, 144.1589, 128.5218
+)
+
+res <- basis_hk_ext(x = dat, p = 0.99, conf = 0.95,
+                    method = "woodward-frawley")
+expect_equal(res$basis, 99.651, tolerance = 0.05)
+res
+```
+
+
+```{r}
+res <- basis_hk_ext(x = dat, p = 0.9, conf = 0.95,
+                    method = "optimum-order")
+expect_equal(res$basis, 124.156, tolerance = 0.05)
+res
+```
 
 
 ## X.X Extended Hanson--Koopman B-Basis
@@ -581,34 +899,10 @@ The following random numbers were generated.
 
 ```{r}
 dat <- c(
-  139.6734,
-  143.0032,
-  130.4757,
-  144.8327,
-  138.7818,
-  136.7693,
-  148.636,
-  131.0095,
-  131.4933,
-  142.8856,
-  158.0198,
-  145.2271,
-  137.5991,
-  139.8298,
-  140.8557,
-  137.6148,
-  131.3614,
-  152.7795,
-  145.8792,
-  152.9207,
-  160.0989,
-  145.192,
-  128.6383,
-  141.5992,
-  122.5297,
-  159.8209,
-  151.672,
-  159.0156
+  139.6734, 143.0032, 130.4757, 144.8327, 138.7818, 136.7693, 148.636,
+  131.0095, 131.4933, 142.8856, 158.0198, 145.2271, 137.5991, 139.8298,
+  140.8557, 137.6148, 131.3614, 152.7795, 145.8792, 152.9207, 160.0989,
+  145.1920, 128.6383, 141.5992, 122.5297, 159.8209, 151.6720, 159.0156
 )
 ```
 
@@ -648,6 +942,93 @@ expect_equal(res$basis, 128.82397, tolerance = 0.001)
 res
 ```
 
+## X.X Large Sample Nonparametric B-Basis
+
+The following data was input into STAT17 and the B-Basis value
+was computed using the nonparametric (large sample) method.
+The results was 122.738297. `cmstatr` reports very similar values.
+
+```{r}
+data <- c(
+  137.3603, 135.6665, 136.6914, 154.7919, 159.2037, 137.3277, 128.821,
+  138.6304, 138.9004, 147.4598, 148.6622, 144.4948, 131.0851, 149.0203,
+  131.8232, 146.4471, 123.8124, 126.3105, 140.7609, 134.4875, 128.7508,
+  117.1854, 129.3088, 141.6789, 138.4073, 136.0295, 128.4164, 141.7733,
+  134.455,  122.7383, 136.9171, 136.9232, 138.8402, 152.8294, 135.0633,
+  121.052,  131.035,  138.3248, 131.1379, 147.3771, 130.0681, 132.7467,
+  137.1444, 141.662,  146.9363, 160.7448, 138.5511, 129.1628, 140.2939,
+  144.8167, 156.5918, 132.0099, 129.3551, 136.6066, 134.5095, 128.2081,
+  144.0896, 141.8029, 130.0149, 140.8813, 137.7864
+)
+
+res <- basis_nonpara_large_sample(x = data, p = 0.9, conf = 0.95)
+expect_equal(res$basis, 122.738297, tolerance = 0.005)
+res
+```
+
+## Acceptance Limits Based on Mean and Extremum
+
+Results from `cmstatr`'s `equiv_mean_extremum` function were compared with
+results from HYTEQ. The summary statistics for the qualification data
+were set as `mean = 141.310` and `sd=6.415`. For a value of `alpha=0.05` and
+`n = 9`,
+HYTEQ reported thresholds of 123.725 and 137.197 for minimum individual
+and mean, respectively. `cmstatr` produces very similar results.
+
+```{r}
+res <- equiv_mean_extremum(alpha = 0.05, mean_qual = 141.310, sd_qual = 6.415,
+                           n_sample = 9)
+expect_equal(res$threshold_min_indiv, 123.725, tolerance = 1e-2)
+expect_equal(res$threshold_mean, 137.197, tolerance = 1e-2)
+res
+```
+
+Using the same parameters, but using the modified CV method,
+HYTEQ produces thresholds of 117.024 and 135.630 for minimum individual
+and mean, respectively. `cmstatr` produces very similar results.
+
+```{r}
+res <- equiv_mean_extremum(alpha = 0.05, mean_qual = 141.310, sd_qual = 6.415,
+                           n_sample = 9, modcv = TRUE)
+expect_equal(res$threshold_min_indiv, 117.024, tolerance = 1e-2)
+expect_equal(res$threshold_mean, 135.630, tolerance = 1e-2)
+res
+```
+
+
+## Acceptance Based on Change in Mean
+
+Results from `cmstatr`'s `equiv_change_mean` function were compared with
+results from HYTEQ. The following parameters were used. A value of
+`alpha = 0.05` was selected.
+
+Parameter | Qualification | Sample
+----------|---------------|---------
+Mean      | 9.24          | 9.02
+SD        | 0.162         | 0.15785
+n         | 28            | 9
+
+HYTEQ gives an acceptance range of 9.115 to 9.365. `cmstatr` produces
+similar results.
+
+```{r}
+res <- equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
+                         sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+                         sd_qual = 0.162)
+expect_equal(res$threshold, c(9.115, 9.365), tolerance = 5e-3)
+res
+```
+
+After selecting the modified CV method, HYTEQ gives an acceptance
+range of 8.857 to 9.623. `cmstatr` produces similar results.
+
+```{r}
+res <- equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
+                         sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+                         sd_qual = 0.162, modcv = TRUE)
+expect_equal(res$threshold, c(8.857, 9.623), tolerance = 5e-3)
+res
+```
 
 # X. Comparison with Literature
 In this section, results from `cmstatr` are compared with values published
