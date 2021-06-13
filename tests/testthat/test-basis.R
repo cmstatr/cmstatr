@@ -1186,7 +1186,6 @@ test_that("Extended Hanson-Koopman matches median results from Vangel 1994", {
                                        ", z_calc=", z_calc, "\n")))
 })
 
-
 cmh_17_1g_8_5_14 <- tribble(
   ~n, ~r, ~k,
   2, 2, 35.177,
@@ -1218,7 +1217,7 @@ cmh_17_1g_8_5_14 <- tribble(
   28, 12, 1.010
 )
 
-test_that("Extended Hanson-Koopman matches CMH-17-1G Table 8.5.14", {
+test_that("Extended HK matches CMH-17-1G Table 8.5.14", {
   # CMH-17-1G uses the optimal order statistic approach suggested by
   # Vangel (1994) for computing B-Basis values. There are a few values
   # of n where this package's implementation finds a different optimum order
@@ -1231,7 +1230,7 @@ test_that("Extended Hanson-Koopman matches CMH-17-1G Table 8.5.14", {
     mutate(z = hk_ext_z_j_opt(n, 0.90, 0.95)$z) %>%
     mutate(j = hk_ext_z_j_opt(n, 0.90, 0.95)$j) %>%
     filter(
-      n != 10 & n != 13 & n != 16 & n != 17 & n != 19 & n != 22 & n != 27
+      n != 17 & n != 20 & n != 23 & n != 24 & n != 28
       ) %>%
     mutate(expect_equal(j, r,
                         label = paste0("Mismatch in `j`/`r` for n=", n, ", ",
@@ -1330,8 +1329,8 @@ test_that("Hanson-Koopman results match STAT17 for several values of n", {
   res <- basis_hk_ext(x = head(data, 13), p = 0.9, conf = 0.95,
                       method = "optimum-order")
   expect_equal(res$basis, 124.07851, tolerance = 1.3)
-  # worst agreement, ensure that it's conservative
-  expect_lt(res$basis, 124.07851)
+  # worst agreement
+  expect_equal(res$basis, 124.07851, tolerance = 0.003)
 
   res <- basis_hk_ext(x = head(data, 12), p = 0.9, conf = 0.95,
                       method = "optimum-order")

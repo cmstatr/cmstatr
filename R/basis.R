@@ -1209,19 +1209,24 @@ hk_ext_z <- function(n, i, j, p, conf) {
   z
 }
 
+
 #' @rdname hk_ext
 #' @export
 hk_ext_z_j_opt <- function(n, p, conf) {
   i <- 1  # i is always 1
 
-  # an approximation of the expected value of the order statistic
-  # for a standard normal distribution. This approximation is
-  # known to be incorrect, especially in the tails of the
-  # distribution. However, it appears to be close enough
-  # for the purposes of determining which value of j is optimum
-  # per Vangel's approach.
+  if (n < 2) {
+    stop("n must be >= 2")
+  }
+
   expected_order_statistic <- function(i, n) {
-    qnorm((i - 0.5) / n)
+    # ref: https://www.gwern.net/docs/statistics/order/1961-harter.pdf
+    int <- function(x) {
+      x * pnorm(-x) ^ (i - 1) * pnorm(x) ^ (n - i) * dnorm(x)
+    }
+    integral <- integrate(int, -Inf, Inf)
+    stopifnot(integral$message == "OK")
+    factorial(n) / (factorial(n - i) * factorial(i - 1)) * integral$value
   }
 
   # Try all the allowable values of j to find the value of T
