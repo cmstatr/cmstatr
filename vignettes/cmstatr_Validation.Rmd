@@ -72,6 +72,20 @@ references:
   issued:
     year: "1994"
   DOI: 10.1080/03610919408813222
+- id: vangel_lot_2002
+  type: article
+  author:
+    - given: Mark
+      family: Vangel
+  title: Lot Acceptance and Compliance Testing Using the Sample Mean and an Extremum
+  container-title: Technometrics
+  volume: "44"
+  issue: "3"
+  page: 242--249
+  issued:
+    year: 2002
+    month: 8
+  DOI: 10.1198/004017002188618428
 
 ---
 
@@ -102,13 +116,15 @@ library(testthat)
 Throughout this vignette, the `testthat` package will be used. Expressions
 such as `expect_equal` are used to ensure that the two values are equal
 (within some tolerance). If this expectation is not true, the vignette will
-fail to build. As an example, the following expression checks that the value
-`10` is equal to `10.1` within a tolerance of `0.5`. Such an expectation
+fail to build. The tolerance is a relative tolerance: a tolerance of 0.01
+means that the two values must be within $1\%$ of each other.
+As an example, the following expression checks that the value
+`10` is equal to `10.1` within a tolerance of `0.01`. Such an expectation
 should be satisfied.
 
 
 ```{r}
-expect_equal(10, 10.1, tolerance = 0.5)
+expect_equal(10, 10.1, tolerance = 0.01)
 ```
 
 # 2. Validation Table
@@ -136,13 +152,13 @@ Function                        | Tests
 `cv()`                          |
 `equiv_change_mean()`           | [Section X.X](#ods-ecm)
 `equiv_mean_extremum()`         | [Section X.X](#ods-eme)
-`hk_ext_z()`                    | [Section X.X](#pf-hk)
-`hk_ext_z_j_opt()`              |
-`k_equiv()`                     |
+`hk_ext_z()`                    | [Section X.X](#pf-hk), [Section X.X](#pf-hk2)
+`hk_ext_z_j_opt()`              | [Section X.X](#pf-hk-opt)
+`k_equiv()`                     | [Section X.X](#pf-equiv)
 `k_factor_normal()`             | [Section X.X](#pf-kb), [Section X.X](#pf-ka)
 `levene_test()`                 | [Section X.X.X](#c11-lbc), [Section X.X.X](#c11-lbb)
 `maximum_normed_residual()`     | [Section X.X.X](#c11-mnr)
-`nonpara_binomial_rank()`       |
+`nonpara_binomial_rank()`       | [Section X.X](#pf-npbinom), [Section X.X](#pf-npbinom2)
 `normalize_group_mean()`        |
 `normalize_ply_thickness()`     |
 `transform_mod_cv_ad()`         |
@@ -212,7 +228,7 @@ res
 # X. Comparison with Examples from CMH-17-1G
 ## X.X Dataset From Section 8.3.11.1.1
 
-[@CMH-17-1G] provides an example data set and results from
+CMH-17-1G [@CMH-17-1G] provides an example data set and results from
 ASAP [@ASAP2008] and STAT17 [@STAT-17]. This example data set is duplicated
 below:
 
@@ -304,7 +320,7 @@ res
 
 ### X.X.X Anderson--Darling k--Sample Test {#c11-adk}
 
-For the ETW condition, the ADK test statistic given in @[CMH-17-1G] is
+For the ETW condition, the ADK test statistic given in [@CMH-17-1G] is
 $ADK = 0.793$ and the test concludes that the samples come from the
 same distribution. Noting that `cmstatr` uses the definition of the
 test statistic given in [@Stephens1987], so the test statistic given
@@ -331,7 +347,7 @@ res <- dat_8_3_11_1_1 %>%
   filter(condition == "ETW2") %>%
   ad_ksample(strength, batch)
 
-expect_equal(res$ad / (res$k - 1), 3.024, tolerance = 0.003)
+expect_equal(res$ad / (res$k - 1), 3.024, tolerance = 0.001)
 expect_true(res$reject_same_dist)
 
 res
@@ -378,12 +394,18 @@ res
 
 ### X.X.X Levene's Test (Between Conditions) {#c11-lbc}
 
-??? The test statistic is different in the handbook????
+CMH-17-1G Section 8.3.11.1.1 provides results from ASAP for Levene's test
+for equality of variance between conditions after the ETW and ETW2 conditions
+are removed. The handbook shows an F statistic of 0.58, however if this
+data is entered into ASAP directly, ASAP gives an F statistic of 0.058,
+which matches the result of `cmstatr`.
 
 ```{r}
-dat_8_3_11_1_1 %>%
+res <- dat_8_3_11_1_1 %>%
   filter(condition != "ETW" & condition != "ETW2") %>%
   levene_test(strength, condition)
+expect_equal(res$f, 0.058, tolerance = 1e-3)
+res
 ```
 
 ### X.X.X Levene's Test (Between Batches) #{c11-lbb}
@@ -414,7 +436,6 @@ res
 ```
 
 
-
 ### X.X.X Nonparametric Basis Values {#c11-hk-wf}
 CMH-17-1G Section 8.3.11.2.1 provides STAT17 outputs for the ETW
 condition of the present data set. The nonparametric Basis values are listed.
@@ -436,6 +457,9 @@ dat_8_3_11_1_1 %>%
   basis_hk_ext(strength, method = "optimum-order", p = 0.90, conf = 0.95)
 ```
 
+```{r}
+hk_ext_z_j_opt(22, 0.90, 0.95)
+```
 
 
 ### X.X.X Single-Point ANOVA Basis Value {#c11-anova}
@@ -948,7 +972,7 @@ was computed using the nonparametric (large sample) method.
 The results was 122.738297. `cmstatr` reports very similar values.
 
 ```{r}
-data <- c(
+dat <- c(
   137.3603, 135.6665, 136.6914, 154.7919, 159.2037, 137.3277, 128.821,
   138.6304, 138.9004, 147.4598, 148.6622, 144.4948, 131.0851, 149.0203,
   131.8232, 146.4471, 123.8124, 126.3105, 140.7609, 134.4875, 128.7508,
@@ -960,7 +984,7 @@ data <- c(
   144.0896, 141.8029, 130.0149, 140.8813, 137.7864
 )
 
-res <- basis_nonpara_large_sample(x = data, p = 0.9, conf = 0.95)
+res <- basis_nonpara_large_sample(x = dat, p = 0.9, conf = 0.95)
 expect_equal(res$basis, 122.738297, tolerance = 0.005)
 res
 ```
@@ -1207,7 +1231,8 @@ tribble(
   mutate(abs_difference = expect_lt(abs(z - z_calc), 5e-5))
 ```
 
-## Nonparametric A-Basis Extended Hanson--Koopman
+
+## X.X Nonparametric A-Basis Extended Hanson--Koopman {#pf-hk2}
 CMH-17-1G provides Table 8.5.15, which contains factors for calculating
 A-Basis values using the Extended Hanson--Koopman nonparametric method.
 That table is reproduced in part here and the factors are compared with
@@ -1253,7 +1278,54 @@ tribble(
   mutate(abs_difference = expect_lt(abs(k - z_calc), 5e-4))
 ```
 
-## Nonparametric B-Basis Binomial Rank
+
+## X.X Factors for Small Sample Nonparametric B-Basis {#pf-hk-opt}
+CMH-17-1G Table 8.5.14 provides ranks orders and factors for computing
+nonparametric B-Basis values. This table is reproduced below and
+compared with the results of `cmstatr`. The results are similar. In some
+cases, the rank order ($r$ in CMH-17-1G or $j$ in `cmstatr`) *and* the 
+the factor ($k$) are different. Since both of these value are different,
+the resulting B-Basis value will actually be similar.
+
+```{r}
+tribble(
+  ~n, ~r, ~k,
+  2, 2, 35.177,
+  3, 3, 7.859,
+  4, 4, 4.505,
+  5, 4, 4.101,
+  6, 5, 3.064,
+  7, 5, 2.858,
+  8, 6, 2.382,
+  9, 6, 2.253,
+  10, 6, 2.137,
+  11, 7, 1.897,
+  12, 7, 1.814,
+  13, 7, 1.738,
+  14, 8, 1.599,
+  15, 8, 1.540,
+  16, 8, 1.485,
+  17, 8, 1.434,
+  18, 9, 1.354,
+  19, 9, 1.311,
+  20, 10, 1.253,
+  21, 10, 1.218,
+  22, 10, 1.184,
+  23, 11, 1.143,
+  24, 11, 1.114,
+  25, 11, 1.087,
+  26, 11, 1.060,
+  27, 11, 1.035,
+  28, 12, 1.010
+) %>% 
+  rowwise() %>%
+    mutate(r_calc = hk_ext_z_j_opt(n, 0.90, 0.95)$j) %>%
+    mutate(k_calc = hk_ext_z_j_opt(n, 0.90, 0.95)$z)
+```
+
+
+
+## X.X Nonparametric B-Basis Binomial Rank {#pf-npbinom}
 CMH-17-1G Table 8.5.12 provides factors for computing B-Basis values
 using the nonparametric binomial rank method. Part of that table is
 reproduced below and compared with the results of `cmstatr`.
@@ -1285,7 +1357,7 @@ tribble(
   select(-c(test))
 ```
 
-## Nonparametric A-Basis Binomial Rank
+## Nonparametric A-Basis Binomial Rank {#pf-npbinom2}
 CMH-17-1G Table 8.5.13 provides factors for computing B-Basis values
 using the nonparametric binomial rank method. Part of that table is
 reproduced below and compared with the results of `cmstatr`.
@@ -1306,6 +1378,39 @@ tribble(
   mutate(r_calc = nonpara_binomial_rank(n, 0.99, 0.95)) %>%
   mutate(test = expect_equal(ra, r_calc)) %>%
   select(-c(test))
+```
+
+
+## X.X Factors for Equivalency {#pf-equiv}
+
+Vangel's 2002 paper provides factors for calculating limits for sample
+mean and sample extremum for various values of $\alpha$ and sample size ($n$).
+A subset of those factors are reproduced below and compared with results
+from `cmstatr`. The results are very similar for values of $\alpha$ and $n$
+that are common for composite materials.
+
+```{r}
+read.csv(system.file("extdata", "k1.vangel.csv",
+                     package = "cmstatr")) %>%
+  tidyr::gather(n, k1, X2:X10) %>%
+  mutate(n = as.numeric(substring(n, 2))) %>%
+  filter(n >= 5 & 0.005 <= alpha & alpha <= 0.1) %>% 
+  rowwise() %>%
+  mutate(k1_calc = k_equiv(alpha, n)[1]) %>%
+  mutate(check = expect_equal(k1, k1_calc, tolerance = 5e-4)) %>%
+  select(-c(check))
+```
+
+```{r}
+read.csv(system.file("extdata", "k2.vangel.csv",
+                     package = "cmstatr")) %>%
+  tidyr::gather(n, k2, X2:X10) %>%
+  mutate(n = as.numeric(substring(n, 2))) %>%
+  filter(n >= 5 & 0.005 <= alpha & alpha <= 0.1) %>% 
+  rowwise() %>%
+  mutate(k2_calc = k_equiv(alpha, n)[2]) %>%
+  mutate(check = expect_equal(k2, k2_calc, tolerance = 5e-4)) %>%
+  select(-c(check))
 ```
 
 
