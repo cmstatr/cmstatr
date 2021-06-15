@@ -40,13 +40,13 @@ Imports:
     ggplot2,
     kSamples,
     MASS,
+    purrr,
     rlang,
     stats,
     tibble
 Suggests:
     knitr,
     lintr,
-    purrr,
     rmarkdown,
     spelling,
     testthat,
