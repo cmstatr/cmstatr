@@ -13,3 +13,4 @@ GenerateFakeData.R
 ^logo.svg$
 ^cran-comments.md
 ^CRAN-RELEASE$
+^.Rprofile

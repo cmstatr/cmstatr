@@ -1,6 +1,4 @@
-context("Verify tidy data")
-
-library(rlang)
+suppressMessages(library(rlang))
 
 # A mock function that uses process_tidy_vector_input
 mock_fcn <- function(data = NULL, x) {

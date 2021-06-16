@@ -1,5 +1,3 @@
-context("Plot Nested")
-
 suppressMessages(library(dplyr))
 suppressMessages(library(ggplot2))
 
