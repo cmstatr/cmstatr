@@ -76,7 +76,7 @@ jobs:
 
       - name: Install dependencies (Depends Only)
         run: |
-          remotes::install_deps(dependencies = "Depends")
+          remotes::install_deps(dependencies = NA)
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("knitr")  # Also install knitr to allow rebuilding of vignettes
         shell: Rscript {0}
