@@ -79,6 +79,7 @@ jobs:
           remotes::install_deps(dependencies = NA)
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("knitr")  # Also install knitr to allow rebuilding of vignettes
+          remotes::install_cran("rmarkdown")  # rmarkdown is required for knitr to work
         shell: Rscript {0}
 
       - name: Session info
