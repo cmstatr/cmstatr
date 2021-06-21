@@ -1,0 +1,389 @@
+---
+title: "Extended Hanson-Koopmans"
+author: "Stefan Kloppenborg"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extended Hanson-Koopmans}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+csl: ieee.csl
+references:
+- id: Hanson1964
+  type: article
+  author:
+    - given: D. L.
+      family: Hanson
+    - given: L. H.
+      family: Koopmans
+  title: Tolerance Limits for the Class of Distributions with Increasing Hazard Rates
+  container-title: The Annals of Mathematical Statistics
+  volume: "35"
+  issue: "4"
+  page: 1561-1570
+  issued:
+    year: "1964"
+  DOI: 10.1214/aoms/1177700380
+- id: Vangel1994
+  type: article
+  author:
+    - given: Mark
+      family: Vangel
+  title: One-Sided Nonparametric Tolerance Limits
+  container-title: Communications in Statistics - Simulation and Computation
+  volume: "23"
+  issue: "4"
+  page: 1137-1154
+  issued:
+    year: "1994"
+  DOI: 10.1080/03610919408813222
+- id: Harter1961
+  type: article
+  author:
+    - given: H. Leon
+      family: Harter
+  title: Expected values of normal order statistics
+  container-title: Biometrika
+  volume: "48"
+  issue: 1/2
+  page: 151-165
+  issued:
+    year: "1961"
+  DOI: https://doi.org/10.2307/2333139
+- id: CMH-17-1G
+  type: report
+  number: CMH-17-1G
+  title: Composite Materials Handbook, Volume 1. Polymer Matrix Composites
+    Guideline for Characterization of Structural Materials
+  publisher: SAE International
+  issued:
+    year: "2012"
+    month: "03"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = ""
+)
+```
+
+In this vignette, we'll use the following packages:
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(tidyr)
+```
+
+
+The Extended Hanson--Koopmans method is a nonparametric method of
+determining tolerance limits (such as A- or B-Basis values).
+This method does not assume
+any particular distribution, but does require that
+$-\log\left(F\right)$ is convex, where $F$ is the cumulative distribution
+function (CDF) of the distribution.
+
+The functions `kh_ext_z`, `hk_ext_z_j_opt` and `basis_kh_ext` in `cmstatr`
+are based on the Extended Hanson--Koopmans method, developed by
+Vangel [@Vangel1994]. This is an extension of the method published in
+[@Hanson1964].
+
+Tolerance limits (Basis values) calculated using the Extended
+Hanson--Koopmans method are calculated based on two order statistics [^1], $i$
+and $j$, and a factor, $z$.
+The function `hk_ext_z_j_opt` and the function
+`basis_kh_ext` (with `method = "optimum-order"`) set the first of
+these order statistics to the first (lowest) order statistic,
+and a second order statistic determined by minimizing the following
+function:
+
+$$
+\left| z E\left(X_{\left(1\right)}\right)
++ \left(1 - z\right) E\left(X_{\left(j\right)}\right)
+- \Phi\left(p\right)\right|
+$$
+
+Where $E\left(X_{(i)}\right)$ is the expected value of the
+$i\,\mathrm{th}$ order
+statistic for a sample drawn from the standard normal distribution,
+and $\Phi\left(p\right)$
+is the CDF of a standard normal distribution for the content of the tolerance
+limit (i.e. $p=0.9$ for B-Basis).
+
+[^1]: The $i\,\mathrm{th}$ order statistic is the $i\,\mathrm{th}$
+lowest value in the sample.
+
+The value of $z$ is calculated based on the sample size, $n$, the two order
+statistics $i$ and $j$, the content $p$ and the confidence. The calculation
+is performed using the method in [@Vangel1994] and
+implemented in `kh_ext_z`. The value of $j$ is very sensitive to the way that
+the expected value of the order statistics is calculated, and may be sensitive
+to numerical precision.
+
+In version 0.8.0 of `cmstatr` and prior, the expected value of an order
+statistic for a sample drawn from a standard normal distribution was
+determined in a crude way. After version 0.8.0, the method in
+[@Harter1961] is used. These method produce different values of $j$ for certain
+sample sizes. Additionally, a table of $j$ and $z$ values for various
+sample sizes is published in CMH-17-1G[^2] [@CMH-17-1G].
+This table gives slightly different
+values of $j$ for some sample sizes.
+
+[^2]: Note that CMH-17-1G uses the symbols $r$ and $k$ instead of
+      $j$ and $z$.
+
+The values of $j$ and $z$ produced by `cmstatr` in version 0.8.0 and before,
+the values produced after version 0.8.0 and the value published in CMH-17-1G
+are shown below. All of these values are for B-Basis (90% content,
+95% confidence).
+
+
+```{r}
+factors <- tribble(
+  ~n, ~j_pre_080, ~z_pre_080, ~j_post_080, ~z_post_080, ~j_cmh, ~z_cmh,
+  2, 2, 35.1768141883907, 2, 35.1768141883907, 2, 35.177,
+  3, 3, 7.85866787768029, 3, 7.85866787768029, 3, 7.859,
+  4, 4, 4.50522447199018, 4, 4.50522447199018, 4, 4.505,
+  5, 4, 4.10074820079326, 4, 4.10074820079326, 4, 4.101,
+  6, 5, 3.06444416024793, 5, 3.06444416024793, 5, 3.064,
+  7, 5, 2.85751000593839, 5, 2.85751000593839, 5, 2.858,
+  8, 6, 2.38240998122575, 6, 2.38240998122575, 6, 2.382,
+  9, 6, 2.25292053841772, 6, 2.25292053841772, 6, 2.253,
+  10, 7, 1.98762060673102, 6, 2.13665759924781, 6, 2.137,
+  11, 7, 1.89699586212496, 7, 1.89699586212496, 7, 1.897,
+  12, 7, 1.81410756892749, 7, 1.81410756892749, 7, 1.814,
+  13, 8, 1.66223343216608, 7, 1.73773765993598, 7, 1.738,
+  14, 8, 1.59916281901889, 8, 1.59916281901889, 8, 1.599,
+  15, 8, 1.54040000806181, 8, 1.54040000806181, 8, 1.54,
+  16, 9, 1.44512878109546, 8, 1.48539432060546, 8, 1.485,
+  17, 9, 1.39799975474842, 9, 1.39799975474842, 8, 1.434,
+  18, 9, 1.35353033609361, 9, 1.35353033609361, 9, 1.354,
+  19, 10, 1.28991705486727, 9, 1.31146980117942, 9, 1.311,
+  20, 10, 1.25290765871981, 9, 1.27163203813793, 10, 1.253,
+  21, 10, 1.21771654027026, 10, 1.21771654027026, 10, 1.218,
+  22, 11, 1.17330587650406, 10, 1.18418267046374, 10, 1.184,
+  23, 11, 1.14324511741536, 10, 1.15218647199938, 11, 1.143,
+  24, 11, 1.11442082880151, 10, 1.12153586685854, 11, 1.114,
+  25, 11, 1.08682185727661, 11, 1.08682185727661, 11, 1.087,
+  26, 11, 1.06032912052507, 11, 1.06032912052507, 11, 1.06,
+  27, 12, 1.03307994274081, 11, 1.03485308510789, 11, 1.035,
+  28, 12, 1.00982188136729, 11, 1.01034609051393, 12, 1.01
+)
+```
+
+For the sample sizes where $j$ is the same for each approach, the values
+of $z$ are also equal within a small tolerance.
+
+```{r include=FALSE}
+factors %>%
+  filter(j_pre_080 == j_post_080 & j_pre_080 == j_cmh) %>%
+  mutate(testthat::expect_equal(z_pre_080, z_post_080),
+         testthat::expect_equal(z_post_080, z_cmh, tolerance = 1e-4))
+```
+
+```{r include=FALSE}
+factors %>%
+  rowwise() %>%
+  mutate(testthat::expect_equal(z_post_080,
+                                cmstatr::hk_ext_z_j_opt(n, 0.9, 0.95)$z),
+         testthat::expect_equal(j_post_080,
+                                cmstatr::hk_ext_z_j_opt(n, 0.9, 0.95)$j))
+```
+
+
+```{r}
+factors %>%
+  filter(j_pre_080 == j_post_080 & j_pre_080 == j_cmh)
+```
+
+The sample sizes where the value of $j$ differs are as follows:
+
+```{r}
+factor_diff <- factors %>%
+  filter(j_pre_080 != j_post_080 | j_pre_080 != j_cmh | j_post_080 != j_cmh)
+factor_diff
+```
+
+While there are differences in the three implementations, it's not clear
+how much these differences will matter in terms of the tolerance limits
+calculated. This can be investigated through simulation.
+
+# Simulation with Normally Distributed Data
+First, we'll generate a large number (10,000) of samples of sample size
+$n$ from a normal distribution. Since we're generating the samples, we
+know the true population parameters, so can calculate the true population
+quantiles. We'll use the three sets of $j$ and $z$ values to compute
+tolerance limits and compared those tolerance limits to the population
+quantiles. The proportion of the calculated tolerance limits below the
+population quantiles should be equal to the selected confidence. We'll
+restrict the simulation study to the sample sizes where the values of
+$j$ and $z$ differ in the three implementations of this method, and we'll
+consider B-Basis (90% content, 95% confidence).
+
+```{r}
+mu_normal <- 100
+sd_normal <- 6
+
+set.seed(1234567)  # make this reproducible
+
+tolerance_limit <- function(x, j, z) {
+  x[j] * (x[1] / x[j]) ^ z
+}
+
+sim_normal <- pmap_dfr(factor_diff, function(n, j_pre_080, z_pre_080,
+                                             j_post_080, z_post_080,
+                                             j_cmh, z_cmh) {
+  map_dfr(1:10000, function(i_sim) {
+    x <- sort(rnorm(n, mu_normal, sd_normal))
+    tibble(
+      n = n,
+      b_pre_080 = tolerance_limit(x, j_pre_080, z_pre_080),
+      b_post_080 = tolerance_limit(x, j_post_080, z_post_080),
+      b_cmh = tolerance_limit(x, j_cmh, z_cmh),
+      x = list(x)
+    )
+  }
+  )
+})
+sim_normal
+```
+
+One can see that the tolerance limits calculated with each set of
+factors for (most) data sets is different. However, this does not necessarily
+mean that any set of factors is more or less correct.
+
+The distribution of the tolerance limits for each sample size is as follows:
+
+```{r distribution-normal, fig.width=7, fig.height=5}
+sim_normal %>%
+  pivot_longer(cols = b_pre_080:b_cmh, names_to = "Factors") %>%
+  ggplot(aes(x = value, color = Factors)) +
+  geom_density() +
+  facet_wrap(n ~ .) +
+  theme_bw() +
+  ggtitle("Distribution of Tolerance Limits for Various Values of n")
+```
+
+For all samples sizes, the distribution of tolerance limits is actually
+very similar between all three sets of factors.
+
+The true population quantile can be calculated as follows:
+
+```{r}
+x_p_normal <- qnorm(0.9, mu_normal, sd_normal, lower.tail = FALSE)
+x_p_normal
+```
+
+The proportion of calculated tolerance limit values that are below the
+population quantile can be calculated as follows. We see that the in all
+cases the tolerance limits are all conservative, and also that each
+set of factors produce similar levels of conservatism.
+
+```{r}
+sim_normal %>%
+  mutate(below_pre_080 = b_pre_080 < x_p_normal,
+         below_post_080 = b_post_080 < x_p_normal,
+         below_cmh = b_cmh < x_p_normal) %>%
+  group_by(n) %>%
+  summarise(
+    prop_below_pre_080 = sum(below_pre_080) / n(),
+    prop_below_post_080 = sum(below_post_080) / n(),
+    prop_below_cmh = sum(below_cmh) / n()
+  )
+```
+
+# Simulation with Weibull Data
+
+Next, we'll do a similar simulation using data drawn from a Weibull
+distribution. Again, we'll generate 10,000 samples for each sample size.
+
+```{r}
+shape_weibull <- 60
+scale_weibull <- 100
+
+set.seed(234568)  # make this reproducible
+
+sim_weibull <- pmap_dfr(factor_diff, function(n, j_pre_080, z_pre_080,
+                                              j_post_080, z_post_080,
+                                              j_cmh, z_cmh) {
+  map_dfr(1:10000, function(i_sim) {
+    x <- sort(rweibull(n, shape_weibull, scale_weibull))
+    tibble(
+      n = n,
+      b_pre_080 = tolerance_limit(x, j_pre_080, z_pre_080),
+      b_post_080 = tolerance_limit(x, j_post_080, z_post_080),
+      b_cmh = tolerance_limit(x, j_cmh, z_cmh),
+      x = list(x)
+    )
+  }
+  )
+})
+sim_weibull
+```
+
+
+The distribution of the tolerance limits for each sample size is as follows.
+Once again, we see that the distribution of tolerance limits is nearly
+identical when each of the three sets of factors are used.
+
+```{r distribution-Weibull, fig.width=7, fig.height=5}
+sim_weibull %>%
+  pivot_longer(cols = b_pre_080:b_cmh, names_to = "Factors") %>%
+  ggplot(aes(x = value, color = Factors)) +
+  geom_density() +
+  facet_wrap(n ~ .) +
+  theme_bw() +
+  ggtitle("Distribution of Tolerance Limits for Various Values of n")
+```
+
+The true population quantile can be calculated as follows:
+
+```{r}
+x_p_weibull <- qweibull(0.9, shape_weibull, scale_weibull, lower.tail = FALSE)
+x_p_weibull
+```
+
+The proportion of calculated tolerance limit values that are below the
+population quantile can be calculated as follows. We see that the in all
+roughly 95% or more of the tolerance limits calculated for each sample
+is below the population quantile. We also see very similar proportions
+for each of the three sets of factors considered.
+
+```{r}
+sim_weibull %>%
+  mutate(below_pre_080 = b_pre_080 < x_p_weibull,
+         below_post_080 = b_post_080 < x_p_weibull,
+         below_cmh = b_cmh < x_p_weibull) %>%
+  group_by(n) %>%
+  summarise(
+    prop_below_pre_080 = sum(below_pre_080) / n(),
+    prop_below_post_080 = sum(below_post_080) / n(),
+    prop_below_cmh = sum(below_cmh) / n()
+  )
+```
+
+
+# Conclusion
+The values of $j$ and $z$ computed by the `kh_Ext_z_j_opt` function differs
+for certain samples sizes ($n$) before and after version 0.8.0. Furthermore,
+for certain sample sizes, these values differ from those published in
+CMH-17-1G. The simulation study presented in this vignette shows that
+the tolerance limit (Basis value) might differ for any individual sample
+based on which set of $j$ and $z$ are used. However, each set of factors
+produces tolerance limit factors that are either correct or conservative.
+These three methods have very similar performance, and tolerance limits
+produced with any of these three methods are equally valid.
+
+# Session Info
+This vignette is computed in advance. A system with the following configuration
+was used:
+
+```{r}
+sessionInfo()
+```
+
+
+# References

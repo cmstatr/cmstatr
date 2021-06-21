@@ -13,3 +13,5 @@ GenerateFakeData.R
 ^logo.svg$
 ^cran-comments.md
 ^CRAN-RELEASE$
+^rebuild-long-running-vignette.R
+^.Rprofile
