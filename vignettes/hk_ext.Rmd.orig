@@ -107,13 +107,13 @@ $$
 $$
 
 Where $E\left(X_{(i)}\right)$ is the expected value of the
-$i\,\mathrm{th}$ order
+$i$`th` order
 statistic for a sample drawn from the standard normal distribution,
 and $\Phi\left(p\right)$
 is the CDF of a standard normal distribution for the content of the tolerance
 limit (i.e. $p=0.9$ for B-Basis).
 
-[^1]: The $i\,\mathrm{th}$ order statistic is the $i\,\mathrm{th}$
+[^1]: The $i$`th` order statistic is the $i$`th`
 lowest value in the sample.
 
 The value of $z$ is calculated based on the sample size, $n$, the two order
