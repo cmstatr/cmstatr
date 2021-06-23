@@ -44,7 +44,7 @@ repository.
 
 ``` r
 install.packages(c("devtools", "rmarkdown", "dplyr", "tidyr"))
-devtools::install_github("ComtekAdvancedStructures/cmstatr", build_vignettes = TRUE,
+devtools::install_github("cmstatr/cmstatr", build_vignettes = TRUE,
                          ref = "master",
                          build_opts = c("--no-resave-data", "--no-manual"))
 ```
