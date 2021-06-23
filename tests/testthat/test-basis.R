@@ -518,14 +518,14 @@ test_that("Non-parametric (small sample) basis value matches STAT17 result", {
 
   res <- basis_hk_ext(x = data, p = 0.9, conf = 0.95,
                       method = "optimum-order")
-  expect_equal(res$basis, 124.156, tolerance = 0.05)
+  expect_equal(res$basis, 124.156, tolerance = 0.002)
   expect_output(print(res), "b-basis.*124", ignore.case = TRUE)
   expect_output(print(res), "nonparametric", ignore.case = TRUE)
   expect_match(res$distribution, "nonparametric.*optimum", ignore.case = TRUE)
 
   res <- basis_hk_ext(x = data, p = 0.99, conf = 0.95,
                       method = "woodward-frawley")
-  expect_equal(res$basis, 99.651, tolerance = 0.05)
+  expect_equal(res$basis, 99.651, tolerance = 0.002)
   expect_output(print(res), "a-basis.*99", ignore.case = TRUE)
   expect_output(print(res), "nonparametric", ignore.case = TRUE)
   expect_match(res$distribution,
@@ -1304,7 +1304,7 @@ test_that("Hanson-Koopman results match STAT17 for several values of n", {
 
   res <- basis_hk_ext(x = head(data, 19), p = 0.9, conf = 0.95,
                       method = "optimum-order")
-  expect_equal(res$basis, 127.74060, tolerance = 0.15)
+  expect_equal(res$basis, 127.74060, tolerance = 0.002)
 
   res <- basis_hk_ext(x = head(data, 18), p = 0.9, conf = 0.95,
                       method = "optimum-order")
@@ -1316,7 +1316,7 @@ test_that("Hanson-Koopman results match STAT17 for several values of n", {
 
   res <- basis_hk_ext(x = head(data, 16), p = 0.9, conf = 0.95,
                       method = "optimum-order")
-  expect_equal(res$basis, 126.23545, tolerance = 0.3)
+  expect_equal(res$basis, 126.23545, tolerance = 0.002)
 
   res <- basis_hk_ext(x = head(data, 15), p = 0.9, conf = 0.95,
                       method = "optimum-order")
@@ -1328,9 +1328,9 @@ test_that("Hanson-Koopman results match STAT17 for several values of n", {
 
   res <- basis_hk_ext(x = head(data, 13), p = 0.9, conf = 0.95,
                       method = "optimum-order")
-  expect_equal(res$basis, 124.07851, tolerance = 1.3)
+  expect_equal(res$basis, 124.07851, tolerance = 0.002)
   # worst agreement
-  expect_equal(res$basis, 124.07851, tolerance = 0.003)
+  expect_equal(res$basis, 124.07851, tolerance = 0.002)
 
   res <- basis_hk_ext(x = head(data, 12), p = 0.9, conf = 0.95,
                       method = "optimum-order")
@@ -1342,7 +1342,7 @@ test_that("Hanson-Koopman results match STAT17 for several values of n", {
 
   res <- basis_hk_ext(x = head(data, 10), p = 0.9, conf = 0.95,
                       method = "optimum-order")
-  expect_equal(res$basis, 120.75149, tolerance = 0.05)
+  expect_equal(res$basis, 120.75149, tolerance = 0.002)
 
   res <- basis_hk_ext(x = head(data, 9), p = 0.9, conf = 0.95,
                       method = "optimum-order")

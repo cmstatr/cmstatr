@@ -208,9 +208,17 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' "optimum-order" in this package.
 #' The results of `basis_hk_ext` have been
 #' verified against example results from the program STAT-17. Agreement is
-#' typically well within 0.2\%, however, for a few sample sizes, the
-#' agreement can be as poor as 1\% with the result of this function
-#' being more conservative than STAT-17.
+#' typically well within 0.2%.
+#'
+#' Note that the implementation of `hk_ext_z_j_opt` changed after `cmstatr`
+#' version 0.8.0. This function is used internally by `basis_hk_ext`
+#' when `method = "optimum-order"`. This implementation change may mean
+#' that basis values computed using this method may change slightly
+#' after version 0.8.0. However, both implementations seem to be equally
+#' valid. See the included vignette
+#' for a discussion of the differences between the implementation before
+#' and after version 0.8.0, as well as the factors given in CMH-17-1G.
+#' To access this vignette, run: `vignette("hk_ext", package = "cmstatr")`
 #'
 #' `basis_hk_ext` also performs
 #' a diagnostic test for outliers (using
