@@ -247,8 +247,8 @@ when \code{method = "optimum-order"}. This implementation change may mean
 that basis values computed using this method may change slightly
 after version 0.8.0. However, both implementations seem to be equally
 valid. See the included vignette
-for a discussion of the differences between the implementation pre-
-and post-version 0.8.0, as well as the factors given in CMH-17-1G.
+for a discussion of the differences between the implementation before
+and after version 0.8.0, as well as the factors given in CMH-17-1G.
 To access this vignette, run: \code{vignette("hk_ext", package = "cmstatr")}
 
 \code{basis_hk_ext} also performs

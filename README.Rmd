@@ -130,3 +130,14 @@ in an issue first.
   patched.
 - For changes that affect the user, add a bullet at the top of `NEWS.md` below
   the current development version
+  
+## Development
+Testing is performed using `testthat`. Edition 3 of that package is used and
+parallel processing enabled. If you wish to use more than two CPUs, set the
+environment variable `TESTTHAT_CUPS` to the number of CPUs that you want to
+use. One way of doing this is to create the file `.Rprofile` with the following
+contents. This file is ignored both by `git` and also in `.Rbuildingore`.
+
+```r
+Sys.setenv(TESTTHAT_CPUS = 8)
+```

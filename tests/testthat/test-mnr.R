@@ -1,5 +1,3 @@
-context("mnr")
-
 suppressMessages(library(dplyr))
 
 cmh_17_cv <- tribble(

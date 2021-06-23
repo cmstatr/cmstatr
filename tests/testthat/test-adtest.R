@@ -1,5 +1,3 @@
-context("Anderson-Darling test for goodness of fit")
-
 test_that("AD test gives same results for a data frame and a vector", {
   data <- data.frame(
     strength = c(
@@ -134,25 +132,25 @@ test_that("ad_p_unknown_parameters matches normal results from Lawless", {
   }
 
   n <- 5
-  expect_equal(fcn(0.576, n), 0.15, tolerance = 0.002)
-  expect_equal(fcn(0.656, n), 0.10, tolerance = 0.002)
-  expect_equal(fcn(0.787, n), 0.05, tolerance = 0.002)
-  expect_equal(fcn(0.918, n), 0.025, tolerance = 0.002)
-  expect_equal(fcn(1.092, n), 0.01, tolerance = 0.002)
+  expect_equal(fcn(0.576, n), 0.15, tolerance = 0.002 / 0.15)
+  expect_equal(fcn(0.656, n), 0.10, tolerance = 0.002 / 0.10)
+  expect_equal(fcn(0.787, n), 0.05, tolerance = 0.002 / 0.05)
+  expect_equal(fcn(0.918, n), 0.025, tolerance = 0.002 / 0.025)
+  expect_equal(fcn(1.092, n), 0.01, tolerance = 0.002 / 0.01)
 
   n <- 10
-  expect_equal(fcn(0.576, n), 0.15, tolerance = 0.002)
-  expect_equal(fcn(0.656, n), 0.10, tolerance = 0.002)
-  expect_equal(fcn(0.787, n), 0.05, tolerance = 0.002)
-  expect_equal(fcn(0.918, n), 0.025, tolerance = 0.002)
-  expect_equal(fcn(1.092, n), 0.01, tolerance = 0.002)
+  expect_equal(fcn(0.576, n), 0.15, tolerance = 0.002 / 0.15)
+  expect_equal(fcn(0.656, n), 0.10, tolerance = 0.002 / 0.10)
+  expect_equal(fcn(0.787, n), 0.05, tolerance = 0.002 / 0.05)
+  expect_equal(fcn(0.918, n), 0.025, tolerance = 0.002 / 0.025)
+  expect_equal(fcn(1.092, n), 0.01, tolerance = 0.002 / 0.01)
 
   n <- 20
-  expect_equal(fcn(0.576, n), 0.15, tolerance = 0.002)
-  expect_equal(fcn(0.656, n), 0.10, tolerance = 0.002)
-  expect_equal(fcn(0.787, n), 0.05, tolerance = 0.002)
-  expect_equal(fcn(0.918, n), 0.025, tolerance = 0.002)
-  expect_equal(fcn(1.092, n), 0.01, tolerance = 0.002)
+  expect_equal(fcn(0.576, n), 0.15, tolerance = 0.002 / 0.15)
+  expect_equal(fcn(0.656, n), 0.10, tolerance = 0.002 / 0.10)
+  expect_equal(fcn(0.787, n), 0.05, tolerance = 0.002 / 0.05)
+  expect_equal(fcn(0.918, n), 0.025, tolerance = 0.002 / 0.025)
+  expect_equal(fcn(1.092, n), 0.01, tolerance = 0.002 / 0.01)
 })
 
 test_that("ad_p_unknown_parameters matches weibull results from Lawless", {
@@ -165,25 +163,25 @@ test_that("ad_p_unknown_parameters matches weibull results from Lawless", {
   }
 
   n <- 5
-  expect_equal(fcn(0.474, n), 0.25, tolerance = 0.002)
-  expect_equal(fcn(0.637, n), 0.10, tolerance = 0.002)
-  expect_equal(fcn(0.757, n), 0.05, tolerance = 0.002)
-  expect_equal(fcn(0.877, n), 0.025, tolerance = 0.002)
-  expect_equal(fcn(1.038, n), 0.01, tolerance = 0.002)
+  expect_equal(fcn(0.474, n), 0.25, tolerance = 0.002 / 0.25)
+  expect_equal(fcn(0.637, n), 0.10, tolerance = 0.002 / 0.10)
+  expect_equal(fcn(0.757, n), 0.05, tolerance = 0.002 / 0.05)
+  expect_equal(fcn(0.877, n), 0.025, tolerance = 0.002 / 0.025)
+  expect_equal(fcn(1.038, n), 0.01, tolerance = 0.002 / 0.01)
 
   n <- 10
-  expect_equal(fcn(0.474, n), 0.25, tolerance = 0.002)
-  expect_equal(fcn(0.637, n), 0.10, tolerance = 0.002)
-  expect_equal(fcn(0.757, n), 0.05, tolerance = 0.002)
-  expect_equal(fcn(0.877, n), 0.025, tolerance = 0.002)
-  expect_equal(fcn(1.038, n), 0.01, tolerance = 0.002)
+  expect_equal(fcn(0.474, n), 0.25, tolerance = 0.002 / 0.25)
+  expect_equal(fcn(0.637, n), 0.10, tolerance = 0.002 / 0.10)
+  expect_equal(fcn(0.757, n), 0.05, tolerance = 0.002 / 0.05)
+  expect_equal(fcn(0.877, n), 0.025, tolerance = 0.002 / 0.025)
+  expect_equal(fcn(1.038, n), 0.01, tolerance = 0.002 / 0.01)
 
   n <- 20
-  expect_equal(fcn(0.474, n), 0.25, tolerance = 0.002)
-  expect_equal(fcn(0.637, n), 0.10, tolerance = 0.002)
-  expect_equal(fcn(0.757, n), 0.05, tolerance = 0.002)
-  expect_equal(fcn(0.877, n), 0.025, tolerance = 0.002)
-  expect_equal(fcn(1.038, n), 0.01, tolerance = 0.002)
+  expect_equal(fcn(0.474, n), 0.25, tolerance = 0.002 / 0.25)
+  expect_equal(fcn(0.637, n), 0.10, tolerance = 0.002 / 0.10)
+  expect_equal(fcn(0.757, n), 0.05, tolerance = 0.002 / 0.05)
+  expect_equal(fcn(0.877, n), 0.025, tolerance = 0.002 / 0.025)
+  expect_equal(fcn(1.038, n), 0.01, tolerance = 0.002 / 0.01)
 })
 
 test_that("print.anderson_darling contains expected values", {

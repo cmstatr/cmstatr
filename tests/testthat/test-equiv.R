@@ -1,5 +1,3 @@
-context("equiv")
-
 suppressMessages(library(dplyr))
 
 test_that("k-factor warnings and errors are raised", {
@@ -168,7 +166,7 @@ test_that("check equiv_change_mean against HYTEQ using some example data", {
   expect_equal(res$n_qual, 28)
   expect_equal(res$mean_qual, 9.24)
   expect_equal(res$sd_qual, 0.162)
-  expect_equal(res$sp, 0.1608, tolerance = 5e-4)
+  expect_equal(res$sp, 0.1608, tolerance = 5e-4 / 0.1608)
   expect_equal(res$t0, -3.570, tolerance = 5e-3)
   expect_equal(res$t_req, 2.030, tolerance = 5e-3)
   expect_equal(res$threshold, c(9.115, 9.365), tolerance = 5e-3)
@@ -260,7 +258,7 @@ test_that("glance.equiv_change_mean produces expected results", {
   expect_equal(res$n_qual[1], 28)
   expect_equal(res$mean_qual[1], 9.24)
   expect_equal(res$sd_qual[1], 0.162)
-  expect_equal(res$sp[1], 0.1608, tolerance = 5e-4)
+  expect_equal(res$sp[1], 0.1608, tolerance = 5e-4 / 0.1608)
   expect_equal(res$t0[1], -3.570, tolerance = 5e-3)
   expect_equal(res$t_req[1], 2.030, tolerance = 5e-3)
   expect_equal(res$threshold_min[1], 9.115, tolerance = 5e-3)
@@ -296,24 +294,24 @@ test_that("equiv_mean_extremum produces expected errors and warnings", {
     "n_sample"
   )
 
-  expect_warning(
+  set.seed(100)
+  expect_snapshot(
     equiv_mean_extremum(
       alpha = 0.05,
       n_sample = 9,
       data_qual = runif(28),
       mean_qual = 9.24,
-      sd_qual = 0.162),
-    "mean_qual"
+      sd_qual = 0.162)
   )
 
-  expect_warning(
+  set.seed(101)
+  expect_snapshot(
     equiv_mean_extremum(
       alpha = 0.05,
       n_sample = 9,
       data_qual = runif(28),
       mean_qual = 9.24,
-      sd_qual = 0.162),
-    "sd_qual"
+      sd_qual = 0.162)
   )
 
   expect_error(
@@ -352,6 +350,7 @@ test_that("equiv_mean_extremum produces expected errors and warnings", {
 })
 
 test_that("equiv_change_mean produces expected errors and warnings", {
+  set.seed(100)
   expect_error(
     equiv_change_mean(
       alpha = -0.05, n_sample = 9, mean_sample = 9.02,
@@ -368,14 +367,14 @@ test_that("equiv_change_mean produces expected errors and warnings", {
     "alpha"
   )
 
-  expect_warning(
+  set.seed(156)
+  expect_snapshot(
     equiv_change_mean(
       alpha = 0.05,
       data_sample = runif(9),
       n_sample = 9, mean_sample = 9.02,
       sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
-      sd_qual = 0.162),
-    "n_sample"
+      sd_qual = 0.162)
   )
 
   expect_error(
@@ -406,26 +405,26 @@ test_that("equiv_change_mean produces expected errors and warnings", {
     "n_qual"
   )
 
-  expect_warning(
+  set.seed(109)
+  expect_snapshot(
     equiv_change_mean(
       alpha = 0.05,
       n_sample = 9, mean_sample = 9.02,
       sd_sample = 0.15785,
       data_qual = runif(28),
       n_qual = 28, mean_qual = 9.24,
-      sd_qual = 0.162),
-    "mean_qual"
+      sd_qual = 0.162)
   )
 
-  expect_warning(
+  set.seed(110)
+  expect_snapshot(
     equiv_change_mean(
       alpha = 0.05,
       n_sample = 9, mean_sample = 9.02,
       sd_sample = 0.15785,
       data_qual = runif(28),
       n_qual = 28, mean_qual = 9.24,
-      sd_qual = 0.162),
-    "sd_qual"
+      sd_qual = 0.162)
   )
 
   expect_error(

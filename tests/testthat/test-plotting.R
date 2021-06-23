@@ -1,5 +1,3 @@
-context("Plotting")
-
 suppressMessages(library(dplyr))
 suppressMessages(library(ggplot2))
 
