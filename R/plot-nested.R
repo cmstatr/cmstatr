@@ -1,11 +1,12 @@
 
 #' @importFrom rlang call2
-build_nesting <- function(x, group_df, i_group, label, stat, type) {
+build_nesting <- function(x, group_df, i_group, label, stat, type, extras) {
   if (i_group > ncol(group_df)) {
     if (type == "Points") {
       nodes <- NULL
     } else {
-      nodes <- list(build_nesting(x, group_df, i_group, label, stat, "Points"))
+      nodes <- list(build_nesting(x, group_df, i_group, label, stat, "Points",
+                                  extras))
     }
   } else {
     group_levels <- levels(as.factor(group_df[[i_group]]))
@@ -15,7 +16,11 @@ build_nesting <- function(x, group_df, i_group, label, stat, type) {
 
       node_x <- subset(x, mask)
       node_group_df <- subset(group_df, mask)
-      n <- build_nesting(node_x, node_group_df, i_group + 1, gl, stat, "Label")
+      extras_subset <- lapply(extras, function(e) {
+        subset(e, mask)
+      })
+      n <- build_nesting(node_x, node_group_df, i_group + 1, gl, stat, "Label",
+                         extras_subset)
       n
     })
   }
@@ -25,7 +30,8 @@ build_nesting <- function(x, group_df, i_group, label, stat, type) {
     x = x,
     stat = eval(call2(.fn = stat, x)),
     label = label,
-    nodes = nodes
+    nodes = nodes,
+    extras = extras
   )
 }
 
@@ -236,18 +242,38 @@ draw_horiz_lines_to_labels <- function(g, elm_list, hline_args) {
   }
 }
 
+add_extras_data <- function(df, extras, name, must_be_equal) {
+  if (name %in% names(extras)) {
+    if (length(levels(as.factor(extras[[name]]))) > 1 & must_be_equal) {
+      # Not all values are the same
+      return(df)
+    } else {
+      # All values are the same, so we can just take the first
+      # This will work regardless of how many rows are in df
+      df[[name]] <- extras[[name]][1]
+      return(df)
+    }
+  } else {
+    return(df)
+  }
+}
+
+
 #' @importFrom purrr map_dfr
 #' @importFrom rlang exec
 #' @importFrom ggplot2 aes
 #' @importFrom rlang .data
-draw_points <- function(g, elm_list, point_args, dline_args) {
+draw_points <- function(g, elm_list, point_args, dline_args, extras_names) {
   points <- map_dfr(
     elm_list,
     function(cur_item) {
       if (cur_item$obj$type == "Points") {
-        data.frame(
-          x = cur_item$obj$x,
-          y = cur_item$y
+        add_extras_data(
+          data.frame(
+            x = cur_item$obj$x,
+            y = cur_item$y
+          ),
+          cur_item$obj$extras, "color", FALSE
         )
       } else {
         return(NULL)
@@ -271,13 +297,29 @@ draw_points <- function(g, elm_list, point_args, dline_args) {
     }
   )
 
+  if ("color" %in% names(extras_names)) {
+    g <- g +
+      exec(
+        ggplot2::geom_point,
+        data = points,
+        mapping = aes(x = .data$x, y = .data$y, color = .data$color),
+        !!!point_args
+      ) +
+      labs(
+        color = extras_names[["color"]]
+      )
+  } else {
+    # No color variable
+    g <- g +
+      exec(
+        ggplot2::geom_point,
+        data = points,
+        mapping = aes(x = .data$x, y = .data$y),
+        !!!point_args
+      )
+  }
+
   g +
-    exec(
-      ggplot2::geom_point,
-      data = points,
-      mapping = aes(x = .data$x, y = .data$y),
-      !!!point_args
-    ) +
     exec(
       ggplot2::geom_segment,
       data = line_segments,
@@ -295,15 +337,18 @@ draw_points <- function(g, elm_list, point_args, dline_args) {
 #' @importFrom rlang exec
 #' @importFrom ggplot2 aes
 #' @importFrom rlang .data
-draw_labels <- function(g, elm_list, label_args) {
+draw_labels <- function(g, elm_list, label_args, extras_names) {
   labels <- map_dfr(
     elm_list,
     function(cur_item) {
       if (cur_item$obj$type == "Label") {
-        data.frame(
-          x = cur_item$obj$stat,
-          y = cur_item$y,
-          label = cur_item$obj$label
+        add_extras_data(
+          data.frame(
+            x = cur_item$obj$stat,
+            y = cur_item$y,
+            label = cur_item$obj$label
+          ),
+          cur_item$obj$extras, "fill", TRUE
         )
       } else {
         NULL
@@ -314,6 +359,23 @@ draw_labels <- function(g, elm_list, label_args) {
   if (nrow(labels) == 0) {
     g
   } else {
+    if ("fill" %in% names(extras_names)) {
+      labels_fill <- filter(labels, !is.na(fill))
+      g <- g +
+        exec(
+          ggplot2::geom_label,
+          data = labels_fill,
+          mapping = aes(x = .data$x, y = .data$y, label = .data$label,
+                        fill = .data$fill),
+          !!!label_args
+        ) +
+        labs(
+          fill = extras_names[["fill"]]
+        )
+      labels <- filter(labels, is.na(fill))
+    }
+
+    # Data with no fill variable
     g +
       exec(
         ggplot2::geom_label,
@@ -362,11 +424,14 @@ draw_labels <- function(g, elm_list, label_args) {
 #'                    groups = c(batch, panel))
 #'
 #' @importFrom rlang ensym
+#' @importFrom rlang quo_get_expr
 #' @importFrom ggplot2 ggplot
 #' @importFrom dplyr ungroup
 #' @export
 nested_data_plot <- function(dat, x, groups = c(),
-                             stat = "mean", y_gap = 1,
+                             stat = "mean",
+                             ...,
+                             y_gap = 1,
                              divider_color = "grey50",
                              point_args = list(),
                              dline_args = list(),
@@ -378,7 +443,12 @@ nested_data_plot <- function(dat, x, groups = c(),
   group_df <- select(dat, !!enquo(groups))
   xlabel <- ensym(x)
   x <- select(dat, !!enquo(x))[[1]]
-  nesting <- build_nesting(x, group_df, 1, "Root", stat, "Root")
+
+  en_dots <- enquos(..., .ignore_empty = "all")
+  extras <- lapply(en_dots, function(ed) select(dat, !!quo_get_expr(ed))[[1]])
+  extras_names <- lapply(en_dots, function(ed) quo_get_expr(ed))
+
+  nesting <- build_nesting(x, group_df, 1, "Root", stat, "Root", extras)
   el <- build_drawing_element_list(nesting, group_df, y_gap)
   elm_list <- el$elm_list
   axis_info <- el$axis_info
@@ -387,7 +457,7 @@ nested_data_plot <- function(dat, x, groups = c(),
   g <- draw_vert_lines_to_labels(g, elm_list, vline_args)
   g <- draw_horiz_lines_to_labels(g, elm_list, hline_args)
   g <- draw_connectors(g, elm_list, connector_args)
-  g <- draw_points(g, elm_list, point_args, dline_args)
-  g <- draw_labels(g, elm_list, label_args)
+  g <- draw_points(g, elm_list, point_args, dline_args, extras_names)
+  g <- draw_labels(g, elm_list, label_args, extras_names)
   g
 }

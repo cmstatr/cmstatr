@@ -9,6 +9,7 @@ nested_data_plot(
   x,
   groups = c(),
   stat = "mean",
+  ...,
   y_gap = 1,
   divider_color = "grey50",
   point_args = list(),
