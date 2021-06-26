@@ -1,3 +1,16 @@
+# Version 0.8.0.9501
+- Updated the expected value of the order statistic of a normally
+  distributed variable in the implementation of `hk_ext_z_j_opt`.
+  This affects the Basis values computed by `basis_hk_ext` when
+  `method="optimum-order"`. Both the new and old implementations appear to
+  perform equally well. See the vignette `hk_ext` for more information.
+- Added the function `nested_data_plot` for producing nested data plots.
+- Added the vignette `hk_ext`
+- Updated the vignette `cmstatr_Graphing` to show some examples of the use
+  of `nested_data_plot`.
+- Added the additional column `batch` to the `carbon.data.2` example data set.
+- Updated the test to use `testthat` edition 3.
+
 # Version 0.8.0
 - Updated `basis_anova` so that in cases where the between-batch variance
   is small compared with the within-batch variance, a tolerance factor
