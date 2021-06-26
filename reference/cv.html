@@ -83,7 +83,7 @@ of data and calculates the CV." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0.9501</span>
       </span>
     </div>
 
@@ -114,6 +114,9 @@ of data and calculates the CV." />
     <li>
       <a href="../articles/cmstatr_Tutorial.html">cmstatr Tutorial</a>
     </li>
+    <li>
+      <a href="../articles/hk_ext.html">Extended Hanson-Koopmans</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -122,7 +125,7 @@ of data and calculates the CV." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/ComtekAdvancedStructures/cmstatr/">
+  <a href="https://github.com/cmstatr/cmstatr/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -141,7 +144,7 @@ of data and calculates the CV." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate the coefficient of variation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/cv.R'><code>R/cv.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/cmstatr/cmstatr/blob/master/R/cv.R'><code>R/cv.R</code></a></small>
     <div class="hidden name"><code>cv.Rd</code></div>
     </div>
 
@@ -182,12 +185,12 @@ of data and calculates the CV.</p>
 <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>test</span> <span class='op'>==</span> <span class='st'>"WT"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>condition</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>mean <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>strength</span><span class='op'>)</span>, cv <span class='op'>=</span> <span class='fu'>cv</span><span class='op'>(</span><span class='va'>strength</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 3</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 3</span>
 #&gt;   condition  mean     cv
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> CTD        137. 0.041</span><span style='text-decoration: underline;'>7</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>2</span><span> ETW        135. 0.031</span><span style='text-decoration: underline;'>0</span><span>
-#&gt; </span><span style='color: #BCBCBC;'>3</span><span> RTD        142. 0.045</span><span style='text-decoration: underline;'>1</span><span></div><div class='input'>
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
+#&gt; <span style='color: #BCBCBC;'>1</span> CTD        137. 0.041<span style='text-decoration: underline;'>7</span>
+#&gt; <span style='color: #BCBCBC;'>2</span> ETW        135. 0.031<span style='text-decoration: underline;'>0</span>
+#&gt; <span style='color: #BCBCBC;'>3</span> RTD        142. 0.045<span style='text-decoration: underline;'>1</span></div><div class='input'>
 <span class='co'>## # A tibble: 3 x 3</span>
 <span class='co'>##   condition  mean     cv</span>
 <span class='co'>##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;</span>
@@ -196,7 +199,7 @@ of data and calculates the CV.</p>
 <span class='co'>## 3 RTD        142. 0.0451</span>
 
 
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -208,7 +211,7 @@ of data and calculates the CV.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://www.kloppenborg.ca'>Stefan Kloppenborg</a>.</p>
+  <p>Developed by <a href='https://www.kloppenborg.ca'>Stefan Kloppenborg</a>, Comtek Advanced Structures, Ltd..</p>
 </div>
 
 <div class="pkgdown">

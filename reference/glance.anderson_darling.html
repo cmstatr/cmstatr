@@ -85,7 +85,7 @@ tibble." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0.9501</span>
       </span>
     </div>
 
@@ -116,6 +116,9 @@ tibble." />
     <li>
       <a href="../articles/cmstatr_Tutorial.html">cmstatr Tutorial</a>
     </li>
+    <li>
+      <a href="../articles/hk_ext.html">Extended Hanson-Koopmans</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -124,7 +127,7 @@ tibble." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/ComtekAdvancedStructures/cmstatr/">
+  <a href="https://github.com/cmstatr/cmstatr/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -143,7 +146,7 @@ tibble." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Glance at an <code>anderson_darling</code> object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/R/adtest.R'><code>R/adtest.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/cmstatr/cmstatr/blob/master/R/adtest.R'><code>R/adtest.R</code></a></small>
     <div class="hidden name"><code>glance.anderson_darling.Rd</code></div>
     </div>
 
@@ -197,16 +200,16 @@ should be rejected</p></li>
     <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>100</span>, <span class='fl'>4</span><span class='op'>)</span>
 <span class='va'>ad</span> <span class='op'>&lt;-</span> <span class='fu'><a href='anderson_darling.html'>anderson_darling_weibull</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span><span class='op'>)</span>
 <span class='fu'><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></span><span class='op'>(</span><span class='va'>ad</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 6</span><span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 6</span>
 #&gt;   dist        n     A   osl alpha reject_distribution
-#&gt;   </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;int&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>              
-#&gt; </span><span style='color: #BCBCBC;'>1</span><span> Weibull   100 0.621 0.102  0.05 FALSE              </div><div class='input'>
+#&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>              
+#&gt; <span style='color: #BCBCBC;'>1</span> Weibull   100 0.621 0.102  0.05 FALSE              </div><div class='input'>
 <span class='co'>## # A tibble: 1 x 6</span>
 <span class='co'>##   dist        n     A        osl alpha reject_distribution</span>
 <span class='co'>##   &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;</span>
 <span class='co'>## 1 Weibull   100  2.62 0.00000207  0.05 TRUE</span>
 
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -218,7 +221,7 @@ should be rejected</p></li>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://www.kloppenborg.ca'>Stefan Kloppenborg</a>.</p>
+  <p>Developed by <a href='https://www.kloppenborg.ca'>Stefan Kloppenborg</a>, Comtek Advanced Structures, Ltd..</p>
 </div>
 
 <div class="pkgdown">

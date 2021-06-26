@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0.9501</span>
       </span>
     </div>
 
@@ -70,6 +70,9 @@
     <li>
       <a href="../articles/cmstatr_Tutorial.html">cmstatr Tutorial</a>
     </li>
+    <li>
+      <a href="../articles/hk_ext.html">Extended Hanson-Koopmans</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -78,7 +81,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ComtekAdvancedStructures/cmstatr/">
+  <a href="https://github.com/cmstatr/cmstatr/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -101,7 +104,7 @@
             
             <h4 class="date">1-Apr-2020</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/vignettes/cmstatr_Tutorial.Rmd"><code>vignettes/cmstatr_Tutorial.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatr/blob/master/vignettes/cmstatr_Tutorial.Rmd"><code>vignettes/cmstatr_Tutorial.Rmd</code></a></small>
       <div class="hidden name"><code>cmstatr_Tutorial.Rmd</code></div>
 
     </div>
@@ -123,17 +126,17 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">carbon.fabric.2</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt;    test condition batch thickness nplies strength modulus failure_mode</span>
-<span class="co">#&gt; 1    WT       CTD     A     0.112     14  142.817   9.285          LAT</span>
-<span class="co">#&gt; 2    WT       CTD     A     0.113     14  135.901   9.133          LAT</span>
-<span class="co">#&gt; 3    WT       CTD     A     0.113     14  132.511   9.253          LAT</span>
-<span class="co">#&gt; 4    WT       CTD     A     0.112     14  135.586   9.150          LAB</span>
-<span class="co">#&gt; 5    WT       CTD     A     0.113     14  125.145   9.270          LAB</span>
-<span class="co">#&gt; 6    WT       CTD     A     0.113     14  135.203   9.189          LGM</span>
-<span class="co">#&gt; 7    WT       CTD     A     0.113     14  128.547   9.088          LAB</span>
-<span class="co">#&gt; 8    WT       CTD     B     0.113     14  127.709   9.199          LGM</span>
-<span class="co">#&gt; 9    WT       CTD     B     0.113     14  127.074   9.058          LGM</span>
-<span class="co">#&gt; 10   WT       CTD     B     0.114     14  126.879   9.306          LGM</span></code></pre></div>
+<span class="co">#&gt;    test condition batch panel thickness nplies strength modulus failure_mode</span>
+<span class="co">#&gt; 1    WT       CTD     A     1     0.112     14  142.817   9.285          LAT</span>
+<span class="co">#&gt; 2    WT       CTD     A     1     0.113     14  135.901   9.133          LAT</span>
+<span class="co">#&gt; 3    WT       CTD     A     1     0.113     14  132.511   9.253          LAT</span>
+<span class="co">#&gt; 4    WT       CTD     A     2     0.112     14  135.586   9.150          LAB</span>
+<span class="co">#&gt; 5    WT       CTD     A     2     0.113     14  125.145   9.270          LAB</span>
+<span class="co">#&gt; 6    WT       CTD     A     2     0.113     14  135.203   9.189          LGM</span>
+<span class="co">#&gt; 7    WT       CTD     A     2     0.113     14  128.547   9.088          LAB</span>
+<span class="co">#&gt; 8    WT       CTD     B     1     0.113     14  127.709   9.199          LGM</span>
+<span class="co">#&gt; 9    WT       CTD     B     1     0.113     14  127.074   9.058          LGM</span>
+<span class="co">#&gt; 10   WT       CTD     B     1     0.114     14  126.879   9.306          LGM</span></code></pre></div>
 <p>If your data set is not yet in this type of format (note: that the column names <em>do not</em> need to match the column names in the example), there are many ways to get it into this format. One of the easier ways of doing so is to use the <a href="https://tidyr.tidyverse.org/"><code>tidyr</code></a> package. The use of this package is outside the scope of this vignette.</p>
 </div>
 <div id="working-with-data" class="section level1">
@@ -154,17 +157,17 @@
 
 <span class="va">norm_data</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt;    test condition batch thickness nplies strength modulus failure_mode</span>
-<span class="co">#&gt; 1    WT       CTD     A     0.112     14  142.817   9.285          LAT</span>
-<span class="co">#&gt; 2    WT       CTD     A     0.113     14  135.901   9.133          LAT</span>
-<span class="co">#&gt; 3    WT       CTD     A     0.113     14  132.511   9.253          LAT</span>
-<span class="co">#&gt; 4    WT       CTD     A     0.112     14  135.586   9.150          LAB</span>
-<span class="co">#&gt; 5    WT       CTD     A     0.113     14  125.145   9.270          LAB</span>
-<span class="co">#&gt; 6    WT       CTD     A     0.113     14  135.203   9.189          LGM</span>
-<span class="co">#&gt; 7    WT       CTD     A     0.113     14  128.547   9.088          LAB</span>
-<span class="co">#&gt; 8    WT       CTD     B     0.113     14  127.709   9.199          LGM</span>
-<span class="co">#&gt; 9    WT       CTD     B     0.113     14  127.074   9.058          LGM</span>
-<span class="co">#&gt; 10   WT       CTD     B     0.114     14  126.879   9.306          LGM</span>
+<span class="co">#&gt;    test condition batch panel thickness nplies strength modulus failure_mode</span>
+<span class="co">#&gt; 1    WT       CTD     A     1     0.112     14  142.817   9.285          LAT</span>
+<span class="co">#&gt; 2    WT       CTD     A     1     0.113     14  135.901   9.133          LAT</span>
+<span class="co">#&gt; 3    WT       CTD     A     1     0.113     14  132.511   9.253          LAT</span>
+<span class="co">#&gt; 4    WT       CTD     A     2     0.112     14  135.586   9.150          LAB</span>
+<span class="co">#&gt; 5    WT       CTD     A     2     0.113     14  125.145   9.270          LAB</span>
+<span class="co">#&gt; 6    WT       CTD     A     2     0.113     14  135.203   9.189          LGM</span>
+<span class="co">#&gt; 7    WT       CTD     A     2     0.113     14  128.547   9.088          LAB</span>
+<span class="co">#&gt; 8    WT       CTD     B     1     0.113     14  127.709   9.199          LGM</span>
+<span class="co">#&gt; 9    WT       CTD     B     1     0.113     14  127.074   9.058          LGM</span>
+<span class="co">#&gt; 10   WT       CTD     B     1     0.114     14  126.879   9.306          LGM</span>
 <span class="co">#&gt;    strength.norm</span>
 <span class="co">#&gt; 1       144.6248</span>
 <span class="co">#&gt; 2       138.8500</span>
@@ -490,7 +493,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://www.kloppenborg.ca">Stefan Kloppenborg</a>.</p>
+  <p>Developed by <a href="https://www.kloppenborg.ca">Stefan Kloppenborg</a>, Comtek Advanced Structures, Ltd..</p>
 </div>
 
 <div class="pkgdown">

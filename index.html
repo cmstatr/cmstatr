@@ -52,7 +52,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0.9501</span>
       </span>
     </div>
 
@@ -83,6 +83,9 @@
     <li>
       <a href="articles/cmstatr_Tutorial.html">cmstatr Tutorial</a>
     </li>
+    <li>
+      <a href="articles/hk_ext.html">Extended Hanson-Koopmans</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -91,7 +94,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ComtekAdvancedStructures/cmstatr/">
+  <a href="https://github.com/cmstatr/cmstatr/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -131,7 +134,7 @@
 <p>If you want the latest development version, you can install it from <code>github</code> using <code>devtools</code>. This will also install the dependencies required to build the vignettes. Optionally, change the value of the argument <code>ref</code> to install <code>cmstatr</code> from a different branch of the repository.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"devtools"</span>, <span class="st">"rmarkdown"</span>, <span class="st">"dplyr"</span>, <span class="st">"tidyr"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"ComtekAdvancedStructures/cmstatr"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>,
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"cmstatr/cmstatr"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>,
                          ref <span class="op">=</span> <span class="st">"master"</span>,
                          build_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
@@ -190,6 +193,13 @@
 <li>For changes that affect the user, add a bullet at the top of <code>NEWS.md</code> below the current development version</li>
 </ul>
 </div>
+<div id="development" class="section level2">
+<h2 class="hasAnchor">
+<a href="#development" class="anchor"></a>Development</h2>
+<p>Testing is performed using <code>testthat</code>. Edition 3 of that package is used and parallel processing enabled. If you wish to use more than two CPUs, set the environment variable <code>TESTTHAT_CUPS</code> to the number of CPUs that you want to use. One way of doing this is to create the file <code>.Rprofile</code> with the following contents. This file is ignored both by <code>git</code> and also in <code>.Rbuildingore</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>TESTTHAT_CPUS <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></code></pre></div>
+</div>
 </div>
 
   </div>
@@ -200,9 +210,9 @@
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=cmstatr">https://​cloud.r-project.org/​package=cmstatr</a>
 </li>
-<li>Browse source code at <br><a href="https://github.com/ComtekAdvancedStructures/cmstatr/">https://​github.com/​ComtekAdvancedStructures/​cmstatr/​</a>
+<li>Browse source code at <br><a href="https://github.com/cmstatr/cmstatr/">https://​github.com/​cmstatr/​cmstatr/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/ComtekAdvancedStructures/cmstatr/issues">https://​github.com/​ComtekAdvancedStructures/​cmstatr/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/cmstatr/cmstatr/issues">https://​github.com/​cmstatr/​cmstatr/​issues</a>
 </li>
 </ul>
 </div>
@@ -223,6 +233,7 @@
 <ul class="list-unstyled">
 <li>
 <a href="https://www.kloppenborg.ca">Stefan Kloppenborg</a> <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Comtek Advanced Structures, Ltd. <br><small class="roles"> Funder </small>  </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
@@ -242,7 +253,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://www.kloppenborg.ca">Stefan Kloppenborg</a>.</p>
+  <p>Developed by <a href="https://www.kloppenborg.ca">Stefan Kloppenborg</a>, Comtek Advanced Structures, Ltd..</p>
 </div>
 
 <div class="pkgdown">

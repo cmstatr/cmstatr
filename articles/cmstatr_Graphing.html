@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0.9501</span>
       </span>
     </div>
 
@@ -70,6 +70,9 @@
     <li>
       <a href="../articles/cmstatr_Tutorial.html">cmstatr Tutorial</a>
     </li>
+    <li>
+      <a href="../articles/hk_ext.html">Extended Hanson-Koopmans</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -78,7 +81,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ComtekAdvancedStructures/cmstatr/">
+  <a href="https://github.com/cmstatr/cmstatr/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -101,7 +104,7 @@
             
             <h4 class="date">2-May-2020</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ComtekAdvancedStructures/cmstatr/blob/master/vignettes/cmstatr_Graphing.Rmd"><code>vignettes/cmstatr_Graphing.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatr/blob/master/vignettes/cmstatr_Graphing.Rmd"><code>vignettes/cmstatr_Graphing.Rmd</code></a></small>
       <div class="hidden name"><code>cmstatr_Graphing.Rmd</code></div>
 
     </div>
@@ -123,17 +126,17 @@
 
 <span class="va">dat</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt;    test condition batch thickness nplies strength modulus failure_mode</span>
-<span class="co">#&gt; 1    WT       CTD     A     0.112     14  142.817   9.285          LAT</span>
-<span class="co">#&gt; 2    WT       CTD     A     0.113     14  135.901   9.133          LAT</span>
-<span class="co">#&gt; 3    WT       CTD     A     0.113     14  132.511   9.253          LAT</span>
-<span class="co">#&gt; 4    WT       CTD     A     0.112     14  135.586   9.150          LAB</span>
-<span class="co">#&gt; 5    WT       CTD     A     0.113     14  125.145   9.270          LAB</span>
-<span class="co">#&gt; 6    WT       CTD     A     0.113     14  135.203   9.189          LGM</span>
-<span class="co">#&gt; 7    WT       CTD     A     0.113     14  128.547   9.088          LAB</span>
-<span class="co">#&gt; 8    WT       CTD     B     0.113     14  127.709   9.199          LGM</span>
-<span class="co">#&gt; 9    WT       CTD     B     0.113     14  127.074   9.058          LGM</span>
-<span class="co">#&gt; 10   WT       CTD     B     0.114     14  126.879   9.306          LGM</span></code></pre></div>
+<span class="co">#&gt;    test condition batch panel thickness nplies strength modulus failure_mode</span>
+<span class="co">#&gt; 1    WT       CTD     A     1     0.112     14  142.817   9.285          LAT</span>
+<span class="co">#&gt; 2    WT       CTD     A     1     0.113     14  135.901   9.133          LAT</span>
+<span class="co">#&gt; 3    WT       CTD     A     1     0.113     14  132.511   9.253          LAT</span>
+<span class="co">#&gt; 4    WT       CTD     A     2     0.112     14  135.586   9.150          LAB</span>
+<span class="co">#&gt; 5    WT       CTD     A     2     0.113     14  125.145   9.270          LAB</span>
+<span class="co">#&gt; 6    WT       CTD     A     2     0.113     14  135.203   9.189          LGM</span>
+<span class="co">#&gt; 7    WT       CTD     A     2     0.113     14  128.547   9.088          LAB</span>
+<span class="co">#&gt; 8    WT       CTD     B     1     0.113     14  127.709   9.199          LGM</span>
+<span class="co">#&gt; 9    WT       CTD     B     1     0.113     14  127.074   9.058          LGM</span>
+<span class="co">#&gt; 10   WT       CTD     B     1     0.114     14  126.879   9.306          LGM</span></code></pre></div>
 <p>We’ll then calculate the B-Basis value using the pooling by standard deviation method. This data set happens to fail some of the diagnostic tests, but for the purpose of this example, we’ll ignore those failures using the <code>override</code> argument.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b_basis_pooled</span> <span class="op">&lt;-</span> <span class="va">dat</span> <span class="op">%&gt;%</span>
@@ -401,6 +404,28 @@
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="cmstatr_Graphing_files/figure-html/unnamed-chunk-19-1.png" width="576"></p>
 </div>
+<div id="nested-data-plots" class="section level1">
+<h1 class="hasAnchor">
+<a href="#nested-data-plots" class="anchor"></a>Nested Data Plots</h1>
+<p><code>cmstatr</code> contains the function <code>nested_data_plot</code>. This function creates a plot showing the sources of variation. In the following example, the data is grouped according to the variables in the <code>group</code> argument. The data is first grouped according to <code>batch</code>, then according to <code>panel</code>. The labels located according to the data points that fall under them. By default, the mean is used, but that <code>stat</code> argument can be used to locate the labels according to <code>median</code> or some other statistic.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">carbon.fabric.2</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>panel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">panel</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">test</span> <span class="op">==</span> <span class="st">"WT"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/nested_data_plot.html">nested_data_plot</a></span><span class="op">(</span><span class="va">strength</span>,
+                   groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">batch</span>, <span class="va">panel</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="cmstatr_Graphing_files/figure-html/unnamed-chunk-20-1.png" width="576"></p>
+<p>Optionally, <code>fill</code> or <code>color</code> can be set as follows:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">carbon.fabric.2</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>panel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">panel</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">test</span> <span class="op">==</span> <span class="st">"WT"</span> <span class="op">&amp;</span> <span class="va">condition</span> <span class="op">==</span> <span class="st">"RTD"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/nested_data_plot.html">nested_data_plot</a></span><span class="op">(</span><span class="va">strength</span>,
+                   groups <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">batch</span>, <span class="va">panel</span><span class="op">)</span>,
+                   fill <span class="op">=</span> <span class="va">batch</span>,
+                   color <span class="op">=</span> <span class="va">panel</span><span class="op">)</span></code></pre></div>
+<p><img src="cmstatr_Graphing_files/figure-html/unnamed-chunk-21-1.png" width="576"></p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -414,7 +439,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://www.kloppenborg.ca">Stefan Kloppenborg</a>.</p>
+  <p>Developed by <a href="https://www.kloppenborg.ca">Stefan Kloppenborg</a>, Comtek Advanced Structures, Ltd..</p>
 </div>
 
 <div class="pkgdown">

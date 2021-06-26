@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Levene's Test for Equality of Variance — levene_test • cmstatr</title>
+<title>Create a plot of nested sources of variation — nested_data_plot • cmstatr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,9 @@
 
 
 
-<meta property="og:title" content="Levene's Test for Equality of Variance — levene_test" />
-<meta property="og:description" content="This function performs the Levene's test for equality of variance." />
+<meta property="og:title" content="Create a plot of nested sources of variation — nested_data_plot" />
+<meta property="og:description" content="Creates a plot showing the breakdown of variation within a sample. This
+function uses ggplot2 internally." />
 <meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png" />
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr" />
 
@@ -141,103 +142,126 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Levene's Test for Equality of Variance</h1>
-    <small class="dont-index">Source: <a href='https://github.com/cmstatr/cmstatr/blob/master/R/levene.R'><code>R/levene.R</code></a></small>
-    <div class="hidden name"><code>levene_test.Rd</code></div>
+    <h1>Create a plot of nested sources of variation</h1>
+    <small class="dont-index">Source: <a href='https://github.com/cmstatr/cmstatr/blob/master/R/plot-nested.R'><code>R/plot-nested.R</code></a></small>
+    <div class="hidden name"><code>nested_data_plot.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function performs the Levene's test for equality of variance.</p>
+    <p>Creates a plot showing the breakdown of variation within a sample. This
+function uses ggplot2 internally.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>levene_test</span><span class='op'>(</span>data <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>x</span>, <span class='va'>groups</span>, alpha <span class='op'>=</span> <span class='fl'>0.05</span>, modcv <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>nested_data_plot</span><span class='op'>(</span>
+  <span class='va'>dat</span>,
+  <span class='va'>x</span>,
+  groups <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span>,
+  stat <span class='op'>=</span> <span class='st'>"mean"</span>,
+  <span class='va'>...</span>,
+  y_gap <span class='op'>=</span> <span class='fl'>1</span>,
+  divider_color <span class='op'>=</span> <span class='st'>"grey50"</span>,
+  point_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  dline_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  vline_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  hline_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  label_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  connector_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>a data.frame</p></td>
+      <th>dat</th>
+      <td><p>a <code>data.frame</code> or similar object</p></td>
     </tr>
     <tr>
       <th>x</th>
-      <td><p>the variable in the data.frame or a vector on which to perform the
-Levene's test (usually strength)</p></td>
+      <td><p>the variable within <code>dat</code> to plot. Most often this would be a
+strength or modulus variable.</p></td>
     </tr>
     <tr>
       <th>groups</th>
-      <td><p>a variable in the data.frame that defines the groups</p></td>
+      <td><p>a vector of variables to group the data by</p></td>
     </tr>
     <tr>
-      <th>alpha</th>
-      <td><p>the significance level (default 0.05)</p></td>
+      <th>stat</th>
+      <td><p>a function for computing the central location for each group.
+This is normally "mean" but could be "median" or another
+function.</p></td>
     </tr>
     <tr>
-      <th>modcv</th>
-      <td><p>a logical value indicating whether the modified CV approach
-should be used.</p></td>
+      <th>...</th>
+      <td><p>extra options. See Details.</p></td>
+    </tr>
+    <tr>
+      <th>y_gap</th>
+      <td><p>the vertical gap between grouping variables</p></td>
+    </tr>
+    <tr>
+      <th>divider_color</th>
+      <td><p>the color of the lines between grouping variables.
+Or <code>NULL</code> to omit these lines.</p></td>
+    </tr>
+    <tr>
+      <th>point_args</th>
+      <td><p>arguments to pass to <a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>ggplot2::geom_point</a> when plotting
+individual data points.</p></td>
+    </tr>
+    <tr>
+      <th>dline_args</th>
+      <td><p>arguments to pass to <a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>ggplot2::geom_segment</a> when plotting
+the horizontal lines between data points.</p></td>
+    </tr>
+    <tr>
+      <th>vline_args</th>
+      <td><p>arguments to pass to <a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>ggplot2::geom_segment</a> when plotting
+vertical lines</p></td>
+    </tr>
+    <tr>
+      <th>hline_args</th>
+      <td><p>arguments to pass to <a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>ggplot2::geom_segment</a> when plotting
+horizontal lines connecting levels in groups</p></td>
+    </tr>
+    <tr>
+      <th>label_args</th>
+      <td><p>arguments to pass to <a href='https://ggplot2.tidyverse.org/reference/geom_text.html'>ggplot2::geom_label</a> when plotting
+labels</p></td>
+    </tr>
+    <tr>
+      <th>connector_args</th>
+      <td><p>arguments to pass to <a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>ggplot2::geom_point</a> when
+plotting the connection between the vertical lines
+and the horizontal lines connecting levels in groups</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Returns an object of class <code>adk</code>. This object has the following fields:</p><ul>
-<li><p><code>call</code> the expression used to call this function</p></li>
-<li><p><code>data</code> the original data supplied by the user</p></li>
-<li><p><code>groups</code> a vector of the groups used in the computation</p></li>
-<li><p><code>alpha</code> the value of alpha specified</p></li>
-<li><p><code>modcv</code> a logical value indicating whether the modified
-CV approach was used.</p></li>
-<li><p><code>n</code> the total number of observations</p></li>
-<li><p><code>k</code> the number of groups</p></li>
-<li><p><code>f</code> the value of the F test statistic</p></li>
-<li><p><code>p</code> the computed p-value</p></li>
-<li><p><code>reject_equal_variance</code> a boolean value indicating whether the
-null hypothesis that all samples have the same variance is rejected</p></li>
-<li><p><code>modcv_transformed_data</code> the data after the modified CV transformation</p></li>
-</ul>
-
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function performs the Levene's test for equality of variance. The
-data is transformed as follows:</p>
-<p>$$w_{ij} = \left| x_{ij} - m_i \right|$$</p>
-<p>Where \(m_i\) is median of the \(ith\) group. An F-Test is then
-performed on the transformed data.</p>
-<p>When <code>modcv=TRUE</code>, the data from each group is first transformed
-according to the modified coefficient of variation (CV) rules before
-performing Levene's test.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+    <p>Extra options can be included to control aesthetic options. The following
+options are supported. Any (or all) can be set to a single variable
+in the data set.</p><ul>
+<li><p><code>color</code>: Controls the color of the data points.</p></li>
+<li><p><code>fill</code>: Controls the fill color of the labels. When a particular label
+is associated with data points with more than one level of the supplied
+variable, the fill is omitted.</p></li>
+</ul>
 
-    <p>“Composite Materials Handbook, Volume 1. Polymer Matrix Composites
-Guideline for Characterization of Structural Materials,” SAE International,
-CMH-17-1G, Mar. 2012.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='calc_cv_star.html'>calc_cv_star()</a></code></p>
-<p><code><a href='transform_mod_cv.html'>transform_mod_cv()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span>
-
 <span class='va'>carbon.fabric.2</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>test</span> <span class='op'>==</span> <span class='st'>"FC"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>levene_test</span><span class='op'>(</span><span class='va'>strength</span>, <span class='va'>condition</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 
-#&gt; Call:
-#&gt; levene_test(data = ., x = strength, groups = condition)
-#&gt; 
-#&gt; n = 91           k = 5            
-#&gt; F = 3.883818     p-value = 0.00600518 
-#&gt; Conclusion: Samples have unequal variance ( alpha = 0.05 )
-#&gt; </div><div class='input'><span class='co'>##</span>
-<span class='co'>## Call:</span>
-<span class='co'>## levene_test(data = ., x = strength, groups = condition)</span>
-<span class='co'>##</span>
-<span class='co'>## n = 91          k = 5</span>
-<span class='co'>## F = 3.883818    p-value = 0.00600518</span>
-<span class='co'>## Conclusion: Samples have unequal variance ( alpha = 0.05 )</span>
-
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>test</span> <span class='op'>==</span> <span class='st'>"WT"</span> <span class='op'>&amp;</span> <span class='va'>condition</span> <span class='op'>==</span> <span class='st'>"RTD"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>nested_data_plot</span><span class='op'>(</span><span class='va'>strength</span>,
+                   groups <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>batch</span>, <span class='va'>panel</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='img'><img src='nested_data_plot-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># Labels can be filled too</span>
+<span class='va'>carbon.fabric.2</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>test</span> <span class='op'>==</span> <span class='st'>"WT"</span> <span class='op'>&amp;</span> <span class='va'>condition</span> <span class='op'>==</span> <span class='st'>"RTD"</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>nested_data_plot</span><span class='op'>(</span><span class='va'>strength</span>,
+                   groups <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>batch</span>, <span class='va'>panel</span><span class='op'>)</span>,
+                   fill <span class='op'>=</span> <span class='va'>batch</span><span class='op'>)</span>
+</div><div class='img'><img src='nested_data_plot-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
