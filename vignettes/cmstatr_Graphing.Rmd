@@ -336,3 +336,33 @@ single_point_results %>%
 ```
 
 
+# Nested Data Plots
+
+`cmstatr` contains the function `nested_data_plot`. This function creates a
+plot showing the sources of variation. In the following example, the data
+is grouped according to the variables in the `group` argument. The data
+is first grouped according to `batch`, then according to `panel`. The
+labels located according to the data points that fall under them.
+By default, the mean is used, but that `stat` argument can be used to
+locate the labels according to `median` or some other statistic.
+
+
+```{r}
+carbon.fabric.2 %>%
+  mutate(panel = as.character(panel)) %>%
+  filter(test == "WT") %>%
+  nested_data_plot(strength,
+                   groups = c(batch, panel))
+```
+
+Optionally, `fill` or `color` can be set as follows:
+
+```{r}
+carbon.fabric.2 %>%
+  mutate(panel = as.character(panel)) %>%
+  filter(test == "WT" & condition == "RTD") %>%
+  nested_data_plot(strength,
+                   groups = c(batch, panel),
+                   fill = batch,
+                   color = panel)
+```
