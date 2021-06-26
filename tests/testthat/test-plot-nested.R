@@ -40,3 +40,26 @@ test_that("nested_data_plot-single_obs_per_group", {
                        groups = c(batch, panel, strength))
   })
 })
+
+test_that("nested_data_plot-color", {
+  skip_if_not_installed("vdiffr")
+  vdiffr::expect_doppelganger("nested_data_plot-color", {
+    carbon.fabric.2 %>%
+      filter(test == "WT" & condition == "RTD") %>%
+      nested_data_plot(strength,
+                       groups = c(batch, panel),
+                       color = batch)
+  })
+})
+
+test_that("nested_data_plot-color-and-fill", {
+  skip_if_not_installed("vdiffr")
+  vdiffr::expect_doppelganger("nested_data_plot-color-and-fill", {
+    carbon.fabric.2 %>%
+      filter(test == "WT") %>%
+      nested_data_plot(strength,
+                       groups = c(condition, batch, panel),
+                       color = batch,
+                       fill = condition)
+  })
+})
