@@ -13,8 +13,8 @@ To learn more about \code{cmstatr}, start with the vignettes:
 Useful links:
 \itemize{
   \item \url{https://www.cmstatr.net/}
-  \item \url{https://github.com/ComtekAdvancedStructures/cmstatr}
-  \item Report bugs at \url{https://github.com/ComtekAdvancedStructures/cmstatr/issues}
+  \item \url{https://github.com/cmstatr/cmstatr}
+  \item Report bugs at \url{https://github.com/cmstatr/cmstatr/issues}
 }
 
 }
@@ -25,6 +25,7 @@ Other contributors:
 \itemize{
   \item Billy Cheng \email{bcheng@comtekadvanced.com} [contributor]
   \item Ally Fraser \email{ally.fraser25@gmail.com} [contributor]
+  \item Comtek Advanced Structures, Ltd. [funder]
 }
 
 }

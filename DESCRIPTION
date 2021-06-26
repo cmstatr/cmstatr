@@ -1,7 +1,7 @@
 Package: cmstatr
 Type: Package
 Title: Statistical Methods for Composite Material Data
-Version: 0.8.0
+Version: 0.8.0.9501
 Date: 2021-02-23
 Depends: R (>= 3.3)
 Authors@R: c(
@@ -10,7 +10,9 @@ Authors@R: c(
     person("Billy", "Cheng", email = "bcheng@comtekadvanced.com",
       role = c("ctb")),
     person("Ally", "Fraser", email = "ally.fraser25@gmail.com",
-      role = c("ctb"))
+      role = c("ctb")),
+    person("Comtek Advanced Structures, Ltd.",
+      role = c("fnd"))
   )
 Description: An implementation of the statistical methods commonly
   used for advanced composite materials in aerospace applications.
@@ -27,8 +29,8 @@ Description: An implementation of the statistical methods commonly
   Additional details about this package are available in the paper by
   Kloppenborg (2020, <doi:10.21105/joss.02265>).
 URL: https://www.cmstatr.net/,
-  https://github.com/ComtekAdvancedStructures/cmstatr
-BugReports: https://github.com/ComtekAdvancedStructures/cmstatr/issues
+  https://github.com/cmstatr/cmstatr
+BugReports: https://github.com/cmstatr/cmstatr/issues
 License: AGPL-3
 Encoding: UTF-8
 LazyData: true
@@ -38,13 +40,13 @@ Imports:
     ggplot2,
     kSamples,
     MASS,
+    purrr,
     rlang,
     stats,
     tibble
 Suggests:
     knitr,
     lintr,
-    purrr,
     rmarkdown,
     spelling,
     testthat,
@@ -54,3 +56,5 @@ RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Language: en-US
 Roxygen: list(markdown = TRUE)
+Config/testthat/parallel: true
+Config/testthat/edition: 3

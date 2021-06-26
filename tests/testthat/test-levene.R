@@ -1,5 +1,3 @@
-context("Levene's Test")
-
 suppressMessages(library(dplyr))
 
 # From CMH-17-1G Section 8.3.11.1.1
@@ -166,7 +164,7 @@ test_that("printing works correctly for equal variance", {
     levene_test(trans_strength, condition, alpha = 0.02)
 
   expect_equal(res$f, 2.862, tolerance = 0.075)
-  expect_equal(res$p, 0.03, tolerance = 0.01)
+  expect_equal(res$p, 0.03, tolerance = 0.01 / 0.03)
 
   expect_output(
     print(res),
@@ -188,7 +186,7 @@ test_that("printing works correctly for unequal variance", {
     levene_test(trans_strength, condition, alpha = 0.05)
 
   expect_equal(res$f, 2.862, tolerance = 0.075)
-  expect_equal(res$p, 0.03, tolerance = 0.01)
+  expect_equal(res$p, 0.03, tolerance = 0.01 / 0.03)
 
   expect_output(
     print(res),

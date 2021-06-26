@@ -1,5 +1,3 @@
-context("normalize")
-
 suppressMessages(library(dplyr))
 
 test_that("normalization to ply thickness takes correct argument lengths", {
@@ -130,14 +128,22 @@ test_that("Modified CV transform produces values that match CMH17-STATS", {
     summarise(cv = sd(strength) / mean(strength),
               mod_cv = sd(trans_strength) / mean(trans_strength))
 
-  expect_equal(res$cv[res$condition == "CTD"], 0.0933, tolerance = 1e-4)
-  expect_equal(res$mod_cv[res$condition == "CTD"], 0.0933, tolerance = 1e-4)
-  expect_equal(res$cv[res$condition == "RTD"], 0.0580, tolerance = 1e-4)
-  expect_equal(res$mod_cv[res$condition == "RTD"], 0.0690, tolerance = 1e-4)
-  expect_equal(res$cv[res$condition == "ETW"], 0.0723, tolerance = 1e-4)
-  expect_equal(res$mod_cv[res$condition == "ETW"], 0.0761, tolerance = 1e-4)
-  expect_equal(res$cv[res$condition == "ETW2"], 0.0836, tolerance = 1e-4)
-  expect_equal(res$mod_cv[res$condition == "ETW2"], 0.0836, tolerance = 1e-4)
+  expect_equal(res$cv[res$condition == "CTD"], 0.0933,
+               tolerance = 1e-4 / 0.1)
+  expect_equal(res$mod_cv[res$condition == "CTD"], 0.0933,
+               tolerance = 1e-4 / 0.1)
+  expect_equal(res$cv[res$condition == "RTD"], 0.0580,
+               tolerance = 1e-4 / 0.058)
+  expect_equal(res$mod_cv[res$condition == "RTD"], 0.0690,
+               tolerance = 1e-4 / 0.0690)
+  expect_equal(res$cv[res$condition == "ETW"], 0.0723,
+               tolerance = 1e-4 / 0.0723)
+  expect_equal(res$mod_cv[res$condition == "ETW"], 0.0761,
+               tolerance = 1e-4 / 0.0761)
+  expect_equal(res$cv[res$condition == "ETW2"], 0.0836,
+               tolerance = 1e-4 / 0.0836)
+  expect_equal(res$mod_cv[res$condition == "ETW2"], 0.0836,
+               tolerance = 1e-4 / 0.0836)
 })
 
 test_that("mod CV transforms handles errors and edge cases correctly", {
