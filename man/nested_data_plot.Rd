@@ -9,6 +9,7 @@ nested_data_plot(
   x,
   groups = c(),
   stat = "mean",
+  ...,
   y_gap = 1,
   divider_color = "grey50",
   point_args = list(),
@@ -30,6 +31,8 @@ strength or modulus variable.}
 \item{stat}{a function for computing the central location for each group.
 This is normally "mean" but could be "median" or another
 function.}
+
+\item{...}{extra options. See Details.}
 
 \item{y_gap}{the vertical gap between grouping variables}
 
@@ -59,11 +62,29 @@ and the horizontal lines connecting levels in groups}
 Creates a plot showing the breakdown of variation within a sample. This
 function uses \link{ggplot2} internally.
 }
+\details{
+Extra options can be included to control aesthetic options. The following
+options are supported. Any (or all) can be set to a single variable
+in the data set.
+\itemize{
+\item \code{color}: Controls the color of the data points.
+\item \code{fill}: Controls the fill color of the labels. When a particular label
+is associated with data points with more than one level of the supplied
+variable, the fill is omitted.
+}
+}
 \examples{
 library(dplyr)
 carbon.fabric.2 \%>\%
   filter(test == "WT" & condition == "RTD") \%>\%
   nested_data_plot(strength,
                    groups = c(batch, panel))
+
+# Labels can be filled too
+carbon.fabric.2 \%>\%
+  filter(test == "WT" & condition == "RTD") \%>\%
+  nested_data_plot(strength,
+                   groups = c(batch, panel),
+                   fill = batch)
 
 }
