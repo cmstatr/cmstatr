@@ -1,5 +1,3 @@
-context("basis")
-
 suppressMessages(library(dplyr))
 
 test_that("kB factors are correct for normal distribution", {
@@ -106,7 +104,9 @@ test_that("(normal) basis value equals mean when sd = 0", {
   expect_equal(
     (data.frame(x = rep(100, 10)) %>%
       basis_normal(x, p = 0.9, conf = 0.95,
-                   override = "anderson_darling_normal"))$basis,
+                   override = c("anderson_darling_normal",
+                                "outliers_within_batch",
+                                "between_batch_variability")))$basis,
     100
   )
 })
@@ -117,7 +117,9 @@ test_that("(normal) basis value approx equals percentile for large samples", {
   set.seed(100)  # make sure that this doesn't fail by pure chance
   q <- qnorm(0.10, m, s, lower.tail = TRUE)
   basis <- (data.frame(x = rnorm(50, m, s)) %>%
-    basis_normal(x, p = 0.90, conf = 0.95))$basis
+    basis_normal(x, p = 0.90, conf = 0.95,
+                 override = c("outliers_within_batch",
+                              "between_batch_variability")))$basis
   expect_lt(abs(basis - q), 0.1)
 })
 
@@ -126,17 +128,23 @@ test_that("printing of basis objects works as expected", {
   x <- c(runif(25))
 
   expect_output(
-    print(basis_normal(x = x, p = 0.9, conf = 0.95)),
+    print(basis_normal(x = x, p = 0.9, conf = 0.95,
+                       override = c("outliers_within_batch",
+                                    "between_batch_variability"))),
     "B-Basis"
   )
 
   expect_output(
-    print(basis_normal(x = x, p = 0.99, conf = 0.95)),
+    print(basis_normal(x = x, p = 0.99, conf = 0.95,
+                       override = c("outliers_within_batch",
+                                    "between_batch_variability"))),
     "A-Basis"
   )
 
   expect_output(
-    print(basis_normal(x = x, p = 0.9, conf = 0.9)),
+    print(basis_normal(x = x, p = 0.9, conf = 0.9,
+                       override = c("outliers_within_batch",
+                                    "between_batch_variability"))),
     "[^AB-]Basis"
   )
 
@@ -167,12 +175,16 @@ test_that("normal basis value matches STAT17/ASAP result", {
     128.5218
   )
 
-  res <- basis_normal(x = data, p = 0.9, conf = 0.95)
+  res <- basis_normal(x = data, p = 0.9, conf = 0.95,
+                      override = c("outliers_within_batch",
+                                   "between_batch_variability"))
   expect_equal(res$basis, 129.287, tolerance = 0.0005)
   expect_output(print(res), "b-basis.*129\\.2", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
 
-  res <- basis_normal(x = data, p = 0.99, conf = 0.95)
+  res <- basis_normal(x = data, p = 0.99, conf = 0.95,
+                      override = c("outliers_within_batch",
+                                   "between_batch_variability"))
   expect_equal(res$basis, 120.336, tolerance = 0.0005)
   expect_output(print(res), "a-basis.*120\\.3", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
@@ -185,14 +197,9 @@ test_that("normal basis values produce expected diagnostic failures", {
   x <- c(runif(25), runif(25, max = 2), 200)
   batch <- c(rep("A", 25), rep("B", 26))
 
-  expect_warning(
+  expect_snapshot(
     res <- basis_normal(x = x, batch = batch),
-    regexp = paste("(outliers_within_batch",
-                   "between_batch_variability",
-                   "outliers",
-                   "anderson_darling_normal)",
-                   sep = ")|("),
-    all = TRUE
+    cran = TRUE
   )
 
   # Check that res$... contains the correct value
@@ -249,10 +256,8 @@ test_that("normal basis values produce expected diagnostic failures", {
   expect_length(res$diagnostic_failures, 0)
 
   # call basis_normal without batch
-  expect_warning(
-    res <- basis_normal(x = x),
-    regexp = "(outliers)|(anderson_darling_normal)",
-    all = TRUE
+  expect_snapshot(
+    res <- basis_normal(x = x)
   )
 
   # Check that res$... contains the correct value
@@ -264,11 +269,15 @@ test_that("normal basis values produce expected diagnostic failures", {
   # overriding the diagnostics should eliminate the warnings
   res <- basis_normal(x = x,
                       override = c("outliers",
-                                   "anderson_darling_normal"))
+                                   "anderson_darling_normal",
+                                   "outliers_within_batch",
+                                   "between_batch_variability"))
 
   expect_equal(res$override,
                c("outliers",
-                 "anderson_darling_normal"))
+                 "anderson_darling_normal",
+                 "outliers_within_batch",
+                 "between_batch_variability"))
   expect_length(res$diagnostic_failures, 0)
 })
 
@@ -294,13 +303,13 @@ test_that("log-normal basis value matches STAT17 result", {
     128.5218
   )
 
-  res <- basis_lognormal(x = data, p = 0.9, conf = 0.95)
+  res <- basis_lognormal(x = data, p = 0.9, conf = 0.95, override = "all")
   expect_equal(res$basis, 129.664, tolerance = 0.0005)
   expect_output(print(res), "b-basis.*129.6", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
   expect_output(print(res), "log", ignore.case = TRUE)
 
-  res <- basis_lognormal(x = data, p = 0.99, conf = 0.95)
+  res <- basis_lognormal(x = data, p = 0.99, conf = 0.95, override = "all")
   expect_equal(res$basis, 121.710, tolerance = 0.0005)
   expect_output(print(res), "a-basis.*121.7", ignore.case = TRUE)
   expect_output(print(res), "normal", ignore.case = TRUE)
@@ -315,14 +324,8 @@ test_that("lognormal basis values produce expected diagnostic failures", {
   x <- c(runif(25), runif(25, max = 2), 200)
   batch <- c(rep("A", 25), rep("B", 26))
 
-  expect_warning(
-    res <- basis_lognormal(x = x, batch = batch),
-    regexp = paste("(outliers_within_batch",
-                   "between_batch_variability",
-                   "outliers",
-                   "anderson_darling_lognormal)",
-                   sep = ")|("),
-    all = TRUE
+  expect_snapshot(
+    res <- basis_lognormal(x = x, batch = batch)
   )
 
   # Check that res$... contains the correct value
@@ -360,10 +363,8 @@ test_that("lognormal basis values produce expected diagnostic failures", {
   expect_length(res$diagnostic_failures, 0)
 
   # call basis_normal without batch
-  expect_warning(
-    res <- basis_lognormal(x = x),
-    regexp = "(outliers)|(anderson_darling_lognormal)",
-    all = TRUE
+  expect_snapshot(
+    res <- basis_lognormal(x = x)
   )
 
   # Check that res$... contains the correct value
@@ -375,11 +376,15 @@ test_that("lognormal basis values produce expected diagnostic failures", {
   # overriding the diagnostics should eliminate the warnings
   res <- basis_lognormal(x = x,
                       override = c("outliers",
-                                   "anderson_darling_lognormal"))
+                                   "anderson_darling_lognormal",
+                                   "outliers_within_batch",
+                                   "between_batch_variability"))
 
   expect_equal(res$override,
                c("outliers",
-                 "anderson_darling_lognormal"))
+                 "anderson_darling_lognormal",
+                 "outliers_within_batch",
+                 "between_batch_variability"))
   expect_length(res$diagnostic_failures, 0)
 })
 
@@ -408,12 +413,16 @@ test_that("Weibull basis value matches STAT17 result", {
   # stat17 B-Basis: 125.441
   # stat17 A-Basis: 109.150
 
-  res <- basis_weibull(x = data, p = 0.9, conf = 0.95)
+  res <- basis_weibull(x = data, p = 0.9, conf = 0.95,
+                       override = c("outliers_within_batch",
+                                    "between_batch_variability"))
   expect_equal(res$basis, 125.441, tolerance = 0.3)
   expect_output(print(res), "b-basis.*125", ignore.case = TRUE)
   expect_output(print(res), "weibull", ignore.case = TRUE)
 
-  res <- basis_weibull(x = data, p = 0.99, conf = 0.95)
+  res <- basis_weibull(x = data, p = 0.99, conf = 0.95,
+                       override = c("outliers_within_batch",
+                                    "between_batch_variability"))
   expect_equal(res$basis, 109.150, tolerance = 0.6)
   expect_output(print(res), "a-basis.*109", ignore.case = TRUE)
   expect_output(print(res), "weibull", ignore.case = TRUE)
@@ -426,14 +435,8 @@ test_that("weibull basis values produce expected diagnostic failures", {
   x <- c(rnorm(10, 100, 2), rnorm(10, 103, 2), 120)
   batch <- c(rep("A", 10), rep("B", 11))
 
-  expect_warning(
-    res <- basis_weibull(x = x, batch = batch),
-    regexp = paste("(outliers_within_batch",
-                   "between_batch_variability",
-                   "outliers",
-                   "anderson_darling_weibull)",
-                   sep = ")|("),
-    all = TRUE
+  expect_snapshot(
+    res <- basis_weibull(x = x, batch = batch)
   )
 
   # Check that res$... contains the correct value
@@ -471,10 +474,8 @@ test_that("weibull basis values produce expected diagnostic failures", {
   expect_length(res$diagnostic_failures, 0)
 
   # call basis_normal without batch
-  expect_warning(
-    res <- basis_weibull(x = x),
-    regexp = "(outliers)|(anderson_darling_weibull)",
-    all = TRUE
+  expect_snapshot(
+    res <- basis_weibull(x = x)
   )
 
   # Check that res$... contains the correct value
@@ -486,11 +487,15 @@ test_that("weibull basis values produce expected diagnostic failures", {
   # overriding the diagnostics should eliminate the warnings
   res <- basis_weibull(x = x,
                          override = c("outliers",
-                                      "anderson_darling_weibull"))
+                                      "anderson_darling_weibull",
+                                      "outliers_within_batch",
+                                      "between_batch_variability"))
 
   expect_equal(res$override,
                c("outliers",
-                 "anderson_darling_weibull"))
+                 "anderson_darling_weibull",
+                 "outliers_within_batch",
+                 "between_batch_variability"))
   expect_length(res$diagnostic_failures, 0)
 })
 
@@ -517,21 +522,27 @@ test_that("Non-parametric (small sample) basis value matches STAT17 result", {
   )
 
   res <- basis_hk_ext(x = data, p = 0.9, conf = 0.95,
-                      method = "optimum-order")
-  expect_equal(res$basis, 124.156, tolerance = 0.05)
+                      method = "optimum-order",
+                      override = c("outliers_within_batch",
+                                   "between_batch_variability"))
+  expect_equal(res$basis, 124.156, tolerance = 0.002)
   expect_output(print(res), "b-basis.*124", ignore.case = TRUE)
   expect_output(print(res), "nonparametric", ignore.case = TRUE)
   expect_match(res$distribution, "nonparametric.*optimum", ignore.case = TRUE)
 
   res <- basis_hk_ext(x = data, p = 0.99, conf = 0.95,
-                      method = "woodward-frawley")
-  expect_equal(res$basis, 99.651, tolerance = 0.05)
+                      method = "woodward-frawley",
+                      override = c("outliers_within_batch",
+                                   "between_batch_variability"))
+  expect_equal(res$basis, 99.651, tolerance = 0.002)
   expect_output(print(res), "a-basis.*99", ignore.case = TRUE)
   expect_output(print(res), "nonparametric", ignore.case = TRUE)
   expect_match(res$distribution,
                "nonparametric.*Woodward-Frawley", ignore.case = TRUE)
 
-  expect_error(basis_hk_ext(x = data, method = "something invalid"))
+  expect_error(basis_hk_ext(x = data, method = "something invalid",
+                            override = c("outliers_within_batch",
+                                         "between_batch_variability")))
 })
 
 test_that("non-para (small) basis values produce expected diag failures", {
@@ -542,16 +553,9 @@ test_that("non-para (small) basis values produce expected diag failures", {
   batch_large <- c(rep("A", 200), rep("B", 101))
 
   # woodward-frawley is only for A-Basis. Should fail if we calculate B-Basis
-  expect_warning(
+  expect_snapshot(
     res <- basis_hk_ext(
-      x = x_large, batch = batch_large, method = "woodward-frawley"),
-    regexp = paste("(outliers_within_batch",
-                   "between_batch_variability",
-                   "outliers",
-                   "correct_method_used",
-                   "sample_size)",
-                   sep = ")|("),
-    all = TRUE
+      x = x_large, batch = batch_large, method = "woodward-frawley")
   )
 
   # Check that res$... contains the correct value
@@ -594,24 +598,15 @@ test_that("non-para (small) basis values produce expected diag failures", {
   expect_length(res$diagnostic_failures, 0)
 
   # optimum-order is only for B-Basis. Should fail if we calculate A-Basis
-  expect_warning(
+  expect_snapshot(
     res <- basis_hk_ext(
       x = x_large, batch = batch_large, method = "optimum-order",
-      p = 0.99, conf = 0.95),
-    regexp = paste("(outliers_within_batch",
-                   "between_batch_variability",
-                   "outliers",
-                   "correct_method_used",
-                   "sample_size)",
-                   sep = ")|("),
-    all = TRUE
+      p = 0.99, conf = 0.95)
   )
 
   # call basis_normal without batch
-  expect_warning(
-    res <- basis_hk_ext(x = x_small, method = "optimum-order"),
-    regexp = "(outliers)",
-    all = TRUE
+  expect_snapshot(
+    res <- basis_hk_ext(x = x_small, method = "optimum-order")
   )
 
   # Check that res$... contains the correct value
@@ -621,10 +616,14 @@ test_that("non-para (small) basis values produce expected diag failures", {
 
   # overriding the diagnostics should eliminate the warnings
   res <- basis_hk_ext(x = x_small, method = "optimum-order",
-                      override = c("outliers"))
+                      override = c("outliers",
+                                   "outliers_within_batch",
+                                   "between_batch_variability"))
 
   expect_equal(res$override,
-               c("outliers"))
+               c("outliers",
+                 "outliers_within_batch",
+                 "between_batch_variability"))
   expect_length(res$diagnostic_failures, 0)
 })
 
@@ -641,7 +640,8 @@ test_that("Non-parametric (large sample) basis value matches STAT17 result", {
     144.0896, 141.8029, 130.0149, 140.8813, 137.7864
   )
 
-  res <- basis_nonpara_large_sample(x = data, p = 0.9, conf = 0.95)
+  res <- basis_nonpara_large_sample(x = data, p = 0.9, conf = 0.95,
+                                    override = "all")
   expect_equal(res$basis, 122.738297, tolerance = 0.005)
   expect_output(print(res), "b-basis.*122", ignore.case = TRUE)
   expect_output(print(res), "nonparametric", ignore.case = TRUE)
@@ -655,14 +655,9 @@ test_that("non-para (large) basis values produce expected diag failures", {
   x_large <- c(rnorm(200, 100, 2), rnorm(100, 103, 2), 120)
   batch_large <- c(rep("A", 200), rep("B", 101))
 
-  expect_warning(
+  expect_snapshot(
     res <- basis_nonpara_large_sample(
-      x = x_large, batch = batch_large),
-    regexp = paste("(outliers_within_batch",
-                   "between_batch_variability",
-                   "outliers)",
-                   sep = ")|("),
-    all = TRUE
+      x = x_large, batch = batch_large)
   )
 
   # Check that res$... contains the correct value
@@ -695,22 +690,15 @@ test_that("non-para (large) basis values produce expected diag failures", {
                  "sample_size"))
   expect_length(res$diagnostic_failures, 0)
 
-  expect_warning(
+  expect_snapshot(
     res <- basis_nonpara_large_sample(
       x = x_large, batch = batch_large,
-      p = 0.99, conf = 0.95),
-    regexp = paste("(outliers_within_batch",
-                   "between_batch_variability",
-                   "outliers)",
-                   sep = ")|("),
-    all = TRUE
+      p = 0.99, conf = 0.95)
   )
 
   # call basis_normal without batch
-  expect_warning(
-    res <- basis_nonpara_large_sample(x = x_large),
-    regexp = "(outliers)",
-    all = TRUE
+  expect_snapshot(
+    res <- basis_nonpara_large_sample(x = x_large)
   )
 
   # Check that res$... contains the correct value
@@ -720,10 +708,13 @@ test_that("non-para (large) basis values produce expected diag failures", {
 
   # overriding the diagnostics should eliminate the warnings
   res <- basis_nonpara_large_sample(x = x_large,
-                      override = c("outliers"))
+                      override = c("outliers",
+                                   "outliers_within_batch",
+                                   "between_batch_variability"))
 
   expect_equal(res$override,
-               c("outliers"))
+               c("outliers", "outliers_within_batch",
+                 "between_batch_variability"))
   expect_length(res$diagnostic_failures, 0)
 })
 
@@ -779,26 +770,14 @@ test_that("expected diagnostic failures are noted for pooling methods", {
   # This section in CMH-17-1G shows the removal of one condition
   # before running Levene's test on the pooled data, so this test
   # will be skipped in this test.
-  expect_warning(res <- basis_pooled_sd(cmh_17_8_3_11_1_1, strength,
-                         condition, batch),
-                 regexp = paste("(outliers_within_batch",
-                                "outliers_within_group",
-                                "between_group_variability",
-                                "pooled_data_normal",
-                                "pooled_variance_equal)",
-                                sep = ")|("),
-                 all = TRUE)
+  expect_snapshot(
+    res <- basis_pooled_sd(cmh_17_8_3_11_1_1, strength, condition, batch)
+  )
 
-  expect_warning(
+  expect_snapshot(
     res <- cmh_17_8_3_11_1_1 %>%
       filter(condition != "ETW2") %>%
-      basis_pooled_sd(strength, condition, batch),
-    regexp = paste("(outliers_within_batch",
-                   "outliers_within_group",
-                   "pooled_data_normal",
-                   "pooled_variance_equal)",
-                   sep = ")|("),
-    all = TRUE
+      basis_pooled_sd(strength, condition, batch)
   )
 
   # removing both ETW and ETW2 should remove all diagnostic failures
@@ -813,26 +792,15 @@ test_that("expected diagnostic failures are noted for pooling methods", {
   expect_equal(res$basis$value[res$basis$group == "ETD"], 80.68,
                tolerance = 0.02)
 
-  expect_warning(res <- basis_pooled_cv(cmh_17_8_3_11_1_1, strength,
-                                        condition, batch),
-                 regexp = paste("(outliers_within_batch",
-                                "outliers_within_group",
-                                "between_group_variability",
-                                "pooled_data_normal",
-                                "normalized_variance_equal)",
-                                sep = ")|("),
-                 all = TRUE)
+  expect_snapshot(
+    res <- basis_pooled_cv(cmh_17_8_3_11_1_1, strength,
+                           condition, batch)
+  )
 
-  expect_warning(
+  expect_snapshot(
     res <- cmh_17_8_3_11_1_1 %>%
       filter(condition != "ETW2") %>%
-      basis_pooled_cv(strength, condition, batch),
-    regexp = paste("(outliers_within_batch",
-                   "outliers_within_group",
-                   "pooled_data_normal",
-                   "normalized_variance_equal)",
-                   sep = ")|("),
-    all = TRUE
+      basis_pooled_cv(strength, condition, batch)
   )
 
   # removing both ETW and ETW2 should remove all diagnostic failures
@@ -932,11 +900,9 @@ poolable_data <- tribble(
 test_that("Pooled SD results match ASAP results", {
   # This data fails the anderson-darling test for normality for the
   # transformed data
-  expect_warning(
+  expect_snapshot(
     res_b <- basis_pooled_sd(poolable_data, strength, condition,
-                             override = c("pooled_variance_equal")),
-    regexp = "pooled_data_normal",
-    all = TRUE
+                             override = c("pooled_variance_equal"))
   )
 
   expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
@@ -960,7 +926,9 @@ test_that("Pooled SD results match ASAP results", {
   res_a <- basis_pooled_sd(poolable_data, strength, condition,
                            p = 0.99, conf = 0.95,
                            override = c("pooled_data_normal",
-                                        "pooled_variance_equal"))
+                                        "pooled_variance_equal",
+                                        "outliers_within_batch",
+                                        "between_group_variability"))
   expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
                86.19, tolerance = 0.01)
   expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
@@ -974,10 +942,8 @@ test_that("Pooled SD results match ASAP results", {
 test_that("Pooled CV results match CMH17STATS", {
   # This data fails the anderson-darling test for normality for the
   # transformed data
-  expect_warning(
-    res_b <- basis_pooled_cv(poolable_data, strength, condition),
-    regexp = "pooled_data_normal",
-    all = TRUE
+  expect_snapshot(
+    res_b <- basis_pooled_cv(poolable_data, strength, condition)
   )
 
   expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
@@ -1000,7 +966,9 @@ test_that("Pooled CV results match CMH17STATS", {
 
   res_a <- basis_pooled_cv(poolable_data, strength, condition,
                            p = 0.99, conf = 0.95,
-                           override = "pooled_data_normal")
+                           override = c("pooled_data_normal",
+                                        "outliers_within_batch",
+                                        "between_group_variability"))
   expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
                81.62, tolerance = 0.01)
   expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
@@ -1020,7 +988,9 @@ test_that("Pooled data matches CMH17-STATS with mod CV, SD pooling", {
   data <- filter(poolable_data, condition != "ETW2")
 
   res_b <- basis_pooled_sd(data, strength, condition, modcv = TRUE,
-                           override = c("pooled_variance_equal"))
+                           override = c("pooled_variance_equal",
+                                        "outliers_within_batch",
+                                        "between_group_variability"))
 
   expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
                92.25, tolerance = 0.01)
@@ -1033,7 +1003,9 @@ test_that("Pooled data matches CMH17-STATS with mod CV, SD pooling", {
 
   res_a <- basis_pooled_sd(data, strength, condition,
                            p = 0.99, conf = 0.95, modcv = TRUE,
-                           override = c("pooled_variance_equal"))
+                           override = c("pooled_variance_equal",
+                                        "outliers_within_batch",
+                                        "between_group_variability"))
   expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
                83.81, tolerance = 0.01)
   expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
@@ -1049,7 +1021,9 @@ test_that("Pooled data matches CMH17-STATS with mod CV, CV pooling", {
 
   data <- filter(poolable_data, condition != "ETW2")
 
-  res_b <- basis_pooled_cv(data, strength, condition, modcv = TRUE)
+  res_b <- basis_pooled_cv(data, strength, condition, modcv = TRUE,
+                           override = c("outliers_within_batch",
+                                        "between_group_variability"))
 
   expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
                90.31, tolerance = 0.01)
@@ -1061,7 +1035,9 @@ test_that("Pooled data matches CMH17-STATS with mod CV, CV pooling", {
   expect_output(print(res_b), "Modified CV")
 
   res_a <- basis_pooled_cv(data, strength, condition,
-                           p = 0.99, conf = 0.95, modcv = TRUE)
+                           p = 0.99, conf = 0.95, modcv = TRUE,
+                           override = c("outliers_within_batch",
+                                        "between_group_variability"))
   expect_equal(res_a$basis$value[res_a$basis$group == "CTD"],
                80.57, tolerance = 0.01)
   expect_equal(res_a$basis$value[res_a$basis$group == "RTD"],
@@ -1186,7 +1162,6 @@ test_that("Extended Hanson-Koopman matches median results from Vangel 1994", {
                                        ", z_calc=", z_calc, "\n")))
 })
 
-
 cmh_17_1g_8_5_14 <- tribble(
   ~n, ~r, ~k,
   2, 2, 35.177,
@@ -1218,7 +1193,7 @@ cmh_17_1g_8_5_14 <- tribble(
   28, 12, 1.010
 )
 
-test_that("Extended Hanson-Koopman matches CMH-17-1G Table 8.5.14", {
+test_that("Extended HK matches CMH-17-1G Table 8.5.14", {
   # CMH-17-1G uses the optimal order statistic approach suggested by
   # Vangel (1994) for computing B-Basis values. There are a few values
   # of n where this package's implementation finds a different optimum order
@@ -1231,7 +1206,7 @@ test_that("Extended Hanson-Koopman matches CMH-17-1G Table 8.5.14", {
     mutate(z = hk_ext_z_j_opt(n, 0.90, 0.95)$z) %>%
     mutate(j = hk_ext_z_j_opt(n, 0.90, 0.95)$j) %>%
     filter(
-      n != 10 & n != 13 & n != 16 & n != 17 & n != 19 & n != 22 & n != 27
+      n != 17 & n != 20 & n != 23 & n != 24 & n != 28
       ) %>%
     mutate(expect_equal(j, r,
                         label = paste0("Mismatch in `j`/`r` for n=", n, ", ",
@@ -1276,77 +1251,75 @@ test_that("Hanson-Koopman results match STAT17 for several values of n", {
   )
 
   res <- basis_hk_ext(x = head(data, 28), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 122.36798, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 27), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 121.96939, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 26), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 121.57073, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 23), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 127.11286, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 22), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 128.82397, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 21), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 128.52107, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 20), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 128.20999, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 19), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
-  expect_equal(res$basis, 127.74060, tolerance = 0.15)
+                      method = "optimum-order", override = "all")
+  expect_equal(res$basis, 127.74060, tolerance = 0.002)
 
   res <- basis_hk_ext(x = head(data, 18), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 127.36697, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 17), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 127.02732, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 16), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
-  expect_equal(res$basis, 126.23545, tolerance = 0.3)
+                      method = "optimum-order", override = "all")
+  expect_equal(res$basis, 126.23545, tolerance = 0.002)
 
   res <- basis_hk_ext(x = head(data, 15), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 125.68740, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 14), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 125.17500, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 13), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
-  expect_equal(res$basis, 124.07851, tolerance = 1.3)
-  # worst agreement, ensure that it's conservative
-  expect_lt(res$basis, 124.07851)
+                      method = "optimum-order", override = "all")
+  expect_equal(res$basis, 124.07851, tolerance = 0.002)
 
   res <- basis_hk_ext(x = head(data, 12), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 121.17418, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 11), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 120.26382, tolerance = 0.001)
 
   res <- basis_hk_ext(x = head(data, 10), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
-  expect_equal(res$basis, 120.75149, tolerance = 0.05)
+                      method = "optimum-order", override = "all")
+  expect_equal(res$basis, 120.75149, tolerance = 0.002)
 
   res <- basis_hk_ext(x = head(data, 9), p = 0.9, conf = 0.95,
-                      method = "optimum-order")
+                      method = "optimum-order", override = "all")
   expect_equal(res$basis, 119.80108, tolerance = 0.001)
 })
 
@@ -1825,13 +1798,8 @@ test_that("anova basis values produce expected diagnostic failures", {
   x <- c(rnorm(30, 100, 1), rnorm(30, 100, 10), 80)
   batch <- c(rep("A", 30), rep("B", 30), "A")
 
-  expect_warning(
-    res <- basis_anova(x = x, group = batch),
-    regexp = paste("(outliers_within_group",
-                   "equality_of_variance",
-                   "number_of_groups)",
-                   sep = ")|("),
-    all = TRUE
+  expect_snapshot(
+    res <- basis_anova(x = x, group = batch)
   )
 
   # Check that res$... contains the correct value

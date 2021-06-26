@@ -6,9 +6,9 @@
 <!-- badges: start -->
 
 [![R build
-status](https://github.com/ComtekAdvancedStructures/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/ComtekAdvancedStructures/cmstatr/actions?workflow=R-CMD-check)
+status](https://github.com/cmstatr/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/cmstatr/cmstatr/actions?workflow=R-CMD-check)
 [![`Codecov` test
-coverage](https://codecov.io/gh/comtekadvancedstructures/cmstatr/branch/master/graph/badge.svg)](https://codecov.io/gh/comtekadvancedstructures/cmstatr?branch=master)
+coverage](https://codecov.io/gh/cmstatr/cmstatr/branch/master/graph/badge.svg)](https://codecov.io/gh/cmstatr/cmstatr?branch=master)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02265/status.svg)](https://doi.org/10.21105/joss.02265)
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/cmstatr)](https://cran.r-project.org/package=cmstatr)
 [![](https://cranlogs.r-pkg.org/badges/cmstatr)](https://cran.r-project.org/package=cmstatr)
@@ -44,7 +44,7 @@ repository.
 
 ``` r
 install.packages(c("devtools", "rmarkdown", "dplyr", "tidyr"))
-devtools::install_github("ComtekAdvancedStructures/cmstatr", build_vignettes = TRUE,
+devtools::install_github("cmstatr/cmstatr", build_vignettes = TRUE,
                          ref = "master",
                          build_opts = c("--no-resave-data", "--no-manual"))
 ```
@@ -92,8 +92,8 @@ vignette("cmstatr_Graphing")
 
 # Philosophical Notes
 
-This package expects [`tidy
-data`](https://www.jstatsoft.org/article/view/v059i10). That is,
+This package expects
+[`tidy data`](https://www.jstatsoft.org/article/view/v059i10). That is,
 individual observations should be in rows and variables in columns.
 
 Where possible, this package uses general solutions. Look-up tables are
@@ -120,17 +120,30 @@ discuss the proposed change in an issue first.
 
 ## Contribution Guidelines
 
-  - Please create a git branch for each pull request (PR)
-  - Before submitting a pull request, please make sure that `R CMD
-    check` passes with no errors, warnings or notes
-  - New and modified code should follow the style guide enforced by the
+-   Please create a git branch for each pull request (PR)
+-   Before submitting a pull request, please make sure that
+    `R CMD check` passes with no errors, warnings or notes
+-   New and modified code should follow the style guide enforced by the
     [`lintr`](https://cran.r-project.org/package=lintr) package
-  - Document all exported functions using
+-   Document all exported functions using
     [`roxygen2`](https://cran.r-project.org/package=roxygen2)
-  - Write tests using
+-   Write tests using
     [`testthat`](https://cran.r-project.org/package=testthat). If your
     contribution fixes a bug, then the test(s) that you add should fail
     before your bug-fix patch is applied and should pass after the code
     is patched.
-  - For changes that affect the user, add a bullet at the top of
+-   For changes that affect the user, add a bullet at the top of
     `NEWS.md` below the current development version
+
+## Development
+
+Testing is performed using `testthat`. Edition 3 of that package is used
+and parallel processing enabled. If you wish to use more than two CPUs,
+set the environment variable `TESTTHAT_CUPS` to the number of CPUs that
+you want to use. One way of doing this is to create the file `.Rprofile`
+with the following contents. This file is ignored both by `git` and also
+in `.Rbuildingore`.
+
+``` r
+Sys.setenv(TESTTHAT_CPUS = 8)
+```

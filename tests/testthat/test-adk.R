@@ -1,5 +1,3 @@
-context("Anderson-Darling k-Sample")
-
 suppressMessages(library(dplyr))
 suppressMessages(library(kSamples))  # nolint
 
@@ -26,9 +24,11 @@ test_that("kSamples package gives results that match published example", {
   ad <- res[["ad"]]
 
   expect_equal(ad["version 1:", "AD"], 8.3559, tolerance = 1e-3)
-  expect_equal(ad["version 1:", " asympt. P-value"], 0.0023, tolerance = 1e-3)
+  expect_equal(ad["version 1:", " asympt. P-value"], 0.0023,
+               tolerance = 1e-3 / 0.0023)
   expect_equal(ad["version 2:", "AD"], 8.3926, tolerance = 1e-3)
-  expect_equal(ad["version 2:", " asympt. P-value"], 0.0022, tolerance = 1e-3)
+  expect_equal(ad["version 2:", " asympt. P-value"], 0.0022,
+               tolerance = 1e-3 / 0.0022)
 })
 
 test_that("ADK test match ASAP", {

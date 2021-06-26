@@ -1,5 +1,3 @@
-context("CV")
-
 suppressMessages(library(dplyr))
 
 test_that("CV produces expected results", {
