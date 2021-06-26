@@ -261,7 +261,7 @@ add_extras_data <- function(df, extras, name, must_be_equal) {
 
 #' @importFrom purrr map_dfr
 #' @importFrom rlang exec
-#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes labs
 #' @importFrom rlang .data
 draw_points <- function(g, elm_list, point_args, dline_args, extras_names) {
   points <- map_dfr(
@@ -335,7 +335,7 @@ draw_points <- function(g, elm_list, point_args, dline_args, extras_names) {
 
 #' @importFrom purrr map_dfr
 #' @importFrom rlang exec
-#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes labs
 #' @importFrom rlang .data
 draw_labels <- function(g, elm_list, label_args, extras_names) {
   labels <- map_dfr(
@@ -360,7 +360,7 @@ draw_labels <- function(g, elm_list, label_args, extras_names) {
     g
   } else {
     if ("fill" %in% names(extras_names)) {
-      labels_fill <- filter(labels, !is.na(fill))
+      labels_fill <- subset(labels, !is.na(labels$fill))
       g <- g +
         exec(
           ggplot2::geom_label,
@@ -372,7 +372,7 @@ draw_labels <- function(g, elm_list, label_args, extras_names) {
         labs(
           fill = extras_names[["fill"]]
         )
-      labels <- filter(labels, is.na(fill))
+      labels <- subset(labels, is.na(labels$fill))
     }
 
     # Data with no fill variable
@@ -399,6 +399,7 @@ draw_labels <- function(g, elm_list, label_args, extras_names) {
 #' @param stat a function for computing the central location for each group.
 #'             This is normally "mean" but could be "median" or another
 #'             function.
+#' @param ... extra options. See Details.
 #' @param y_gap the vertical gap between grouping variables
 #' @param divider_color the color of the lines between grouping variables.
 #'                      Or `NULL` to omit these lines.
@@ -416,6 +417,16 @@ draw_labels <- function(g, elm_list, label_args, extras_names) {
 #'                       plotting the connection between the vertical lines
 #'                       and the horizontal lines connecting levels in groups
 #'
+#' @details
+#' Extra options can be included to control aesthetic options. The following
+#' options are supported. Any (or all) can be set to a single variable
+#' in the data set.
+#'
+#' - `color`: Controls the color of the data points.
+#' - `fill`: Controls the fill color of the labels. When a particular label
+#'   is associated with data points with more than one level of the supplied
+#'   variable, the fill is omitted.
+#'
 #' @examples
 #' library(dplyr)
 #' carbon.fabric.2 %>%
@@ -423,8 +434,15 @@ draw_labels <- function(g, elm_list, label_args, extras_names) {
 #'   nested_data_plot(strength,
 #'                    groups = c(batch, panel))
 #'
+#' # Labels can be filled too
+#' carbon.fabric.2 %>%
+#'   filter(test == "WT" & condition == "RTD") %>%
+#'   nested_data_plot(strength,
+#'                    groups = c(batch, panel),
+#'                    fill = batch)
+#'
 #' @importFrom rlang ensym
-#' @importFrom rlang quo_get_expr
+#' @importFrom rlang quo_get_expr enquos
 #' @importFrom ggplot2 ggplot
 #' @importFrom dplyr ungroup
 #' @export
