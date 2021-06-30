@@ -1,7 +1,7 @@
 ---
 title: "Extended Hanson-Koopmans"
 author: "Stefan Kloppenborg"
-date: "2021-06-21"
+date: "2021-06-30"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Extended Hanson-Koopmans}
@@ -490,17 +490,17 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] tidyr_1.1.3   purrr_0.3.4   ggplot2_3.3.3 dplyr_1.0.6  
+#> [1] tidyr_1.1.3   purrr_0.3.4   ggplot2_3.3.5 dplyr_1.0.7  
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] highr_0.9          pillar_1.6.1       compiler_4.1.0     kSamples_1.2-9     tools_4.1.0        digest_0.6.27     
-#>  [7] testthat_3.0.2     pkgload_1.2.1      evaluate_0.14      lifecycle_1.0.0    tibble_3.1.2       gtable_0.3.0      
-#> [13] pkgconfig_2.0.3    rlang_0.4.11       DBI_1.1.1          cli_2.5.0          rstudioapi_0.13    yaml_2.2.1        
-#> [19] xfun_0.23          cmstatr_0.8.0.9000 withr_2.4.2        stringr_1.4.0      knitr_1.33         SuppDists_1.1-9.5 
+#>  [1] highr_0.9          pillar_1.6.1       compiler_4.1.0     kSamples_1.2-9     tools_4.1.0        testthat_3.0.3    
+#>  [7] digest_0.6.27      pkgload_1.2.1      evaluate_0.14      lifecycle_1.0.0    tibble_3.1.2       gtable_0.3.0      
+#> [13] pkgconfig_2.0.3    rlang_0.4.11       rstudioapi_0.13    cli_2.5.0          DBI_1.1.1          yaml_2.2.1        
+#> [19] xfun_0.24          cmstatr_0.8.0.9501 withr_2.4.2        stringr_1.4.0      knitr_1.33         SuppDists_1.1-9.5 
 #> [25] generics_0.1.0     desc_1.3.0         vctrs_0.3.8        rprojroot_2.0.2    grid_4.1.0         tidyselect_1.1.1  
-#> [31] glue_1.4.2         R6_2.5.0           fansi_0.5.0        rmarkdown_2.8      farver_2.1.0       magrittr_2.0.1    
-#> [37] htmltools_0.5.1.1  MASS_7.3-54        scales_1.1.1       ellipsis_0.3.2     assertthat_0.2.1   colorspace_2.0-1  
-#> [43] labeling_0.4.2     utf8_1.2.1         stringi_1.6.2      munsell_0.5.0      crayon_1.4.1
+#> [31] glue_1.4.2         R6_2.5.0           fansi_0.5.0        rmarkdown_2.9      waldo_0.2.5        farver_2.1.0      
+#> [37] magrittr_2.0.1     MASS_7.3-54        scales_1.1.1       ellipsis_0.3.2     htmltools_0.5.1.1  assertthat_0.2.1  
+#> [43] colorspace_2.0-2   labeling_0.4.2     utf8_1.2.1         stringi_1.6.2      munsell_0.5.0      crayon_1.4.1
 ```
 
 
