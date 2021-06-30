@@ -2,7 +2,10 @@
 title: "cmstatr Validation"
 author: "Stefan Kloppenborg"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{cmstatr Validation}
   %\VignetteEngine{knitr::rmarkdown}
@@ -110,6 +113,8 @@ each package used is listed at the end of this vignette.
 ```{r message=FALSE, warning=FALSE}
 library(cmstatr)
 library(dplyr)
+library(purrr)
+library(tidyr)
 library(testthat)
 ```
 
@@ -127,6 +132,10 @@ should be satisfied.
 expect_equal(10, 10.1, tolerance = 0.01)
 ```
 
+The `basis_...` functions automatically perform certain diagnostic tests.
+When those diagnostic tests are not relevant to the validation, the
+diagnostic tests are overridden by passing the argument `override = "all"`.
+
 # 2. Validation Table
 The following table provides a cross-reference between the various
 functions of the `cmstatr` package and the tests shown within this
@@ -136,29 +145,29 @@ Not all checks are performed on all data sets.
 
 Function                        | Tests
 --------------------------------|---------------------------
-`ad_ksample()`                  | [Section 3.1](#cf-ad), [Section X.X.X](#c11-adk), [Section X.X](#cl-adk)
-`anderson_darling_normal()`     | [Section X.X.X](#c11-ad), [Section X.X](#ods-adn)
-`anderson_darling_lognormal()`  | [Section X.X.X](#c11-ad), [Section X.X](#ods-adl)
-`anderson_darling_weibull()`    | [Section X.X.X](#c11-ad), [Section X.X](#ods-adw)
-`basis_normal()`                | [Section X.X](#ods-nb)
-`basis_lognormal()`             | [Section X.X](#ods-lb)
-`basis_weibull()`               | [Section X.X](#ods-wb)
-`basis_pooled_cv()`             | [Section X.X.X](#c12-pcv), [Section X.X.X](#c12-pcvmcv),
-`basis_pooled_sd()`             | [Section X.X.X](#c12-psd), [Section X.X.X](#c12-psdmcv)
-`basis_hk_ext()`                | [Section X.X.X](#c11-hk-wf), [Section X.X](#ods-hkb), [Section X.X](#ods-hkb2)
-`basis_nonpara_large_sample()`  | [Section X.X](#ods-lsnb)
-`basis_anova()`                 | [Section X.X.X](#c11-anova)
+`ad_ksample()`                  | [Section 3.1](#cf-ad), [Section 4.1.2](#c11-adk), [Section 6.1](#cl-adk)
+`anderson_darling_normal()`     | [Section 4.1.3](#c11-ad), [Section 5.1](#ods-adn)
+`anderson_darling_lognormal()`  | [Section 4.1.3](#c11-ad), [Section 5.2](#ods-adl)
+`anderson_darling_weibull()`    | [Section 4.1.3](#c11-ad), [Section 5.3](#ods-adw)
+`basis_normal()`                | [Section 5.4](#ods-nb)
+`basis_lognormal()`             | [Section 5.5](#ods-lb)
+`basis_weibull()`               | [Section 5.6](#ods-wb)
+`basis_pooled_cv()`             | [Section 4.2.3](#c12-pcv), [Section 4.2.4](#c12-pcvmcv),
+`basis_pooled_sd()`             | [Section 4.2.1](#c12-psd), [Section 4.2.2](#c12-psdmcv)
+`basis_hk_ext()`                | [Section 4.1.6](#c11-hk-wf), [Section 5.7](#ods-hkb), [Section 5.8](#ods-hkb2)
+`basis_nonpara_large_sample()`  | [Section 5.9](#ods-lsnb)
+`basis_anova()`                 | [Section 4.1.7](#c11-anova)
 `calc_cv_star()`                |
 `cv()`                          |
-`equiv_change_mean()`           | [Section X.X](#ods-ecm)
-`equiv_mean_extremum()`         | [Section X.X](#ods-eme)
-`hk_ext_z()`                    | [Section X.X](#pf-hk), [Section X.X](#pf-hk2)
-`hk_ext_z_j_opt()`              | [Section X.X](#pf-hk-opt)
-`k_equiv()`                     | [Section X.X](#pf-equiv)
-`k_factor_normal()`             | [Section X.X](#pf-kb), [Section X.X](#pf-ka)
-`levene_test()`                 | [Section X.X.X](#c11-lbc), [Section X.X.X](#c11-lbb)
-`maximum_normed_residual()`     | [Section X.X.X](#c11-mnr)
-`nonpara_binomial_rank()`       | [Section X.X](#pf-npbinom), [Section X.X](#pf-npbinom2)
+`equiv_change_mean()`           | [Section 5.11](#ods-ecm)
+`equiv_mean_extremum()`         | [Section 5.10](#ods-eme)
+`hk_ext_z()`                    | [Section 7.3](#pf-hk), [Section 7.4](#pf-hk2)
+`hk_ext_z_j_opt()`              | [Section 7.5](#pf-hk-opt)
+`k_equiv()`                     | [Section 7.8](#pf-equiv)
+`k_factor_normal()`             | [Section 7.1](#pf-kb), [Section 7.2](#pf-ka)
+`levene_test()`                 | [Section 4.1.4](#c11-lbc), [Section 4.1.5](#c11-lbb)
+`maximum_normed_residual()`     | [Section 4.1.1](#c11-mnr)
+`nonpara_binomial_rank()`       | [Section 7.6](#pf-npbinom), [Section 7.7](#pf-npbinom2)
 `normalize_group_mean()`        |
 `normalize_ply_thickness()`     |
 `transform_mod_cv_ad()`         |
@@ -191,7 +200,7 @@ When the RTD warp-tension data from this data set is entered into ASAP 2008,
 it reports a test statistic of 0.456 and fails to reject the null hypothesis
 that the batches are drawn from the same distribution. Adjusting for the
 different definition of the test statistic, the results given by `cmstatr`
-are very similar
+are very similar.
 
 
 ```{r}
@@ -225,8 +234,8 @@ res
 ```
 
 
-# X. Comparison with Examples from CMH-17-1G
-## X.X Dataset From Section 8.3.11.1.1
+# 4. Comparison with Examples from CMH-17-1G
+## 4.1 Dataset From Section 8.3.11.1.1
 
 CMH-17-1G [@CMH-17-1G] provides an example data set and results from
 ASAP [@ASAP2008] and STAT17 [@STAT-17]. This example data set is duplicated
@@ -281,14 +290,14 @@ dat_8_3_11_1_1 <- tribble(
 dat_8_3_11_1_1
 ```
 
-### X.X.X Maximum Normed Residual Test {#c11-mnr}
+### 4.1.1 Maximum Normed Residual Test {#c11-mnr}
 CMH-17-1G Table 8.3.11.1.1(a) provides results of the MNR test from
 ASAP for this data set. Batches 2 and 3 of the ETW data is considered
 here and the results of `cmstatr` are compared with those published in
 CMH-17-1G.
 
 For Batch 2 of the ETW data, the results match those published in the
-handbook within a small tolerance.
+handbook within a small tolerance. The published test statistic is 2.008.
 
 ```{r}
 res <- dat_8_3_11_1_1 %>%
@@ -303,7 +312,8 @@ res
 ```
 
 Similarly, for Batch 3 of the ETW data, the results of `cmstatr` match
-the results published in the handbook within a small tolerance.
+the results published in the handbook within a small tolerance. The published
+test statistic is 2.119
 
 ```{r}
 res <- dat_8_3_11_1_1 %>%
@@ -318,7 +328,7 @@ res
 ```
 
 
-### X.X.X Anderson--Darling k--Sample Test {#c11-adk}
+### 4.1.2 Anderson--Darling k--Sample Test {#c11-adk}
 
 For the ETW condition, the ADK test statistic given in [@CMH-17-1G] is
 $ADK = 0.793$ and the test concludes that the samples come from the
@@ -353,7 +363,7 @@ expect_true(res$reject_same_dist)
 res
 ```
 
-### X.X.X Anderson--Darling Tests for Distribution {#c11-ad}
+### 4.1.3 Anderson--Darling Tests for Distribution {#c11-ad}
 
 CMH-17-1G Section 8.3.11.2.1 contains results from STAT17 for
 the "observed significance level" from the Anderson--Darling test
@@ -372,14 +382,14 @@ Weibull      | 0.219
 res <- dat_8_3_11_1_1 %>%
   filter(condition == "ETW") %>%
   anderson_darling_normal(strength)
-expect_equal(res$osl, 0.006051, tolerance = 1e-6)
+expect_equal(res$osl, 0.006051, tolerance = 0.001)
 res
 ```
 ```{r}
 res <- dat_8_3_11_1_1 %>%
   filter(condition == "ETW") %>%
   anderson_darling_lognormal(strength)
-expect_equal(res$osl, 0.000307, tolerance = 1e-6)
+expect_equal(res$osl, 0.000307, tolerance = 0.001)
 res
 ```
 
@@ -387,12 +397,12 @@ res
 res <- dat_8_3_11_1_1 %>%
   filter(condition == "ETW") %>%
   anderson_darling_weibull(strength)
-expect_equal(res$osl, 0.0219, tolerance = 1e-4)
+expect_equal(res$osl, 0.0219, tolerance = 0.002)
 res
 ```
 
 
-### X.X.X Levene's Test (Between Conditions) {#c11-lbc}
+### 4.1.4 Levene's Test (Between Conditions) {#c11-lbc}
 
 CMH-17-1G Section 8.3.11.1.1 provides results from ASAP for Levene's test
 for equality of variance between conditions after the ETW and ETW2 conditions
@@ -404,11 +414,11 @@ which matches the result of `cmstatr`.
 res <- dat_8_3_11_1_1 %>%
   filter(condition != "ETW" & condition != "ETW2") %>%
   levene_test(strength, condition)
-expect_equal(res$f, 0.058, tolerance = 1e-3)
+expect_equal(res$f, 0.058, tolerance = 0.01)
 res
 ```
 
-### X.X.X Levene's Test (Between Batches) #{c11-lbb}
+### 4.1.5 Levene's Test (Between Batches) {#c11-lbb}
 
 CMH-17-1G Section 8.3.11.2.2 provides output from STAT17. The
 ETW2 condition from the present data set was analyzed by STAT17
@@ -420,7 +430,7 @@ The result from `cmstatr` is similar.
 res <- dat_8_3_11_1_1 %>%
   filter(condition == "ETW2") %>%
   levene_test(strength, batch)
-expect_equal(res$f, 0.123, tolerance = 1e-3)
+expect_equal(res$f, 0.123, tolerance = 0.005)
 res
 ```
 
@@ -431,12 +441,12 @@ $3.850$. `cmstatr` produces very similar results.
 res <- dat_8_3_11_1_1 %>%
   filter(condition == "CTD") %>%
   levene_test(strength, batch)
-expect_equal(res$f, 3.850, tolerance = 1e-3)
+expect_equal(res$f, 3.850, tolerance = 0.005)
 res
 ```
 
 
-### X.X.X Nonparametric Basis Values {#c11-hk-wf}
+### 4.1.6 Nonparametric Basis Values {#c11-hk-wf}
 CMH-17-1G Section 8.3.11.2.1 provides STAT17 outputs for the ETW
 condition of the present data set. The nonparametric Basis values are listed.
 In this case, the Hanson--Koopmans method is used. The published A-Basis
@@ -444,25 +454,30 @@ value is 13.0 and the B-Basis is 37.9.
 
 
 ```{r}
-dat_8_3_11_1_1 %>%
+res <- dat_8_3_11_1_1 %>%
   filter(condition == "ETW") %>%
-  basis_hk_ext(strength, method = "woodward-frawley", p = 0.99, conf = 0.95)
+  basis_hk_ext(strength, method = "woodward-frawley", p = 0.99, conf = 0.95,
+               override = "all")
+
+expect_equal(res$basis, 13.0, tolerance = 0.001)
+
+res
 ```
 
-TODO: THIS IS NOT THE RESULT THAT IS PUBLISHED!!!!!!!
 
 ```{r}
-dat_8_3_11_1_1 %>%
+res <- dat_8_3_11_1_1 %>%
   filter(condition == "ETW") %>%
-  basis_hk_ext(strength, method = "optimum-order", p = 0.90, conf = 0.95)
+  basis_hk_ext(strength, method = "optimum-order", p = 0.90, conf = 0.95,
+               override = "all")
+
+expect_equal(res$basis, 37.9, tolerance = 0.001)
+
+res
 ```
 
-```{r}
-hk_ext_z_j_opt(22, 0.90, 0.95)
-```
 
-
-### X.X.X Single-Point ANOVA Basis Value {#c11-anova}
+### 4.1.7 Single-Point ANOVA Basis Value {#c11-anova}
 CMH-17-1G Section 8.3.11.2.2 provides output from STAT17 for
 the ETW2 condition from the present data set. STAT17 reports
 A- and B-Basis values based on the ANOVA method of 34.6 and
@@ -473,7 +488,7 @@ res <- dat_8_3_11_1_1 %>%
   filter(condition == "ETW2") %>%
   basis_anova(strength, batch, override = "number_of_groups",
               p = 0.99, conf = 0.95)
-expect_equal(res$basis, 34.6, tolerance = 5e-3)
+expect_equal(res$basis, 34.6, tolerance = 0.001)
 res
 ```
 
@@ -481,11 +496,11 @@ res
 res <- dat_8_3_11_1_1 %>%
   filter(condition == "ETW2") %>%
   basis_anova(strength, batch, override = "number_of_groups")
-expect_equal(res$basis, 63.2, tolerance = 5e-3)
+expect_equal(res$basis, 63.2, tolerance = 0.001)
 res
 ```
 
-## X.X Dataset From Section 8.3.11.1.2
+## 4.2 Dataset From Section 8.3.11.1.2
 
 [@CMH-17-1G] provides an example data set and results from
 ASAP [@ASAP2008]. This example data set is duplicated
@@ -524,7 +539,7 @@ dat_8_3_11_1_2 <- tribble(
 ```
 
 
-### X.X.X Pooled SD A- and B-Basis {#c12-psd}
+### 4.2.1 Pooled SD A- and B-Basis {#c12-psd}
 CMH-17-1G Table 8.3.11.2(k) provides outputs from ASAP for the data set
 above. ASAP uses the pooled SD method. ASAP produces the following
 results, which are quite similar to those produced by `cmstatr`.
@@ -540,13 +555,13 @@ res <- basis_pooled_sd(dat_8_3_11_1_2, strength, condition,
                          override = "all")
 
 expect_equal(res$basis$value[res$basis$group == "CTD"],
-           93.64, tolerance = 0.01)
+           93.64, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "RTD"],
-           87.30, tolerance = 0.01)
+           87.30, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW"],
-           54.33, tolerance = 0.01)
+           54.33, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW2"],
-           47.12, tolerance = 0.01)
+           47.12, tolerance = 0.001)
 res
 ```
 
@@ -556,27 +571,17 @@ res <- basis_pooled_sd(dat_8_3_11_1_2, strength, condition,
                        p = 0.99, conf = 0.95,
                        override = "all")
 expect_equal(res$basis$value[res$basis$group == "CTD"],
-           86.19, tolerance = 0.01)
+           86.19, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "RTD"],
-           79.86, tolerance = 0.01)
+           79.86, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW"],
-           46.84, tolerance = 0.01)
+           46.84, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW2"],
-           39.69, tolerance = 0.01)
+           39.69, tolerance = 0.001)
 res
 ```
 
-### X.X.X Pooled SD A- and B-Basis (Mod CV) {#c12-psdmcv}
-
-The present data set was input into CMH17-STATS and the software was set
-to use the modified CV transform with the pooled SD method. CMH17-STATS
-indicates that the transformed data fails the XXXX test....which one???
-...does `cmstatr` fail the same test???
-
-```{r}
-dat_8_3_11_1_2 %>%
-  basis_pooled_sd(strength, condition, modcv = TRUE)
-```
+### 4.2.2 Pooled SD A- and B-Basis (Mod CV) {#c12-psdmcv}
 
 After removal of the ETW2 condition, CMH17-STATS reports the pooled A- and 
 B-Basis (mod CV) shown in the following table.
@@ -591,35 +596,34 @@ A-Basis   | 83.81 | 77.48 | 44.47
 ```{r}
 res <- dat_8_3_11_1_2 %>%
   filter(condition != "ETW2") %>%
-  basis_pooled_sd(strength, condition, modcv = TRUE)
+  basis_pooled_sd(strength, condition, modcv = TRUE, override = "all")
 expect_equal(res$basis$value[res$basis$group == "CTD"],
-             92.25, tolerance = 0.01)
+             92.25, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "RTD"],
-             85.91, tolerance = 0.01)
+             85.91, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW"],
-             52.97, tolerance = 0.01)
+             52.97, tolerance = 0.001)
 res
 ```
 
 
-               
 ```{r}
 res <- dat_8_3_11_1_2 %>%
   filter(condition != "ETW2") %>%
   basis_pooled_sd(strength, condition,
-                  p = 0.99, conf = 0.95, modcv = TRUE)
+                  p = 0.99, conf = 0.95, modcv = TRUE, override = "all")
 expect_equal(res$basis$value[res$basis$group == "CTD"],
-             83.81, tolerance = 0.01)
+             83.81, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "RTD"],
-             77.48, tolerance = 0.01)
+             77.48, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW"],
-             44.47, tolerance = 0.01)
+             44.47, tolerance = 0.001)
 res
 ```
 
 
 
-### X.X.X Pooled CV A- and B-Basis {#c12-pcv}
+### 4.2.3 Pooled CV A- and B-Basis {#c12-pcv}
 This data set was input into CMH17-STATS and the Pooled CV method was selected.
 The results from CMH17-STATS were as follows. `cmstatr` produces very similar
 results.
@@ -632,13 +636,13 @@ A-Basis   | 81.62 | 76.67 | 50.98 | 45.40
 ```{r}
 res <- basis_pooled_cv(dat_8_3_11_1_2, strength, condition, override = "all")
 expect_equal(res$basis$value[res$basis$group == "CTD"],
-             90.89, tolerance = 0.01)
+             90.89, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "RTD"],
-             85.37, tolerance = 0.01)
+             85.37, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW"],
-             56.79, tolerance = 0.01)
+             56.79, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW2"],
-             50.55, tolerance = 0.01)
+             50.55, tolerance = 0.001)
 res
 ```
 
@@ -646,18 +650,18 @@ res
 res <- basis_pooled_cv(dat_8_3_11_1_2, strength, condition,
                        p = 0.99, conf = 0.95, override = "all")
 expect_equal(res$basis$value[res$basis$group == "CTD"],
-             81.62, tolerance = 0.01)
+             81.62, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "RTD"],
-             76.67, tolerance = 0.01)
+             76.67, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW"],
-             50.98, tolerance = 0.01)
+             50.98, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW2"],
-             45.40, tolerance = 0.01)
+             45.40, tolerance = 0.001)
 res
 ```
 
 
-### X.X.X Pooled CV A- and B-Basis (Mod CV) {#c12-pcvmcv}
+### 4.2.4 Pooled CV A- and B-Basis (Mod CV) {#c12-pcvmcv}
 This data set was input into CMH17-STATS and the Pooled CV method was selected
 with the modified CV transform. Additionally, the ETW2 condition was removed.
 The results from CMH17-STATS were as follows. `cmstatr` produces very similar
@@ -672,13 +676,13 @@ A-Basis   | 80.57 | 75.69 | 50.33
 ```{r}
 res <- dat_8_3_11_1_2 %>%
   filter(condition != "ETW2") %>%
-  basis_pooled_cv(strength, condition, modcv = TRUE)
+  basis_pooled_cv(strength, condition, modcv = TRUE, override = "all")
 expect_equal(res$basis$value[res$basis$group == "CTD"],
-             90.31, tolerance = 0.01)
+             90.31, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "RTD"],
-             84.83, tolerance = 0.01)
+             84.83, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW"],
-             56.43, tolerance = 0.01)
+             56.43, tolerance = 0.001)
 res
 ```
 
@@ -686,23 +690,23 @@ res
 res <- dat_8_3_11_1_2 %>%
   filter(condition != "ETW2") %>%
   basis_pooled_cv(strength, condition, modcv = TRUE,
-                  p = 0.99, conf = 0.95)
+                  p = 0.99, conf = 0.95, override = "all")
 expect_equal(res$basis$value[res$basis$group == "CTD"],
-             80.57, tolerance = 0.01)
+             80.57, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "RTD"],
-             75.69, tolerance = 0.01)
+             75.69, tolerance = 0.001)
 expect_equal(res$basis$value[res$basis$group == "ETW"],
-             50.33, tolerance = 0.01)
+             50.33, tolerance = 0.001)
 res
 ```
 
 
-# X. Other Data Sets
+# 5. Other Data Sets
 This section contains various small data sets. In most cases, these data sets
 were generated randomly for the purpose of comparing `cmstatr` to other
 software.
 
-## X.X Anderson--Darling Test (Normal) {#ods-adn}
+## 5.1 Anderson--Darling Test (Normal) {#ods-adn}
 The following data set was randomly generated. When this is
 entered into STAT17 [@STAT-17], that software gives the value
 $OSL = 0.465$, which matches the result of `cmstatr`
@@ -711,33 +715,19 @@ within a small margin.
 ```{r}
 dat <- data.frame(
   strength = c(
-    137.4438,
-    139.5395,
-    150.89,
-    141.4474,
-    141.8203,
-    151.8821,
-    143.9245,
-    132.9732,
-    136.6419,
-    138.1723,
-    148.7668,
-    143.283,
-    143.5429,
-    141.7023,
-    137.4732,
-    152.338,
-    144.1589,
-    128.5218
-))
+    137.4438, 139.5395, 150.89, 141.4474, 141.8203, 151.8821, 143.9245,
+    132.9732, 136.6419, 138.1723, 148.7668, 143.283, 143.5429,
+    141.7023, 137.4732, 152.338, 144.1589, 128.5218
+  )
+)
 res <- anderson_darling_normal(dat, strength)
 
-expect_equal(res$osl, 0.465, tolerance = 0.002)
+expect_equal(res$osl, 0.465, tolerance = 0.001)
 
 res
 ```
 
-## X.X Anderson--Darling Test (Lognormal) {#ods-adl}
+## 5.2 Anderson--Darling Test (Lognormal) {#ods-adl}
 The following data set was randomly generated. When this is
 entered into STAT17 [@STAT-17], that software gives the value
 $OSL = 0.480$, which matches the result of `cmstatr`
@@ -746,34 +736,20 @@ within a small margin.
 ```{r}
 dat <- data.frame(
   strength = c(
-    137.4438,
-    139.5395,
-    150.89,
-    141.4474,
-    141.8203,
-    151.8821,
-    143.9245,
-    132.9732,
-    136.6419,
-    138.1723,
-    148.7668,
-    143.283,
-    143.5429,
-    141.7023,
-    137.4732,
-    152.338,
-    144.1589,
-    128.5218
-))
+    137.4438, 139.5395, 150.89, 141.4474, 141.8203, 151.8821, 143.9245,
+    132.9732, 136.6419, 138.1723, 148.7668, 143.283, 143.5429,
+    141.7023, 137.4732, 152.338, 144.1589, 128.5218
+  )
+)
 
 res <- anderson_darling_lognormal(dat, strength)
 
-expect_equal(res$osl, 0.480, tolerance = 0.002)
+expect_equal(res$osl, 0.480, tolerance = 0.001)
 
 res
 ```
 
-## Anderson--Darling Test (Weibull) {#ods-adw}
+## 5.3 Anderson--Darling Test (Weibull) {#ods-adw}
 The following data set was randomly generated. When this is
 entered into STAT17 [@STAT-17], that software gives the value
 $OSL = 0.179$, which matches the result of `cmstatr`
@@ -782,25 +758,11 @@ within a small margin.
 ```{r}
 dat <- data.frame(
   strength = c(
-    137.4438,
-    139.5395,
-    150.89,
-    141.4474,
-    141.8203,
-    151.8821,
-    143.9245,
-    132.9732,
-    136.6419,
-    138.1723,
-    148.7668,
-    143.283,
-    143.5429,
-    141.7023,
-    137.4732,
-    152.338,
-    144.1589,
-    128.5218
-))
+    137.4438, 139.5395, 150.89, 141.4474, 141.8203, 151.8821, 143.9245,
+    132.9732, 136.6419, 138.1723, 148.7668, 143.283, 143.5429,
+    141.7023, 137.4732, 152.338, 144.1589, 128.5218
+  )
+)
 
 res <- anderson_darling_weibull(dat, strength)
 
@@ -809,7 +771,7 @@ expect_equal(res$osl, 0.179, tolerance = 0.002)
 res
 ```
 
-## X.X Normal A- and B-Basis {#ods-nb}
+## 5.4 Normal A- and B-Basis {#ods-nb}
 
 The following data was input into STAT17 and the A- and B-Basis values
 were computed assuming normally distributed data. The results were 120.336
@@ -823,23 +785,24 @@ dat <- c(
   137.4732, 152.3380, 144.1589, 128.5218
 )
 
-res <- basis_normal(x = dat, p = 0.99, conf = 0.95)
+res <- basis_normal(x = dat, p = 0.99, conf = 0.95, override = "all")
 expect_equal(res$basis, 120.336, tolerance = 0.0005)
 res
 ```
 
 
 ```{r}
-res <- basis_normal(x = dat, p = 0.9, conf = 0.95)
+res <- basis_normal(x = dat, p = 0.9, conf = 0.95, override = "all")
 expect_equal(res$basis, 129.287, tolerance = 0.0005)
 res
 ```
 
 
-## X.X Lognormal A- and B-Basis {#ods-lb}
+## 5.5 Lognormal A- and B-Basis {#ods-lb}
 
 The following data was input into STAT17 and the A- and B-Basis values
-were computed assuming lognormally distributed data. The results were 121.710
+were computed assuming distributed according to a lognormal distribution.
+The results were 121.710
 and 129.664, respectively. `cmstatr` reports very similar values.
 
 
@@ -850,19 +813,19 @@ dat <- c(
   137.4732, 152.3380, 144.1589, 128.5218
 )
 
-res <- basis_lognormal(x = dat, p = 0.99, conf = 0.95)
+res <- basis_lognormal(x = dat, p = 0.99, conf = 0.95, override = "all")
 expect_equal(res$basis, 121.710, tolerance = 0.0005)
 res
 ```
 
 ```{r}
-res <- basis_lognormal(x = dat, p = 0.9, conf = 0.95)
+res <- basis_lognormal(x = dat, p = 0.9, conf = 0.95, override = "all")
 expect_equal(res$basis, 129.664, tolerance = 0.0005)
 res
 ```
 
 
-## X.X Weibull A- and B-Basis {#ods-wb}
+## 5.6 Weibull A- and B-Basis {#ods-wb}
 
 The following data was input into STAT17 and the A- and B-Basis values
 were computed assuming data following the Weibull distribution.
@@ -877,18 +840,18 @@ dat <- c(
   137.4732, 152.3380, 144.1589, 128.5218
 )
 
-res <- basis_weibull(x = dat, p = 0.99, conf = 0.95)
-expect_equal(res$basis, 109.150, tolerance = 0.6)
+res <- basis_weibull(x = dat, p = 0.99, conf = 0.95, override = "all")
+expect_equal(res$basis, 109.150, tolerance = 0.005)
 res
 ```
 
 ```{r}
-res <- basis_weibull(x = dat, p = 0.9, conf = 0.95)
-expect_equal(res$basis, 125.441, tolerance = 0.3)
+res <- basis_weibull(x = dat, p = 0.9, conf = 0.95, override = "all")
+expect_equal(res$basis, 125.441, tolerance = 0.005)
 res
 ```
 
-## X.X Extended Hanson--Koopman A- and B-Basis {#ods-hkb}
+## 5.7 Extended Hanson--Koopmans A- and B-Basis {#ods-hkb}
 
 The following data was input into STAT17 and the A- and B-Basis values
 were computed using the nonparametric (small sample) method.
@@ -903,21 +866,21 @@ dat <- c(
 )
 
 res <- basis_hk_ext(x = dat, p = 0.99, conf = 0.95,
-                    method = "woodward-frawley")
-expect_equal(res$basis, 99.651, tolerance = 0.05)
+                    method = "woodward-frawley", override = "all")
+expect_equal(res$basis, 99.651, tolerance = 0.005)
 res
 ```
 
 
 ```{r}
 res <- basis_hk_ext(x = dat, p = 0.9, conf = 0.95,
-                    method = "optimum-order")
-expect_equal(res$basis, 124.156, tolerance = 0.05)
+                    method = "optimum-order", override = "all")
+expect_equal(res$basis, 124.156, tolerance = 0.005)
 res
 ```
 
 
-## X.X Extended Hanson--Koopman B-Basis {#ods-hkb2}
+## 5.8 Extended Hanson--Koopmans B-Basis {#ods-hkb2}
 The following random numbers were generated.
 
 ```{r}
@@ -935,7 +898,7 @@ result matches the results of `cmstatr` within a small margin.
 
 ```{r}
 res <- basis_hk_ext(x = dat, p = 0.9, conf = 0.95,
-                    method = "optimum-order")
+                    method = "optimum-order", override = "all")
 expect_equal(res$basis, 122.36798, tolerance = 0.001)
 res
 ```
@@ -947,7 +910,7 @@ Order nonparametric method. `cmstatr` reports a very similar number.
 
 ```{r}
 res <- basis_hk_ext(x = head(dat, 26), p = 0.9, conf = 0.95,
-                    method = "optimum-order")
+                    method = "optimum-order", override = "all")
 expect_equal(res$basis, 121.57073, tolerance = 0.001)
 res
 ```
@@ -960,12 +923,12 @@ Order nonparametric method. `cmstatr` reports a very similar number.
 
 ```{r}
 res <- basis_hk_ext(x = head(dat, 22), p = 0.9, conf = 0.95,
-                    method = "optimum-order")
+                    method = "optimum-order", override = "all")
 expect_equal(res$basis, 128.82397, tolerance = 0.001)
 res
 ```
 
-## X.X Large Sample Nonparametric B-Basis {#ods-lsnb}
+## 5.9 Large Sample Nonparametric B-Basis {#ods-lsnb}
 
 The following data was input into STAT17 and the B-Basis value
 was computed using the nonparametric (large sample) method.
@@ -984,12 +947,13 @@ dat <- c(
   144.0896, 141.8029, 130.0149, 140.8813, 137.7864
 )
 
-res <- basis_nonpara_large_sample(x = dat, p = 0.9, conf = 0.95)
+res <- basis_nonpara_large_sample(x = dat, p = 0.9, conf = 0.95,
+                                  override = "all")
 expect_equal(res$basis, 122.738297, tolerance = 0.005)
 res
 ```
 
-## X.X Acceptance Limits Based on Mean and Extremum {#ods-eme}
+## 5.10 Acceptance Limits Based on Mean and Extremum {#ods-eme}
 
 Results from `cmstatr`'s `equiv_mean_extremum` function were compared with
 results from HYTEQ. The summary statistics for the qualification data
@@ -1001,8 +965,8 @@ and mean, respectively. `cmstatr` produces very similar results.
 ```{r}
 res <- equiv_mean_extremum(alpha = 0.05, mean_qual = 141.310, sd_qual = 6.415,
                            n_sample = 9)
-expect_equal(res$threshold_min_indiv, 123.725, tolerance = 1e-2)
-expect_equal(res$threshold_mean, 137.197, tolerance = 1e-2)
+expect_equal(res$threshold_min_indiv, 123.725, tolerance = 0.001)
+expect_equal(res$threshold_mean, 137.197, tolerance = 0.001)
 res
 ```
 
@@ -1013,13 +977,13 @@ and mean, respectively. `cmstatr` produces very similar results.
 ```{r}
 res <- equiv_mean_extremum(alpha = 0.05, mean_qual = 141.310, sd_qual = 6.415,
                            n_sample = 9, modcv = TRUE)
-expect_equal(res$threshold_min_indiv, 117.024, tolerance = 1e-2)
-expect_equal(res$threshold_mean, 135.630, tolerance = 1e-2)
+expect_equal(res$threshold_min_indiv, 117.024, tolerance = 0.001)
+expect_equal(res$threshold_mean, 135.630, tolerance = 0.001)
 res
 ```
 
 
-## Acceptance Based on Change in Mean {#ods-ecm}
+## 5.11 Acceptance Based on Change in Mean {#ods-ecm}
 
 Results from `cmstatr`'s `equiv_change_mean` function were compared with
 results from HYTEQ. The following parameters were used. A value of
@@ -1038,7 +1002,7 @@ similar results.
 res <- equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
                          sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
                          sd_qual = 0.162)
-expect_equal(res$threshold, c(9.115, 9.365), tolerance = 5e-3)
+expect_equal(res$threshold, c(9.115, 9.365), tolerance = 0.001)
 res
 ```
 
@@ -1049,15 +1013,15 @@ range of 8.857 to 9.623. `cmstatr` produces similar results.
 res <- equiv_change_mean(alpha = 0.05, n_sample = 9, mean_sample = 9.02,
                          sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
                          sd_qual = 0.162, modcv = TRUE)
-expect_equal(res$threshold, c(8.857, 9.623), tolerance = 5e-3)
+expect_equal(res$threshold, c(8.857, 9.623), tolerance = 0.001)
 res
 ```
 
-# X. Comparison with Literature
+# 6. Comparison with Literature
 In this section, results from `cmstatr` are compared with values published
 in literature.
 
-## X.X Anderson--Darling K--Sample Test {#cl-adk}
+## 6.1 Anderson--Darling K--Sample Test {#cl-adk}
 [@Stephens1987] provides example data that compares measurements obtained
 in four labs. Their paper gives values of the ADK test statistic as well as
 p-values.
@@ -1084,26 +1048,26 @@ $p = 0.0022$. These match the result of `cmstatr` within a small margin.
 ```{r}
 res <- ad_ksample(dat_ss1987, smoothness, lab)
 
-expect_equal(res$ad, 8.3926, tolerance = 1e-3)
-expect_equal(res$sigma, 1.2038, tolerance = 1e-3)
-expect_equal(res$p, 0.00226, tolerance = 1e-3)
+expect_equal(res$ad, 8.3926, tolerance = 0.001)
+expect_equal(res$sigma, 1.2038, tolerance = 0.001)
+expect_equal(res$p, 0.00226, tolerance = 0.01)
 
 res
 ```
 
 
-# X. Comparison with Published Factors
+# 7. Comparison with Published Factors
 Various factors, such as tolerance limit factors, are published in various
 publications. This section compares those published factors with those
 computed by `cmstatr`.
 
-## X.X Normal kB Factors {#pf-kb}
+## 7.1 Normal kB Factors {#pf-kb}
 B-Basis tolerance limit factors assuming a normal distribution are published in
 CMH-17-1G. Those factors are reproduced below and are compared with the
 results of `cmstatr`. The published factors and those computed by `cmstatr`
 are quite similar.
 
-```{r message=FALSE, warning=FALSE}
+```{r}
 tribble(
   ~n, ~kB_published,
   2, 20.581, 36, 1.725, 70, 1.582, 104, 1.522,
@@ -1144,17 +1108,17 @@ tribble(
   arrange(n) %>%
   mutate(kB_cmstatr = k_factor_normal(n, p = 0.9, conf = 0.95)) %>%
   rowwise() %>%
-  mutate(abs_difference = expect_less_than(
-    abs(kB_published - kB_cmstatr), 5e-3))
+  mutate(diff = expect_equal(kB_published, kB_cmstatr, tolerance = 0.001)) %>%
+  select(-c(diff))
 ```
 
-## Normal kA Factors {#pf-ka}
+## 7.2 Normal kA Factors {#pf-ka}
 A-Basis tolerance limit factors assuming a normal distribution are published in
 CMH-17-1G. Those factors are reproduced below and are compared with the
 results of `cmstatr`. The published factors and those computed by `cmstatr`
 are quite similar.
 
-```{r message=FALSE, warning=FALSE}
+```{r}
 tribble(
   ~n, ~kA_published,
   2, 37.094, 36, 2.983, 70, 2.765, 104, 2.676,
@@ -1195,11 +1159,11 @@ tribble(
   arrange(n) %>%
   mutate(kA_cmstatr = k_factor_normal(n, p = 0.99, conf = 0.95)) %>%
   rowwise() %>%
-  mutate(abs_difference = expect_less_than(
-    abs(kA_published - kA_cmstatr), 5e-4))
+  mutate(diff = expect_equal(kA_published, kA_cmstatr, tolerance = 0.001)) %>%
+  select(-c(diff))
 ```
 
-## X.X Nonparametric B-Basis Extended Hanson--Koopman {#pf-hk}
+## 7.3 Nonparametric B-Basis Extended Hanson--Koopmans {#pf-hk}
 Vangel [@Vangel1994] provides extensive tables of $z$ for the case where
 $i=1$ and $j$ is the median observation. This section checks the results of
 `cmstatr`'s function against those tables. Only the odd values of $n$
@@ -1228,13 +1192,14 @@ tribble(
   mutate(
     z_calc = hk_ext_z(n, 1, ceiling(n / 2), p = 0.90, conf = 0.95)
   ) %>%
-  mutate(abs_difference = expect_lt(abs(z - z_calc), 5e-5))
+  mutate(diff = expect_equal(z, z_calc, tolerance = 0.0001)) %>% 
+  select(-c(diff))
 ```
 
 
-## X.X Nonparametric A-Basis Extended Hanson--Koopman {#pf-hk2}
+## 7.4 Nonparametric A-Basis Extended Hanson--Koopmans {#pf-hk2}
 CMH-17-1G provides Table 8.5.15, which contains factors for calculating
-A-Basis values using the Extended Hanson--Koopman nonparametric method.
+A-Basis values using the Extended Hanson--Koopmans nonparametric method.
 That table is reproduced in part here and the factors are compared with
 those computed by `cmstatr`. More extensive checks are performed in the
 unit test of the `cmstatr` package. The factors computed by `cmstatr` are
@@ -1275,17 +1240,19 @@ tribble(
 ) %>%
   rowwise() %>%
   mutate(z_calc = hk_ext_z(n, 1, n, 0.99, 0.95)) %>%
-  mutate(abs_difference = expect_lt(abs(k - z_calc), 5e-4))
+  mutate(diff = expect_lt(abs(k - z_calc), 0.0001)) %>% 
+  select(-c(diff))
 ```
 
 
-## X.X Factors for Small Sample Nonparametric B-Basis {#pf-hk-opt}
+## 7.5 Factors for Small Sample Nonparametric B-Basis {#pf-hk-opt}
 CMH-17-1G Table 8.5.14 provides ranks orders and factors for computing
 nonparametric B-Basis values. This table is reproduced below and
 compared with the results of `cmstatr`. The results are similar. In some
 cases, the rank order ($r$ in CMH-17-1G or $j$ in `cmstatr`) *and* the 
-the factor ($k$) are different. Since both of these value are different,
-the resulting B-Basis value will actually be similar.
+the factor ($k$) are different. These differences are discussed in detail in
+the vignette
+[Extended Hanson-Koopmans](hk_ext.html).
 
 ```{r}
 tribble(
@@ -1319,13 +1286,13 @@ tribble(
   28, 12, 1.010
 ) %>% 
   rowwise() %>%
-    mutate(r_calc = hk_ext_z_j_opt(n, 0.90, 0.95)$j) %>%
-    mutate(k_calc = hk_ext_z_j_opt(n, 0.90, 0.95)$z)
+  mutate(r_calc = hk_ext_z_j_opt(n, 0.90, 0.95)$j) %>%
+  mutate(k_calc = hk_ext_z_j_opt(n, 0.90, 0.95)$z)
 ```
 
 
 
-## X.X Nonparametric B-Basis Binomial Rank {#pf-npbinom}
+## 7.6 Nonparametric B-Basis Binomial Rank {#pf-npbinom}
 CMH-17-1G Table 8.5.12 provides factors for computing B-Basis values
 using the nonparametric binomial rank method. Part of that table is
 reproduced below and compared with the results of `cmstatr`.
@@ -1357,7 +1324,7 @@ tribble(
   select(-c(test))
 ```
 
-## Nonparametric A-Basis Binomial Rank {#pf-npbinom2}
+## 7.7 Nonparametric A-Basis Binomial Rank {#pf-npbinom2}
 CMH-17-1G Table 8.5.13 provides factors for computing B-Basis values
 using the nonparametric binomial rank method. Part of that table is
 reproduced below and compared with the results of `cmstatr`.
@@ -1381,7 +1348,7 @@ tribble(
 ```
 
 
-## X.X Factors for Equivalency {#pf-equiv}
+## 7.8 Factors for Equivalency {#pf-equiv}
 
 Vangel's 2002 paper provides factors for calculating limits for sample
 mean and sample extremum for various values of $\alpha$ and sample size ($n$).
@@ -1389,38 +1356,40 @@ A subset of those factors are reproduced below and compared with results
 from `cmstatr`. The results are very similar for values of $\alpha$ and $n$
 that are common for composite materials.
 
+
 ```{r}
 read.csv(system.file("extdata", "k1.vangel.csv",
                      package = "cmstatr")) %>%
-  tidyr::gather(n, k1, X2:X10) %>%
+  gather(n, k1, X2:X10) %>%
   mutate(n = as.numeric(substring(n, 2))) %>%
-  filter(n >= 5 & 0.005 <= alpha & alpha <= 0.1) %>% 
-  rowwise() %>%
-  mutate(k1_calc = k_equiv(alpha, n)[1]) %>%
-  mutate(check = expect_equal(k1, k1_calc, tolerance = 5e-4)) %>%
+  inner_join(
+    read.csv(system.file("extdata", "k2.vangel.csv",
+                         package = "cmstatr")) %>%
+      gather(n, k2, X2:X10) %>%
+      mutate(n = as.numeric(substring(n, 2))),
+    by = c("n" = "n", "alpha" = "alpha")
+  ) %>%
+  filter(n >= 5 & (alpha == 0.01 | alpha == 0.05)) %>% 
+  group_by(n, alpha) %>%
+  nest() %>%
+  mutate(equiv = map2(alpha, n, ~k_equiv(.x, .y))) %>%
+  mutate(k1_calc = map(equiv, function(e) e[1]),
+         k2_calc = map(equiv, function(e) e[2])) %>%
+  select(-c(equiv)) %>% 
+  unnest(cols = c(data, k1_calc, k2_calc)) %>% 
+  mutate(check = expect_equal(k1, k1_calc, tolerance = 0.0001)) %>%
+  select(-c(check)) %>% 
+  mutate(check = expect_equal(k2, k2_calc, tolerance = 0.0001)) %>%
   select(-c(check))
 ```
 
-```{r}
-read.csv(system.file("extdata", "k2.vangel.csv",
-                     package = "cmstatr")) %>%
-  tidyr::gather(n, k2, X2:X10) %>%
-  mutate(n = as.numeric(substring(n, 2))) %>%
-  filter(n >= 5 & 0.005 <= alpha & alpha <= 0.1) %>% 
-  rowwise() %>%
-  mutate(k2_calc = k_equiv(alpha, n)[2]) %>%
-  mutate(check = expect_equal(k2, k2_calc, tolerance = 5e-4)) %>%
-  select(-c(check))
-```
 
-
-
-# Session Info
+# 8. Session Info
 This copy of this vignette was build on the following system.
 
 ```{r}
 sessionInfo()
 ```
 
-# References
+# 9. References
 
