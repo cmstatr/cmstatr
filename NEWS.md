@@ -1,4 +1,5 @@
-# Version 0.8.0.9501
+# Version 0.9.0
+- Added the vignette `cmstatr_Validation`
 - Updated the expected value of the order statistic of a normally
   distributed variable in the implementation of `hk_ext_z_j_opt`.
   This affects the Basis values computed by `basis_hk_ext` when
@@ -9,6 +10,8 @@
 - Updated the vignette `cmstatr_Graphing` to show some examples of the use
   of `nested_data_plot`.
 - Added the additional column `batch` to the `carbon.data.2` example data set.
+- In `k_factor_normal`, suppress warnings emitted by `qt` when the non-central
+  parameter is large.
 - Updated the test to use `testthat` edition 3.
 
 # Version 0.8.0

@@ -86,7 +86,7 @@ tolerance_limit <- function(x, j, z) {
 sim_normal <- pmap_dfr(factor_diff, function(n, j_pre_080, z_pre_080,
                                              j_post_080, z_post_080,
                                              j_cmh, z_cmh) {
-  map_dfr(1:100, function(i_sim) {
+  map_dfr(1:10000, function(i_sim) {
     x <- sort(rnorm(n, mu_normal, sd_normal))
     tibble(
       n = n,
@@ -138,7 +138,7 @@ set.seed(234568)  # make this reproducible
 sim_weibull <- pmap_dfr(factor_diff, function(n, j_pre_080, z_pre_080,
                                               j_post_080, z_post_080,
                                               j_cmh, z_cmh) {
-  map_dfr(1:100, function(i_sim) {
+  map_dfr(1:10000, function(i_sim) {
     x <- sort(rweibull(n, shape_weibull, scale_weibull))
     tibble(
       n = n,
