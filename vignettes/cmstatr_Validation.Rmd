@@ -194,7 +194,7 @@ The value of the test statistic reported by `cmstatr` and that reported
 by ASAP 2008 differ by a factor of $k - 1$, as do the critical values
 used. As such, the conclusion of the tests are identical. This is
 described in more detail in the
-[Anderson--Darling k--Sample Vignette](adktest1.html).
+[Anderson--Darling k--Sample Vignette](adktest.html).
 
 When the RTD warp-tension data from this data set is entered into ASAP 2008,
 it reports a test statistic of 0.456 and fails to reject the null hypothesis
@@ -335,7 +335,7 @@ $ADK = 0.793$ and the test concludes that the samples come from the
 same distribution. Noting that `cmstatr` uses the definition of the
 test statistic given in [@Stephens1987], so the test statistic given
 by `cmstatr` differs from that given by ASAP by a factor of $k - 1$,
-as described in the [Anderson--Darling k--Sample Vignette](adktest1.html).
+as described in the [Anderson--Darling k--Sample Vignette](adktest.html).
 
 ```{r}
 res <- dat_8_3_11_1_1 %>%
