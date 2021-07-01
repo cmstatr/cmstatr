@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0.9501</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
       </span>
     </div>
 
@@ -110,6 +110,9 @@
     </li>
     <li>
       <a href="../articles/cmstatr_Tutorial.html">cmstatr Tutorial</a>
+    </li>
+    <li>
+      <a href="../articles/cmstatr_Validation.html">cmstatr Validation</a>
     </li>
     <li>
       <a href="../articles/hk_ext.html">Extended Hanson-Koopmans</a>
@@ -144,17 +147,20 @@
       <small>Source: <a href='https://github.com/cmstatr/cmstatr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="version-0809501" class="section level1">
-<h1 class="page-header" data-toc-text="0.8.0.9501">
-<a href="#version-0809501" class="anchor"></a>Version 0.8.0.9501<small> Unreleased </small>
+    <div id="version-090" class="section level1">
+<h1 class="page-header" data-toc-text="0.9.0">
+<a href="#version-090" class="anchor"></a>Version 0.9.0<small> 2021-07-01 </small>
 </h1>
 <ul>
+<li>Added the vignette <code>cmstatr_Validation</code>
+</li>
 <li>Updated the expected value of the order statistic of a normally distributed variable in the implementation of <code>hk_ext_z_j_opt</code>. This affects the Basis values computed by <code>basis_hk_ext</code> when <code>method="optimum-order"</code>. Both the new and old implementations appear to perform equally well. See the vignette <code>hk_ext</code> for more information.</li>
 <li>Added the function <code>nested_data_plot</code> for producing nested data plots.</li>
 <li>Added the vignette <code>hk_ext</code>
 </li>
 <li>Updated the vignette <code>cmstatr_Graphing</code> to show some examples of the use of <code>nested_data_plot</code>.</li>
 <li>Added the additional column <code>batch</code> to the <code>carbon.data.2</code> example data set.</li>
+<li>In <code>k_factor_normal</code>, suppress warnings emitted by <code>qt</code> when the non-central parameter is large.</li>
 <li>Updated the test to use <code>testthat</code> edition 3.</li>
 </ul>
 </div>
