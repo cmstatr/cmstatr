@@ -1,3 +1,7 @@
+# Version 0.9.1
+- Updated tests to accommodate upcoming changes to the rlang package.
+  No change to test coverage was made.
+
 # Version 0.9.0
 - Added the vignette `cmstatr_Validation`
 - Updated the expected value of the order statistic of a normally

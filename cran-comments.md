@@ -1,15 +1,15 @@
-This re-submission adds some functionality, improves the accuracy
-of some approximations made and adds two new vignettes.
+This re-submission does not change functionality, but the test suite has
+been updated to allow for an upcoming change to rlang when version 1.0.0
+of that package is released.
 
 ## Test environments
 - win-builder (devel, release, oldrelease)
-- local Ubuntu 20.04, R 4.1.0
+- local Ubuntu 20.04, R 4.1.1
 - GitHub Action runners:
-  - Windows, R 4.0.4
-  - MacOS, R 4.1.0
-  - Ubuntu 16.04, R 4.1.0
-  - Ubuntu 16.04, R 4.0.5
-  - MacOS, R 4.1.0 (with _R_CHECK_DEPENDS_ONLY_ set)
+  - Windows, R 4.1.1
+  - MacOS, R 4.1.1
+  - Ubuntu 20.04, R 4.1.1
+  - Ubuntu 18.04, R 4.0.5
 
 ## R CMD check results
 There were no ERRORs, WARNINGs, or NOTEs.
