@@ -85,7 +85,7 @@ tibble." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -204,7 +204,7 @@ null hypothesis that all samples have the same variance is rejected</p></li>
 <span class='op'>)</span>
 <span class='va'>levene_result</span> <span class='op'>&lt;-</span> <span class='fu'><a href='levene_test.html'>levene_test</a></span><span class='op'>(</span><span class='va'>df</span>, <span class='va'>strength</span>, <span class='va'>groups</span><span class='op'>)</span>
 <span class='fu'><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></span><span class='op'>(</span><span class='va'>levene_result</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 7</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 × 7</span>
 #&gt;   alpha modcv     n     k     f      p reject_equal_variance
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>                
 #&gt; <span style='color: #BCBCBC;'>1</span>  0.05 FALSE    11     2  6.01 0.036<span style='text-decoration: underline;'>7</span> TRUE                 </div><div class='input'>

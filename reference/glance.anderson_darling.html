@@ -85,7 +85,7 @@ tibble." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -203,7 +203,7 @@ should be rejected</p></li>
     <pre class="examples"><div class='input'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>100</span>, <span class='fl'>100</span>, <span class='fl'>4</span><span class='op'>)</span>
 <span class='va'>ad</span> <span class='op'>&lt;-</span> <span class='fu'><a href='anderson_darling.html'>anderson_darling_weibull</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span><span class='op'>)</span>
 <span class='fu'><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></span><span class='op'>(</span><span class='va'>ad</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 6</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 × 6</span>
 #&gt;   dist        n     A   osl alpha reject_distribution
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>              
 #&gt; <span style='color: #BCBCBC;'>1</span> Weibull   100 0.621 0.102  0.05 FALSE              </div><div class='input'>

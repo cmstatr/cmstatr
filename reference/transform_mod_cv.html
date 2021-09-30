@@ -92,7 +92,7 @@ across environments." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -242,7 +242,7 @@ equation.</p>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>condition</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>trans_strength <span class='op'>=</span> <span class='fu'>transform_mod_cv</span><span class='op'>(</span><span class='va'>strength</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 10 x 6</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 10 × 6</span>
 #&gt; <span style='color: #949494;'># Groups:   condition [1]</span>
 #&gt;    id         test  condition batch strength trans_strength
 #&gt;    <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>          <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
@@ -280,7 +280,7 @@ equation.</p>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>trans_strength <span class='op'>=</span> <span class='fu'>transform_mod_cv</span><span class='op'>(</span><span class='va'>strength</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
   <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarize</a></span><span class='op'>(</span>cv <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>strength</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>strength</span><span class='op'>)</span>,
             mod_cv <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/sd.html'>sd</a></span><span class='op'>(</span><span class='va'>trans_strength</span><span class='op'>)</span> <span class='op'>/</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>trans_strength</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 x 3</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 3 × 3</span>
 #&gt;   condition     cv mod_cv
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>      <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span> CTD       0.042<span style='text-decoration: underline;'>3</span> 0.061<span style='text-decoration: underline;'>2</span>

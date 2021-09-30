@@ -85,7 +85,7 @@ tibble." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
       </span>
     </div>
 
@@ -222,7 +222,7 @@ computed the basis value).</p>
 <span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>100</span>, <span class='fl'>5</span><span class='op'>)</span>
 <span class='va'>b</span> <span class='op'>&lt;-</span> <span class='fu'><a href='basis.html'>basis_normal</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>x</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>`outliers_within_batch` not run because parameter `batch` not specified</span></div><div class='output co'>#&gt; <span class='message'>`between_batch_variability` not run because parameter `batch` not specified</span></div><div class='input'><span class='fu'><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></span><span class='op'>(</span><span class='va'>b</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 7</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 × 7</span>
 #&gt;       p  conf distribution modcv     n r     basis
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>        <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>
 #&gt; <span style='color: #BCBCBC;'>1</span>   0.9  0.95 Normal       FALSE    20 <span style='color: #BB0000;'>NA</span>     92.0</div><div class='input'>
@@ -233,7 +233,7 @@ computed the basis value).</p>
 
 
 <span class='fu'><a href='https://generics.r-lib.org/reference/glance.html'>glance</a></span><span class='op'>(</span><span class='va'>b</span>, include_diagnostics <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 x 11</span>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 1 × 11</span>
 #&gt;       p  conf distribution modcv     n r     basis outliers_within_batch
 #&gt;   <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>        <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;int&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>                
 #&gt; <span style='color: #BCBCBC;'>1</span>   0.9  0.95 Normal       FALSE    20 <span style='color: #BB0000;'>NA</span>     92.0 <span style='color: #BB0000;'>NA</span>                   
