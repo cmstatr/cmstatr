@@ -396,33 +396,43 @@ test_dat <- tribble(
 )
 
 test_that("MNR within each batch and condition matches CMH17-STATS", {
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_sd(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   expect_true("outliers_within_batch" %in%
                 res_unmodified$diagnostic_failures)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = TRUE)
+      basis_pooled_sd(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   expect_true("outliers_within_batch" %in%
                 res_modcv$diagnostic_failures)
 
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_cv(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   expect_true("outliers_within_batch" %in%
                 res_unmodified$diagnostic_failures)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = TRUE)
+      basis_pooled_cv(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   expect_true("outliers_within_batch" %in%
@@ -448,33 +458,43 @@ test_that("MNR within each batch and condition matches CMH17-STATS", {
 })
 
 test_that("ADK for between-batch var. within each cond matches CMH17-STATS", {
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_cv(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   expect_true("between_group_variability" %in%
                 res_unmodified$diagnostic_failures)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = TRUE)
+      basis_pooled_cv(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   expect_false("between_group_variability" %in%
                  res_modcv$diagnostic_failures)
 
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_sd(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   expect_true("between_group_variability" %in%
                 res_unmodified$diagnostic_failures)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = TRUE)
+      basis_pooled_sd(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   expect_false("between_group_variability" %in%
@@ -513,33 +533,43 @@ test_that("ADK for between-batch var. within each cond matches CMH17-STATS", {
 })
 
 test_that("MNR within each condition matches CMH17-STATS", {
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_sd(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   expect_false("outliers_within_group" %in%
                 res_unmodified$diagnostic_failures)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = TRUE)
+      basis_pooled_sd(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   expect_false("outliers_within_group" %in%
                 res_modcv$diagnostic_failures)
 
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_cv(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   expect_false("outliers_within_group" %in%
                 res_unmodified$diagnostic_failures)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = TRUE)
+      basis_pooled_cv(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   expect_false("outliers_within_group" %in%
@@ -586,33 +616,43 @@ test_that("OSL of data from each batch CMH17-STATS", {
 })
 
 test_that("OSL of pooled data after norm to group mean matches CMH17-STATS", {
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_sd(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   expect_false("pooled_data_normal" %in%
                  res_unmodified$diagnostic_failures)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = TRUE)
+      basis_pooled_sd(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   expect_false("pooled_data_normal" %in%
                  res_modcv$diagnostic_failures)
 
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_cv(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   expect_false("pooled_data_normal" %in%
                  res_unmodified$diagnostic_failures)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = TRUE)
+      basis_pooled_cv(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   expect_false("pooled_data_normal" %in%
@@ -631,9 +671,13 @@ test_that("OSL of pooled data after norm to group mean matches CMH17-STATS", {
 })
 
 test_that("Levene's test among condition groups matches CMH17-STATS", {
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_sd(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   expect_false("pooled_variance_equal" %in%
@@ -643,9 +687,10 @@ test_that("Levene's test among condition groups matches CMH17-STATS", {
     levene_test(strength, groups = cond)
   expect_equal(lev$f, 1.051, tolerance = 1e-3)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = TRUE)
+      basis_pooled_sd(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   expect_false("pooled_variance_equal" %in%
@@ -658,9 +703,13 @@ test_that("Levene's test among condition groups matches CMH17-STATS", {
     levene_test(strength, groups = cond)
   expect_equal(lev$f, 0.005, tolerance = 0.05)
 
-  expect_snapshot(
-    res_unmodified <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res_unmodified <- test_dat %>%
+        basis_pooled_cv(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
 
   lev <- test_dat %>%
@@ -668,9 +717,10 @@ test_that("Levene's test among condition groups matches CMH17-STATS", {
     levene_test(strength, groups = cond)
   expect_equal(lev$f, 1.631, tolerance = 0.05)
 
-  expect_snapshot(
+  expect_warning(
     res_modcv <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = TRUE)
+      basis_pooled_cv(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
 
   lev <- test_dat %>%
@@ -683,19 +733,25 @@ test_that("Levene's test among condition groups matches CMH17-STATS", {
 })
 
 test_that("Basis values match CMH17-STATS", {
-  expect_snapshot(
-    res <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res <- test_dat %>%
+        basis_pooled_cv(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
+
   res$basis %>%
     mutate(expected = case_when(group == 1 ~ 98.21,
                                 group == 2 ~ 99.27,
                                 group == 3 ~ 92.22)) %>%
     mutate(expect_equal(value, expected, tolerance = 1e-2))
 
-  expect_snapshot(
+  expect_warning(
     res <- test_dat %>%
-      basis_pooled_cv(strength, cond, batch, modcv = TRUE)
+      basis_pooled_cv(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
   res$basis %>%
     mutate(expected = case_when(group == 1 ~ 94.49,
@@ -703,9 +759,13 @@ test_that("Basis values match CMH17-STATS", {
                                 group == 3 ~ 88.76)) %>%
     mutate(expect_equal(value, expected, tolerance = 1e-2))
 
-  expect_snapshot(
-    res <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = FALSE)
+  expect_warning(
+    expect_warning(
+      res <- test_dat %>%
+        basis_pooled_sd(strength, cond, batch, modcv = FALSE),
+      "outliers_within_batch"
+    ),
+    "between_group_variability"
   )
   res$basis %>%
     mutate(expected = case_when(group == 1 ~ 98.42,
@@ -713,9 +773,10 @@ test_that("Basis values match CMH17-STATS", {
                                 group == 3 ~ 92.00)) %>%
     mutate(expect_equal(value, expected, tolerance = 1e-2))
 
-  expect_snapshot(
+  expect_warning(
     res <- test_dat %>%
-      basis_pooled_sd(strength, cond, batch, modcv = TRUE)
+      basis_pooled_sd(strength, cond, batch, modcv = TRUE),
+    "outliers_within_batch"
   )
   res$basis %>%
     mutate(expected = case_when(group == 1 ~ 94.71,

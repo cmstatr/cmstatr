@@ -295,23 +295,31 @@ test_that("equiv_mean_extremum produces expected errors and warnings", {
   )
 
   set.seed(100)
-  expect_snapshot(
-    equiv_mean_extremum(
-      alpha = 0.05,
-      n_sample = 9,
-      data_qual = runif(28),
-      mean_qual = 9.24,
-      sd_qual = 0.162)
+  expect_warning(
+    expect_warning(
+      equiv_mean_extremum(
+        alpha = 0.05,
+        n_sample = 9,
+        data_qual = runif(28),
+        mean_qual = 9.24,
+        sd_qual = 0.162),
+      "Both data_qual and mean_qual"
+    ),
+    "Both data_qual and sd_qual"
   )
 
   set.seed(101)
-  expect_snapshot(
-    equiv_mean_extremum(
-      alpha = 0.05,
-      n_sample = 9,
-      data_qual = runif(28),
-      mean_qual = 9.24,
-      sd_qual = 0.162)
+  expect_warning(
+    expect_warning(
+      equiv_mean_extremum(
+        alpha = 0.05,
+        n_sample = 9,
+        data_qual = runif(28),
+        mean_qual = 9.24,
+        sd_qual = 0.162),
+      "Both data_qual and mean_qual were supplied. mean_qual ignored."
+    ),
+    "Both data_qual and sd_qual were supplied. sd_qual ignored."
   )
 
   expect_error(
@@ -368,13 +376,20 @@ test_that("equiv_change_mean produces expected errors and warnings", {
   )
 
   set.seed(156)
-  expect_snapshot(
-    equiv_change_mean(
-      alpha = 0.05,
-      data_sample = runif(9),
-      n_sample = 9, mean_sample = 9.02,
-      sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
-      sd_qual = 0.162)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        equiv_change_mean(
+          alpha = 0.05,
+          data_sample = runif(9),
+          n_sample = 9, mean_sample = 9.02,
+          sd_sample = 0.15785, n_qual = 28, mean_qual = 9.24,
+          sd_qual = 0.162),
+        "Both data_sample and n_sample supplied. n_sample ignored."
+      ),
+      "Both data_sample and mean_sample supplied. mean_sample ignored"
+    ),
+    "Both data_sample and sd_sample supplied. sd_sample ignored"
   )
 
   expect_error(
@@ -406,25 +421,39 @@ test_that("equiv_change_mean produces expected errors and warnings", {
   )
 
   set.seed(109)
-  expect_snapshot(
-    equiv_change_mean(
-      alpha = 0.05,
-      n_sample = 9, mean_sample = 9.02,
-      sd_sample = 0.15785,
-      data_qual = runif(28),
-      n_qual = 28, mean_qual = 9.24,
-      sd_qual = 0.162)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        equiv_change_mean(
+          alpha = 0.05,
+          n_sample = 9, mean_sample = 9.02,
+          sd_sample = 0.15785,
+          data_qual = runif(28),
+          n_qual = 28, mean_qual = 9.24,
+          sd_qual = 0.162),
+        "Both data_qual and n_qual supplied. n_qual ignored."
+      ),
+      "Both data_qual and mean_qual supplied. mean_qual ignored"
+    ),
+    "Both data_qual and sd_qual supplied. sd_qual ignored"
   )
 
   set.seed(110)
-  expect_snapshot(
-    equiv_change_mean(
-      alpha = 0.05,
-      n_sample = 9, mean_sample = 9.02,
-      sd_sample = 0.15785,
-      data_qual = runif(28),
-      n_qual = 28, mean_qual = 9.24,
-      sd_qual = 0.162)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        equiv_change_mean(
+          alpha = 0.05,
+          n_sample = 9, mean_sample = 9.02,
+          sd_sample = 0.15785,
+          data_qual = runif(28),
+          n_qual = 28, mean_qual = 9.24,
+          sd_qual = 0.162),
+        "Both data_qual and n_qual supplied. n_qual ignored."
+      ),
+      "Both data_qual and mean_qual supplied. mean_qual ignored"
+    ),
+    "Both data_qual and sd_qual supplied. sd_qual ignored"
   )
 
   expect_error(
