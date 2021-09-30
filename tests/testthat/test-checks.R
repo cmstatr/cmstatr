@@ -53,11 +53,23 @@ test_that("Messages are created for missing parameters", {
   expect_message(perform_checks(sample_rules, pos = NULL, neg = -1, z = 0),
                  regexp = "`positive`.+`pos`",
                  all = TRUE)
-  expect_snapshot(perform_checks(sample_rules, pos = 1, neg = NULL, z = 0))
+  expect_message(
+    expect_message(
+      perform_checks(sample_rules, pos = 1, neg = NULL, z = 0),
+      "negative"),
+    "neg_or_zero"
+  )
 
   # two parameters missing
-  expect_snapshot(
-    perform_checks(sample_rules, pos = 1, neg = NULL, z = NULL)
+  expect_message(
+    expect_message(
+      expect_message(
+        perform_checks(sample_rules, pos = 1, neg = NULL, z = NULL),
+        "negative"
+      ),
+      "zero"
+    ),
+    "neg_or_zero"
   )
 })
 

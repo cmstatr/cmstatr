@@ -139,7 +139,7 @@ discuss the proposed change in an issue first.
 
 Testing is performed using `testthat`. Edition 3 of that package is used
 and parallel processing enabled. If you wish to use more than two CPUs,
-set the environment variable `TESTTHAT_CUPS` to the number of CPUs that
+set the environment variable `TESTTHAT_CPUS` to the number of CPUs that
 you want to use. One way of doing this is to create the file `.Rprofile`
 with the following contents. This file is ignored both by `git` and also
 in `.Rbuildingore`.

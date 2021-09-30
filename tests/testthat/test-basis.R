@@ -197,9 +197,18 @@ test_that("normal basis values produce expected diagnostic failures", {
   x <- c(runif(25), runif(25, max = 2), 200)
   batch <- c(rep("A", 25), rep("B", 26))
 
-  expect_snapshot(
-    res <- basis_normal(x = x, batch = batch),
-    cran = TRUE
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+          res <- basis_normal(x = x, batch = batch),
+          "outliers_within_batch"
+        ),
+        "between_batch_variability"
+      ),
+      "outliers"
+    ),
+    "anderson_darling_normal"
   )
 
   # Check that res$... contains the correct value
@@ -256,8 +265,18 @@ test_that("normal basis values produce expected diagnostic failures", {
   expect_length(res$diagnostic_failures, 0)
 
   # call basis_normal without batch
-  expect_snapshot(
-    res <- basis_normal(x = x)
+  expect_warning(
+    expect_warning(
+      expect_message(
+        expect_message(
+          res <- basis_normal(x = x),
+          "outliers_within_batch"
+        ),
+        "between_batch_variability"
+      ),
+      "outliers"
+    ),
+    "anderson_darling_normal"
   )
 
   # Check that res$... contains the correct value
@@ -324,8 +343,18 @@ test_that("lognormal basis values produce expected diagnostic failures", {
   x <- c(runif(25), runif(25, max = 2), 200)
   batch <- c(rep("A", 25), rep("B", 26))
 
-  expect_snapshot(
-    res <- basis_lognormal(x = x, batch = batch)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+          res <- basis_lognormal(x = x, batch = batch),
+          "outliers_within_batch"
+        ),
+        "between_batch_variability"
+      ),
+      "outliers"
+    ),
+    "anderson_darling_lognormal"
   )
 
   # Check that res$... contains the correct value
@@ -363,8 +392,18 @@ test_that("lognormal basis values produce expected diagnostic failures", {
   expect_length(res$diagnostic_failures, 0)
 
   # call basis_normal without batch
-  expect_snapshot(
-    res <- basis_lognormal(x = x)
+  expect_warning(
+    expect_warning(
+      expect_message(
+        expect_message(
+          res <- basis_lognormal(x = x),
+          "outliers_within_batch"
+        ),
+        "between_batch_variability"
+      ),
+      "outliers"
+    ),
+    "anderson_darling_lognormal"
   )
 
   # Check that res$... contains the correct value
@@ -435,8 +474,18 @@ test_that("weibull basis values produce expected diagnostic failures", {
   x <- c(rnorm(10, 100, 2), rnorm(10, 103, 2), 120)
   batch <- c(rep("A", 10), rep("B", 11))
 
-  expect_snapshot(
-    res <- basis_weibull(x = x, batch = batch)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+          res <- basis_weibull(x = x, batch = batch),
+          "outliers_within_batch"
+        ),
+        "between_batch_variability"
+      ),
+      "outliers"
+    ),
+    "anderson_darling_weibull"
   )
 
   # Check that res$... contains the correct value
@@ -474,8 +523,18 @@ test_that("weibull basis values produce expected diagnostic failures", {
   expect_length(res$diagnostic_failures, 0)
 
   # call basis_normal without batch
-  expect_snapshot(
-    res <- basis_weibull(x = x)
+  expect_warning(
+    expect_warning(
+      expect_message(
+        expect_message(
+          res <- basis_weibull(x = x),
+          "outliers_within_batch"
+        ),
+        "between_batch_variability"
+      ),
+      "outliers"
+    ),
+    "anderson_darling_weibull"
   )
 
   # Check that res$... contains the correct value
@@ -553,9 +612,22 @@ test_that("non-para (small) basis values produce expected diag failures", {
   batch_large <- c(rep("A", 200), rep("B", 101))
 
   # woodward-frawley is only for A-Basis. Should fail if we calculate B-Basis
-  expect_snapshot(
-    res <- basis_hk_ext(
-      x = x_large, batch = batch_large, method = "woodward-frawley")
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+          expect_warning(
+            res <- basis_hk_ext(
+              x = x_large, batch = batch_large, method = "woodward-frawley"),
+            "outliers_within_batch"
+          ),
+          "between_batch_variability"
+        ),
+        "outliers"
+      ),
+      "correct_method_used"
+    ),
+    "sample_size"
   )
 
   # Check that res$... contains the correct value
@@ -598,15 +670,35 @@ test_that("non-para (small) basis values produce expected diag failures", {
   expect_length(res$diagnostic_failures, 0)
 
   # optimum-order is only for B-Basis. Should fail if we calculate A-Basis
-  expect_snapshot(
-    res <- basis_hk_ext(
-      x = x_large, batch = batch_large, method = "optimum-order",
-      p = 0.99, conf = 0.95)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+          expect_warning(
+            res <- basis_hk_ext(
+              x = x_large, batch = batch_large, method = "optimum-order",
+              p = 0.99, conf = 0.95),
+            "outliers_within_batch"
+          ),
+          "between_batch_variability"
+        ),
+        "outliers"
+      ),
+      "correct_method_used"
+    ),
+    "sample_size"
   )
 
   # call basis_normal without batch
-  expect_snapshot(
-    res <- basis_hk_ext(x = x_small, method = "optimum-order")
+  expect_warning(
+    expect_message(
+      expect_message(
+        res <- basis_hk_ext(x = x_small, method = "optimum-order"),
+        "outliers_within_batch"
+      ),
+      "between_batch_variability"
+    ),
+    "outliers"
   )
 
   # Check that res$... contains the correct value
@@ -655,9 +747,16 @@ test_that("non-para (large) basis values produce expected diag failures", {
   x_large <- c(rnorm(200, 100, 2), rnorm(100, 103, 2), 120)
   batch_large <- c(rep("A", 200), rep("B", 101))
 
-  expect_snapshot(
-    res <- basis_nonpara_large_sample(
-      x = x_large, batch = batch_large)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        res <- basis_nonpara_large_sample(
+          x = x_large, batch = batch_large),
+        "outliers_within_batch"
+      ),
+      "between_batch_variability"
+    ),
+    "outliers"
   )
 
   # Check that res$... contains the correct value
@@ -690,15 +789,29 @@ test_that("non-para (large) basis values produce expected diag failures", {
                  "sample_size"))
   expect_length(res$diagnostic_failures, 0)
 
-  expect_snapshot(
-    res <- basis_nonpara_large_sample(
-      x = x_large, batch = batch_large,
-      p = 0.99, conf = 0.95)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        res <- basis_nonpara_large_sample(
+          x = x_large, batch = batch_large,
+          p = 0.99, conf = 0.95),
+        "outliers_within_batch"
+      ),
+      "between_batch_variability"
+    ),
+    "outliers"
   )
 
   # call basis_normal without batch
-  expect_snapshot(
-    res <- basis_nonpara_large_sample(x = x_large)
+  expect_warning(
+    expect_message(
+      expect_message(
+        res <- basis_nonpara_large_sample(x = x_large),
+        "outliers_within_batch"
+      ),
+      "between_batch_variability"
+    ),
+    "outliers"
   )
 
   # Check that res$... contains the correct value
@@ -770,14 +883,38 @@ test_that("expected diagnostic failures are noted for pooling methods", {
   # This section in CMH-17-1G shows the removal of one condition
   # before running Levene's test on the pooled data, so this test
   # will be skipped in this test.
-  expect_snapshot(
-    res <- basis_pooled_sd(cmh_17_8_3_11_1_1, strength, condition, batch)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+          expect_warning(
+            res <- basis_pooled_sd(cmh_17_8_3_11_1_1, strength, condition,
+                                   batch),
+            "outliers_within_batch"
+          ),
+          "between_group_variability"
+        ),
+        "outliers_within_group"
+      ),
+      "pooled_data_normal"
+    ),
+    "pooled_variance_equal"
   )
 
-  expect_snapshot(
-    res <- cmh_17_8_3_11_1_1 %>%
-      filter(condition != "ETW2") %>%
-      basis_pooled_sd(strength, condition, batch)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+          res <- cmh_17_8_3_11_1_1 %>%
+            filter(condition != "ETW2") %>%
+            basis_pooled_sd(strength, condition, batch),
+          "outliers_within_batch"
+        ),
+        "outliers_within_group"
+      ),
+      "pooled_data_normal"
+    ),
+    "pooled_variance_equal"
   )
 
   # removing both ETW and ETW2 should remove all diagnostic failures
@@ -792,15 +929,38 @@ test_that("expected diagnostic failures are noted for pooling methods", {
   expect_equal(res$basis$value[res$basis$group == "ETD"], 80.68,
                tolerance = 0.02)
 
-  expect_snapshot(
-    res <- basis_pooled_cv(cmh_17_8_3_11_1_1, strength,
-                           condition, batch)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+          expect_warning(
+            res <- basis_pooled_cv(cmh_17_8_3_11_1_1, strength,
+                                   condition, batch),
+            "outliers_within_batch"
+          ),
+          "between_group_variability"
+        ),
+        "outliers_within_group"
+      ),
+      "pooled_data_normal"
+    ),
+    "normalized_variance_equal"
   )
 
-  expect_snapshot(
-    res <- cmh_17_8_3_11_1_1 %>%
-      filter(condition != "ETW2") %>%
-      basis_pooled_cv(strength, condition, batch)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        expect_warning(
+          res <- cmh_17_8_3_11_1_1 %>%
+            filter(condition != "ETW2") %>%
+            basis_pooled_cv(strength, condition, batch),
+          "outliers_within_batch"
+        ),
+        "outliers_within_group"
+      ),
+      "pooled_data_normal"
+    ),
+    "normalized_variance_equal"
   )
 
   # removing both ETW and ETW2 should remove all diagnostic failures
@@ -900,9 +1060,16 @@ poolable_data <- tribble(
 test_that("Pooled SD results match ASAP results", {
   # This data fails the anderson-darling test for normality for the
   # transformed data
-  expect_snapshot(
-    res_b <- basis_pooled_sd(poolable_data, strength, condition,
-                             override = c("pooled_variance_equal"))
+  expect_warning(
+    expect_message(
+      expect_message(
+        res_b <- basis_pooled_sd(poolable_data, strength, condition,
+                                 override = c("pooled_variance_equal")),
+        "outliers_within_batch"
+      ),
+      "between_group_variability"
+    ),
+    "pooled_data_normal"
   )
 
   expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
@@ -942,8 +1109,15 @@ test_that("Pooled SD results match ASAP results", {
 test_that("Pooled CV results match CMH17STATS", {
   # This data fails the anderson-darling test for normality for the
   # transformed data
-  expect_snapshot(
-    res_b <- basis_pooled_cv(poolable_data, strength, condition)
+  expect_warning(
+    expect_message(
+      expect_message(
+        res_b <- basis_pooled_cv(poolable_data, strength, condition),
+        "outliers_within_batch"
+      ),
+      "between_group_variability"
+    ),
+    "pooled_data_normal"
   )
 
   expect_equal(res_b$basis$value[res_b$basis$group == "CTD"],
@@ -1798,8 +1972,15 @@ test_that("anova basis values produce expected diagnostic failures", {
   x <- c(rnorm(30, 100, 1), rnorm(30, 100, 10), 80)
   batch <- c(rep("A", 30), rep("B", 30), "A")
 
-  expect_snapshot(
-    res <- basis_anova(x = x, group = batch)
+  expect_warning(
+    expect_warning(
+      expect_warning(
+        res <- basis_anova(x = x, group = batch),
+        "outliers_within_group"
+      ),
+      "equality_of_variance"
+    ),
+    "number_of_groups"
   )
 
   # Check that res$... contains the correct value
