@@ -93,7 +93,7 @@ vignette("cmstatr_Graphing")
 # Philosophical Notes
 
 This package expects
-[`tidy data`](https://www.jstatsoft.org/article/view/v059i10). That is,
+[`tidy data`](https://doi.org/10.18637/jss.v059.i10). That is,
 individual observations should be in rows and variables in columns.
 
 Where possible, this package uses general solutions. Look-up tables are
