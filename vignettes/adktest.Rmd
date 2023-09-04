@@ -1,6 +1,6 @@
 ---
 title: "Anderson-Darling k-Sample Test"
-author: "Stefan Kloppenborg"
+author: "Stefan Kloppenborg, Jeffrey Borlik"
 date: "20-Jan-2019"
 output: rmarkdown::html_vignette
 bibliography: bibliography.json

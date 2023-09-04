@@ -11,6 +11,8 @@ Authors@R: c(
       role = c("ctb")),
     person("Ally", "Fraser", email = "ally.fraser25@gmail.com",
       role = c("ctb")),
+    person("Jeffrey Borlik",
+      role = c("ctb")),
     person("Comtek Advanced Structures, Ltd.",
       role = c("fnd"))
   )
@@ -52,7 +54,7 @@ Suggests:
     testthat,
     tidyr,
     vdiffr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Language: en-US
 Roxygen: list(markdown = TRUE)

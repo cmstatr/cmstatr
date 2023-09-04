@@ -25,6 +25,7 @@ Other contributors:
 \itemize{
   \item Billy Cheng \email{bcheng@comtekadvanced.com} [contributor]
   \item Ally Fraser \email{ally.fraser25@gmail.com} [contributor]
+  \item Jeffrey Borlik [contributor]
   \item Comtek Advanced Structures, Ltd. [funder]
 }
 
