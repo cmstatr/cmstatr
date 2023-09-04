@@ -173,6 +173,7 @@ ad_ksample <- function(data = NULL, x, groups, alpha = 0.025) {
 #'
 #' @export
 glance.adk <- function(x, ...) {  # nolint
+  # nolint start: object_usage_linter
   with(
     x,
     tibble::tibble(
@@ -185,6 +186,7 @@ glance.adk <- function(x, ...) {  # nolint
       reject_same_dist = reject_same_dist
     )
   )
+  # nolint end
 }
 
 #' @export

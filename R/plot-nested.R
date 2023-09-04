@@ -89,7 +89,7 @@ build_drawing_element_list <- function(nesting, group_df, y_gap) {
     ancestor_level_heights <- ifelse(level <= 2,
                                      0,
                                      sum(level_heights[2:(level - 1)]))
-    y_obj <-
+    y_obj <- # nolint
       ancestor_level_heights +
       y_gap * max(0, level - 2) -
       y_gap / 2 - 0.5
@@ -244,7 +244,7 @@ draw_horiz_lines_to_labels <- function(g, elm_list, hline_args) {
 
 add_extras_data <- function(df, extras, name, must_be_equal) {
   if (name %in% names(extras)) {
-    if (length(levels(as.factor(extras[[name]]))) > 1 & must_be_equal) {
+    if (length(levels(as.factor(extras[[name]]))) > 1 && must_be_equal) {
       # Not all values are the same
       return(df)
     } else {

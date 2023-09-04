@@ -191,6 +191,7 @@ maximum_normed_residual_crit <- function(n, alpha) {
 #'
 #' @export
 glance.mnr <- function(x, ...) {  # nolint
+  # nolint start: object_usage_linter
   with(
     x,
     tibble::tibble(
@@ -200,6 +201,7 @@ glance.mnr <- function(x, ...) {  # nolint
       n_outliers = n_outliers
     )
   )
+  # nolint end
 }
 
 #' Augment data with information from an `mnr` object
