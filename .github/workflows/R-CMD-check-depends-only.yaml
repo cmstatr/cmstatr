@@ -26,29 +26,19 @@ jobs:
         - { os: macOS-latest,   r: 'release', vdiffr: false }
 
     env:
-      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      # Runs vdiffr test only on the latest version of R
-      VDIFFR_RUN_TESTS: ${{ matrix.config.vdiffr }}
-      VDIFFR_LOG_PATH: "../vdiffr.Rout.fail"
+      R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: r-lib/actions/setup-r@master
+      - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
 
-      - uses: r-lib/actions/setup-pandoc@master
-
-      # To install vdiffr, these three libraries/tools are needed:
-      # - freetype (already installed, needed by systemfonts)
-      # - cairo (not installed, needed by gdtools)
-      # - pkg-config (not installed, needed to set proper build settings)
-      - name: Install pkg-config and cairo on macOS
-        if: runner.os == 'macOS'
-        run: brew install pkg-config cairo
+      - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Query dependencies
         run: |
@@ -80,6 +70,7 @@ jobs:
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("knitr")  # Also install knitr to allow rebuilding of vignettes
           remotes::install_cran("rmarkdown")  # rmarkdown is required for knitr to work
+          remotes::install_cran("testthat")
         shell: Rscript {0}
 
       - name: Session info
@@ -93,6 +84,8 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_: false
           _R_CHECK_DEPENDS_ONLY_: true
+          _R_CHECK_FORCE_SUGGESTS_: false
+
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--no-build-vignettes"), build_args = c("--no-build-vignettes"), error_on = "error", check_dir = "check")
         shell: Rscript {0}
 

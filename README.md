@@ -5,8 +5,7 @@
 
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/cmstatr/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/cmstatr/cmstatr/actions?workflow=R-CMD-check)
+[![R-CMD-check](https://github.com/cmstatr/cmstatr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cmstatr/cmstatr/actions/workflows/R-CMD-check.yaml)
 [![`Codecov` test
 coverage](https://codecov.io/gh/cmstatr/cmstatr/branch/master/graph/badge.svg)](https://codecov.io/gh/cmstatr/cmstatr?branch=master)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02265/status.svg)](https://doi.org/10.21105/joss.02265)
