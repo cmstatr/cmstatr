@@ -125,7 +125,7 @@ set_axes <- function(g, xlabel, axis_info, divider_color) {
       expand = expansion()
     ) +
     theme(panel.grid.major.y = element_blank(),
-          panel.grid.minor.y = element_line(size = 0.1, color = "black")) +
+          panel.grid.minor.y = element_line(linewidth = 0.1, color = "black")) +
     ylab("")
 
   if (!is.null(divider_color)) {
