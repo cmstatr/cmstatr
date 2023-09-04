@@ -1,6 +1,6 @@
 ---
 title: "Anderson-Darling k-Sample Test"
-author: "Stefan Kloppenborg"
+author: "Stefan Kloppenborg, Jeffrey Borlik"
 date: "20-Jan-2019"
 output: rmarkdown::html_vignette
 bibliography: bibliography.json
@@ -75,6 +75,11 @@ It should be noted that this is *not* the student's t-distribution, but rather a
 
 The `cmstatr` package use the package `kSamples` to perform the k-sample Anderson--Darling tests.
 This package uses the original formulation from Scholz and Stephens, so the test statistic will differ from that given software based on the CMH-17-1G formulation by a factor of $\left(k-1\right)$.
-The conclusions about the null hypothesis drawn, however, will be the same.
+
+For comparison, [SciPy's implementation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.anderson_ksamp.html) also
+uses the original Scholz and Stephens formulation.  The statistic that it returns, however, is the normalized statistic, 
+$\left[A_{a k N}^2 - \left(k - 1\right)\right] / \sigma_N$, rather than `kSamples`'s $A_{a k N}^2$ value.  To be consistent, SciPy also returns the critical values $t_{k-1}(\alpha)$ directly.  (Currently, SciPy also floors/caps the returned p-value at 0.1% / 25%.)  The values of $k$ and $\sigma_N$ are available in `cmstatr`'s `ad_ksample` return value, if an exact comparison to Python SciPy is necessary.
+
+The conclusions about the null hypothesis drawn, however, will be the same, whether R or CMH-17-1G or SciPy.
 
 # References
