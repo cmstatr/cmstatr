@@ -36,6 +36,11 @@ Additional details about the package are available in the paper by
 Kloppenborg (2020,
 [https://doi.org/10.21105/joss.02265](https://doi.org/10.21105/joss.02265)).
 
+There is a companion package `cmstatrExt` which provides statistical methods
+that are not included in CMH-17, but which may be of use to practitioners.
+For more information, please see the
+[`cmstatrExt` Website](https://cmstatrext.cmstatr.net).
+
 # Installation
 To install `cmstatr` from CRAN, simply run:
 
