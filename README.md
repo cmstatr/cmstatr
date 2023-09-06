@@ -7,7 +7,7 @@
 
 [![R-CMD-check](https://github.com/cmstatr/cmstatr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cmstatr/cmstatr/actions/workflows/R-CMD-check.yaml)
 [![`Codecov` test
-coverage](https://codecov.io/gh/cmstatr/cmstatr/branch/master/graph/badge.svg)](https://codecov.io/gh/cmstatr/cmstatr?branch=master)
+coverage](https://codecov.io/gh/cmstatr/cmstatr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/cmstatr/cmstatr?branch=master)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02265/status.svg)](https://doi.org/10.21105/joss.02265)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/cmstatr)](https://cran.r-project.org/package=cmstatr)
 [![](https://cranlogs.r-pkg.org/badges/cmstatr)](https://cran.r-project.org/package=cmstatr)
