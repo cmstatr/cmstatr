@@ -19,7 +19,7 @@
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Anderson-Darling k-Sample Test">
 <meta property="og:description" content="cmstatr">
-<meta property="og:image" content="www.cmstatr.net/reference/figures/logo-240x278.png">
+<meta property="og:image" content="https://www.cmstatr.net/reference/figures/logo-240x278.png">
 <meta property="og:image:alt" content="Statistical methods for composite material data: cmstatr">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -27,6 +27,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -39,23 +41,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -84,7 +80,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/cmstatr/cmstatr/">
+  <a href="https://github.com/cmstatr/cmstatr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -99,24 +95,34 @@
 
       
 
-      </header><script src="adktest_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Anderson-Darling k-Sample Test</h1>
-                        <h4 class="author">Stefan Kloppenborg</h4>
+                        <h4 data-toc-skip class="author">Stefan
+Kloppenborg, Jeffrey Borlik</h4>
             
-            <h4 class="date">20-Jan-2019</h4>
+            <h4 data-toc-skip class="date">20-Jan-2019</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatr/blob/master/vignettes/adktest.Rmd"><code>vignettes/adktest.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatr/blob/HEAD/vignettes/adktest.Rmd" class="external-link"><code>vignettes/adktest.Rmd</code></a></small>
       <div class="hidden name"><code>adktest.Rmd</code></div>
 
     </div>
 
     
     
-<p>This vignette explores the Anderson–Darling k-Sample test. CMH-17-1G <span class="citation">[1]</span> provides a formulation for this test that appears different than the formulation given by Scholz and Stephens in their 1987 paper <span class="citation">[2]</span>.</p>
-<p>Both references use different nomenclature, which is summarized as follows:</p>
+<p>This vignette explores the Anderson–Darling k-Sample test. CMH-17-1G
+<span class="citation">[1]</span> provides a formulation for this test
+that appears different than the formulation given by Scholz and Stephens
+in their 1987 paper <span class="citation">[2]</span>.</p>
+<p>Both references use different nomenclature, which is summarized as
+follows:</p>
 <table class="table">
+<colgroup>
+<col width="53%">
+<col width="24%">
+<col width="22%">
+</colgroup>
 <thead><tr class="header">
 <th>Term</th>
 <th>CMH-17-1G</th>
@@ -165,39 +171,80 @@
 </tr>
 </tbody>
 </table>
-<p>Given the possibility of ties in the data, the discrete version of the test must be used Scholz and Stephens (1987) give the test statistic as:</p>
+<p>Given the possibility of ties in the data, the discrete version of
+the test must be used Scholz and Stephens (1987) give the test statistic
+as:</p>
 <p><span class="math display">\[
-A_{a k N}^2 = \frac{N - 1}{N}\sum_{i=1}^k \frac{1}{n_i}\sum_{j=1}^{L}\frac{l_j}{N}\frac{\left(N M_{a i j} - n_i B_{a j}\right)^2}{B_{a j}\left(N - B_{a j}\right) - N l_j / 4}
+A_{a k N}^2 = \frac{N - 1}{N}\sum_{i=1}^k
+\frac{1}{n_i}\sum_{j=1}^{L}\frac{l_j}{N}\frac{\left(N M_{a i j} - n_i
+B_{a j}\right)^2}{B_{a j}\left(N - B_{a j}\right) - N l_j / 4}
 \]</span></p>
 <p>CMH-17-1G gives the test statistic as:</p>
 <p><span class="math display">\[
-ADK = \frac{n - 1}{n^2\left(k - 1\right)}\sum_{i=1}^k\frac{1}{n_i}\sum_{j=1}^L h_j \frac{\left(n F_{i j} - n_i H_j\right)^2}{H_j \left(n - H_j\right) - n h_j / 4}
+ADK = \frac{n - 1}{n^2\left(k -
+1\right)}\sum_{i=1}^k\frac{1}{n_i}\sum_{j=1}^L h_j \frac{\left(n F_{i j}
+- n_i H_j\right)^2}{H_j \left(n - H_j\right) - n h_j / 4}
 \]</span></p>
-<p>By inspection, the CMH-17-1G version of this test statistic contains an extra factor of <span class="math inline">\(\frac{1}{\left(k - 1\right)}\)</span>.</p>
+<p>By inspection, the CMH-17-1G version of this test statistic contains
+an extra factor of <span class="math inline">\(\frac{1}{\left(k -
+1\right)}\)</span>.</p>
 <p>Scholz and Stephens indicate that one rejects <span class="math inline">\(H_0\)</span> at a significance level of <span class="math inline">\(\alpha\)</span> when:</p>
 <p><span class="math display">\[
-\frac{A_{a k N}^2 - \left(k - 1\right)}{\sigma_N} \ge t_{k - 1}\left(\alpha\right)
+\frac{A_{a k N}^2 - \left(k - 1\right)}{\sigma_N} \ge t_{k -
+1}\left(\alpha\right)
 \]</span></p>
 <p>This can be rearranged to give a critical value:</p>
 <p><span class="math display">\[
-A_{c r i t}^2 = \left(k - 1\right) + \sigma_N t_{k - 1}\left(\alpha\right)
+A_{c r i t}^2 = \left(k - 1\right) + \sigma_N t_{k -
+1}\left(\alpha\right)
 \]</span></p>
 <p>CHM-17-1G gives the critical value for <span class="math inline">\(ADK\)</span> for <span class="math inline">\(\alpha=0.025\)</span> as:</p>
 <p><span class="math display">\[
-ADC = 1 + \sigma_n \left(1.96 + \frac{1.149}{\sqrt{k - 1}} - \frac{0.391}{k - 1}\right)
+ADC = 1 + \sigma_n \left(1.96 + \frac{1.149}{\sqrt{k - 1}} -
+\frac{0.391}{k - 1}\right)
 \]</span></p>
-<p>The definition of <span class="math inline">\(\sigma_n\)</span> from the two sources differs by a factor of <span class="math inline">\(\left(k - 1\right)\)</span>.</p>
-<p>The value in parentheses in the CMH-17-1G critical value corresponds to the interpolation formula for <span class="math inline">\(t_m\left(\alpha\right)\)</span> given in Scholz and Stephen’s paper. It should be noted that this is <em>not</em> the student’s t-distribution, but rather a distribution referred to as the <span class="math inline">\(T_m\)</span> distribution.</p>
-<p>The <code>cmstatr</code> package use the package <code>kSamples</code> to perform the k-sample Anderson–Darling tests. This package uses the original formulation from Scholz and Stephens, so the test statistic will differ from that given software based on the CMH-17-1G formulation by a factor of <span class="math inline">\(\left(k-1\right)\)</span>. The conclusions about the null hypothesis drawn, however, will be the same.</p>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
-<div id="refs" class="references">
-<div id="ref-CMH-17-1G">
-<p>[1] “Composite Materials Handbook, Volume 1. Polymer Matrix Composites Guideline for Characterization of Structural Materials,” SAE International, CMH-17-1G, Mar. 2012.</p>
+<p>The definition of <span class="math inline">\(\sigma_n\)</span> from
+the two sources differs by a factor of <span class="math inline">\(\left(k - 1\right)\)</span>.</p>
+<p>The value in parentheses in the CMH-17-1G critical value corresponds
+to the interpolation formula for <span class="math inline">\(t_m\left(\alpha\right)\)</span> given in Scholz
+and Stephen’s paper. It should be noted that this is <em>not</em> the
+student’s t-distribution, but rather a distribution referred to as the
+<span class="math inline">\(T_m\)</span> distribution.</p>
+<p>The <code>cmstatr</code> package use the package
+<code>kSamples</code> to perform the k-sample Anderson–Darling tests.
+This package uses the original formulation from Scholz and Stephens, so
+the test statistic will differ from that given software based on the
+CMH-17-1G formulation by a factor of <span class="math inline">\(\left(k-1\right)\)</span>.</p>
+<p>For comparison, <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.anderson_ksamp.html" class="external-link">SciPy’s
+implementation</a> also uses the original Scholz and Stephens
+formulation. The statistic that it returns, however, is the normalized
+statistic, <span class="math inline">\(\left[A_{a k N}^2 - \left(k -
+1\right)\right] / \sigma_N\)</span>, rather than <code>kSamples</code>’s
+<span class="math inline">\(A_{a k N}^2\)</span> value. To be
+consistent, SciPy also returns the critical values <span class="math inline">\(t_{k-1}(\alpha)\)</span> directly. (Currently,
+SciPy also floors/caps the returned p-value at 0.1% / 25%.) The values
+of <span class="math inline">\(k\)</span> and <span class="math inline">\(\sigma_N\)</span> are available in
+<code>cmstatr</code>’s <code>ad_ksample</code> return value, if an exact
+comparison to Python SciPy is necessary.</p>
+<p>The conclusions about the null hypothesis drawn, however, will be the
+same, whether R or CMH-17-1G or SciPy.</p>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body">
+<div id="ref-CMH-17-1G" class="csl-entry">
+<div class="csl-left-margin">[1] </div>
+<div class="csl-right-inline">
+<span>“Composite Materials Handbook, Volume 1.
+Polymer Matrix Composites Guideline for Characterization of Structural
+Materials,”</span> SAE International, CMH-17-1G, Mar. 2012.</div>
 </div>
-<div id="ref-Stephens1987">
-<p>[2] F. W. Scholz and M. Stephens, “K-Sample Anderson–Darling Tests,” <em>Journal of the American Statistical Association</em>, vol. 82, no. 399. pp. 918–924, Sep-1987.</p>
+<div id="ref-Stephens1987" class="csl-entry">
+<div class="csl-left-margin">[2] </div>
+<div class="csl-right-inline">F.
+W. Scholz and M. A. Stephens, <span>“K-Sample Anderson--Darling
+Tests,”</span> <em>Journal of the American Statistical Association</em>,
+vol. 82, no. 399. pp. 918–924, Sep-1987.</div>
 </div>
 </div>
 </div>
@@ -214,11 +261,13 @@ ADC = 1 + \sigma_n \left(1.96 + \frac{1.149}{\sqrt{k - 1}} - \frac{0.391}{k - 1}
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://www.kloppenborg.ca">Stefan Kloppenborg</a>, Comtek Advanced Structures, Ltd..</p>
+  <p></p>
+<p>Developed by <a href="https://www.kloppenborg.ca" class="external-link">Stefan Kloppenborg</a>, Comtek Advanced Structures, Ltd..</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -226,6 +275,8 @@ ADC = 1 + \sigma_n \left(1.96 + \frac{1.149}{\sqrt{k - 1}} - \frac{0.391}{k - 1}
 
   
 
+
+  
 
   </body>
 </html>

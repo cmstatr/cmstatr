@@ -1,111 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>www.cmstatr.net/index.html</loc>
+    <loc>https://www.cmstatr.net/404.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/ad_ksample.html</loc>
+    <loc>https://www.cmstatr.net/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/anderson_darling.html</loc>
+    <loc>https://www.cmstatr.net/articles/adktest.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/augment.mnr.html</loc>
+    <loc>https://www.cmstatr.net/articles/cmstatr_Graphing.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/basis.html</loc>
+    <loc>https://www.cmstatr.net/articles/cmstatr_Tutorial.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/calc_cv_star.html</loc>
+    <loc>https://www.cmstatr.net/articles/cmstatr_Validation.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/carbon.fabric.html</loc>
+    <loc>https://www.cmstatr.net/articles/hk_ext.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/cmstatr-package.html</loc>
+    <loc>https://www.cmstatr.net/articles/index.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/cv.html</loc>
+    <loc>https://www.cmstatr.net/authors.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/equiv_change_mean.html</loc>
+    <loc>https://www.cmstatr.net/index.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/equiv_mean_extremum.html</loc>
+    <loc>https://www.cmstatr.net/logo-notes.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/glance.adk.html</loc>
+    <loc>https://www.cmstatr.net/news/index.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/glance.anderson_darling.html</loc>
+    <loc>https://www.cmstatr.net/paper.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/glance.basis.html</loc>
+    <loc>https://www.cmstatr.net/reference/ad_ksample.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/glance.equiv_change_mean.html</loc>
+    <loc>https://www.cmstatr.net/reference/anderson_darling.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/glance.equiv_mean_extremum.html</loc>
+    <loc>https://www.cmstatr.net/reference/augment.mnr.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/glance.levene.html</loc>
+    <loc>https://www.cmstatr.net/reference/basis.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/glance.mnr.html</loc>
+    <loc>https://www.cmstatr.net/reference/calc_cv_star.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/hk_ext.html</loc>
+    <loc>https://www.cmstatr.net/reference/carbon.fabric.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/k_equiv.html</loc>
+    <loc>https://www.cmstatr.net/reference/cmstatr-package.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/k_factor_normal.html</loc>
+    <loc>https://www.cmstatr.net/reference/cv.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/levene_test.html</loc>
+    <loc>https://www.cmstatr.net/reference/equiv_change_mean.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/maximum_normed_residual.html</loc>
+    <loc>https://www.cmstatr.net/reference/equiv_mean_extremum.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/nested_data_plot.html</loc>
+    <loc>https://www.cmstatr.net/reference/glance.adk.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/nonpara_binomial_rank.html</loc>
+    <loc>https://www.cmstatr.net/reference/glance.anderson_darling.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/normalize_group_mean.html</loc>
+    <loc>https://www.cmstatr.net/reference/glance.basis.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/normalize_ply_thickness.html</loc>
+    <loc>https://www.cmstatr.net/reference/glance.equiv_change_mean.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/reexports.html</loc>
+    <loc>https://www.cmstatr.net/reference/glance.equiv_mean_extremum.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/stat_esf.html</loc>
+    <loc>https://www.cmstatr.net/reference/glance.levene.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/stat_normal_surv_func.html</loc>
+    <loc>https://www.cmstatr.net/reference/glance.mnr.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/reference/transform_mod_cv.html</loc>
+    <loc>https://www.cmstatr.net/reference/hk_ext.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/articles/adktest.html</loc>
+    <loc>https://www.cmstatr.net/reference/index.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/articles/cmstatr_Graphing.html</loc>
+    <loc>https://www.cmstatr.net/reference/k_equiv.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/articles/cmstatr_Tutorial.html</loc>
+    <loc>https://www.cmstatr.net/reference/k_factor_normal.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/articles/cmstatr_Validation.html</loc>
+    <loc>https://www.cmstatr.net/reference/levene_test.html</loc>
   </url>
   <url>
-    <loc>www.cmstatr.net/articles/hk_ext.html</loc>
+    <loc>https://www.cmstatr.net/reference/maximum_normed_residual.html</loc>
+  </url>
+  <url>
+    <loc>https://www.cmstatr.net/reference/nested_data_plot.html</loc>
+  </url>
+  <url>
+    <loc>https://www.cmstatr.net/reference/nonpara_binomial_rank.html</loc>
+  </url>
+  <url>
+    <loc>https://www.cmstatr.net/reference/normalize_group_mean.html</loc>
+  </url>
+  <url>
+    <loc>https://www.cmstatr.net/reference/normalize_ply_thickness.html</loc>
+  </url>
+  <url>
+    <loc>https://www.cmstatr.net/reference/reexports.html</loc>
+  </url>
+  <url>
+    <loc>https://www.cmstatr.net/reference/stat_esf.html</loc>
+  </url>
+  <url>
+    <loc>https://www.cmstatr.net/reference/stat_normal_surv_func.html</loc>
+  </url>
+  <url>
+    <loc>https://www.cmstatr.net/reference/transform_mod_cv.html</loc>
   </url>
 </urlset>
