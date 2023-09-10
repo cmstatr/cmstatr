@@ -19,7 +19,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Stefan Kloppenborg \email{stefan@kloppenborg.ca}
+\strong{Maintainer}: Stefan Kloppenborg \email{stefan@kloppenborg.ca} (\href{https://orcid.org/0000-0002-1908-5214}{ORCID})
 
 Other contributors:
 \itemize{
