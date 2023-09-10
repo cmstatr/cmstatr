@@ -5,12 +5,11 @@
 
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/cmstatr/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/cmstatr/cmstatr/actions?workflow=R-CMD-check)
+[![R-CMD-check](https://github.com/cmstatr/cmstatr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cmstatr/cmstatr/actions/workflows/R-CMD-check.yaml)
 [![`Codecov` test
-coverage](https://codecov.io/gh/cmstatr/cmstatr/branch/master/graph/badge.svg)](https://codecov.io/gh/cmstatr/cmstatr?branch=master)
+coverage](https://codecov.io/gh/cmstatr/cmstatr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/cmstatr/cmstatr?branch=master)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02265/status.svg)](https://doi.org/10.21105/joss.02265)
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/cmstatr)](https://cran.r-project.org/package=cmstatr)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/cmstatr)](https://cran.r-project.org/package=cmstatr)
 [![](https://cranlogs.r-pkg.org/badges/cmstatr)](https://cran.r-project.org/package=cmstatr)
 <!-- badges: end -->
 
@@ -27,6 +26,11 @@ equivalency between alternate samples and the “qualification” or
 
 Additional details about the package are available in the paper by
 Kloppenborg (2020, <https://doi.org/10.21105/joss.02265>).
+
+There is a companion package `cmstatrExt` which provides statistical
+methods that are not included in CMH-17, but which may be of use to
+practitioners. For more information, please see the [`cmstatrExt`
+Website](https://cmstatrext.cmstatr.net).
 
 # Installation
 
@@ -93,7 +97,7 @@ vignette("cmstatr_Graphing")
 # Philosophical Notes
 
 This package expects
-[`tidy data`](https://www.jstatsoft.org/article/view/v059i10). That is,
+[`tidy data`](https://doi.org/10.18637/jss.v059.i10). That is,
 individual observations should be in rows and variables in columns.
 
 Where possible, this package uses general solutions. Look-up tables are
@@ -120,20 +124,20 @@ discuss the proposed change in an issue first.
 
 ## Contribution Guidelines
 
--   Please create a git branch for each pull request (PR)
--   Before submitting a pull request, please make sure that
-    `R CMD check` passes with no errors, warnings or notes
--   New and modified code should follow the style guide enforced by the
-    [`lintr`](https://cran.r-project.org/package=lintr) package
--   Document all exported functions using
-    [`roxygen2`](https://cran.r-project.org/package=roxygen2)
--   Write tests using
-    [`testthat`](https://cran.r-project.org/package=testthat). If your
-    contribution fixes a bug, then the test(s) that you add should fail
-    before your bug-fix patch is applied and should pass after the code
-    is patched.
--   For changes that affect the user, add a bullet at the top of
-    `NEWS.md` below the current development version
+- Please create a git branch for each pull request (PR)
+- Before submitting a pull request, please make sure that `R CMD check`
+  passes with no errors, warnings or notes
+- New and modified code should follow the style guide enforced by the
+  [`lintr`](https://cran.r-project.org/package=lintr) package
+- Document all exported functions using
+  [`roxygen2`](https://cran.r-project.org/package=roxygen2)
+- Write tests using
+  [`testthat`](https://cran.r-project.org/package=testthat). If your
+  contribution fixes a bug, then the test(s) that you add should fail
+  before your bug-fix patch is applied and should pass after the code is
+  patched.
+- For changes that affect the user, add a bullet at the top of `NEWS.md`
+  below the current development version
 
 ## Development
 

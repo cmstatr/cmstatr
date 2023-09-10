@@ -19,12 +19,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Stefan Kloppenborg \email{stefan@kloppenborg.ca}
+\strong{Maintainer}: Stefan Kloppenborg \email{stefan@kloppenborg.ca} (\href{https://orcid.org/0000-0002-1908-5214}{ORCID})
 
 Other contributors:
 \itemize{
   \item Billy Cheng \email{bcheng@comtekadvanced.com} [contributor]
   \item Ally Fraser \email{ally.fraser25@gmail.com} [contributor]
+  \item Jeffrey Borlik [contributor]
   \item Comtek Advanced Structures, Ltd. [funder]
 }
 

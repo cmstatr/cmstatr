@@ -191,6 +191,7 @@ anderson_darling <- function(x0, call, ad_p_unknown_param_fcn,
 #'
 #' @export
 glance.anderson_darling <- function(x, ...) {  # nolint
+  # nolint start: object_usage_linter
   with(
     x,
     tibble::tibble(
@@ -202,6 +203,7 @@ glance.anderson_darling <- function(x, ...) {  # nolint
       reject_distribution = reject_distribution
     )
   )
+  # nolint end
 }
 
 #' @export

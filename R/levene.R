@@ -186,6 +186,7 @@ levene_test <- function(data = NULL, x, groups, alpha = 0.05, modcv = FALSE) {
 #'
 #' @export
 glance.levene <- function(x, ...) {  # nolint
+  # nolint start: object_usage_linter
   with(
     x,
     tibble::tibble(
@@ -198,6 +199,7 @@ glance.levene <- function(x, ...) {  # nolint
       reject_equal_variance = reject_equal_variance
     )
   )
+  # nolint end
 }
 
 

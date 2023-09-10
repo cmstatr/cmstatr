@@ -486,7 +486,7 @@ new_basis <- function(
   res$diagnostic_failures <- character(0L)
   res$n <- length(res$data)
   res$r <- NA
-  if (!is.null(groups) & !all(is.na(groups))) {
+  if (!is.null(groups) && !all(is.na(groups))) {
     res$r <- length(levels(as.factor(groups)))
   }
   res$basis <- NA
@@ -592,7 +592,7 @@ glance.basis <- function(x, include_diagnostics = FALSE, ...) {  # nolint
 }
 
 format_diagnostic_helper <- function(heading, vec) {
-  if (!is.null(vec) & length(vec) > 0) {
+  if (!is.null(vec) && length(vec) > 0) {
     return(paste0(
       heading, "\n",
       "    `",
@@ -611,7 +611,7 @@ print.basis <- function(x, ...) {
   cat("Distribution: ", x$distribution, "\t")
 
   cat("( n =", x$n)
-  if (!is.null(x$r) & !all(is.na(x$r))) {
+  if (!is.null(x$r) && !all(is.na(x$r))) {
     cat(", r =", x$r)
   }
   cat(" )\n")
@@ -629,13 +629,11 @@ print.basis <- function(x, ...) {
     x$override)
   )
 
-  if (x$conf == 0.95 & x$p == 0.9) {
+  if (x$conf == 0.95 && x$p == 0.9) {
     cat("B-Basis: ", " ( p =", x$p, ", conf =", x$conf, ")\n")
-  }
-  else if (x$conf == 0.95 & x$p == 0.99) {
+  } else if (x$conf == 0.95 && x$p == 0.99) {
     cat("A-Basis: ", " ( p =", x$p, ", conf =", x$conf, ")\n")
-  }
-  else {
+  } else {
     cat("Basis: ", " ( p =", x$p, ", conf =", x$conf, ")\n")
   }
 
@@ -1264,12 +1262,12 @@ hk_ext_z_j_opt <- function(n, p, conf) {
 basis_hk_ext_rules <- single_point_rules
 basis_hk_ext_rules[["correct_method_used"]] <-
   function(method, p, conf, ...) {
-    if (p == 0.90 & conf == 0.95) {
+    if (p == 0.90 && conf == 0.95) {
       # B-Basis
       return(ifelse(method == "optimum-order", "",
                     paste0("For B-Basis, the optimum order method ",
                            "should be used")))
-    } else if (p == 0.99 & conf == 0.95) {
+    } else if (p == 0.99 && conf == 0.95) {
       # A-Basis
       return(ifelse(method == "woodward-frawley", "",
                     paste0("For A-Basis, the Woodward-Frawley method ",
@@ -1280,12 +1278,12 @@ basis_hk_ext_rules[["correct_method_used"]] <-
   }
 basis_hk_ext_rules[["sample_size"]] <-
   function(n, p, conf, ...) {
-    if (p == 0.90 & conf == 0.95) {
+    if (p == 0.90 && conf == 0.95) {
       # B-Basis
       return(ifelse(n <= 28, "",
                     paste0("For B-Basis, Hanson-Koopmans should only be ",
                            "used for samples of 28 or fewer observations")))
-    } else if (p == 0.99 & conf == 0.95) {
+    } else if (p == 0.99 && conf == 0.95) {
       # A-Basis
       return(ifelse(n <= 299, "",
                     paste0("For A-Basis, Hanson-Koopmans should only be ",
@@ -1478,12 +1476,12 @@ nonpara_binomial_rank <- function(n, p, conf) {
 nonpara_large_sample_rules <- single_point_rules
 nonpara_large_sample_rules[["sample_size"]] <-
   function(n, p, conf, ...) {
-    if (p == 0.90 & conf == 0.95) {
+    if (p == 0.90 && conf == 0.95) {
       # B-Basis
       return(ifelse(n >= 28, "",
                     paste0("This method should only be used for ",
                            "B-Basis for sample sizes larger than 28")))
-    } else if (p == 0.99 & conf == 0.95) {
+    } else if (p == 0.99 && conf == 0.95) {
       # A-Basis
       return(ifelse(n >= 299, "",
                     paste0("This method should only be used for ",

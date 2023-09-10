@@ -1,9 +1,7 @@
-citHeader("To cite ‘cmstatr’ in publications use:")
-
-citEntry(
+bibentry(
   "Article",
   title = "cmstatr: An {R} Package for Statistical Analysis of Composite Material Data",
-  author = personList(as.person("Stefan Kloppenborg")),
+  author = "Stefan Kloppenborg",
   year = 2020,
   journal = "Journal of Open Source Software",
   volume = 5,

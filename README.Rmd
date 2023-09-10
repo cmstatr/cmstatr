@@ -15,8 +15,8 @@ knitr::opts_chunk$set(
 # cmstatr <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
-[![R build status](https://github.com/cmstatr/cmstatr/workflows/R-CMD-check/badge.svg)](https://github.com/cmstatr/cmstatr/actions?workflow=R-CMD-check)
-[![`Codecov` test coverage](https://codecov.io/gh/cmstatr/cmstatr/branch/master/graph/badge.svg)](https://codecov.io/gh/cmstatr/cmstatr?branch=master)
+[![R-CMD-check](https://github.com/cmstatr/cmstatr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/cmstatr/cmstatr/actions/workflows/R-CMD-check.yaml)
+[![`Codecov` test coverage](https://codecov.io/gh/cmstatr/cmstatr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/cmstatr/cmstatr?branch=master)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02265/status.svg)](https://doi.org/10.21105/joss.02265)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/cmstatr)](https://cran.r-project.org/package=cmstatr)
 [![](https://cranlogs.r-pkg.org/badges/cmstatr)](https://cran.r-project.org/package=cmstatr)
@@ -35,6 +35,11 @@ or "baseline" samples.
 Additional details about the package are available in the paper by
 Kloppenborg (2020,
 [https://doi.org/10.21105/joss.02265](https://doi.org/10.21105/joss.02265)).
+
+There is a companion package `cmstatrExt` which provides statistical methods
+that are not included in CMH-17, but which may be of use to practitioners.
+For more information, please see the
+[`cmstatrExt` Website](https://cmstatrext.cmstatr.net).
 
 # Installation
 To install `cmstatr` from CRAN, simply run:
@@ -91,7 +96,7 @@ vignette("cmstatr_Graphing")
 
 # Philosophical Notes
 This package expects
-[`tidy data`](https://www.jstatsoft.org/article/view/v059i10).
+[`tidy data`](https://doi.org/10.18637/jss.v059.i10).
 That is, individual observations should be in rows and variables in columns.
 
 Where possible, this package uses general solutions. Look-up tables are avoided

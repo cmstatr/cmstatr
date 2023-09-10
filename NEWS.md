@@ -1,3 +1,10 @@
+# Version 0.9.2
+- Update to Anderson Darling k-Sample vignette to explain differences with
+  SciPy implementation
+- Updated README
+- Update `plot_nested` to use `linewidth` instead of `size` internally due
+  to update to `ggplot2`
+
 # Version 0.9.1
 - Updated tests to accommodate upcoming changes to the rlang package.
   No change to test coverage was made.

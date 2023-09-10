@@ -690,7 +690,7 @@ equiv_change_mean <- function(df_qual = NULL, data_qual = NULL,
                               sd_qual = NULL, data_sample = NULL,
                               n_sample = NULL, mean_sample = NULL,
                               sd_sample = NULL, alpha, modcv = FALSE) {
-  if (alpha <= 0 | alpha >= 1) {
+  if (alpha <= 0 || alpha >= 1) {
     stop("alpha must be positive and less than 1")
   }
 
@@ -884,6 +884,7 @@ verify_equiv_change_mean_var <- function(n_sample, mean_sample, sd_sample,
 #'
 #' @export
 glance.equiv_change_mean <- function(x, ...) {  # nolint
+  # nolint start: object_usage_linter
   with(
     x,
     tibble::tibble(
@@ -903,6 +904,7 @@ glance.equiv_change_mean <- function(x, ...) {  # nolint
       result = result
     )
   )
+  # nolint end
 }
 
 
