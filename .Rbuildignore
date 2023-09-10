@@ -16,3 +16,4 @@ GenerateFakeData.R
 ^rebuild-long-running-vignette.R
 ^.Rprofile
 ^\.github$
+^CRAN-SUBMISSION$
