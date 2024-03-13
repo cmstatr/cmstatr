@@ -933,6 +933,10 @@ print.equiv_change_mean <- function(x, ...) {
                  justify3, width3, ...))
   cat(format_row(list("SD", x$sd_qual, x$sd_sample),
                  justify3, width3, ...))
+  cat(format_row(list("Pooled SD", x$sp),
+                 justify2, width2, ...))
+  cat(format_row(list("t0", x$t0),
+                 justify2, width2, ...))
   cat(format_row(list("Result", x$result),
                  justify2, width2, ...))
   cat(format_row(
