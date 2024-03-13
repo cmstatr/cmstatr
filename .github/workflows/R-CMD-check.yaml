@@ -52,7 +52,6 @@ jobs:
         with:
           extra-packages:
             any::rcmdcheck
-            vdiffr@1.0.5
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
