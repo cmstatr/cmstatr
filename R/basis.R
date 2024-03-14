@@ -1640,17 +1640,21 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     msb / effective_batch + (effective_batch - 1) / effective_batch * mse
   )
 
-  u <- msb / mse
+  # It was found that when mse=0, the following code unnecessarily fails
+  # The equations were rearranged to allow for mse and msb to be any value
+  # nolint start
+  # WAS: u <- msb / mse
+  # WAS: w <- sqrt(u / (u + effective_batch - 1))
+  # nolint end
+  w <- sqrt(msb / (msb + effective_batch * mse - mse))
 
   k0 <- k_factor_normal(res$n, p, conf)
   k1 <- k_factor_normal(res$r, p, conf)
 
-  w <- sqrt(u / (u + effective_batch - 1))
-
   tol_factor <- (k0 - k1 / sqrt(effective_batch) + (k1 - k0) * w) /
     (1 - 1 / sqrt(effective_batch))
 
-  if (msb / mse <= 1) {
+  if (msb <= mse) {
     tol_factor <- k0
   }
 

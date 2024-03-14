@@ -1,3 +1,8 @@
+# Version 0.9.3
+- Updated `basis_anova` function to prevent division by zero when MSE is 0
+- Update `equiv_change_mean.print` method so that t-statistic and pooled SD
+  are displayed.
+
 # Version 0.9.2
 - Update to Anderson Darling k-Sample vignette to explain differences with
   SciPy implementation

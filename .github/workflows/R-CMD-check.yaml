@@ -38,7 +38,7 @@ jobs:
       VDIFFR_LOG_PATH: "../vdiffr.Rout.fail"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -52,7 +52,6 @@ jobs:
         with:
           extra-packages:
             any::rcmdcheck
-            vdiffr@1.0.5
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
