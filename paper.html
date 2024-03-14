@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.3</span>
       </span>
     </div>
 
@@ -99,17 +99,17 @@
 <code class="sourceCode R"><span><span class="va">carbon.fabric.2</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">test</span> <span class="op">==</span> <span class="st">"WT"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">##    test condition batch thickness nplies strength modulus failure_mode</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1    WT       CTD     A     0.112     14  142.817   9.285          LAT</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2    WT       CTD     A     0.113     14  135.901   9.133          LAT</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3    WT       CTD     A     0.113     14  132.511   9.253          LAT</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4    WT       CTD     A     0.112     14  135.586   9.150          LAB</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5    WT       CTD     A     0.113     14  125.145   9.270          LAB</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6    WT       CTD     A     0.113     14  135.203   9.189          LGM</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 7    WT       CTD     A     0.113     14  128.547   9.088          LAB</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 8    WT       CTD     B     0.113     14  127.709   9.199          LGM</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 9    WT       CTD     B     0.113     14  127.074   9.058          LGM</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 10   WT       CTD     B     0.114     14  126.879   9.306          LGM</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="do">##    test condition batch thickness nplies strength modulus failure_mode</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="do">## 1    WT       CTD     A     0.112     14  142.817   9.285          LAT</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="do">## 2    WT       CTD     A     0.113     14  135.901   9.133          LAT</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="do">## 3    WT       CTD     A     0.113     14  132.511   9.253          LAT</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="do">## 4    WT       CTD     A     0.112     14  135.586   9.150          LAB</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="do">## 5    WT       CTD     A     0.113     14  125.145   9.270          LAB</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="do">## 6    WT       CTD     A     0.113     14  135.203   9.189          LGM</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="do">## 7    WT       CTD     A     0.113     14  128.547   9.088          LAB</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="do">## 8    WT       CTD     B     0.113     14  127.709   9.199          LGM</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="do">## 9    WT       CTD     B     0.113     14  127.074   9.058          LGM</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="do">## 10   WT       CTD     B     0.114     14  126.879   9.306          LGM</span></span></code></pre></div>
 <p>One common task is to calculate B-Basis values. There are several statistical methods for doing so, depending on the distribution of the data. The single-point basis functions automatically perform the following diagnostic tests:</p>
 <ul><li>the maximum normed residual test for outliers within a batch [@CMH171G],</li>
 <li>the Anderson–Darling k-Sample test to check if batches are drawn from the same (unspecified) distribution [@Scholz_Stephens_1987],</li>
@@ -121,18 +121,18 @@
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">test</span> <span class="op">==</span> <span class="st">"WT"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">condition</span> <span class="op">==</span> <span class="st">"ETW"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="reference/basis.html">basis_normal</a></span><span class="op">(</span><span class="va">strength</span>, <span class="va">batch</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: `anderson_darling_normal` failed: Anderson-Darling test rejects</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## hypothesis that data is drawn from a normal distribution</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">## basis_normal(data = ., x = strength, batch = batch)</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Distribution:  Normal    ( n = 18 )</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="do">## The following diagnostic tests failed: </span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="do">##     `anderson_darling_normal`</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="do">## B-Basis:   ( p = 0.9 , conf = 0.95 )</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 122.9315</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="do">## Warning: `anderson_darling_normal` failed: Anderson-Darling test rejects</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">## hypothesis that data is drawn from a normal distribution</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="do">## basis_normal(data = ., x = strength, batch = batch)</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="do">## Distribution:  Normal    ( n = 18 )</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="do">## The following diagnostic tests failed: </span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="do">##     `anderson_darling_normal`</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="do">## B-Basis:   ( p = 0.9 , conf = 0.95 )</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="do">## 122.9315</span></span></code></pre></div>
 <p>All of the various basis functions perform diagnostic tests for each of the statistical tests mentioned above. If any of the diagnostic tests failed, a warning is shown and the test failure is also recorded in the returned object (and shown in that object’s <code>print</code> method). In the example above, the output shows that the Anderson–Darling test for normality [@Lawless_1982] rejects the hypothesis that the data is drawn from a normal distribution.</p>
 <p>Two non-parametric basis calculations, based on @Guenther_1970 and @Vangel_1994 are also implemented in <code>cmstatr</code>. These functions perform the same diagnostic tests, but omit the Anderson–Darling test for a particular distribution.</p>
 <p>The diagnostic test can be run directly using <code>cmstatr</code> as well. For example, the failed diagnostic test above can be run as follows:</p>
@@ -141,29 +141,29 @@
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">test</span> <span class="op">==</span> <span class="st">"WT"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">condition</span> <span class="op">==</span> <span class="st">"ETW"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="reference/anderson_darling.html">anderson_darling_normal</a></span><span class="op">(</span><span class="va">strength</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">## anderson_darling_normal(data = ., x = strength)</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Distribution:  Normal ( n = 18 ) </span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Test statistic:  A = 0.9381665 </span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="do">## OSL (p-value):  0.01103075  (assuming unknown parameters)</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="do">## Conclusion: Sample is not drawn from a Normal distribution ( alpha = 0.05 )</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="do">## anderson_darling_normal(data = ., x = strength)</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="do">## Distribution:  Normal ( n = 18 ) </span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="do">## Test statistic:  A = 0.9381665 </span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="do">## OSL (p-value):  0.01103075  (assuming unknown parameters)</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="do">## Conclusion: Sample is not drawn from a Normal distribution ( alpha = 0.05 )</span></span></code></pre></div>
 <p>If the failure of a diagnostic test is decided to be acceptable, the test result can be overridden to hide the warning in the basis function output:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">carbon.fabric.2</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">test</span> <span class="op">==</span> <span class="st">"WT"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">condition</span> <span class="op">==</span> <span class="st">"ETW"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="reference/basis.html">basis_normal</a></span><span class="op">(</span><span class="va">strength</span>, <span class="va">batch</span>, override <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"anderson_darling_normal"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">## basis_normal(data = ., x = strength, batch = batch, override = c("anderson_darling_normal"))</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Distribution:  Normal    ( n = 18 )</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="do">## The following diagnostic tests were overridden: </span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     `anderson_darling_normal`</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="do">## B-Basis:   ( p = 0.9 , conf = 0.95 )</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 122.9315</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">## Call:</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="do">## basis_normal(data = ., x = strength, batch = batch, override = c("anderson_darling_normal"))</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="do">## Distribution:  Normal    ( n = 18 )</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="do">## The following diagnostic tests were overridden: </span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="do">##     `anderson_darling_normal`</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="do">## B-Basis:   ( p = 0.9 , conf = 0.95 )</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="do">## 122.9315</span></span></code></pre></div>
 <p><code>cmstatr</code> also provides functions for calculating basis values from data pooled across multiple testing environments, as recommended by [@CMH171G]. There are two methods of pooling: both calculate a measure of global variation from the data in all tested environmental conditions, then they calculate a basis value for each condition using the measure of the global variation and the individual mean values of each condition. The two methods of pooling have different underlying assumptions and hence the data must pass a different set diagnostic tests for each of the two functions.</p>
 </div>
 <div class="section level1">

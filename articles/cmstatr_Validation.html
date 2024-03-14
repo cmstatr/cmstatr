@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cmstatr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.3</span>
       </span>
     </div>
 
@@ -102,7 +102,7 @@
                         <h4 data-toc-skip class="author">Stefan
 Kloppenborg</h4>
             
-            <h4 data-toc-skip class="date">2023-09-10</h4>
+            <h4 data-toc-skip class="date">2024-03-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/cmstatr/cmstatr/blob/HEAD/vignettes/cmstatr_Validation.Rmd" class="external-link"><code>vignettes/cmstatr_Validation.Rmd</code></a></small>
       <div class="hidden name"><code>cmstatr_Validation.Rmd</code></div>
@@ -1663,6 +1663,8 @@ were used. A value of <code>alpha = 0.05</code> was selected.</p>
 <span><span class="co">#&gt;           Number        28               9         </span></span>
 <span><span class="co">#&gt;             Mean       9.24             9.02       </span></span>
 <span><span class="co">#&gt;               SD      0.162           0.15785      </span></span>
+<span><span class="co">#&gt;        Pooled SD            0.1610609             </span></span>
+<span><span class="co">#&gt;               t0            -3.564775             </span></span>
 <span><span class="co">#&gt;           Result               FAIL               </span></span>
 <span><span class="co">#&gt;    Passing Range       9.114712 to 9.365288</span></span></code></pre></div>
 <p>After selecting the modified CV method, HYTEQ gives an acceptance
@@ -1686,6 +1688,8 @@ results.</p>
 <span><span class="co">#&gt;           Number        28               9         </span></span>
 <span><span class="co">#&gt;             Mean       9.24             9.02       </span></span>
 <span><span class="co">#&gt;               SD      0.162           0.15785      </span></span>
+<span><span class="co">#&gt;        Pooled SD            0.4927484             </span></span>
+<span><span class="co">#&gt;               t0             -1.16519             </span></span>
 <span><span class="co">#&gt;           Result               PASS               </span></span>
 <span><span class="co">#&gt;    Passing Range       8.856695 to 9.623305</span></span></code></pre></div>
 </div>
@@ -2219,9 +2223,9 @@ materials.</p>
 <p>This copy of this vignette was build on the following system.</p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.3.1 (2023-06-16)</span></span>
+<span><span class="co">#&gt; R version 4.3.3 (2024-02-29)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span><span class="co">#&gt; Running under: Ubuntu 22.04.3 LTS</span></span>
+<span><span class="co">#&gt; Running under: Ubuntu 22.04.4 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 </span></span>
@@ -2240,28 +2244,27 @@ materials.</p>
 <span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] testthat_3.1.10 tidyr_1.3.0     purrr_1.0.2     dplyr_1.1.3    </span></span>
-<span><span class="co">#&gt; [5] cmstatr_0.9.2  </span></span>
+<span><span class="co">#&gt; [1] testthat_3.2.1 tidyr_1.3.1    purrr_1.0.2    dplyr_1.1.4    cmstatr_0.9.3 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] sass_0.4.7        utf8_1.2.3        generics_0.1.3    SuppDists_1.1-9.7</span></span>
-<span><span class="co">#&gt;  [5] stringi_1.7.12    digest_0.6.33     magrittr_2.0.3    evaluate_0.21    </span></span>
-<span><span class="co">#&gt;  [9] grid_4.3.1        pkgload_1.3.2.1   fastmap_1.1.1     rprojroot_2.0.3  </span></span>
-<span><span class="co">#&gt; [13] jsonlite_1.8.7    kSamples_1.2-9    brio_1.1.3        fansi_1.0.4      </span></span>
-<span><span class="co">#&gt; [17] scales_1.2.1      textshaping_0.3.6 jquerylib_0.1.4   cli_3.6.1        </span></span>
-<span><span class="co">#&gt; [21] rlang_1.1.1       munsell_0.5.0     withr_2.5.0       cachem_1.0.8     </span></span>
-<span><span class="co">#&gt; [25] yaml_2.3.7        tools_4.3.1       memoise_2.0.1     colorspace_2.1-0 </span></span>
-<span><span class="co">#&gt; [29] ggplot2_3.4.3     vctrs_0.6.3       R6_2.5.1          lifecycle_1.0.3  </span></span>
-<span><span class="co">#&gt; [33] stringr_1.5.0     fs_1.6.3          MASS_7.3-60       ragg_1.2.5       </span></span>
-<span><span class="co">#&gt; [37] waldo_0.5.1       pkgconfig_2.0.3   desc_1.4.2        pkgdown_2.0.7    </span></span>
-<span><span class="co">#&gt; [41] pillar_1.9.0      bslib_0.5.1       gtable_0.3.4      glue_1.6.2       </span></span>
-<span><span class="co">#&gt; [45] systemfonts_1.0.4 xfun_0.40         tibble_3.2.1      tidyselect_1.2.0 </span></span>
-<span><span class="co">#&gt; [49] knitr_1.43        htmltools_0.5.6   rmarkdown_2.24    compiler_4.3.1</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] gtable_0.3.4      jsonlite_1.8.8    compiler_4.3.3    brio_1.1.4       </span></span>
+<span><span class="co">#&gt;  [5] tidyselect_1.2.1  jquerylib_0.1.4   systemfonts_1.0.6 scales_1.3.0     </span></span>
+<span><span class="co">#&gt;  [9] textshaping_0.3.7 yaml_2.3.8        fastmap_1.1.1     ggplot2_3.5.0    </span></span>
+<span><span class="co">#&gt; [13] R6_2.5.1          kSamples_1.2-10   generics_0.1.3    knitr_1.45       </span></span>
+<span><span class="co">#&gt; [17] MASS_7.3-60.0.1   tibble_3.2.1      desc_1.4.3        rprojroot_2.0.4  </span></span>
+<span><span class="co">#&gt; [21] munsell_0.5.0     bslib_0.6.1       pillar_1.9.0      SuppDists_1.1-9.7</span></span>
+<span><span class="co">#&gt; [25] rlang_1.1.3       utf8_1.2.4        cachem_1.0.8      xfun_0.42        </span></span>
+<span><span class="co">#&gt; [29] fs_1.6.3          sass_0.4.8        pkgload_1.3.4     memoise_2.0.1    </span></span>
+<span><span class="co">#&gt; [33] cli_3.6.2         withr_3.0.0       pkgdown_2.0.7     magrittr_2.0.3   </span></span>
+<span><span class="co">#&gt; [37] digest_0.6.35     grid_4.3.3        lifecycle_1.0.4   waldo_0.5.2      </span></span>
+<span><span class="co">#&gt; [41] vctrs_0.6.5       evaluate_0.23     glue_1.7.0        ragg_1.3.0       </span></span>
+<span><span class="co">#&gt; [45] colorspace_2.1-0  fansi_1.0.6       rmarkdown_2.26    tools_4.3.3      </span></span>
+<span><span class="co">#&gt; [49] pkgconfig_2.0.3   htmltools_0.5.7</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">9. References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body">
+<div id="refs" class="references csl-bib-body" entry-spacing="0">
 <div id="ref-ASAP2008" class="csl-entry">
 <div class="csl-left-margin">[1] </div>
 <div class="csl-right-inline">K.
