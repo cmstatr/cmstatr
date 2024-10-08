@@ -32,16 +32,16 @@ perform_checks <- function(rules, override = c(), ...) {
       cur_rule <- rules[[cur_rule_name]]
       all_formal_names <- fn_fmls_names(cur_rule)
       missing_formals <- vapply(all_formal_names, function(cur_formal_name) {
-          is.null(args[[cur_formal_name]]) & cur_formal_name != "..."
-        },
-        FUN.VALUE = logical(1L)
+        is.null(args[[cur_formal_name]]) & cur_formal_name != "..."
+      },
+      FUN.VALUE = logical(1L)
       )
       if (!any(missing_formals)) {
         message <- tryCatch(
           do.call(cur_rule, args),
-        error = function(e) {
-          stop(paste0("During evaluation of `", cur_rule_name, "`: ", e))
-        })
+          error = function(e) {
+            stop(paste0("During evaluation of `", cur_rule_name, "`: ", e))
+          })
         if (message != "") {
           warn(paste0("`", cur_rule_name, "` failed: ", message))
           return("F")
