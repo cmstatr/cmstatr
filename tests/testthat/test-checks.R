@@ -1,30 +1,42 @@
 test_that("perform_checks produces warnings unless overriden", {
   sample_rules <- list(
     positive = function(pos, ...) {
-      ifelse(pos > 0, "", "Not positive")
+      list(
+        msg = ifelse(pos > 0, "", "Not positive"),
+        obj = pos > 0
+      )
     },
     negative = function(neg, ...) {
-      ifelse(neg < 0, "", "Not negative")
+      list(
+        msg = ifelse(neg < 0, "", "Not negative"),
+        obj = neg < 0
+      )
     },
     zero = function(z, ...) {
-      ifelse(z == 0, "", "Not zero")
+      list(
+        msg = ifelse(z == 0, "", "Not zero"),
+        obj = z == 0
+      )
     }
   )
 
   expect_warning(res <- perform_checks(sample_rules, pos = -1, neg = -1, z = 0),
                  regexp = "positive")
+  res <- get_check_pfo(res)
   names(res) <- NULL
   expect_equal(res, c("F", "P", "P"))
   perform_checks(sample_rules, pos = -1, neg = -1, z = 0,
                  override = "positive")
   expect_warning(res <- perform_checks(sample_rules, pos = 1, neg = 1, z = 0),
                  regexp = "negative")
+  res <- get_check_pfo(res)
   names(res) <- NULL
   expect_equal(res, c("P", "F", "P"))
   perform_checks(sample_rules, pos = 1, neg = 1, z = 0,
                  override = "negative")
   expect_warning(res <- perform_checks(sample_rules, pos = 1, neg = -1, z = 1),
                  regexp = "zero")
+  res <- get_check_pfo(res)
   names(res) <- NULL
   expect_equal(res, c("P", "P", "F"))
   perform_checks(sample_rules, pos = 1, neg = -1, z = 1,
@@ -37,16 +49,28 @@ test_that("perform_checks produces warnings unless overriden", {
 test_that("Messages are created for missing parameters", {
   sample_rules <- list(
     positive = function(pos, ...) {
-      ifelse(pos > 0, "", "Not positive")
+      list(
+        msg = ifelse(pos > 0, "", "Not positive"),
+        obj = pos > 0
+      )
     },
     negative = function(neg, ...) {
-      ifelse(neg < 0, "", "Not negative")
+      list(
+        msg = ifelse(neg < 0, "", "Not negative"),
+        obj = neg < 0
+      )
     },
     zero = function(z, ...) {
-      ifelse(z == 0, "", "Not zero")
+      list(
+        msg = ifelse(z == 0, "", "Not zero"),
+        obj = z == 0
+      )
     },
     neg_or_zero = function(neg, z, ...) {
-      ""
+      list(
+        msg = "",
+        obj = TRUE
+      )
     }
   )
 
@@ -126,17 +150,29 @@ test_that("Invalid overrides produce warnings", {
 test_that("Errors raised are wrapped with source of warning", {
   sample_rules <- list(
     positive = function(pos, ...) {
-      ifelse(pos > 0, "", "Not positive")
+      list(
+        msg = ifelse(pos > 0, "", "Not positive"),
+        obj = pos > 0
+      )
     },
     negative = function(neg, ...) {
-      ifelse(neg < 0, "", "Not negative")
+      list(
+        msg = ifelse(neg < 0, "", "Not negative"),
+        obj = neg < 0
+      )
     },
     zero = function(z, ...) {
-      ifelse(z == 0, "", "Not zero")
+      list(
+        msg = ifelse(z == 0, "", "Not zero"),
+        obj = z == 0
+      )
     },
     always_error = function(...) {
       stop("This is an error")
-      ""
+      list(
+        msg = "",
+        obj = FALSE
+      )
     }
   )
 
