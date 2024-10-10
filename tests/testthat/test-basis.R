@@ -130,6 +130,22 @@ test_that("normal basis values produce expected diagnostic failures", {
   output <- capture_output(print(res))
   expect_false(grepl("overridden", output, ignore.case = TRUE))
 
+  expect_equal(class(res$diagnostic_obj$outliers), "mnr")
+  expect_gt(res$diagnostic_obj$outliers$n_outliers, 0)
+
+  expect_length(res$diagnostic_obj$outliers_within_batch, 2)  # two batches
+  expect_equal(class(res$diagnostic_obj$outliers_within_batch$A), "mnr")
+  expect_equal(class(res$diagnostic_obj$outliers_within_batch$B), "mnr")
+  expect_equal(res$diagnostic_obj$outliers_within_batch$A$n_outliers, 0)
+  expect_gt(res$diagnostic_obj$outliers_within_batch$B$n_outliers, 0)
+
+  expect_equal(class(res$diagnostic_obj$between_batch_variability), "adk")
+  expect_true(res$diagnostic_obj$between_batch_variability$reject_same_dist)
+
+  expect_equal(class(res$diagnostic_obj$anderson_darling_normal),
+               "anderson_darling")
+  expect_true(res$diagnostic_obj$anderson_darling_normal$reject_distribution)
+
   # overriding the diagnostics should eliminate the warnings
   res <- basis_normal(x = x, batch = batch,
                       override = c("outliers_within_batch",
@@ -266,6 +282,10 @@ test_that("lognormal basis values produce expected diagnostic failures", {
                  "anderson_darling_lognormal"))
   expect_length(res$override, 0)
 
+  expect_equal(class(res$diagnostic_obj$anderson_darling_lognormal),
+               "anderson_darling")
+  expect_true(res$diagnostic_obj$anderson_darling_lognormal$reject_distribution)
+
   # overriding the diagnostics should eliminate the warnings
   res <- basis_lognormal(x = x, batch = batch,
                       override = c("outliers_within_batch",
@@ -396,6 +416,10 @@ test_that("weibull basis values produce expected diagnostic failures", {
                  "outliers",
                  "anderson_darling_weibull"))
   expect_length(res$override, 0)
+
+  expect_equal(class(res$diagnostic_obj$anderson_darling_weibull),
+               "anderson_darling")
+  expect_true(res$diagnostic_obj$anderson_darling_weibull$reject_distribution)
 
   # overriding the diagnostics should eliminate the warnings
   res <- basis_weibull(x = x, batch = batch,
@@ -540,6 +564,11 @@ test_that("non-para (small) basis values produce expected diag failures", {
                  "sample_size"))
   expect_length(res$override, 0)
 
+  expect_type(res$diagnostic_obj$correct_method_used, "logical")
+  expect_false(res$diagnostic_obj$correct_method_used)
+  expect_type(res$diagnostic_obj$sample_size, "logical")
+  expect_false(res$diagnostic_obj$sample_size)
+
   # overriding the diagnostics should eliminate the warnings
   res <- basis_hk_ext(x = x_large, batch = batch_large,
                       method = "woodward-frawley",
@@ -666,6 +695,9 @@ test_that("non-para (large) basis values produce expected diag failures", {
                  "between_batch_variability",
                  "outliers"))
   expect_length(res$override, 0)
+
+  expect_type(res$diagnostic_obj$sample_size, "logical")
+  expect_true(res$diagnostic_obj$sample_size)
 
   # overriding the diagnostics should eliminate the warnings
   res <- basis_nonpara_large_sample(x = x_large, batch = batch_large,
@@ -917,6 +949,17 @@ test_that("anova basis values produce expected diagnostic failures", {
                  "equality_of_variance",
                  "number_of_groups"))
   expect_length(res$override, 0)
+
+  expect_length(res$diagnostic_obj$outliers_within_group, 2)
+  expect_equal(class(res$diagnostic_obj$outliers_within_group$A), "mnr")
+  expect_equal(res$diagnostic_obj$outliers_within_group$A$n_outliers, 2)
+  expect_equal(class(res$diagnostic_obj$outliers_within_group$B), "mnr")
+  expect_equal(res$diagnostic_obj$outliers_within_group$B$n_outliers, 0)
+
+  expect_equal(class(res$diagnostic_obj$equality_of_variance), "levene")
+  expect_true(res$diagnostic_obj$equality_of_variance$reject_equal_variance)
+
+  expect_false(res$diagnostic_obj$number_of_groups)
 
   # overriding the diagnostics should eliminate the warnings
   res <- basis_anova(x = x, group = batch,
