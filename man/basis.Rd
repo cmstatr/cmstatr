@@ -127,6 +127,8 @@ were overridden. \code{NULL} if none were overridden
 \item \code{diagnostic_results} a named character vector containing the
 results of all the diagnostic tests. See the Details section for
 additional information
+\item \code{diagnostic_obj} a named list containing the objects produced by the
+diagnostic tests.
 \item \code{diagnostic_failures} a vector containing any diagnostic tests
 that produced failures
 \item \code{n} the number of observations
@@ -332,6 +334,11 @@ name of the diagnostic test. The contents of each element will be
 diagnostic test was skipped (typically because an optional
 argument was not supplied).
 
+The objects produced by the diagnostic tests are included in the named
+list \code{diagnostic_obj}. The name of each element in the list corresponds with
+the name of the test. This can be useful when evaluating diagnostic test
+failures.
+
 The following list summarizes the diagnostic tests automatically
 performed by each function.
 \itemize{
@@ -401,13 +408,14 @@ library(dplyr)
 # in this example, three failed diagnostic tests are
 # overridden.
 
-carbon.fabric \%>\%
+res <- carbon.fabric \%>\%
   filter(test == "FC") \%>\%
   filter(condition == "RTD") \%>\%
   basis_normal(strength, batch,
                override = c("outliers",
                             "outliers_within_batch",
                             "anderson_darling_normal"))
+print(res)
 
 ## Call:
 ## basis_normal(data = ., x = strength, batch = batch,
@@ -421,6 +429,15 @@ carbon.fabric \%>\%
 ##     `anderson_darling_normal`
 ## B-Basis:   ( p = 0.9 , conf = 0.95 )
 ## 76.94656
+
+print(res$diagnostic_obj$between_batch_variability)
+
+## Call:
+## ad_ksample(x = x, groups = batch, alpha = 0.025)
+##
+## N = 18           k = 3
+## ADK = 1.73       p-value = 0.52151
+## Conclusion: Samples come from the same distribution ( alpha = 0.025 )
 
 # A set of pooled basis values can also be calculated
 # using the pooled standard deviation method, as follows.

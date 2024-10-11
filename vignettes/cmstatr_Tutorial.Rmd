@@ -180,18 +180,27 @@ There are certainly times when it is appropriate to do so, but sound
 engineering judgment is required.
 
 The better approach would be to specify the batch. This can be done as
-follows:
+follows. We'll store the result in the variable `b_basis_wt_rtd` for reasons
+that will become clear later.
 
 ```{r}
-norm_data %>%
+b_basis_wt_rtd <- norm_data %>%
   filter(test == "WT" & condition == "RTD") %>%
   basis_normal(strength.norm, batch)
 ```
 
 Now that batch is specified, we see that one of the diagnostic tests
 actually fails: the Anderson--Darling k-Sample test shows that the batches
-are not drawn from the same (unspecified) distribution. We can run this
-diagnostic test directly to investigate further:
+are not drawn from the same (unspecified) distribution. We can interrogate
+the failing test by accessing the `diagnostic_obj` element of the return
+value from `basis_normal()`. This contains elements for each of the diagnostic
+tests. We can access the `between_batch_variability` result as follows:
+
+```{r}
+b_basis_wt_rtd$diagnostic_obj$between_batch_variability
+```
+
+We could have also run the failing diagnostic test directly as follows:
 
 ```{r}
 norm_data %>%
