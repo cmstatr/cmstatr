@@ -36,3 +36,8 @@ test_that("cv works inside dplyr::summarize with na.rm=TRUE", {
               test = expect_equal(cv, sd(x, na.rm = TRUE) /
                                     mean(x, na.rm = TRUE)))
 })
+
+test_that("calc_cv_star works for single values and vectors", {
+  expect_equal(calc_cv_star(0.01), 0.06)
+  expect_equal(calc_cv_star(c(0.01, 0.09)), c(0.06, 0.09))
+})
