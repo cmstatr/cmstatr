@@ -414,3 +414,19 @@ test_that("augment method returns expected results", {
   expect_equal(augment_res$.outlier,
                c(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE))
 })
+
+test_that("messages for small samples are sensible", {
+  expect_error(
+    maximum_normed_residual(x = c()),
+    "at least 3"
+  )
+  expect_error(
+    maximum_normed_residual(x = c(1)),
+    "at least 3"
+  )
+  expect_error(
+    maximum_normed_residual(x = c(1, 2)),
+    "at least 3"
+  )
+  maximum_normed_residual(x = c(1, 2, 3))
+})

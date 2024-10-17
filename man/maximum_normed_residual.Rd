@@ -10,7 +10,8 @@ maximum_normed_residual(data = NULL, x, alpha = 0.05)
 \item{data}{a data.frame}
 
 \item{x}{the variable in the data.frame for which to find the MNR
-or a vector if \code{data=NULL}}
+or a vector if \code{data=NULL}. This must include at least 3
+observations.}
 
 \item{alpha}{the significance level for the test. Defaults to 0.05}
 }

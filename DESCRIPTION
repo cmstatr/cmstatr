@@ -1,7 +1,7 @@
 Package: cmstatr
 Type: Package
 Title: Statistical Methods for Composite Material Data
-Version: 0.9.3.9002
+Version: 0.9.3.9003
 Date: 2024-03-13
 Depends: R (>= 3.3)
 Authors@R: c(
