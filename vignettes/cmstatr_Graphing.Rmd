@@ -113,6 +113,26 @@ dat %>%
   ggtitle("Batch Plot")
 ```
 
+It's sometimes useful add failure modes to the plot so that you can easily
+identify whether failure modes differ between conditions or batches.
+This can be done with the `geom_jitter_failure_mode()` function. This
+behaves very similarly to `geom_jitter()`, except that `color` or `shape`
+must be specified, and if there are multiple failure modes (e.g. "LAB/LAT"),
+both failure modes are plotted as separate points.
+
+```{r}
+dat %>%
+  ggplot(aes(x = batch, y = strength)) +
+  geom_boxplot() +
+  geom_jitter_failure_mode(aes(color = failure_mode, shape = failure_mode), width = 0.25) +
+  geom_hline(aes(yintercept = value),
+             data = b_basis_pooled$basis %>% rename(condition = group),
+             color = "blue") +
+  facet_grid(. ~ condition) +
+  theme_bw() +
+  ggtitle("Batch Plot with Failure Modes")
+```
+
 # Quantile Plots
 A quantile plot provides a graphical summary of sample values. 
 This plot displays the sample values and the corresponding quantile.

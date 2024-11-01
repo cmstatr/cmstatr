@@ -46,14 +46,14 @@ Imports:
     purrr,
     rlang,
     stats,
-    tibble
+    tibble,
+    tidyr
 Suggests:
     knitr,
     lintr,
     rmarkdown,
     spelling,
     testthat,
-    tidyr,
     vdiffr
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
