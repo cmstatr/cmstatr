@@ -1,9 +1,8 @@
-This re-submission represents a minor bug-fix and a minor improvement.
-No new functions or methods are added.
+This re-submission adds new functionality, as described in NEWS.md.
 
 ## Test environments
-- win-builder (`devel`, `release`).
-- local Ubuntu 20.04.2, R 4.3.3
+- win-builder `devel`.
+- local Ubuntu 24.04.1, R 4.4.2
 - GitHub Action runners:
   - Windows, R `release`
   - MacOS, R `release`
