@@ -2,7 +2,7 @@
 % Please edit documentation in R/levene.R
 \name{levene_test}
 \alias{levene_test}
-\title{Levene's Test for Equality of Variance}
+\title{Levene's Test (Median) for Equality of Variance}
 \usage{
 levene_test(data = NULL, x, groups, alpha = 0.05, modcv = FALSE)
 }
@@ -20,7 +20,7 @@ Levene's test (usually strength)}
 should be used.}
 }
 \value{
-Returns an object of class \code{adk}. This object has the following fields:
+Returns an object of class \code{levene}. This object has the following fields:
 \itemize{
 \item \code{call} the expression used to call this function
 \item \code{data} the original data supplied by the user
@@ -38,10 +38,12 @@ null hypothesis that all samples have the same variance is rejected
 }
 }
 \description{
-This function performs the Levene's test for equality of variance.
+This function performs the Levene's test for equality of variance using
+the median. This is also known as the Brown-Forsythe test.
 }
 \details{
-This function performs the Levene's test for equality of variance. The
+This function performs the Levene's test for equality of variance using
+median (also known as the Brown-Forsythe test). The
 data is transformed as follows:
 
 \deqn{w_{ij} = \left| x_{ij} - m_i \right|}{wij = | xij - mi |}
@@ -72,6 +74,12 @@ carbon.fabric.2 \%>\%
 “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 Guideline for Characterization of Structural Materials,” SAE International,
 CMH-17-1G, Mar. 2012.
+
+\code{NIST/SEMATECH} e-Handbook of Statistical Methods,
+\url{https://www.itl.nist.gov/div898/handbook/eda/section3/eda35a.htm}, 2024.
+
+Brown, M. B. and Forsythe, A. B. (1974), Journal of the American
+Statistical Association, 69, pp. 364-367.
 }
 \seealso{
 \code{\link[=calc_cv_star]{calc_cv_star()}}

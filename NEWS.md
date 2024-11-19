@@ -1,3 +1,8 @@
+# Version x.x.x
+- Updated documentation to clarify that the implementation of Levene's Test
+  is based on median, which is also known as the Brown-Forsythe test.
+  Thanks to Brice Langston for pointing this out.
+
 # Version 0.9.3
 - Updated `basis_anova` function to prevent division by zero when MSE is 0
 - Update `equiv_change_mean.print` method so that t-statistic and pooled SD
