@@ -60,7 +60,7 @@ and the horizontal lines connecting levels in groups}
 }
 \description{
 Creates a plot showing the breakdown of variation within a sample. This
-function uses \link{ggplot2} internally.
+function uses \code{ggplot2} internally.
 }
 \details{
 Extra options can be included to control aesthetic options. The following

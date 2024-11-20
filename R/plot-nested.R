@@ -390,7 +390,7 @@ draw_labels <- function(g, elm_list, label_args, extras_names) {
 #'
 #' @description
 #' Creates a plot showing the breakdown of variation within a sample. This
-#' function uses [ggplot2] internally.
+#' function uses `ggplot2` internally.
 #'
 #' @param dat a `data.frame` or similar object
 #' @param x the variable within `dat` to plot. Most often this would be a
