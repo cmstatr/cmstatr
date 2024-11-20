@@ -9,7 +9,8 @@
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame for which to find the MNR
-#'          or a vector if `data=NULL`
+#'          or a vector if `data=NULL`. This must include at least 3
+#'          observations.
 #' @param alpha the significance level for the test. Defaults to 0.05
 #'
 #' @details
@@ -96,6 +97,10 @@ maximum_normed_residual <- function(data = NULL, x, alpha = 0.05) {
   res$data <- cur_data
 
   res$alpha <- alpha
+
+  if (length(res$data) < 3) {
+    stop("Maximum normed residual test requires at least 3 observations")
+  }
 
   indicies_cur <- seq_along(res$data)
 

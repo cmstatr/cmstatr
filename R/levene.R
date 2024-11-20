@@ -1,8 +1,9 @@
 
-#' Levene's Test for Equality of Variance
+#' Levene's Test (Median) for Equality of Variance
 #'
 #' @description
-#' This function performs the Levene's test for equality of variance.
+#' This function performs the Levene's test for equality of variance using
+#' the median. This is also known as the Brown-Forsythe test.
 #'
 #' @param data a data.frame
 #' @param x the variable in the data.frame or a vector on which to perform the
@@ -13,7 +14,7 @@
 #'              should be used.
 #'
 #' @return
-#' Returns an object of class `adk`. This object has the following fields:
+#' Returns an object of class `levene`. This object has the following fields:
 #' - `call` the expression used to call this function
 #' - `data` the original data supplied by the user
 #' - `groups` a vector of the groups used in the computation
@@ -28,7 +29,8 @@
 #'   null hypothesis that all samples have the same variance is rejected
 #' - `modcv_transformed_data` the data after the modified CV transformation
 #' @details
-#' This function performs the Levene's test for equality of variance. The
+#' This function performs the Levene's test for equality of variance using
+#' median (also known as the Brown-Forsythe test). The
 #' data is transformed as follows:
 #'
 #' \deqn{w_{ij} = \left| x_{ij} - m_i \right|}{wij = | xij - mi |}
@@ -44,6 +46,12 @@
 #' “Composite Materials Handbook, Volume 1. Polymer Matrix Composites
 #' Guideline for Characterization of Structural Materials,” SAE International,
 #' CMH-17-1G, Mar. 2012.
+#'
+#' `NIST/SEMATECH` e-Handbook of Statistical Methods,
+#' [https://www.itl.nist.gov/div898/handbook/eda/section3/eda35a.htm](), 2024.
+#'
+#' Brown, M. B. and Forsythe, A. B. (1974), Journal of the American
+#' Statistical Association, 69, pp. 364-367.
 #'
 #' @examples
 #' library(dplyr)

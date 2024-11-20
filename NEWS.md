@@ -1,3 +1,19 @@
+# Version 0.10.0
+- Updated documentation to clarify that the implementation of Levene's Test
+  is based on median, which is also known as the Brown-Forsythe test.
+  Thanks to Brice Langston for pointing this out.
+- Objects returned by the `basis_...()` methods now contain the actual results
+  of each diagnostic tests. This allows users to interrogate any diagnostic
+  failures.
+- Added `condition_summary()` methods for producing tables that compare
+  several environmental conditions.
+- Added the function `geom_jitter_failure_mode()` for plotting data with
+  multiple failure modes for some (or all) observations.
+- Added a helper function for separating failure modes.
+- Added a check in the `maximum_normed_residual()` test to ensure that at
+  least 3 observations were provided.
+- The `calc_cv_star()` function now accepts vectors.
+
 # Version 0.9.3
 - Updated `basis_anova` function to prevent division by zero when MSE is 0
 - Update `equiv_change_mean.print` method so that t-statistic and pooled SD

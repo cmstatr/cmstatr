@@ -176,16 +176,18 @@ normalize_group_mean <- function(x, group) {
 #' ## [1] 0.09
 #'
 #' @export
-calc_cv_star <- function(cv) {
-  if (cv < 0.04) {
-    cv <- 0.06
-  } else if (cv < 0.08) {
-    cv <- cv / 2 + 0.04
-  } else {
-    cv <- cv
+calc_cv_star <- Vectorize(
+  function(cv) {
+    if (cv < 0.04) {
+      cv <- 0.06
+    } else if (cv < 0.08) {
+      cv <- cv / 2 + 0.04
+    } else {
+      cv <- cv
+    }
+    return(cv)
   }
-  return(cv)
-}
+)
 
 #' Transforms data according to the modified CV rule
 #'

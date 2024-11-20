@@ -1,8 +1,8 @@
 Package: cmstatr
 Type: Package
 Title: Statistical Methods for Composite Material Data
-Version: 0.9.3
-Date: 2024-03-13
+Version: 0.10.0
+Date: 2024-11-18
 Depends: R (>= 3.3)
 Authors@R: c(
     person("Stefan", "Kloppenborg", email = "stefan@kloppenborg.ca",
@@ -13,6 +13,8 @@ Authors@R: c(
     person("Ally", "Fraser", email = "ally.fraser25@gmail.com",
       role = c("ctb")),
     person("Jeffrey", "Borlik",
+      role = c("ctb")),
+    person("Brice", "Langston", email = "tblangst@gmail.com",
       role = c("ctb")),
     person("Comtek Advanced Structures, Ltd.",
       role = c("fnd"))
@@ -46,16 +48,16 @@ Imports:
     purrr,
     rlang,
     stats,
-    tibble
+    tibble,
+    tidyr
 Suggests:
     knitr,
     lintr,
     rmarkdown,
     spelling,
     testthat,
-    tidyr,
     vdiffr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Language: en-US
 Roxygen: list(markdown = TRUE)

@@ -180,18 +180,27 @@ There are certainly times when it is appropriate to do so, but sound
 engineering judgment is required.
 
 The better approach would be to specify the batch. This can be done as
-follows:
+follows. We'll store the result in the variable `b_basis_wt_rtd` for reasons
+that will become clear later.
 
 ```{r}
-norm_data %>%
+b_basis_wt_rtd <- norm_data %>%
   filter(test == "WT" & condition == "RTD") %>%
   basis_normal(strength.norm, batch)
 ```
 
 Now that batch is specified, we see that one of the diagnostic tests
 actually fails: the Anderson--Darling k-Sample test shows that the batches
-are not drawn from the same (unspecified) distribution. We can run this
-diagnostic test directly to investigate further:
+are not drawn from the same (unspecified) distribution. We can interrogate
+the failing test by accessing the `diagnostic_obj` element of the return
+value from `basis_normal()`. This contains elements for each of the diagnostic
+tests. We can access the `between_batch_variability` result as follows:
+
+```{r}
+b_basis_wt_rtd$diagnostic_obj$between_batch_variability
+```
+
+We could have also run the failing diagnostic test directly as follows:
 
 ```{r}
 norm_data %>%
@@ -337,10 +346,22 @@ if ((norm_data %>%
 
 We find no outliers, so we can continue.
 
+## Investigation Conditions
+When multiple conditions were tested, it's usually useful to view some basic
+summary statistics for each condition before proceeding. The `condition_summary`
+function can be used for this. You can pass a `data.frame` with the data and
+the name of the condition variable to generate such summary statistics.
+
+```{r}
+norm_data %>%
+  filter(test == "FC") %>%
+  condition_summary(strength.norm, condition, "RTD")
+```
+
 ## Pooling Across Environments
 Often it is desirable to pool data across several environments. There
 are two methods for doing so: "pooled standard deviation" and
-"pooled CV" (CV is an abbreviation for Coefficient of Variation)
+"pooled CV" (CV is an abbreviation for Coefficient of Variation).
 
 First, we will check for
 equality of variance among the conditions. We will do so using Levene's test.
@@ -423,15 +444,28 @@ The conditions listed in the output above are in alphabetical order. This
 probably isn't what you want. Instead, you probably want the conditions
 listed in a certain order. This can be done by ordering the data first as
 demonstrated below. You're probably just do this one in at the start of
-your analysis.
+your analysis. In the example below, we'll store the result in the variable
+`basis_res` before printing it.
 
 ```{r}
-norm_data %>%
+basis_res <- norm_data %>%
   mutate(condition = ordered(condition,
                              c("CTD", "RTD", "ETD", "ETW", "ETW2"))) %>%
   filter(test == "FC") %>%
   basis_pooled_cv(strength.norm, condition, batch)
+basis_res
 ```
+
+The summary statistics that we computed for each condition earlier can also
+be generated using the `basis` object returned by `basis_pooled_cv` and related
+functions.
+
+```{r}
+basis_res %>%
+  condition_summary("RTD")
+```
+
+
 
 # Equivalency
 Eventually, once you've finished calculating all your basis values,

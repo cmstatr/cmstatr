@@ -303,6 +303,11 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' diagnostic test was skipped (typically because an optional
 #' argument was not supplied).
 #'
+#' The objects produced by the diagnostic tests are included in the named
+#' list `diagnostic_obj`. The name of each element in the list corresponds with
+#' the name of the test. This can be useful when evaluating diagnostic test
+#' failures.
+#'
 #' The following list summarizes the diagnostic tests automatically
 #' performed by each function.
 #'
@@ -366,6 +371,8 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' - `diagnostic_results` a named character vector containing the
 #'   results of all the diagnostic tests. See the Details section for
 #'   additional information
+#' - `diagnostic_obj` a named list containing the objects produced by the
+#'   diagnostic tests.
 #' - `diagnostic_failures` a vector containing any diagnostic tests
 #'   that produced failures
 #' - `n` the number of observations
@@ -414,13 +421,14 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' # in this example, three failed diagnostic tests are
 #' # overridden.
 #'
-#' carbon.fabric %>%
+#' res <- carbon.fabric %>%
 #'   filter(test == "FC") %>%
 #'   filter(condition == "RTD") %>%
 #'   basis_normal(strength, batch,
 #'                override = c("outliers",
 #'                             "outliers_within_batch",
 #'                             "anderson_darling_normal"))
+#' print(res)
 #'
 #' ## Call:
 #' ## basis_normal(data = ., x = strength, batch = batch,
@@ -434,6 +442,15 @@ k_factor_normal <- function(n, p = 0.90, conf = 0.95) {
 #' ##     `anderson_darling_normal`
 #' ## B-Basis:   ( p = 0.9 , conf = 0.95 )
 #' ## 76.94656
+#'
+#' print(res$diagnostic_obj$between_batch_variability)
+#'
+#' ## Call:
+#' ## ad_ksample(x = x, groups = batch, alpha = 0.025)
+#' ##
+#' ## N = 18           k = 3
+#' ## ADK = 1.73       p-value = 0.52151
+#' ## Conclusion: Samples come from the same distribution ( alpha = 0.025 )
 #'
 #' # A set of pooled basis values can also be calculated
 #' # using the pooled standard deviation method, as follows.
@@ -483,6 +500,7 @@ new_basis <- function(
   res$modcv_transformed_data <- NA
   res$override <- override
   res$diagnostic_results <- character(0L)
+  res$diagnostic_obj <- list(0L)
   res$diagnostic_failures <- character(0L)
   res$n <- length(res$data)
   res$r <- NA
@@ -654,26 +672,39 @@ print.basis <- function(x, ...) {
 
 single_point_rules <- list(
   outliers_within_batch = function(x, batch, ...) {
-    group_mnr <- vapply(unique(batch), function(b) {
-      x_group <- x[batch == b]
-      mnr <- maximum_normed_residual(x = x_group)
-      mnr$n_outliers == 0
-    }, FUN.VALUE = logical(1L))
-    ifelse(all(group_mnr), "",
-           paste0("Maximum normed residual test detected ",
-                  "outliers within one or more batch"))
+    group_mnr <- sapply(unique(batch),
+                        function(b) {
+                          x_group <- x[batch == b]
+                          maximum_normed_residual(x = x_group)
+                        },
+                        simplify = FALSE
+    )
+    group_mnr_logical <- sapply(group_mnr, \(mnr) mnr$n_outliers == 0)
+    list(
+      msg = ifelse(all(group_mnr_logical), "",
+                   paste0("Maximum normed residual test detected ",
+                          "outliers within one or more batch")),
+      obj = group_mnr
+    )
   },
   between_batch_variability = function(x, batch, ...) {
     adk <- ad_ksample(x = x, groups = batch, alpha = 0.025)
-    ifelse(!adk$reject_same_dist, "",
-          paste0("Anderson-Darling k-Sample test indicates that ",
-                 "batches are drawn from different distributions"))
+    list(
+      msg = ifelse(!adk$reject_same_dist, "",
+                   paste0("Anderson-Darling k-Sample test indicates that ",
+                          "batches are drawn from different distributions")),
+      obj = adk
+    )
   },
   outliers = function(x, ...) {
     mnr <- maximum_normed_residual(x = x)
-    ifelse(mnr$n_outliers == 0, "",
-           paste0("Maximum normed residual test detected outliers ",
-                  "within data"))
+
+    list(
+      msg = ifelse(mnr$n_outliers == 0, "",
+                   paste0("Maximum normed residual test detected outliers ",
+                          "within data")),
+      obj = mnr
+    )
   }
 )
 
@@ -681,9 +712,12 @@ basis_normal_rules <- single_point_rules
 basis_normal_rules[["anderson_darling_normal"]] <-
   function(x, ...) {
     ad <- anderson_darling_normal(x = x)
-    ifelse(!ad$reject_distribution, "",
-           paste0("Anderson-Darling test rejects hypothesis that data ",
-                  "is drawn from a normal distribution"))
+    list(
+      msg = ifelse(!ad$reject_distribution, "",
+                   paste0("Anderson-Darling test rejects hypothesis that data ",
+                          "is drawn from a normal distribution")),
+      obj = ad
+    )
   }
 
 #' @rdname basis
@@ -718,9 +752,11 @@ basis_normal <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  res$diagnostic_results <- perform_checks(
+  check_res <- perform_checks(
     basis_normal_rules, x = res$data, batch = res$batch, override = override
   )
+  res$diagnostic_results <- get_check_pfo(check_res)
+  res$diagnostic_obj <- get_check_obj(check_res)
   res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
@@ -736,9 +772,12 @@ basis_lognormal_rules <- single_point_rules
 basis_lognormal_rules[["anderson_darling_lognormal"]] <-
   function(x, ...) {
     ad <- anderson_darling_lognormal(x = x)
-    ifelse(!ad$reject_distribution, "",
-           paste0("Anderson-Darling test rejects hypothesis that data ",
-                  "is drawn from a log-normal distribution"))
+    list(
+      msg = ifelse(!ad$reject_distribution, "",
+                   paste0("Anderson-Darling test rejects hypothesis that data ",
+                          "is drawn from a log-normal distribution")),
+      obj = ad
+    )
   }
 
 #' @rdname basis
@@ -773,9 +812,11 @@ basis_lognormal <- function(data = NULL, x, batch = NULL, p = 0.90,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  res$diagnostic_results <- perform_checks(
+  check_res <- perform_checks(
     basis_lognormal_rules, x = res$data, batch = res$batch, override = override
   )
+  res$diagnostic_results <- get_check_pfo(check_res)
+  res$diagnostic_obj <- get_check_obj(check_res)
   res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
@@ -788,9 +829,12 @@ basis_weibull_rules <- single_point_rules
 basis_weibull_rules[["anderson_darling_weibull"]] <-
   function(x, ...) {
     ad <- anderson_darling_weibull(x = x)
-    ifelse(!ad$reject_distribution, "",
-           paste0("Anderson-Darling test rejects hypothesis that data ",
-                  "is drawn from a Weibull distribution"))
+    list(
+      msg = ifelse(!ad$reject_distribution, "",
+                   paste0("Anderson-Darling test rejects hypothesis that data ",
+                          "is drawn from a Weibull distribution")),
+      obj = ad
+    )
   }
 
 #' @rdname basis
@@ -827,9 +871,11 @@ basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  res$diagnostic_results <- perform_checks(
+  check_res <- perform_checks(
     basis_weibull_rules, x = res$data, batch = res$batch, override = override
   )
+  res$diagnostic_results <- get_check_pfo(check_res)
+  res$diagnostic_obj <- get_check_obj(check_res)
   res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   dist <- fitdistr(res$data, "weibull")
@@ -886,48 +932,88 @@ basis_weibull <- function(data = NULL, x, batch = NULL, p = 0.90,
 
 pooled_rules <- list(
   outliers_within_batch = function(x, groups, batch, ...) {
-    group_batch_mnr <- vapply(unique(groups), function(g) {
-      batch_mnr <- vapply(unique(batch), function(b) {
-        x_group <- x[batch == b & groups == g]
-        if (length(x_group) == 0) {
-          return(TRUE)
-        }
-        mnr <- maximum_normed_residual(x = x_group)
-        return(mnr$n_outliers == 0)
-      }, FUN.VALUE = logical(1L))
-      all(batch_mnr)
-    }, FUN.VALUE = logical(1L))
-    ifelse(all(group_batch_mnr), "",
-           paste0("Maximum normed residual test detected ",
-                  "outliers within one or more batch and group"))
+    group_batch_mnr <- sapply(
+      unique(groups),
+      function(g) {
+        sapply(
+          unique(batch[groups == g]),
+          function(b) {
+            x_group <- x[batch == b & groups == g]
+            if (length(x_group) == 0) {
+              stop("Should never get here")  # TODO: Test this and delete
+              return(TRUE)
+            }
+            maximum_normed_residual(x = x_group)
+          },
+          simplify = FALSE
+        )
+      },
+      simplify = FALSE
+    )
+    group_batch_mnr_logical <- vapply(
+      group_batch_mnr,
+      function(g_mnr) {
+        within_group <- vapply(
+          g_mnr,
+          function(gb_mnr) {
+            gb_mnr$n_outliers == 0
+          },
+          FUN.VALUE = logical(1L)
+        )
+        all(within_group)
+      },
+      FUN.VALUE = logical(1L)
+    )
+    list(
+      msg = ifelse(all(group_batch_mnr_logical), "",
+                   paste0("Maximum normed residual test detected ",
+                          "outliers within one or more batch and group")),
+      obj = group_batch_mnr
+    )
   },
   between_group_variability = function(x_ad, groups, batch, ...) {
-    group_adk <- vapply(unique(groups), function(g) {
-      x_group <- x_ad[groups == g]
-      batch_group <- batch[groups == g]
-      adk <- ad_ksample(x = x_group, groups = batch_group)
-      !adk$reject_same_dist
-    }, FUN.VALUE = logical(1L))
-    ifelse(all(group_adk), "",
-           paste0("Anderson-Darling k-Sample test indicates that ",
-                  "batches are drawn from different distributions"))
+    group_adk <- sapply(
+      unique(groups), function(g) {
+        x_group <- x_ad[groups == g]
+        batch_group <- batch[groups == g]
+        ad_ksample(x = x_group, groups = batch_group)
+      },
+      simplify = FALSE
+    )
+    group_adk_logical <- sapply(group_adk,
+                                function(adk) !adk$reject_same_dist)
+    list(
+      msg = ifelse(all(group_adk_logical), "",
+                   paste0("Anderson-Darling k-Sample test indicates that ",
+                          "batches are drawn from different distributions")),
+      obj = group_adk
+    )
   },
   outliers_within_group = function(x, groups, ...) {
-    group_mnr <- vapply(unique(groups), function(g) {
-      x_group <- x[groups == g]
-      mnr <- maximum_normed_residual(x = x_group)
-      return(mnr$n_outliers == 0)
-    }, FUN.VALUE = logical(1L))
-    ifelse(all(group_mnr), "",
-           paste0("Maximum normed residual test detected ",
-                  "outliers within one or more group"))
+    group_mnr <- sapply(
+      unique(groups), function(g) {
+        x_group <- x[groups == g]
+        maximum_normed_residual(x = x_group)
+      },
+      simplify = FALSE
+    )
+    group_mnr_logical <- sapply(group_mnr, function(mnr) mnr$n_outliers == 0)
+    list(
+      msg = ifelse(all(group_mnr_logical), "",
+                   paste0("Maximum normed residual test detected ",
+                          "outliers within one or more group")),
+      obj = group_mnr
+    )
   },
   pooled_data_normal = function(x_ad, groups, ...) {
     norm_x <- normalize_group_mean(x = x_ad, group = groups)
     ad <- anderson_darling_normal(x = norm_x)
-    ifelse(!ad$reject_distribution, "",
-           paste0("Anderson-Darling test rejects hypothesis that pooled ",
-                  "data is drawn from a normal distribution"))
+    list(
+      msg = ifelse(!ad$reject_distribution, "",
+                   paste0("Anderson-Darling test rejects hypothesis that pooled ",
+                          "data is drawn from a normal distribution")),
+      obj = ad
+    )
   }
 )
 
@@ -935,9 +1021,12 @@ pooled_rules_cv <- pooled_rules
 pooled_rules_cv[["normalized_variance_equal"]] <- function(x, groups, ...) {
   norm_x <- normalize_group_mean(x = x, group = groups)
   lev <- levene_test(x = norm_x, groups = groups)
-  return(ifelse(!lev$reject_equal_variance, "",
-                paste0("Levene's test rejected the hypothesis that the ",
-                       "variance of all groups are equal")))
+  return(list(
+    msg = ifelse(!lev$reject_equal_variance, "",
+                 paste0("Levene's test rejected the hypothesis that the ",
+                        "variance of all groups are equal")),
+    obj = lev
+  ))
 }
 
 #' @rdname basis
@@ -989,10 +1078,12 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
     x_ad <- data_to_use
   }
 
-  res$diagnostic_results <- perform_checks(
+  check_res <- perform_checks(
     pooled_rules_cv, x = data_to_use, x_ad = x_ad,
     groups = res$groups, batch = res$batch, override = override
   )
+  res$diagnostic_results <- get_check_pfo(check_res)
+  res$diagnostic_obj <- get_check_obj(check_res)
   res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   norm_data <- normalize_group_mean(data_to_use, res$groups)
@@ -1016,11 +1107,13 @@ basis_pooled_cv <- function(data = NULL, x, groups, batch = NULL,
 
 pooled_rules_sd <- pooled_rules
 pooled_rules_sd[["pooled_variance_equal"]] <- function(x, groups, ...) {
-
   lev <- levene_test(x = x, groups = groups)
-  return(ifelse(!lev$reject_equal_variance, "",
-                paste0("Levene's test rejected the hypothesis that the ",
-                       "variance of all conditions are equal")))
+  return(list(
+    msg = ifelse(!lev$reject_equal_variance, "",
+                 paste0("Levene's test rejected the hypothesis that the ",
+                        "variance of all conditions are equal")),
+    obj = lev
+  ))
 }
 
 #' @rdname basis
@@ -1072,10 +1165,12 @@ basis_pooled_sd <- function(data = NULL, x, groups, batch = NULL,
     x_ad <- data_to_use
   }
 
-  res$diagnostic_results <- perform_checks(
+  check_res <- perform_checks(
     pooled_rules_sd, x = data_to_use, x_ad = x_ad,
     groups = res$groups, batch = res$batch, override = override
   )
+  res$diagnostic_results <- get_check_pfo(check_res)
+  res$diagnostic_obj <- get_check_obj(check_res)
   res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   pooled_sd <- sqrt(
@@ -1264,32 +1359,52 @@ basis_hk_ext_rules[["correct_method_used"]] <-
   function(method, p, conf, ...) {
     if (p == 0.90 && conf == 0.95) {
       # B-Basis
-      return(ifelse(method == "optimum-order", "",
-                    paste0("For B-Basis, the optimum order method ",
-                           "should be used")))
+      return(list(
+        msg = ifelse(method == "optimum-order", "",
+                     paste0("For B-Basis, the optimum order method ",
+                            "should be used")),
+        obj = method == "optimum-order"
+      ))
     } else if (p == 0.99 && conf == 0.95) {
       # A-Basis
-      return(ifelse(method == "woodward-frawley", "",
-                    paste0("For A-Basis, the Woodward-Frawley method ",
-                           "should be used")))
+      return(list(
+        msg = ifelse(method == "woodward-frawley", "",
+                     paste0("For A-Basis, the Woodward-Frawley method ",
+                            "should be used")),
+        obj = method == "woodward-frawley"
+      ))
     } else {
-      return("")
+      return(list(
+        msg = paste0("Recommended method not defined for tolerance limits ",
+                     "other than A- and B-Basis are not defined"),  # TODO: Document this change
+        obj = FALSE
+      ))
     }
   }
 basis_hk_ext_rules[["sample_size"]] <-
   function(n, p, conf, ...) {
     if (p == 0.90 && conf == 0.95) {
       # B-Basis
-      return(ifelse(n <= 28, "",
-                    paste0("For B-Basis, Hanson-Koopmans should only be ",
-                           "used for samples of 28 or fewer observations")))
+      return(list(
+        msg = ifelse(n <= 28, "",
+                     paste0("For B-Basis, Hanson-Koopmans should only be ",
+                            "used for samples of 28 or fewer observations")),
+        obj = n <= 28
+      ))
     } else if (p == 0.99 && conf == 0.95) {
       # A-Basis
-      return(ifelse(n <= 299, "",
-                    paste0("For A-Basis, Hanson-Koopmans should only be ",
-                           "used for samples of 299 or fewer observations")))
+      return(list(
+        msg = ifelse(n <= 299, "",
+                     paste0("For A-Basis, Hanson-Koopmans should only be ",
+                            "used for samples of 299 or fewer obs.")),
+        obj = n <= 299
+      ))
     } else {
-      return("")
+      return(list(
+        msg = paste0("Sample size requirements for tolerance limits other ",
+                     "than A- and B-Basis are not defined"), # TODO: Document this change
+        obj = FALSE
+      ))
     }
   }
 
@@ -1332,10 +1447,12 @@ basis_hk_ext <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  res$diagnostic_results <- perform_checks(
+  check_res <- perform_checks(
     basis_hk_ext_rules, x = res$data, batch = res$batch, n = res$n,
     p = res$p, conf = res$conf, method = method, override = override
   )
+  res$diagnostic_results <- get_check_pfo(check_res)
+  res$diagnostic_obj <- get_check_obj(check_res)
   res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   if (method == "optimum-order") {
@@ -1478,16 +1595,26 @@ nonpara_large_sample_rules[["sample_size"]] <-
   function(n, p, conf, ...) {
     if (p == 0.90 && conf == 0.95) {
       # B-Basis
-      return(ifelse(n >= 28, "",
-                    paste0("This method should only be used for ",
-                           "B-Basis for sample sizes larger than 28")))
+      return(list(
+        msg = ifelse(n >= 28, "",
+                     paste0("This method should only be used for ",
+                            "B-Basis for sample sizes larger than 28")),
+        obj = n >= 28
+      ))
     } else if (p == 0.99 && conf == 0.95) {
       # A-Basis
-      return(ifelse(n >= 299, "",
-                    paste0("This method should only be used for ",
-                           "A-Basis for sample sizes larger than 299")))
+      return(list(
+        msg = ifelse(n >= 299, "",
+                     paste0("This method should only be used for ",
+                            "A-Basis for sample sizes larger than 299")),
+        obj = n >= 299
+      ))
     } else {
-      return(TRUE)
+      return(list(
+        msg = paste0("Sample size requirements for tolerance limits other ",
+                     "than A- and B-Basis are not defined"), # TODO: Document this change
+        obj = FALSE
+      ))
     }
   }
 
@@ -1524,10 +1651,12 @@ basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
     batch = eval_tidy(enquo(batch), data)
   )
 
-  res$diagnostic_results <- perform_checks(
+  check_res <- perform_checks(
     nonpara_large_sample_rules, x = res$data, batch = res$batch, n = res$n,
     p = res$p, conf = res$conf, override = override
   )
+  res$diagnostic_results <- get_check_pfo(check_res)
+  res$diagnostic_obj <- get_check_obj(check_res)
   res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   x_ordered <- sort(res$data)
@@ -1539,24 +1668,36 @@ basis_nonpara_large_sample <- function(data = NULL, x, batch = NULL,
 
 anova_rules <- list(
   outliers_within_group = function(x, groups, ...) {
-    group_mnr <- vapply(unique(groups), function(b) {
-      x_group <- x[groups == b]
-      mnr <- maximum_normed_residual(x = x_group)
-      mnr$n_outliers == 0
-    }, FUN.VALUE = logical(1L))
-    ifelse(all(group_mnr), "",
-           paste0("Maximum normed residual test detected ",
-                  "outliers within one or more batch"))
+    group_mnr <- sapply(
+      unique(groups), function(b) {
+        x_group <- x[groups == b]
+        maximum_normed_residual(x = x_group)
+      },
+      simplify = FALSE
+    )
+    group_mnr_logical <- sapply(group_mnr, function(mnr) mnr$n_outliers == 0)
+    list(
+      msg = ifelse(all(group_mnr_logical), "",
+                   paste0("Maximum normed residual test detected ",
+                          "outliers within one or more batch")),
+      obj = group_mnr
+    )
   },
   equality_of_variance = function(x, groups, ...) {
     lt <- levene_test(x = x, groups = groups)
-    ifelse(!lt$reject_equal_variance, "",
-           paste0("Levene's test rejected the hypothesis that the ",
-                  "variance of all groups is equal"))
+    list(
+      msg = ifelse(!lt$reject_equal_variance, "",
+                   paste0("Levene's test rejected the hypothesis that the ",
+                          "variance of all groups is equal")),
+      obj = lt
+    )
   },
   number_of_groups = function(r, ...) {
-    ifelse(r >= 5, "",
-           "ANOVA should only be used for 5 or more groups")
+    list(
+      msg = ifelse(r >= 5, "",
+                   "ANOVA should only be used for 5 or more groups"),
+      obj = r >= 5
+    )
   }
 )
 
@@ -1595,10 +1736,12 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
     stop("ANOVA cannot be computed with fewer than 2 groups")
   }
 
-  res$diagnostic_results <- perform_checks(
+  check_res <- perform_checks(
     rules = anova_rules, x = res$data, groups = res$groups,
     r = res$r, override = override
   )
+  res$diagnostic_results <- get_check_pfo(check_res)
+  res$diagnostic_obj <- get_check_obj(check_res)
   res$diagnostic_failures <- get_check_failure_names(res$diagnostic_results)
 
   grand_mean <- mean(res$data)
