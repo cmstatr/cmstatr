@@ -507,6 +507,7 @@ new_basis <- function(
   if (!is.null(groups) && !all(is.na(groups))) {
     res$r <- length(levels(as.factor(groups)))
   }
+  res$estimate <- list(0L)
   res$basis <- NA
 
   return(res)
@@ -761,9 +762,16 @@ basis_normal <- function(data = NULL, x, batch = NULL, p = 0.90, conf = 0.95,
 
   k <- k_factor_normal(n = res$n, p = p, conf = conf)
 
-  cv <- sd(res$data) / mean(res$data)
+  mean_dat <- mean(res$data)
+  sd_dat <- sd(res$data)
+  cv <- sd_dat / mean_dat
 
-  res$basis <- mean(res$data) * (1 - k * cv)
+  res$estimate <- list(
+    mean = mean_dat,
+    sd = sd_dat
+  )
+
+  res$basis <- mean_dat * (1 - k * cv)
 
   return(res)
 }
@@ -1800,6 +1808,16 @@ basis_anova <- function(data = NULL, x, groups, p = 0.90, conf = 0.95,
   if (msb <= mse) {
     tol_factor <- k0
   }
+
+  res$estimate <- list(
+    grand_mean = grand_mean,
+    pop_sd_est = pop_sd,
+    ssb = ssb,
+    sst = sst,
+    sse = sse,
+    msb = msb,
+    mse = mse
+  )
 
   res$basis <- grand_mean - tol_factor * pop_sd
 
