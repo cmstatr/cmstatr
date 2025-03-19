@@ -6,5 +6,5 @@ linters <- linters_with_defaults(
 # Ignore the auto-generated R files
 exclusions <- list(
   "R/RcppExports.R",
-  "vignettes/*.R",
+  "vignettes/*.R"
 )
